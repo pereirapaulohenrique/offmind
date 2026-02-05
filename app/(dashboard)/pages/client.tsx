@@ -218,11 +218,10 @@ export function PagesListClient({
             icon="📄"
             title="No pages yet"
             description="Create your first page to start writing"
-            action={
-              <Button onClick={handleCreatePage} disabled={isCreating}>
-                Create Page
-              </Button>
-            }
+            action={{
+              label: isCreating ? 'Creating...' : 'Create Page',
+              onClick: handleCreatePage,
+            }}
           />
         ) : (
           <div className="mx-auto max-w-4xl">
