@@ -4,6 +4,15 @@ import { useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUIStore } from '@/stores/ui';
 import {
+  Inbox,
+  ArrowRightLeft,
+  CalendarCheck,
+  Plus,
+  FileText,
+  Settings,
+  LucideIcon,
+} from 'lucide-react';
+import {
   CommandDialog,
   CommandEmpty,
   CommandGroup,
@@ -13,16 +22,24 @@ import {
   CommandSeparator,
 } from '@/components/ui/command';
 
-const navigationItems = [
-  { label: 'Go to Capture', href: '/capture', icon: '📥', shortcut: '⌘1' },
-  { label: 'Go to Process', href: '/process', icon: '🔄', shortcut: '⌘2' },
-  { label: 'Go to Commit', href: '/commit', icon: '📅', shortcut: '⌘3' },
+interface NavItem {
+  label: string;
+  href?: string;
+  action?: string;
+  Icon: LucideIcon;
+  shortcut: string;
+}
+
+const navigationItems: NavItem[] = [
+  { label: 'Go to Capture', href: '/capture', Icon: Inbox, shortcut: '⌘1' },
+  { label: 'Go to Process', href: '/process', Icon: ArrowRightLeft, shortcut: '⌘2' },
+  { label: 'Go to Commit', href: '/commit', Icon: CalendarCheck, shortcut: '⌘3' },
 ];
 
-const actionItems = [
-  { label: 'New Item', action: 'new-item', icon: '➕', shortcut: '⌘N' },
-  { label: 'New Page', action: 'new-page', icon: '📄', shortcut: '⌘⇧N' },
-  { label: 'Settings', href: '/settings', icon: '⚙️', shortcut: '⌘,' },
+const actionItems: NavItem[] = [
+  { label: 'New Item', action: 'new-item', Icon: Plus, shortcut: '⌘N' },
+  { label: 'New Page', action: 'new-page', Icon: FileText, shortcut: '⌘⇧N' },
+  { label: 'Settings', href: '/settings', Icon: Settings, shortcut: '⌘,' },
 ];
 
 export function CommandPalette() {
@@ -76,7 +93,7 @@ export function CommandPalette() {
   }, [router, setCommandPaletteOpen]);
 
   const handleSelect = useCallback(
-    (item: { href?: string; action?: string }) => {
+    (item: NavItem) => {
       if (item.href) {
         router.push(item.href);
       }
@@ -115,7 +132,7 @@ export function CommandPalette() {
               className="flex items-center justify-between"
             >
               <div className="flex items-center gap-2">
-                <span>{item.icon}</span>
+                <item.Icon className="h-4 w-4 text-muted-foreground" />
                 <span>{item.label}</span>
               </div>
               {item.shortcut && (
@@ -135,7 +152,7 @@ export function CommandPalette() {
               className="flex items-center justify-between"
             >
               <div className="flex items-center gap-2">
-                <span>{item.icon}</span>
+                <item.Icon className="h-4 w-4 text-muted-foreground" />
                 <span>{item.label}</span>
               </div>
               {item.shortcut && (

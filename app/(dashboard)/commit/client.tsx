@@ -307,7 +307,7 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
           <LoadingState count={5} type="card" />
         ) : commitItems.length === 0 ? (
           <EmptyState
-            icon="📅"
+            iconName="calendar"
             title="Nothing scheduled"
             description="Schedule items from your backlog to commit to specific times."
             action={{

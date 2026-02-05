@@ -1,7 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { Bot, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ICON_MAP } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import type { Destination } from '@/types/database';
 
@@ -31,7 +33,7 @@ export function AISuggestionBadge({
         animate={{ opacity: 1, y: 0 }}
         className="flex items-center gap-2 rounded-lg border border-border bg-muted/50 px-3 py-2"
       >
-        <span className="text-sm">🤖</span>
+        <Sparkles className="h-4 w-4 text-primary animate-pulse" />
         <span className="text-sm text-muted-foreground animate-pulse">
           Analyzing...
         </span>
@@ -51,7 +53,9 @@ export function AISuggestionBadge({
     >
       <div className="flex items-start gap-3">
         {/* AI icon */}
-        <span className="text-lg">🤖</span>
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+          <Bot className="h-4 w-4 text-primary" />
+        </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
@@ -66,7 +70,10 @@ export function AISuggestionBadge({
                 color: `var(--destination-${destinationSlug})`,
               }}
             >
-              {destination?.icon || '📋'}
+              {(() => {
+                const DestIcon = destination?.icon ? ICON_MAP[destination.icon] : null;
+                return DestIcon ? <DestIcon className="h-3 w-3" /> : null;
+              })()}
               <span>{destination?.name || destinationSlug}</span>
             </span>
             <span

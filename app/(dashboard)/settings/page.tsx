@@ -21,10 +21,18 @@ export default async function SettingsPage() {
     .eq('id', user.id)
     .single();
 
+  // Get destinations
+  const { data: destinations } = await supabase
+    .from('destinations')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('sort_order', { ascending: true });
+
   return (
     <SettingsPageClient
       user={user}
       profile={profile}
+      destinations={destinations || []}
     />
   );
 }

@@ -1,7 +1,17 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Plus,
+  MoreHorizontal,
+  Pencil,
+  Archive,
+  Trash2,
+  FolderOpen,
+  ClipboardList,
+} from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,6 +40,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { EmptyState } from '@/components/shared/EmptyState';
+import { IconPicker } from '@/components/shared/IconPicker';
+import { ColorPicker } from '@/components/shared/ColorPicker';
+import { ICON_MAP, COLOR_PALETTE, getSuggestedColor } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import type { Space, Project } from '@/types/database';
 import { toast } from 'sonner';
@@ -39,9 +52,6 @@ interface ProjectsPageClientProps {
   spaces: Space[];
   userId: string;
 }
-
-const EMOJI_OPTIONS = ['📁', '🎯', '💼', '🎮', '📝', '🚀', '💡', '📊', '🔧', '🎨', '📚', '⭐'];
-const COLOR_OPTIONS = ['indigo', 'blue', 'purple', 'green', 'yellow', 'pink', 'orange', 'red'];
 
 interface FormData {
   name: string;
@@ -61,14 +71,23 @@ export function ProjectsPageClient({
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+
+  // Get suggested color for new project
+  const suggestedColor = getSuggestedColor(projects.length);
   const [formData, setFormData] = useState<FormData>({
     name: '',
     description: '',
-    icon: '📁',
-    color: 'indigo',
+    icon: 'folder-open',
+    color: suggestedColor.value,
     space_id: null,
   });
   const [isSaving, setIsSaving] = useState(false);
+
+  // Reset form with new suggested color
+  const resetForm = () => {
+    const newSuggestedColor = getSuggestedColor(projects.length);
+    setFormData({ name: '', description: '', icon: 'folder-open', color: newSuggestedColor.value, space_id: null });
+  };
 
   // Create project
   const handleCreate = useCallback(async () => {
@@ -99,7 +118,7 @@ export function ProjectsPageClient({
 
       setProjects([...projects, data as Project]);
       setIsCreateOpen(false);
-      setFormData({ name: '', description: '', icon: '📁', color: 'indigo', space_id: null });
+      resetForm();
       toast.success('Project created');
     } catch (error) {
       console.error('Error creating project:', error);
@@ -235,10 +254,13 @@ export function ProjectsPageClient({
           </div>
 
           {/* Create button */}
-          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+          <Dialog open={isCreateOpen} onOpenChange={(open) => {
+            setIsCreateOpen(open);
+            if (open) resetForm();
+          }}>
             <DialogTrigger asChild>
               <Button>
-                <span className="mr-2">+</span>
+                <Plus className="mr-2 h-4 w-4" />
                 New Project
               </Button>
             </DialogTrigger>
@@ -271,7 +293,7 @@ export function ProjectsPageClient({
       <div className="flex-1 overflow-auto p-6">
         {projects.length === 0 ? (
           <EmptyState
-            icon="📁"
+            iconName="folder-open"
             title="No projects yet"
             description="Create projects to organize related tasks and track your progress."
             action={{
@@ -285,11 +307,13 @@ export function ProjectsPageClient({
             {spaces.map((space) => {
               const spaceProjects = projectsBySpace[space.id] || [];
               if (spaceProjects.length === 0) return null;
+              const SpaceIcon = ICON_MAP[space.icon] || FolderOpen;
+              const spaceColor = COLOR_PALETTE.find(c => c.value === space.color);
 
               return (
                 <div key={space.id}>
                   <h2 className="mb-4 flex items-center gap-2 text-lg font-medium text-foreground">
-                    <span>{space.icon}</span>
+                    <SpaceIcon className={cn('h-5 w-5', spaceColor?.text || 'text-muted-foreground')} />
                     <span>{space.name}</span>
                     <span className="text-sm text-muted-foreground">
                       ({spaceProjects.length})
@@ -317,7 +341,7 @@ export function ProjectsPageClient({
             {unassignedProjects.length > 0 && (
               <div>
                 <h2 className="mb-4 flex items-center gap-2 text-lg font-medium text-foreground">
-                  <span>📋</span>
+                  <ClipboardList className="h-5 w-5 text-muted-foreground" />
                   <span>Unassigned</span>
                   <span className="text-sm text-muted-foreground">
                     ({unassignedProjects.length})
@@ -380,65 +404,79 @@ interface ProjectCardProps {
 }
 
 function ProjectCard({ project, space, onEdit, onArchive, onDelete }: ProjectCardProps) {
+  const ProjectIcon = ICON_MAP[project.icon] || FolderOpen;
+  const colorOption = COLOR_PALETTE.find(c => c.value === project.color);
+
   return (
     <motion.div
       layout
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className="group rounded-lg border border-border bg-card p-4 transition-colors hover:border-border-emphasis"
     >
-      <div className="flex items-start gap-4">
-        {/* Icon */}
-        <div
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-xl"
-          style={{
-            backgroundColor: `var(--${project.color}-100, hsl(var(--muted)))`,
-          }}
-        >
-          {project.icon}
-        </div>
+      <Link
+        href={`/projects/${project.id}`}
+        className="group block rounded-lg border border-border bg-card p-4 transition-colors hover:border-primary/50"
+      >
+        <div className="flex items-start gap-4">
+          {/* Icon */}
+          <div className={cn(
+            'flex h-10 w-10 items-center justify-center rounded-lg',
+            colorOption?.bgSubtle || 'bg-muted'
+          )}>
+            <ProjectIcon className={cn('h-5 w-5', colorOption?.text || 'text-muted-foreground')} />
+          </div>
 
-        {/* Content */}
-        <div className="flex-1">
-          <h3 className="font-medium text-foreground">{project.name}</h3>
-          {project.description && (
-            <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
-              {project.description}
-            </p>
-          )}
-        </div>
+          {/* Content */}
+          <div className="flex-1">
+            <h3 className="font-medium text-foreground">{project.name}</h3>
+            {project.description && (
+              <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
+                {project.description}
+              </p>
+            )}
+          </div>
 
-        {/* Actions */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <span>⋯</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={onEdit}>
-              <span className="mr-2">✏️</span>
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={onArchive}>
-              <span className="mr-2">📥</span>
-              Archive
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={onDelete}
-              className="text-destructive focus:text-destructive"
-            >
-              <span className="mr-2">🗑️</span>
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+          {/* Actions */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild onClick={(e) => e.preventDefault()}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={(e) => {
+                e.preventDefault();
+                onEdit();
+              }}>
+                <Pencil className="mr-2 h-4 w-4" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={(e) => {
+                e.preventDefault();
+                onArchive();
+              }}>
+                <Archive className="mr-2 h-4 w-4" />
+                Archive
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.preventDefault();
+                  onDelete();
+                }}
+                className="text-destructive focus:text-destructive"
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </Link>
     </motion.div>
   );
 }
@@ -489,57 +527,35 @@ function ProjectForm({ formData, setFormData, spaces }: ProjectFormProps) {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="none">No space</SelectItem>
-            {spaces.map((space) => (
-              <SelectItem key={space.id} value={space.id}>
-                <span className="flex items-center gap-2">
-                  <span>{space.icon}</span>
-                  <span>{space.name}</span>
-                </span>
-              </SelectItem>
-            ))}
+            {spaces.map((space) => {
+              const SpaceIcon = ICON_MAP[space.icon] || FolderOpen;
+              return (
+                <SelectItem key={space.id} value={space.id}>
+                  <span className="flex items-center gap-2">
+                    <SpaceIcon className="h-4 w-4" />
+                    <span>{space.name}</span>
+                  </span>
+                </SelectItem>
+              );
+            })}
           </SelectContent>
         </Select>
       </div>
 
-      <div className="space-y-2">
-        <Label>Icon</Label>
-        <div className="flex flex-wrap gap-2">
-          {EMOJI_OPTIONS.map((emoji) => (
-            <button
-              key={emoji}
-              type="button"
-              onClick={() => setFormData({ ...formData, icon: emoji })}
-              className={cn(
-                'flex h-10 w-10 items-center justify-center rounded-lg border text-lg transition-colors',
-                formData.icon === emoji
-                  ? 'border-primary bg-primary/10'
-                  : 'border-border hover:bg-muted'
-              )}
-            >
-              {emoji}
-            </button>
-          ))}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label>Icon</Label>
+          <IconPicker
+            value={formData.icon}
+            onChange={(icon) => setFormData({ ...formData, icon })}
+          />
         </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label>Color</Label>
-        <div className="flex flex-wrap gap-2">
-          {COLOR_OPTIONS.map((color) => (
-            <button
-              key={color}
-              type="button"
-              onClick={() => setFormData({ ...formData, color })}
-              className={cn(
-                'h-8 w-8 rounded-full border-2 transition-all',
-                formData.color === color ? 'border-foreground scale-110' : 'border-transparent'
-              )}
-              style={{
-                backgroundColor: `var(--${color}-500, var(--muted))`,
-              }}
-              title={color}
-            />
-          ))}
+        <div className="space-y-2">
+          <Label>Color</Label>
+          <ColorPicker
+            value={formData.color}
+            onChange={(color) => setFormData({ ...formData, color })}
+          />
         </div>
       </div>
     </div>

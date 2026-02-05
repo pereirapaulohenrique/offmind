@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDown, Inbox } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useItemsStore } from '@/stores/items';
 import { ItemCard } from '@/components/items/ItemCard';
@@ -16,6 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ICON_MAP, COLOR_PALETTE } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import type { Item, Destination } from '@/types/database';
 import { toast } from 'sonner';
@@ -248,7 +250,7 @@ export function ProcessPageClient({
           <LoadingState count={6} type="card" />
         ) : processItems.length === 0 ? (
           <EmptyState
-            icon="📭"
+            iconName="inbox"
             title="Nothing to process"
             description="Items you move from Capture will appear here. Start by capturing some thoughts!"
             action={{
@@ -274,7 +276,7 @@ export function ProcessPageClient({
             {uncategorizedItems.length > 0 && (
               <DestinationGroup
                 title="Uncategorized"
-                icon="📥"
+                iconName="inbox"
                 color="gray"
                 items={uncategorizedItems}
                 destinations={destinations}
@@ -300,7 +302,7 @@ export function ProcessPageClient({
                 <DestinationGroup
                   key={destination.id}
                   title={destination.name}
-                  icon={destination.icon}
+                  iconName={destination.icon}
                   color={destination.color}
                   items={destItems}
                   destinations={destinations}
@@ -368,7 +370,7 @@ export function ProcessPageClient({
 // Destination Group Component
 interface DestinationGroupProps {
   title: string;
-  icon: string;
+  iconName: string;
   color: string;
   items: Item[];
   destinations: Destination[];
@@ -382,7 +384,7 @@ interface DestinationGroupProps {
 
 function DestinationGroup({
   title,
-  icon,
+  iconName,
   color,
   items,
   destinations,
@@ -393,6 +395,9 @@ function DestinationGroup({
   onMoveToDestination,
   onScheduleItem,
 }: DestinationGroupProps) {
+  const Icon = ICON_MAP[iconName] || Inbox;
+  const colorOption = COLOR_PALETTE.find(c => c.value === color);
+
   return (
     <div className="mb-6">
       {/* Header */}
@@ -400,28 +405,20 @@ function DestinationGroup({
         onClick={onToggle}
         className="mb-3 flex w-full items-center gap-2 text-left"
       >
-        <span
-          className={cn(
-            'flex h-8 w-8 items-center justify-center rounded-lg text-lg',
-            `bg-${color}-500/10`
-          )}
-          style={{
-            backgroundColor: `var(--destination-${title.toLowerCase()}, hsl(var(--muted)))`,
-            opacity: 0.15,
-          }}
-        >
-          {icon}
-        </span>
+        <div className={cn(
+          'flex h-8 w-8 items-center justify-center rounded-lg',
+          colorOption?.bgSubtle || 'bg-muted'
+        )}>
+          <Icon className={cn('h-4 w-4', colorOption?.text || 'text-muted-foreground')} />
+        </div>
         <h2 className="text-lg font-medium text-foreground">{title}</h2>
         <span className="text-sm text-muted-foreground">({items.length})</span>
-        <span
+        <ChevronDown
           className={cn(
-            'ml-auto text-muted-foreground transition-transform',
+            'ml-auto h-4 w-4 text-muted-foreground transition-transform',
             isExpanded && 'rotate-180'
           )}
-        >
-          ▼
-        </span>
+        />
       </button>
 
       {/* Items */}

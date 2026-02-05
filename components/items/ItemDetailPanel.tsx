@@ -3,6 +3,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  X,
+  Trash2,
+  FileText,
+  Inbox,
+  ArrowRight,
+  Calendar,
+  Clock,
+  Plus,
+} from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,10 +26,43 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { ICON_MAP, COLOR_PALETTE } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { formatRelativeTime } from '@/lib/utils/dates';
 import type { Item, Destination, Space, Project, Page } from '@/types/database';
 import { toast } from 'sonner';
+
+// Destination-specific field configurations
+const DESTINATION_FIELDS: Record<string, Array<{
+  name: string;
+  label: string;
+  type: 'text' | 'select' | 'date' | 'url';
+  options?: string[];
+  placeholder?: string;
+}>> = {
+  backlog: [
+    { name: 'priority', label: 'Priority', type: 'select', options: ['Low', 'Medium', 'High', 'Urgent'] },
+    { name: 'effort', label: 'Effort', type: 'select', options: ['Quick (< 15min)', 'Small (< 1h)', 'Medium (< 4h)', 'Large (> 4h)'] },
+  ],
+  reference: [
+    { name: 'source_url', label: 'Source URL', type: 'url', placeholder: 'https://...' },
+    { name: 'category', label: 'Category', type: 'text', placeholder: 'e.g., Article, Book, Video' },
+  ],
+  incubating: [
+    { name: 'stage', label: 'Development Stage', type: 'select', options: ['Seed', 'Exploring', 'Developing', 'Ready to Act'] },
+  ],
+  someday: [
+    { name: 'revisit_date', label: 'Revisit On', type: 'date' },
+  ],
+  questions: [
+    { name: 'possible_answer', label: 'Possible Answer', type: 'text', placeholder: 'What might the answer be?' },
+    { name: 'research_links', label: 'Research Links', type: 'url', placeholder: 'https://...' },
+  ],
+  waiting: [
+    { name: 'waiting_for', label: 'Waiting For', type: 'text', placeholder: 'Person or thing you\'re waiting for' },
+    { name: 'follow_up_date', label: 'Follow Up Date', type: 'date' },
+  ],
+};
 
 interface ItemDetailPanelProps {
   item: Item | null;
@@ -50,7 +93,7 @@ export function ItemDetailPanel({
   const [spaceId, setSpaceId] = useState<string | null>(null);
   const [projectId, setProjectId] = useState<string | null>(null);
   const [scheduledAt, setScheduledAt] = useState<string>('');
-  const [waitingFor, setWaitingFor] = useState('');
+  const [customValues, setCustomValues] = useState<Record<string, any>>({});
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [linkedPage, setLinkedPage] = useState<Page | null>(null);
@@ -65,7 +108,7 @@ export function ItemDetailPanel({
       setSpaceId(item.space_id);
       setProjectId(item.project_id);
       setScheduledAt(item.scheduled_at ? item.scheduled_at.slice(0, 16) : '');
-      setWaitingFor(item.waiting_for || '');
+      setCustomValues((item.custom_values as Record<string, any>) || {});
       setHasChanges(false);
       setLinkedPage(null);
 
@@ -93,9 +136,9 @@ export function ItemDetailPanel({
       spaceId !== item.space_id ||
       projectId !== item.project_id ||
       scheduledAt !== (item.scheduled_at ? item.scheduled_at.slice(0, 16) : '') ||
-      waitingFor !== (item.waiting_for || '');
+      JSON.stringify(customValues) !== JSON.stringify(item.custom_values || {});
     setHasChanges(changed);
-  }, [item, title, notes, destinationId, spaceId, projectId, scheduledAt, waitingFor]);
+  }, [item, title, notes, destinationId, spaceId, projectId, scheduledAt, customValues]);
 
   // Save changes
   const handleSave = useCallback(async () => {
@@ -112,7 +155,8 @@ export function ItemDetailPanel({
         space_id: spaceId,
         project_id: projectId,
         scheduled_at: scheduledAt ? new Date(scheduledAt).toISOString() : null,
-        waiting_for: waitingFor || null,
+        custom_values: Object.keys(customValues).length > 0 ? customValues : null,
+        waiting_for: customValues.waiting_for || null,
       };
 
       // If scheduled, move to commit layer
@@ -141,12 +185,35 @@ export function ItemDetailPanel({
     } finally {
       setIsSaving(false);
     }
-  }, [item, hasChanges, title, notes, destinationId, spaceId, projectId, scheduledAt, waitingFor, onUpdate]);
+  }, [item, hasChanges, title, notes, destinationId, spaceId, projectId, scheduledAt, customValues, onUpdate]);
 
-  // Auto-save on blur
-  const handleBlur = () => {
-    if (hasChanges) {
-      handleSave();
+  // Quick process to destination
+  const handleQuickProcess = async (destId: string) => {
+    if (!item) return;
+
+    setDestinationId(destId);
+    setIsSaving(true);
+    const supabase = getSupabase();
+
+    try {
+      const updates: Partial<Item> = {
+        destination_id: destId,
+        layer: 'process',
+      };
+
+      const { error } = await supabase
+        .from('items')
+        .update(updates as any)
+        .eq('id', item.id);
+
+      if (error) throw error;
+
+      onUpdate(item.id, updates);
+      toast.success('Item processed');
+    } catch (error) {
+      toast.error('Failed to process item');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -213,6 +280,10 @@ export function ItemDetailPanel({
   }, [isOpen, handleSave, onClose]);
 
   const selectedDestination = destinations.find((d) => d.id === destinationId);
+  const destinationFields = selectedDestination?.slug ? DESTINATION_FIELDS[selectedDestination.slug] || [] : [];
+
+  // Get layer icon
+  const LayerIcon = item?.layer === 'capture' ? Inbox : item?.layer === 'process' ? ArrowRight : Calendar;
 
   return (
     <AnimatePresence>
@@ -238,11 +309,9 @@ export function ItemDetailPanel({
             {/* Header */}
             <div className="flex items-center justify-between border-b border-border px-6 py-4">
               <div className="flex items-center gap-2">
-                <span className="text-lg">
-                  {item.layer === 'capture' && '📥'}
-                  {item.layer === 'process' && '📤'}
-                  {item.layer === 'commit' && '📅'}
-                </span>
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted">
+                  <LayerIcon className="h-4 w-4 text-muted-foreground" />
+                </div>
                 <span className="text-sm text-muted-foreground capitalize">
                   {item.layer} layer
                 </span>
@@ -252,7 +321,7 @@ export function ItemDetailPanel({
                   <span className="text-xs text-muted-foreground">Unsaved changes</span>
                 )}
                 <Button variant="ghost" size="icon" onClick={onClose}>
-                  <span>✕</span>
+                  <X className="h-4 w-4" />
                 </Button>
               </div>
             </div>
@@ -265,7 +334,6 @@ export function ItemDetailPanel({
                   <Input
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    onBlur={handleBlur}
                     placeholder="Item title..."
                     className="text-lg font-medium border-none px-0 focus-visible:ring-0"
                   />
@@ -277,71 +345,200 @@ export function ItemDetailPanel({
                   <Textarea
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    onBlur={handleBlur}
                     placeholder="Add notes..."
-                    className="min-h-[120px] resize-none"
+                    className="min-h-[100px] resize-none"
                   />
                 </div>
 
                 <Separator />
 
-                {/* Destination */}
-                <div className="space-y-2">
-                  <Label className="text-muted-foreground">Destination</Label>
-                  <Select
-                    value={destinationId || 'none'}
-                    onValueChange={(value) => {
-                      setDestinationId(value === 'none' ? null : value);
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select destination">
-                        {selectedDestination ? (
-                          <span className="flex items-center gap-2">
-                            <span>{selectedDestination.icon}</span>
-                            <span>{selectedDestination.name}</span>
-                          </span>
-                        ) : (
-                          'No destination'
-                        )}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">No destination</SelectItem>
-                      {destinations.map((dest) => (
-                        <SelectItem key={dest.id} value={dest.id}>
-                          <span className="flex items-center gap-2">
-                            <span>{dest.icon}</span>
-                            <span>{dest.name}</span>
-                          </span>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                {/* Quick Destination Selection */}
+                <div className="space-y-3">
+                  <Label className="text-muted-foreground">Where does this go?</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {destinations.slice(0, 6).map((dest) => {
+                      const DestIcon = ICON_MAP[dest.icon] || Inbox;
+                      const colorOption = COLOR_PALETTE.find(c => c.value === dest.color);
+                      const isSelected = destinationId === dest.id;
+
+                      return (
+                        <button
+                          key={dest.id}
+                          onClick={() => handleQuickProcess(dest.id)}
+                          className={cn(
+                            'flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors',
+                            isSelected
+                              ? 'border-primary bg-primary/10 text-primary'
+                              : 'border-border hover:border-primary/50 hover:bg-muted'
+                          )}
+                        >
+                          <DestIcon className={cn('h-4 w-4', colorOption?.text || 'text-muted-foreground')} />
+                          <span>{dest.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {destinations.length > 6 && (
+                    <Select
+                      value={destinationId || 'none'}
+                      onValueChange={(value) => {
+                        if (value !== 'none') handleQuickProcess(value);
+                      }}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="More destinations..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {destinations.slice(6).map((dest) => {
+                          const DestIcon = ICON_MAP[dest.icon] || Inbox;
+                          return (
+                            <SelectItem key={dest.id} value={dest.id}>
+                              <span className="flex items-center gap-2">
+                                <DestIcon className="h-4 w-4" />
+                                <span>{dest.name}</span>
+                              </span>
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
+                  )}
                 </div>
 
-                {/* Waiting for (only for waiting destination) */}
-                {selectedDestination?.slug === 'waiting' && (
-                  <div className="space-y-2">
-                    <Label className="text-muted-foreground">Waiting for</Label>
-                    <Input
-                      value={waitingFor}
-                      onChange={(e) => setWaitingFor(e.target.value)}
-                      onBlur={handleBlur}
-                      placeholder="Person or thing you're waiting for..."
-                    />
-                  </div>
+                {/* Destination-Specific Fields */}
+                {destinationFields.length > 0 && (
+                  <>
+                    <Separator />
+                    <div className="space-y-4">
+                      <Label className="text-muted-foreground">
+                        {selectedDestination?.name} Details
+                      </Label>
+                      {destinationFields.map((field) => (
+                        <div key={field.name} className="space-y-2">
+                          <Label className="text-sm">{field.label}</Label>
+                          {field.type === 'select' && field.options ? (
+                            <Select
+                              value={customValues[field.name] || ''}
+                              onValueChange={(value) =>
+                                setCustomValues({ ...customValues, [field.name]: value })
+                              }
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder={`Select ${field.label.toLowerCase()}`} />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {field.options.map((option) => (
+                                  <SelectItem key={option} value={option}>
+                                    {option}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          ) : field.type === 'date' ? (
+                            <Input
+                              type="date"
+                              value={customValues[field.name] || ''}
+                              onChange={(e) =>
+                                setCustomValues({ ...customValues, [field.name]: e.target.value })
+                              }
+                            />
+                          ) : (
+                            <Input
+                              type={field.type === 'url' ? 'url' : 'text'}
+                              value={customValues[field.name] || ''}
+                              onChange={(e) =>
+                                setCustomValues({ ...customValues, [field.name]: e.target.value })
+                              }
+                              placeholder={field.placeholder}
+                            />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </>
                 )}
 
+                <Separator />
+
+                {/* Organization */}
+                <div className="space-y-4">
+                  <Label className="text-muted-foreground">Organization (optional)</Label>
+
+                  {spaces.length > 0 && (
+                    <div className="space-y-2">
+                      <Label className="text-sm">Space</Label>
+                      <Select
+                        value={spaceId || 'none'}
+                        onValueChange={(value) => {
+                          setSpaceId(value === 'none' ? null : value);
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="No space" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">No space</SelectItem>
+                          {spaces.map((space) => {
+                            const SpaceIcon = ICON_MAP[space.icon] || Inbox;
+                            return (
+                              <SelectItem key={space.id} value={space.id}>
+                                <span className="flex items-center gap-2">
+                                  <SpaceIcon className="h-4 w-4" />
+                                  <span>{space.name}</span>
+                                </span>
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+
+                  {projects.length > 0 && (
+                    <div className="space-y-2">
+                      <Label className="text-sm">Project</Label>
+                      <Select
+                        value={projectId || 'none'}
+                        onValueChange={(value) => {
+                          setProjectId(value === 'none' ? null : value);
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="No project" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">No project</SelectItem>
+                          {projects.map((project) => {
+                            const ProjectIcon = ICON_MAP[project.icon] || Inbox;
+                            return (
+                              <SelectItem key={project.id} value={project.id}>
+                                <span className="flex items-center gap-2">
+                                  <ProjectIcon className="h-4 w-4" />
+                                  <span>{project.name}</span>
+                                </span>
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                </div>
+
+                <Separator />
+
                 {/* Schedule */}
-                <div className="space-y-2">
-                  <Label className="text-muted-foreground">Schedule</Label>
-                  <Input
-                    type="datetime-local"
-                    value={scheduledAt}
-                    onChange={(e) => setScheduledAt(e.target.value)}
-                    onBlur={handleBlur}
-                  />
+                <div className="space-y-4">
+                  <Label className="text-muted-foreground">Schedule (optional)</Label>
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="datetime-local"
+                      value={scheduledAt}
+                      onChange={(e) => setScheduledAt(e.target.value)}
+                      className="flex-1"
+                    />
+                  </div>
                   {scheduledAt && (
                     <Button
                       variant="ghost"
@@ -356,73 +553,16 @@ export function ItemDetailPanel({
 
                 <Separator />
 
-                {/* Organization */}
-                {spaces.length > 0 && (
-                  <div className="space-y-2">
-                    <Label className="text-muted-foreground">Space</Label>
-                    <Select
-                      value={spaceId || 'none'}
-                      onValueChange={(value) => {
-                        setSpaceId(value === 'none' ? null : value);
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="No space" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">No space</SelectItem>
-                        {spaces.map((space) => (
-                          <SelectItem key={space.id} value={space.id}>
-                            <span className="flex items-center gap-2">
-                              <span>{space.icon}</span>
-                              <span>{space.name}</span>
-                            </span>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-
-                {projects.length > 0 && (
-                  <div className="space-y-2">
-                    <Label className="text-muted-foreground">Project</Label>
-                    <Select
-                      value={projectId || 'none'}
-                      onValueChange={(value) => {
-                        setProjectId(value === 'none' ? null : value);
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="No project" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">No project</SelectItem>
-                        {projects.map((project) => (
-                          <SelectItem key={project.id} value={project.id}>
-                            <span className="flex items-center gap-2">
-                              <span>{project.icon}</span>
-                              <span>{project.name}</span>
-                            </span>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-
-                <Separator />
-
                 {/* Linked Page */}
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">Page</Label>
+                  <Label className="text-muted-foreground">Linked Page</Label>
                   {linkedPage ? (
                     <Button
                       variant="outline"
                       className="w-full justify-start"
                       onClick={() => router.push(`/pages/${linkedPage.id}`)}
                     >
-                      <span className="mr-2">{linkedPage.icon || '📄'}</span>
+                      <FileText className="mr-2 h-4 w-4" />
                       <span className="truncate">{linkedPage.title || 'Untitled'}</span>
                     </Button>
                   ) : (
@@ -432,7 +572,8 @@ export function ItemDetailPanel({
                       onClick={handleCreatePage}
                       disabled={isCreatingPage}
                     >
-                      {isCreatingPage ? 'Creating...' : '📄 Create Page'}
+                      <Plus className="mr-2 h-4 w-4" />
+                      {isCreatingPage ? 'Creating...' : 'Create Page'}
                     </Button>
                   )}
                 </div>
@@ -471,7 +612,7 @@ export function ItemDetailPanel({
                 onClick={handleDelete}
                 className="text-destructive hover:text-destructive"
               >
-                <span className="mr-2">🗑️</span>
+                <Trash2 className="mr-2 h-4 w-4" />
                 Delete
               </Button>
 

@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Header } from '@/components/layout/Header';
 import { CommandPalette } from '@/components/layout/CommandPalette';
+import { AIAssistant } from '@/components/ai/AIAssistant';
 
 export default async function DashboardLayout({
   children,
@@ -88,6 +89,9 @@ export default async function DashboardLayout({
 
       {/* Command Palette (global) */}
       <CommandPalette />
+
+      {/* AI Assistant (global) */}
+      <AIAssistant />
     </div>
   );
 }

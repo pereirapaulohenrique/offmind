@@ -224,7 +224,7 @@ export function CapturePageClient({ initialItems, destinations, userId }: Captur
           <LoadingState count={3} type="card" />
         ) : captureItems.length === 0 ? (
           <EmptyState
-            icon="🎉"
+            iconName="check-circle-2"
             title="Inbox Zero!"
             description="All captured thoughts have been processed. Use the input below to capture something new."
           />
