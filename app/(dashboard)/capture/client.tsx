@@ -11,16 +11,18 @@ import { ItemDetailPanel } from '@/components/items/ItemDetailPanel';
 import { AISuggestionBadge } from '@/components/items/AISuggestionBadge';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { LoadingState } from '@/components/shared/LoadingState';
-import type { Item, Destination } from '@/types/database';
+import type { Item, Destination, Space, Project } from '@/types/database';
 import { toast } from 'sonner';
 
 interface CapturePageClientProps {
   initialItems: Item[];
   destinations: Destination[];
+  spaces: Space[];
+  projects: Project[];
   userId: string;
 }
 
-export function CapturePageClient({ initialItems, destinations, userId }: CapturePageClientProps) {
+export function CapturePageClient({ initialItems, destinations, spaces, projects, userId }: CapturePageClientProps) {
   const getSupabase = () => createClient();
   const { items, setItems, addItem, updateItem, removeItem, isLoading } = useItemsStore();
   const { suggestDestination, suggestion, isLoading: isAILoading, clearSuggestion } = useAISuggestion();
@@ -278,6 +280,8 @@ export function CapturePageClient({ initialItems, destinations, userId }: Captur
       <ItemDetailPanel
         item={selectedItem}
         destinations={destinations}
+        spaces={spaces}
+        projects={projects}
         isOpen={!!selectedItem}
         onClose={() => setSelectedItem(null)}
         onUpdate={handleUpdateItem}

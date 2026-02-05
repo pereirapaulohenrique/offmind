@@ -2,6 +2,15 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import {
+  Sparkles,
+  Send,
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+  Calendar,
+  Inbox,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatRelativeTime } from '@/lib/utils/dates';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -13,6 +22,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { ICON_MAP } from '@/components/icons';
 import type { Item, Destination } from '@/types/database';
 
 interface ItemCardProps {
@@ -50,6 +66,9 @@ export function ItemCard({
       });
     }
   };
+
+  // Get destination icon component
+  const DestIcon = destination?.icon ? ICON_MAP[destination.icon] || Inbox : null;
 
   return (
     <motion.div
@@ -99,16 +118,13 @@ export function ItemCard({
             {/* Destination badge */}
             {destination && (
               <span
-                className={cn(
-                  'inline-flex items-center gap-1 rounded-full px-2 py-0.5',
-                  `bg-${destination.color}-500/10 text-${destination.color}-500`
-                )}
+                className="inline-flex items-center gap-1 rounded-full px-2 py-0.5"
                 style={{
                   backgroundColor: `var(--destination-${destination.slug})20`,
                   color: `var(--destination-${destination.slug})`,
                 }}
               >
-                <span>{destination.icon}</span>
+                {DestIcon && <DestIcon className="h-3 w-3" />}
                 <span>{destination.name}</span>
               </span>
             )}
@@ -116,7 +132,7 @@ export function ItemCard({
             {/* Scheduled time */}
             {item.scheduled_at && (
               <span className="inline-flex items-center gap-1">
-                <span>📅</span>
+                <Calendar className="h-3 w-3" />
                 <span>{formatRelativeTime(item.scheduled_at)}</span>
               </span>
             )}
@@ -131,60 +147,81 @@ export function ItemCard({
           </div>
         </div>
 
-        {/* Actions (visible on hover) */}
-        <div
-          className={cn(
-            'flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100',
-            isHovered && 'opacity-100'
-          )}
-        >
-          {/* AI Suggest button */}
+        {/* Actions */}
+        <div className="flex items-center gap-1">
+          {/* AI Suggest button - Always visible when enabled */}
           {showAIButton && onAISuggest && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
-              onClick={(e) => {
-                e.stopPropagation();
-                onAISuggest(item);
-              }}
-              title="Get AI suggestion"
-            >
-              <span className="text-sm">🤖</span>
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-primary hover:text-primary hover:bg-primary/10"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onAISuggest(item);
+                    }}
+                  >
+                    <Sparkles className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Get AI suggestion</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           )}
 
-          {/* Move to destination */}
+          {/* Move to destination - visible on hover */}
           {onMove && destinations && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <span className="text-sm">📤</span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={cn(
+                    'h-8 w-8 transition-opacity',
+                    !isHovered && 'opacity-0 group-hover:opacity-100'
+                  )}
+                >
+                  <Send className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                {destinations.map((dest) => (
-                  <DropdownMenuItem
-                    key={dest.id}
-                    onClick={() => onMove(item.id, dest.id)}
-                  >
-                    <span className="mr-2">{dest.icon}</span>
-                    {dest.name}
-                  </DropdownMenuItem>
-                ))}
+                {destinations.map((dest) => {
+                  const Icon = ICON_MAP[dest.icon] || Inbox;
+                  return (
+                    <DropdownMenuItem
+                      key={dest.id}
+                      onClick={() => onMove(item.id, dest.id)}
+                    >
+                      <Icon className="mr-2 h-4 w-4" />
+                      {dest.name}
+                    </DropdownMenuItem>
+                  );
+                })}
               </DropdownMenuContent>
             </DropdownMenu>
           )}
 
+          {/* More options - visible on hover */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <span className="text-sm">⋯</span>
+              <Button
+                variant="ghost"
+                size="icon"
+                className={cn(
+                  'h-8 w-8 transition-opacity',
+                  !isHovered && 'opacity-0 group-hover:opacity-100'
+                )}
+              >
+                <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={onClick}>
-                <span className="mr-2">✏️</span>
+                <Pencil className="mr-2 h-4 w-4" />
                 Edit
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -192,7 +229,7 @@ export function ItemCard({
                 onClick={() => onDelete?.(item.id)}
                 className="text-destructive focus:text-destructive"
               >
-                <span className="mr-2">🗑️</span>
+                <Trash2 className="mr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>

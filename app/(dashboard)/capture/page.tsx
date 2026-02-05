@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { ensureProfile } from '@/lib/supabase/ensure-profile';
 import { CapturePageClient } from './client';
-import type { Item, Destination } from '@/types/database';
+import type { Item, Destination, Space, Project } from '@/types/database';
 
 export const metadata = {
   title: 'Capture',
@@ -38,10 +38,27 @@ export default async function CapturePage() {
     .neq('slug', 'trash')
     .order('sort_order');
 
+  // Get spaces
+  const { data: spaces } = await supabase
+    .from('spaces')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('sort_order');
+
+  // Get active projects
+  const { data: projects } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('user_id', user.id)
+    .eq('status', 'active')
+    .order('sort_order');
+
   return (
     <CapturePageClient
       initialItems={(items || []) as Item[]}
       destinations={(destinations || []) as Destination[]}
+      spaces={(spaces || []) as Space[]}
+      projects={(projects || []) as Project[]}
       userId={user.id}
     />
   );
