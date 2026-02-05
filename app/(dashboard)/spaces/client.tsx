@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Plus, MoreHorizontal, Pencil, Trash2, FolderOpen } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,6 +24,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { EmptyState } from '@/components/shared/EmptyState';
+import { IconPicker } from '@/components/shared/IconPicker';
+import { ColorPicker } from '@/components/shared/ColorPicker';
+import { ICON_MAP, COLOR_PALETTE, getSuggestedColor } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import type { Space, Project } from '@/types/database';
 import { toast } from 'sonner';
@@ -31,9 +36,6 @@ interface SpacesPageClientProps {
   projectsBySpace: Record<string, Project[]>;
   userId: string;
 }
-
-const EMOJI_OPTIONS = ['📁', '🏠', '💼', '🎮', '❤️', '🎯', '📚', '🌟', '🚀', '💡', '🎨', '🏃'];
-const COLOR_OPTIONS = ['blue', 'purple', 'green', 'yellow', 'pink', 'orange', 'red', 'gray'];
 
 export function SpacesPageClient({
   initialSpaces,
@@ -45,8 +47,21 @@ export function SpacesPageClient({
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editingSpace, setEditingSpace] = useState<Space | null>(null);
-  const [formData, setFormData] = useState({ name: '', icon: '📁', color: 'blue' });
+
+  // Get suggested color for new space
+  const suggestedColor = getSuggestedColor(spaces.length);
+  const [formData, setFormData] = useState({
+    name: '',
+    icon: 'folder',
+    color: suggestedColor.value
+  });
   const [isSaving, setIsSaving] = useState(false);
+
+  // Reset form with new suggested color
+  const resetForm = () => {
+    const newSuggestedColor = getSuggestedColor(spaces.length);
+    setFormData({ name: '', icon: 'folder', color: newSuggestedColor.value });
+  };
 
   // Create space
   const handleCreate = useCallback(async () => {
@@ -75,7 +90,7 @@ export function SpacesPageClient({
 
       setSpaces([...spaces, data as Space]);
       setIsCreateOpen(false);
-      setFormData({ name: '', icon: '📁', color: 'blue' });
+      resetForm();
       toast.success('Space created');
     } catch (error) {
       console.error('Error creating space:', error);
@@ -165,10 +180,13 @@ export function SpacesPageClient({
           </div>
 
           {/* Create button */}
-          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+          <Dialog open={isCreateOpen} onOpenChange={(open) => {
+            setIsCreateOpen(open);
+            if (open) resetForm();
+          }}>
             <DialogTrigger asChild>
               <Button>
-                <span className="mr-2">+</span>
+                <Plus className="mr-2 h-4 w-4" />
                 New Space
               </Button>
             </DialogTrigger>
@@ -200,7 +218,7 @@ export function SpacesPageClient({
       <div className="flex-1 overflow-auto p-6">
         {spaces.length === 0 ? (
           <EmptyState
-            icon="📁"
+            iconName="folder"
             title="No spaces yet"
             description="Create spaces to organize your life into distinct areas like Work, Personal, or Health."
             action={{
@@ -213,6 +231,9 @@ export function SpacesPageClient({
             <AnimatePresence mode="popLayout">
               {spaces.map((space) => {
                 const projects = projectsBySpace[space.id] || [];
+                const SpaceIcon = ICON_MAP[space.icon] || FolderOpen;
+                const colorOption = COLOR_PALETTE.find(c => c.value === space.color);
+
                 return (
                   <motion.div
                     key={space.id}
@@ -220,74 +241,86 @@ export function SpacesPageClient({
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="group rounded-lg border border-border bg-card p-4 transition-colors hover:border-border-emphasis"
                   >
-                    <div className="flex items-start gap-4">
-                      {/* Icon */}
-                      <div
-                        className="flex h-12 w-12 items-center justify-center rounded-lg text-2xl"
-                        style={{
-                          backgroundColor: `var(--${space.color}-100, hsl(var(--muted)))`,
-                        }}
-                      >
-                        {space.icon}
+                    <Link
+                      href={`/spaces/${space.id}`}
+                      className="group block rounded-lg border border-border bg-card p-4 transition-colors hover:border-primary/50"
+                    >
+                      <div className="flex items-start gap-4">
+                        {/* Icon */}
+                        <div className={cn(
+                          'flex h-12 w-12 items-center justify-center rounded-lg',
+                          colorOption?.bgSubtle || 'bg-muted'
+                        )}>
+                          <SpaceIcon className={cn('h-6 w-6', colorOption?.text || 'text-muted-foreground')} />
+                        </div>
+
+                        {/* Content */}
+                        <div className="flex-1">
+                          <h3 className="text-lg font-medium text-foreground">
+                            {space.name}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            {projects.length} project{projects.length !== 1 ? 's' : ''}
+                          </p>
+
+                          {/* Projects preview */}
+                          {projects.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-2">
+                              {projects.slice(0, 3).map((project) => {
+                                const ProjectIcon = ICON_MAP[project.icon] || FolderOpen;
+                                return (
+                                  <span
+                                    key={project.id}
+                                    className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground"
+                                  >
+                                    <ProjectIcon className="h-3 w-3" />
+                                    {project.name}
+                                  </span>
+                                );
+                              })}
+                              {projects.length > 3 && (
+                                <span className="text-xs text-muted-foreground">
+                                  +{projects.length - 3} more
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Actions */}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild onClick={(e) => e.preventDefault()}>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={(e) => {
+                              e.preventDefault();
+                              openEdit(space);
+                            }}>
+                              <Pencil className="mr-2 h-4 w-4" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleDelete(space.id);
+                              }}
+                              className="text-destructive focus:text-destructive"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
-
-                      {/* Content */}
-                      <div className="flex-1">
-                        <h3 className="text-lg font-medium text-foreground">
-                          {space.name}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
-                          {projects.length} project{projects.length !== 1 ? 's' : ''}
-                        </p>
-
-                        {/* Projects preview */}
-                        {projects.length > 0 && (
-                          <div className="mt-2 flex flex-wrap gap-2">
-                            {projects.slice(0, 3).map((project) => (
-                              <span
-                                key={project.id}
-                                className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground"
-                              >
-                                {project.icon} {project.name}
-                              </span>
-                            ))}
-                            {projects.length > 3 && (
-                              <span className="text-xs text-muted-foreground">
-                                +{projects.length - 3} more
-                              </span>
-                            )}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Actions */}
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <span>⋯</span>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => openEdit(space)}>
-                            <span className="mr-2">✏️</span>
-                            Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleDelete(space.id)}
-                            className="text-destructive focus:text-destructive"
-                          >
-                            <span className="mr-2">🗑️</span>
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
+                    </Link>
                   </motion.div>
                 );
               })}
@@ -323,7 +356,7 @@ export function SpacesPageClient({
   );
 }
 
-// Space Form Component
+// Space Form Component with IconPicker and ColorPicker
 interface SpaceFormProps {
   formData: { name: string; icon: string; color: string };
   setFormData: (data: { name: string; icon: string; color: string }) => void;
@@ -343,45 +376,20 @@ function SpaceForm({ formData, setFormData }: SpaceFormProps) {
         />
       </div>
 
-      <div className="space-y-2">
-        <Label>Icon</Label>
-        <div className="flex flex-wrap gap-2">
-          {EMOJI_OPTIONS.map((emoji) => (
-            <button
-              key={emoji}
-              type="button"
-              onClick={() => setFormData({ ...formData, icon: emoji })}
-              className={cn(
-                'flex h-10 w-10 items-center justify-center rounded-lg border text-lg transition-colors',
-                formData.icon === emoji
-                  ? 'border-primary bg-primary/10'
-                  : 'border-border hover:bg-muted'
-              )}
-            >
-              {emoji}
-            </button>
-          ))}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label>Icon</Label>
+          <IconPicker
+            value={formData.icon}
+            onChange={(icon) => setFormData({ ...formData, icon })}
+          />
         </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label>Color</Label>
-        <div className="flex flex-wrap gap-2">
-          {COLOR_OPTIONS.map((color) => (
-            <button
-              key={color}
-              type="button"
-              onClick={() => setFormData({ ...formData, color })}
-              className={cn(
-                'h-8 w-8 rounded-full border-2 transition-all',
-                formData.color === color ? 'border-foreground scale-110' : 'border-transparent'
-              )}
-              style={{
-                backgroundColor: `var(--${color}-500, var(--muted))`,
-              }}
-              title={color}
-            />
-          ))}
+        <div className="space-y-2">
+          <Label>Color</Label>
+          <ColorPicker
+            value={formData.color}
+            onChange={(color) => setFormData({ ...formData, color })}
+          />
         </div>
       </div>
     </div>
