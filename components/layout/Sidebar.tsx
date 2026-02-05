@@ -16,6 +16,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import {
+  Home,
   Inbox,
   ArrowRight,
   Calendar,
@@ -30,6 +31,7 @@ import { ICON_MAP, COLOR_PALETTE } from '@/components/icons';
 
 // Navigation items with Lucide icons
 const mainNav: { href: string; label: string; icon: LucideIcon; shortcut: string }[] = [
+  { href: '/home', label: 'Home', icon: Home, shortcut: '⌘0' },
   { href: '/capture', label: 'Capture', icon: Inbox, shortcut: '⌘1' },
   { href: '/process', label: 'Process', icon: ArrowRight, shortcut: '⌘2' },
   { href: '/commit', label: 'Commit', icon: Calendar, shortcut: '⌘3' },
@@ -73,7 +75,7 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
       >
         {/* Header */}
         <div className="flex h-14 items-center justify-between px-3">
-          <Link href="/capture" className="flex items-center gap-2">
+          <Link href="/home" className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
               <Brain className="h-5 w-5 text-primary" />
             </div>

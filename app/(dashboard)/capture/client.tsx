@@ -9,6 +9,7 @@ import { QuickCapture } from '@/components/layout/QuickCapture';
 import { ItemCard } from '@/components/items/ItemCard';
 import { ItemDetailPanel } from '@/components/items/ItemDetailPanel';
 import { AISuggestionBadge } from '@/components/items/AISuggestionBadge';
+import { BulkAIActions, type BulkAISuggestion } from '@/components/ai/BulkAIActions';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { LoadingState } from '@/components/shared/LoadingState';
 import type { Item, Destination, Space, Project } from '@/types/database';
@@ -198,6 +199,32 @@ export function CapturePageClient({ initialItems, destinations, spaces, projects
     setAiSuggestItemId(null);
   }, [clearSuggestion]);
 
+  // Handle bulk AI suggestions
+  const handleApplyBulkSuggestions = useCallback(
+    async (suggestions: BulkAISuggestion[]) => {
+      const supabase = getSupabase();
+
+      for (const suggestion of suggestions) {
+        if (suggestion.destinationSlug) {
+          // Find destination by slug
+          const dest = destinations.find(d => d.slug === suggestion.destinationSlug);
+          if (dest) {
+            await supabase
+              .from('items')
+              .update({
+                destination_id: dest.id,
+                layer: 'process',
+              } as any)
+              .eq('id', suggestion.itemId);
+          }
+        }
+      }
+
+      // Refresh will happen via realtime subscription
+    },
+    [destinations]
+  );
+
   // Filter items in capture layer
   const captureItems = items.filter((item) => item.layer === 'capture');
 
@@ -212,11 +239,19 @@ export function CapturePageClient({ initialItems, destinations, spaces, projects
               Get thoughts out of your head. Process them later.
             </p>
           </div>
-          {captureItems.length > 0 && (
-            <span className="rounded-full bg-primary px-3 py-1 text-sm font-medium text-primary-foreground">
-              {captureItems.length} item{captureItems.length !== 1 ? 's' : ''}
-            </span>
-          )}
+          <div className="flex items-center gap-3">
+            <BulkAIActions
+              items={captureItems}
+              destinations={destinations}
+              pageType="capture"
+              onApplySuggestions={handleApplyBulkSuggestions}
+            />
+            {captureItems.length > 0 && (
+              <span className="rounded-full bg-primary px-3 py-1 text-sm font-medium text-primary-foreground">
+                {captureItems.length} item{captureItems.length !== 1 ? 's' : ''}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 

@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useItemsStore } from '@/stores/items';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { LoadingState } from '@/components/shared/LoadingState';
+import { BulkAIActions, type BulkAISuggestion } from '@/components/ai/BulkAIActions';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -155,6 +156,29 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
     []
   );
 
+  // Handle bulk AI suggestions (for scheduling)
+  const handleApplyBulkSuggestions = useCallback(
+    async (suggestions: BulkAISuggestion[]) => {
+      const supabase = getSupabase();
+
+      for (const suggestion of suggestions) {
+        // Parse schedule suggestion - format: "Schedule for YYYY-MM-DD at HH:MM"
+        const match = suggestion.suggestion.match(/Schedule for (\d{4}-\d{2}-\d{2})(?: at (\d{2}:\d{2}))?/);
+        if (match) {
+          const dateStr = match[1];
+          const timeStr = match[2] || '09:00';
+          const scheduledAt = new Date(`${dateStr}T${timeStr}:00`);
+
+          await supabase
+            .from('items')
+            .update({ scheduled_at: scheduledAt.toISOString() } as any)
+            .eq('id', suggestion.itemId);
+        }
+      }
+    },
+    []
+  );
+
   // Filter items in commit layer
   const commitItems = items.filter(
     (item) => item.layer === 'commit' && item.scheduled_at
@@ -243,6 +267,14 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
             </p>
           </div>
           <div className="flex items-center gap-2">
+            {/* AI Actions */}
+            <BulkAIActions
+              items={commitItems}
+              destinations={[]}
+              pageType="commit"
+              onApplySuggestions={handleApplyBulkSuggestions}
+            />
+
             {/* View toggle */}
             <div className="flex rounded-md border border-border">
               <Button

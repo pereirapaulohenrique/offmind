@@ -12,6 +12,12 @@ import {
   Calendar,
   Clock,
   Plus,
+  Sparkles,
+  Loader2,
+  Wand2,
+  Type,
+  MapPin,
+  CalendarDays,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -98,6 +104,7 @@ export function ItemDetailPanel({
   const [hasChanges, setHasChanges] = useState(false);
   const [linkedPage, setLinkedPage] = useState<Page | null>(null);
   const [isCreatingPage, setIsCreatingPage] = useState(false);
+  const [aiLoading, setAiLoading] = useState<string | null>(null);
 
   // Initialize form when item changes
   useEffect(() => {
@@ -139,6 +146,16 @@ export function ItemDetailPanel({
       JSON.stringify(customValues) !== JSON.stringify(item.custom_values || {});
     setHasChanges(changed);
   }, [item, title, notes, destinationId, spaceId, projectId, scheduledAt, customValues]);
+
+  // Auto-populate space when project is selected
+  useEffect(() => {
+    if (projectId && projects.length > 0) {
+      const selectedProject = projects.find(p => p.id === projectId);
+      if (selectedProject?.space_id && selectedProject.space_id !== spaceId) {
+        setSpaceId(selectedProject.space_id);
+      }
+    }
+  }, [projectId, projects]);
 
   // Save changes
   const handleSave = useCallback(async () => {
@@ -262,6 +279,108 @@ export function ItemDetailPanel({
     }
   };
 
+  // AI Actions
+  const handleAISuggestDestination = async () => {
+    if (!item) return;
+    setAiLoading('destination');
+
+    try {
+      const response = await fetch('/api/ai/bulk-process', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: [{ id: item.id, title: item.title, notes: item.notes }],
+          action: 'categorize',
+          destinations: destinations.map(d => ({ id: d.id, slug: d.slug, name: d.name })),
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to get suggestion');
+
+      const data = await response.json();
+      if (data.suggestions?.[0]) {
+        const suggestion = data.suggestions[0];
+        const dest = destinations.find(d => d.slug === suggestion.destinationSlug);
+        if (dest) {
+          setDestinationId(dest.id);
+          toast.success(`AI suggests: ${dest.name}`, {
+            description: suggestion.reasoning,
+          });
+        }
+      }
+    } catch (error) {
+      toast.error('Failed to get AI suggestion');
+    } finally {
+      setAiLoading(null);
+    }
+  };
+
+  const handleAIImproveTitle = async () => {
+    if (!item) return;
+    setAiLoading('title');
+
+    try {
+      const response = await fetch('/api/ai/bulk-process', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: [{ id: item.id, title: item.title, notes: item.notes }],
+          action: 'improve',
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to improve title');
+
+      const data = await response.json();
+      if (data.suggestions?.[0]?.suggestion) {
+        setTitle(data.suggestions[0].suggestion);
+        toast.success('Title improved', {
+          description: data.suggestions[0].reasoning,
+        });
+      }
+    } catch (error) {
+      toast.error('Failed to improve title');
+    } finally {
+      setAiLoading(null);
+    }
+  };
+
+  const handleAISuggestSchedule = async () => {
+    if (!item) return;
+    setAiLoading('schedule');
+
+    try {
+      const response = await fetch('/api/ai/bulk-process', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: [{ id: item.id, title: item.title, notes: item.notes }],
+          action: 'schedule',
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to get schedule suggestion');
+
+      const data = await response.json();
+      if (data.suggestions?.[0]?.suggestion) {
+        // Parse the suggestion - format: "Schedule for YYYY-MM-DD at HH:MM"
+        const match = data.suggestions[0].suggestion.match(/Schedule for (\d{4}-\d{2}-\d{2})(?: at (\d{2}:\d{2}))?/);
+        if (match) {
+          const dateStr = match[1];
+          const timeStr = match[2] || '09:00';
+          setScheduledAt(`${dateStr}T${timeStr}`);
+          toast.success('Schedule suggested', {
+            description: data.suggestions[0].reasoning,
+          });
+        }
+      }
+    } catch (error) {
+      toast.error('Failed to get schedule suggestion');
+    } finally {
+      setAiLoading(null);
+    }
+  };
+
   // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -348,6 +467,58 @@ export function ItemDetailPanel({
                     placeholder="Add notes..."
                     className="min-h-[100px] resize-none"
                   />
+                </div>
+
+                {/* AI Actions */}
+                <div className="space-y-3">
+                  <Label className="text-muted-foreground flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-primary" />
+                    AI Assist
+                  </Label>
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleAISuggestDestination}
+                      disabled={aiLoading !== null}
+                      className="gap-2"
+                    >
+                      {aiLoading === 'destination' ? (
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                      ) : (
+                        <MapPin className="h-3 w-3" />
+                      )}
+                      Suggest Destination
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleAIImproveTitle}
+                      disabled={aiLoading !== null}
+                      className="gap-2"
+                    >
+                      {aiLoading === 'title' ? (
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                      ) : (
+                        <Type className="h-3 w-3" />
+                      )}
+                      Improve Title
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleAISuggestSchedule}
+                      disabled={aiLoading !== null}
+                      className="gap-2"
+                    >
+                      {aiLoading === 'schedule' ? (
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                      ) : (
+                        <CalendarDays className="h-3 w-3" />
+                      )}
+                      Suggest Schedule
+                    </Button>
+                  </div>
                 </div>
 
                 <Separator />

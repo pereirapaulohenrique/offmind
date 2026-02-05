@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useItemsStore } from '@/stores/items';
 import { ItemCard } from '@/components/items/ItemCard';
 import { ItemDetailPanel } from '@/components/items/ItemDetailPanel';
+import { BulkAIActions, type BulkAISuggestion } from '@/components/ai/BulkAIActions';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { LoadingState } from '@/components/shared/LoadingState';
 import { KanbanView } from '@/components/process/KanbanView';
@@ -167,6 +168,26 @@ export function ProcessPageClient({
     [removeItem]
   );
 
+  // Handle bulk AI suggestions
+  const handleApplyBulkSuggestions = useCallback(
+    async (suggestions: BulkAISuggestion[]) => {
+      const supabase = getSupabase();
+
+      for (const suggestion of suggestions) {
+        if (suggestion.destinationSlug) {
+          const dest = destinations.find(d => d.slug === suggestion.destinationSlug);
+          if (dest) {
+            await supabase
+              .from('items')
+              .update({ destination_id: dest.id } as any)
+              .eq('id', suggestion.itemId);
+          }
+        }
+      }
+    },
+    [destinations]
+  );
+
   // Filter items in process layer
   const processItems = items.filter((item) => item.layer === 'process');
 
@@ -193,7 +214,15 @@ export function ProcessPageClient({
               Organize items into destinations. Schedule when ready.
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            {/* Bulk AI Actions */}
+            <BulkAIActions
+              items={processItems}
+              destinations={destinations}
+              pageType="process"
+              onApplySuggestions={handleApplyBulkSuggestions}
+            />
+
             {/* View toggle */}
             <div className="flex rounded-md border border-border">
               <Button
