@@ -1,13 +1,29 @@
 import Stripe from 'stripe';
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is not configured');
+// Lazy initialization to avoid build-time errors
+let stripeInstance: Stripe | null = null;
+
+export function getStripe(): Stripe {
+  if (!stripeInstance) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY is not configured');
+    }
+    stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2025-04-30.basil',
+      typescript: true,
+    });
+  }
+  return stripeInstance;
 }
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2025-04-30.basil',
-  typescript: true,
-});
+// For backwards compatibility - use getStripe() in new code
+export const stripe = {
+  get customers() { return getStripe().customers; },
+  get subscriptions() { return getStripe().subscriptions; },
+  get checkout() { return getStripe().checkout; },
+  get billingPortal() { return getStripe().billingPortal; },
+  get webhooks() { return getStripe().webhooks; },
+} as unknown as Stripe;
 
 // Price IDs from environment
 export const PRICES = {
