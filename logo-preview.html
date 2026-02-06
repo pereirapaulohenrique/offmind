@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OffMind Logo Preview</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      gap: 60px;
+    }
+    .preview {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .preview-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+    }
+    .row {
+      display: flex;
+      gap: 60px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    /* Dark background */
+    .dark { background: #08080c; color: #6b6b7b; }
+    .light { background: #fafaf8; color: #999; }
+    .section {
+      padding: 80px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 48px;
+      width: 100%;
+    }
+    .section h2 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-weight: 600;
+    }
+    .dark h2 { color: #9d9dab; }
+    .light h2 { color: #666; }
+
+    /* Simulated sidebar */
+    .sidebar-demo {
+      width: 252px;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dark .sidebar-demo { background: #0c0c12; border: 1px solid #25252f; }
+    .light .sidebar-demo { background: #f5f5f3; border: 1px solid #e5e5e0; }
+    .sidebar-demo .wordmark {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .dark .sidebar-demo .wordmark { color: #f0f0f4; }
+    .light .sidebar-demo .wordmark { color: #1a1a1a; }
+  </style>
+</head>
+<body>
+
+  <!-- DARK BACKGROUND -->
+  <div class="section dark">
+    <h2>Dark Mode</h2>
+
+    <div class="row">
+      <!-- Full size -->
+      <div class="preview">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="sphere-grad-lg" x1="20" y1="90" x2="100" y2="10" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#8b5cf6"/>
+              <stop offset="40%" stop-color="#7c5cfc"/>
+              <stop offset="100%" stop-color="#22d3ee"/>
+            </linearGradient>
+            <radialGradient id="sphere-shine-lg" cx="0.35" cy="0.3" r="0.65">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.18)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </radialGradient>
+            <radialGradient id="sphere-shadow-lg" cx="0.5" cy="0.85" r="0.5">
+              <stop offset="0%" stop-color="rgba(0,0,0,0.25)"/>
+              <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+            </radialGradient>
+          </defs>
+          <!-- Sphere -->
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-grad-lg)"/>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-shine-lg)"/>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-shadow-lg)"/>
+          <!-- Two lines beneath -->
+          <rect x="30" y="94" width="60" height="4" rx="2" fill="#22d3ee" opacity="0.7"/>
+          <rect x="38" y="103" width="44" height="3.5" rx="1.75" fill="#22d3ee" opacity="0.35"/>
+        </svg>
+        <span class="preview-label">Mark (120px)</span>
+      </div>
+
+      <!-- App icon size -->
+      <div class="preview">
+        <svg width="48" height="48" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="sphere-grad-md" x1="20" y1="90" x2="100" y2="10" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#8b5cf6"/>
+              <stop offset="40%" stop-color="#7c5cfc"/>
+              <stop offset="100%" stop-color="#22d3ee"/>
+            </linearGradient>
+            <radialGradient id="sphere-shine-md" cx="0.35" cy="0.3" r="0.65">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.18)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </radialGradient>
+            <radialGradient id="sphere-shadow-md" cx="0.5" cy="0.85" r="0.5">
+              <stop offset="0%" stop-color="rgba(0,0,0,0.25)"/>
+              <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+            </radialGradient>
+          </defs>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-grad-md)"/>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-shine-md)"/>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-shadow-md)"/>
+          <rect x="30" y="94" width="60" height="4" rx="2" fill="#22d3ee" opacity="0.7"/>
+          <rect x="38" y="103" width="44" height="3.5" rx="1.75" fill="#22d3ee" opacity="0.35"/>
+        </svg>
+        <span class="preview-label">Icon (48px)</span>
+      </div>
+
+      <!-- Favicon size -->
+      <div class="preview">
+        <svg width="20" height="20" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="sphere-grad-sm" x1="20" y1="90" x2="100" y2="10" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#8b5cf6"/>
+              <stop offset="40%" stop-color="#7c5cfc"/>
+              <stop offset="100%" stop-color="#22d3ee"/>
+            </linearGradient>
+            <radialGradient id="sphere-shine-sm" cx="0.35" cy="0.3" r="0.65">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.18)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </radialGradient>
+          </defs>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-grad-sm)"/>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-shine-sm)"/>
+          <rect x="30" y="94" width="60" height="5" rx="2.5" fill="#22d3ee" opacity="0.7"/>
+          <rect x="38" y="104" width="44" height="4" rx="2" fill="#22d3ee" opacity="0.35"/>
+        </svg>
+        <span class="preview-label">Favicon (20px)</span>
+      </div>
+    </div>
+
+    <!-- Full logo with wordmark -->
+    <div class="preview">
+      <svg width="200" height="56" viewBox="0 0 200 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="sphere-grad-full" x1="4" y1="44" x2="44" y2="4" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#8b5cf6"/>
+            <stop offset="40%" stop-color="#7c5cfc"/>
+            <stop offset="100%" stop-color="#22d3ee"/>
+          </linearGradient>
+          <radialGradient id="sphere-shine-full" cx="0.35" cy="0.3" r="0.65">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.18)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </radialGradient>
+          <radialGradient id="sphere-shadow-full" cx="0.5" cy="0.85" r="0.5">
+            <stop offset="0%" stop-color="rgba(0,0,0,0.25)"/>
+            <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+          </radialGradient>
+        </defs>
+        <!-- Sphere -->
+        <circle cx="24" cy="20" r="16" fill="url(#sphere-grad-full)"/>
+        <circle cx="24" cy="20" r="16" fill="url(#sphere-shine-full)"/>
+        <circle cx="24" cy="20" r="16" fill="url(#sphere-shadow-full)"/>
+        <!-- Lines -->
+        <rect x="11" y="40" width="26" height="2" rx="1" fill="#22d3ee" opacity="0.7"/>
+        <rect x="14.5" y="45" width="19" height="1.8" rx="0.9" fill="#22d3ee" opacity="0.35"/>
+        <!-- Wordmark -->
+        <text x="56" y="30" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif" font-size="22" font-weight="600" letter-spacing="0.5" fill="#f0f0f4">OffMind</text>
+      </svg>
+      <span class="preview-label">Full Logo (sidebar / header)</span>
+    </div>
+
+    <!-- Sidebar simulation -->
+    <div class="preview">
+      <div class="sidebar-demo">
+        <svg width="32" height="32" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="sphere-grad-sb" x1="20" y1="90" x2="100" y2="10" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#8b5cf6"/>
+              <stop offset="40%" stop-color="#7c5cfc"/>
+              <stop offset="100%" stop-color="#22d3ee"/>
+            </linearGradient>
+            <radialGradient id="sphere-shine-sb" cx="0.35" cy="0.3" r="0.65">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.18)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </radialGradient>
+            <radialGradient id="sphere-shadow-sb" cx="0.5" cy="0.85" r="0.5">
+              <stop offset="0%" stop-color="rgba(0,0,0,0.25)"/>
+              <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+            </radialGradient>
+          </defs>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-grad-sb)"/>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-shine-sb)"/>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-shadow-sb)"/>
+          <rect x="30" y="94" width="60" height="4" rx="2" fill="#22d3ee" opacity="0.7"/>
+          <rect x="38" y="103" width="44" height="3.5" rx="1.75" fill="#22d3ee" opacity="0.35"/>
+        </svg>
+        <span class="wordmark">OffMind</span>
+      </div>
+      <span class="preview-label">In Sidebar Context</span>
+    </div>
+  </div>
+
+  <!-- LIGHT BACKGROUND -->
+  <div class="section light">
+    <h2>Light Mode</h2>
+
+    <div class="row">
+      <div class="preview">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="sphere-grad-lt" x1="20" y1="90" x2="100" y2="10" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#8b5cf6"/>
+              <stop offset="40%" stop-color="#7c5cfc"/>
+              <stop offset="100%" stop-color="#22d3ee"/>
+            </linearGradient>
+            <radialGradient id="sphere-shine-lt" cx="0.35" cy="0.3" r="0.65">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.25)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </radialGradient>
+            <radialGradient id="sphere-shadow-lt" cx="0.5" cy="0.85" r="0.5">
+              <stop offset="0%" stop-color="rgba(0,0,0,0.15)"/>
+              <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+            </radialGradient>
+          </defs>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-grad-lt)"/>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-shine-lt)"/>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-shadow-lt)"/>
+          <rect x="30" y="94" width="60" height="4" rx="2" fill="#0d9488" opacity="0.6"/>
+          <rect x="38" y="103" width="44" height="3.5" rx="1.75" fill="#0d9488" opacity="0.3"/>
+        </svg>
+        <span class="preview-label">Mark (120px)</span>
+      </div>
+
+      <div class="preview">
+        <svg width="48" height="48" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="sphere-grad-lt2" x1="20" y1="90" x2="100" y2="10" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#8b5cf6"/>
+              <stop offset="40%" stop-color="#7c5cfc"/>
+              <stop offset="100%" stop-color="#22d3ee"/>
+            </linearGradient>
+            <radialGradient id="sphere-shine-lt2" cx="0.35" cy="0.3" r="0.65">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.25)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </radialGradient>
+          </defs>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-grad-lt2)"/>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-shine-lt2)"/>
+          <rect x="30" y="94" width="60" height="4" rx="2" fill="#0d9488" opacity="0.6"/>
+          <rect x="38" y="103" width="44" height="3.5" rx="1.75" fill="#0d9488" opacity="0.3"/>
+        </svg>
+        <span class="preview-label">Icon (48px)</span>
+      </div>
+
+      <div class="preview">
+        <svg width="20" height="20" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="sphere-grad-lt3" x1="20" y1="90" x2="100" y2="10" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#8b5cf6"/>
+              <stop offset="40%" stop-color="#7c5cfc"/>
+              <stop offset="100%" stop-color="#22d3ee"/>
+            </linearGradient>
+          </defs>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-grad-lt3)"/>
+          <rect x="30" y="94" width="60" height="5" rx="2.5" fill="#0d9488" opacity="0.6"/>
+          <rect x="38" y="104" width="44" height="4" rx="2" fill="#0d9488" opacity="0.3"/>
+        </svg>
+        <span class="preview-label">Favicon (20px)</span>
+      </div>
+    </div>
+
+    <!-- Full logo light -->
+    <div class="preview">
+      <svg width="200" height="56" viewBox="0 0 200 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="sphere-grad-full-lt" x1="4" y1="44" x2="44" y2="4" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#8b5cf6"/>
+            <stop offset="40%" stop-color="#7c5cfc"/>
+            <stop offset="100%" stop-color="#22d3ee"/>
+          </linearGradient>
+          <radialGradient id="sphere-shine-full-lt" cx="0.35" cy="0.3" r="0.65">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.25)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </radialGradient>
+        </defs>
+        <circle cx="24" cy="20" r="16" fill="url(#sphere-grad-full-lt)"/>
+        <circle cx="24" cy="20" r="16" fill="url(#sphere-shine-full-lt)"/>
+        <rect x="11" y="40" width="26" height="2" rx="1" fill="#0d9488" opacity="0.6"/>
+        <rect x="14.5" y="45" width="19" height="1.8" rx="0.9" fill="#0d9488" opacity="0.3"/>
+        <text x="56" y="30" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif" font-size="22" font-weight="600" letter-spacing="0.5" fill="#1a1a1a">OffMind</text>
+      </svg>
+      <span class="preview-label">Full Logo (light)</span>
+    </div>
+
+    <!-- Sidebar simulation light -->
+    <div class="preview">
+      <div class="sidebar-demo">
+        <svg width="32" height="32" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="sphere-grad-sb-lt" x1="20" y1="90" x2="100" y2="10" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#8b5cf6"/>
+              <stop offset="40%" stop-color="#7c5cfc"/>
+              <stop offset="100%" stop-color="#22d3ee"/>
+            </linearGradient>
+            <radialGradient id="sphere-shine-sb-lt" cx="0.35" cy="0.3" r="0.65">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.25)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </radialGradient>
+          </defs>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-grad-sb-lt)"/>
+          <circle cx="60" cy="48" r="38" fill="url(#sphere-shine-sb-lt)"/>
+          <rect x="30" y="94" width="60" height="4" rx="2" fill="#0d9488" opacity="0.6"/>
+          <rect x="38" y="103" width="44" height="3.5" rx="1.75" fill="#0d9488" opacity="0.35"/>
+        </svg>
+        <span class="wordmark">OffMind</span>
+      </div>
+      <span class="preview-label">In Sidebar Context (light)</span>
+    </div>
+  </div>
+
+</body>
+</html>
