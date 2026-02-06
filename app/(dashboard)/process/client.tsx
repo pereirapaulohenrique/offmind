@@ -2,7 +2,19 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Inbox } from 'lucide-react';
+import {
+  ChevronDown,
+  Inbox,
+  LayoutGrid,
+  BarChart3,
+  List,
+  Send,
+  Calendar,
+  MoreHorizontal,
+  CheckCircle2,
+  RotateCcw,
+  Trash2,
+} from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useItemsStore } from '@/stores/items';
 import { ItemCard } from '@/components/items/ItemCard';
@@ -206,15 +218,15 @@ export function ProcessPageClient({
   return (
     <div className="flex h-full flex-col">
       {/* Page header */}
-      <div className="border-b border-border px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-foreground">Process</h1>
-            <p className="text-sm text-muted-foreground">
+      <div className="border-b border-border px-4 py-4 sm:px-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0">
+            <h1 className="text-xl font-semibold text-foreground sm:text-2xl">Process</h1>
+            <p className="hidden text-sm text-muted-foreground sm:block">
               Organize items into destinations. Schedule when ready.
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             {/* Bulk AI Actions */}
             <BulkAIActions
               items={processItems}
@@ -235,7 +247,7 @@ export function ProcessPageClient({
                 onClick={() => setViewMode('kanban')}
                 title="Kanban view"
               >
-                <span className="text-sm">📋</span>
+                <LayoutGrid className="h-4 w-4" />
               </Button>
               <Button
                 variant="ghost"
@@ -247,7 +259,7 @@ export function ProcessPageClient({
                 onClick={() => setViewMode('grouped')}
                 title="Grouped view"
               >
-                <span className="text-sm">📊</span>
+                <BarChart3 className="h-4 w-4" />
               </Button>
               <Button
                 variant="ghost"
@@ -259,7 +271,7 @@ export function ProcessPageClient({
                 onClick={() => setViewMode('list')}
                 title="List view"
               >
-                <span className="text-sm">📝</span>
+                <List className="h-4 w-4" />
               </Button>
             </div>
 
@@ -279,9 +291,10 @@ export function ProcessPageClient({
           <LoadingState count={6} type="card" />
         ) : processItems.length === 0 ? (
           <EmptyState
-            iconName="inbox"
+            icon={Inbox}
             title="Nothing to process"
             description="Items you move from Capture will appear here. Start by capturing some thoughts!"
+            variant="process"
             action={{
               label: 'Go to Capture',
               href: '/capture',
@@ -568,7 +581,7 @@ function ProcessItemCard({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-8 w-8">
-                <span className="text-sm">📤</span>
+                <Send className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -593,26 +606,30 @@ function ProcessItemCard({
             onClick={handleQuickSchedule}
             title="Schedule for tomorrow"
           >
-            <span className="text-sm">📅</span>
+            <Calendar className="h-4 w-4" />
           </Button>
 
           {/* More actions */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-8 w-8">
-                <span className="text-sm">⋯</span>
+                <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => onUpdate(item.id, { is_completed: !item.is_completed })}>
-                <span className="mr-2">{item.is_completed ? '↩️' : '✅'}</span>
+                {item.is_completed ? (
+                  <RotateCcw className="mr-2 h-4 w-4" />
+                ) : (
+                  <CheckCircle2 className="mr-2 h-4 w-4" />
+                )}
                 {item.is_completed ? 'Mark incomplete' : 'Mark complete'}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => onDelete(item.id)}
                 className="text-destructive focus:text-destructive"
               >
-                <span className="mr-2">🗑️</span>
+                <Trash2 className="mr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>

@@ -230,30 +230,41 @@ export function CapturePageClient({ initialItems, destinations, spaces, projects
 
   return (
     <div className="flex h-full flex-col">
-      {/* Page header */}
-      <div className="border-b border-border px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-foreground">Capture</h1>
-            <p className="text-sm text-muted-foreground">
-              Get thoughts out of your head. Process them later.
-            </p>
+      {/* Capture input - hero zone at TOP */}
+      <div className="border-b-2 border-b-blue-500/30 bg-blue-500/[0.03] px-4 py-5 sm:px-6 sm:py-6">
+        <div className="mx-auto max-w-3xl">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <h1 className="text-xl font-semibold text-foreground">Capture</h1>
+              <p className="hidden text-sm text-muted-foreground sm:block">
+                Get thoughts out of your head. Process them later.
+              </p>
+            </div>
+            <div className="flex shrink-0 items-center gap-3">
+              <BulkAIActions
+                items={captureItems}
+                destinations={destinations}
+                pageType="capture"
+                onApplySuggestions={handleApplyBulkSuggestions}
+              />
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <BulkAIActions
-              items={captureItems}
-              destinations={destinations}
-              pageType="capture"
-              onApplySuggestions={handleApplyBulkSuggestions}
-            />
-            {captureItems.length > 0 && (
-              <span className="rounded-full bg-primary px-3 py-1 text-sm font-medium text-primary-foreground">
-                {captureItems.length} item{captureItems.length !== 1 ? 's' : ''}
-              </span>
-            )}
-          </div>
+          <QuickCapture onCapture={handleCapture} isLoading={isCapturing} />
         </div>
       </div>
+
+      {/* Inbox section divider */}
+      {captureItems.length > 0 && (
+        <div className="flex items-center gap-3 px-6 py-3 border-b border-border">
+          <div className="mx-auto flex w-full max-w-3xl items-center gap-3">
+            <h2 className="text-sm font-medium text-muted-foreground">Inbox</h2>
+            <span className="rounded-full bg-blue-500/15 px-2.5 py-0.5 text-xs font-medium text-blue-400">
+              {captureItems.length} item{captureItems.length !== 1 ? 's' : ''}
+            </span>
+            <div className="flex-1 border-t border-border" />
+          </div>
+        </div>
+      )}
 
       {/* Items list */}
       <div className="flex-1 overflow-auto p-6">
@@ -263,7 +274,7 @@ export function CapturePageClient({ initialItems, destinations, spaces, projects
           <EmptyState
             iconName="check-circle-2"
             title="Inbox Zero!"
-            description="All captured thoughts have been processed. Use the input below to capture something new."
+            description="All captured thoughts have been processed. Capture something new above."
           />
         ) : (
           <div className="mx-auto max-w-3xl space-y-3">
@@ -274,8 +285,8 @@ export function CapturePageClient({ initialItems, destinations, spaces, projects
                   layout
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.15 }}
                   className="space-y-2"
                 >
                   <ItemCard
@@ -307,9 +318,6 @@ export function CapturePageClient({ initialItems, destinations, spaces, projects
           </div>
         )}
       </div>
-
-      {/* Quick capture bar */}
-      <QuickCapture onCapture={handleCapture} isLoading={isCapturing} />
 
       {/* Item detail panel */}
       <ItemDetailPanel

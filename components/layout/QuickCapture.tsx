@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Plus, CornerDownLeft, Loader2 } from 'lucide-react';
 import { useUIStore } from '@/stores/ui';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -14,10 +14,11 @@ interface QuickCaptureProps {
 export function QuickCapture({ onCapture, isLoading = false }: QuickCaptureProps) {
   const [value, setValue] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { quickCaptureOpen, setQuickCaptureOpen } = useUIStore();
 
-  // Focus on Cmd+N
+  // Auto-focus on mount and on Cmd+N
   useEffect(() => {
+    textareaRef.current?.focus();
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
         e.preventDefault();
@@ -35,15 +36,14 @@ export function QuickCapture({ onCapture, isLoading = false }: QuickCaptureProps
 
     await onCapture(trimmedValue);
     setValue('');
+    textareaRef.current?.focus();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    // Submit on Enter (without Shift)
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
     }
-    // Clear on Escape
     if (e.key === 'Escape') {
       setValue('');
       textareaRef.current?.blur();
@@ -51,38 +51,38 @@ export function QuickCapture({ onCapture, isLoading = false }: QuickCaptureProps
   };
 
   return (
-    <div className="sticky bottom-0 border-t border-border bg-background p-4">
-      <div className="mx-auto max-w-3xl">
-        <div className="relative flex items-center gap-2">
-          <div className="relative flex-1">
-            <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-              ○
-            </div>
-            <Textarea
-              ref={textareaRef}
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="What's on your mind?"
-              className="min-h-[44px] resize-none py-3 pl-9 pr-20"
-              rows={1}
-              disabled={isLoading}
-            />
-            <div className="absolute right-2 top-1/2 -translate-y-1/2">
-              <Button
-                size="sm"
-                onClick={handleSubmit}
-                disabled={!value.trim() || isLoading}
-              >
-                {isLoading ? '...' : '↵ Add'}
-              </Button>
-            </div>
+    <div className="capture-input rounded-lg border border-border bg-card transition-shadow">
+      <div className="relative flex items-center gap-2">
+        <div className="relative flex-1">
+          <div className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
+            <Plus className="h-5 w-5" />
+          </div>
+          <Textarea
+            ref={textareaRef}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="What's on your mind?"
+            className="min-h-[52px] resize-none border-0 bg-transparent py-4 pl-12 pr-24 text-base focus-visible:ring-0"
+            rows={1}
+            disabled={isLoading}
+          />
+          <div className="absolute right-3 top-1/2 -translate-y-1/2">
+            <Button
+              size="sm"
+              onClick={handleSubmit}
+              disabled={!value.trim() || isLoading}
+              className="gap-1.5"
+            >
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <CornerDownLeft className="h-4 w-4" />
+              )}
+              Capture
+            </Button>
           </div>
         </div>
-        <p className="mt-2 text-center text-xs text-muted-foreground">
-          Press <kbd className="rounded border border-border px-1">Enter</kbd> to add,{' '}
-          <kbd className="rounded border border-border px-1">Shift+Enter</kbd> for new line
-        </p>
       </div>
     </div>
   );

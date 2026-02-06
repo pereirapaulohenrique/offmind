@@ -14,6 +14,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { WaitlistForm } from '@/components/marketing/WaitlistForm';
 import { cn } from '@/lib/utils';
 
 export default function LandingPage() {
@@ -98,7 +99,7 @@ export default function LandingPage() {
                 icon={ArrowRightLeft}
                 title="Process"
                 description="AI suggests where each item belongs. Review and refine with a few clicks. No more decision fatigue."
-                color="purple"
+                color="amber"
               />
               <ProcessStep
                 number={3}
@@ -244,13 +245,16 @@ export default function LandingPage() {
                 Ready to clear your mind?
               </h2>
               <p className="mt-4 text-muted-foreground">
-                Join thousands of overthinkers who found their calm.
+                Join the waitlist for early access and exclusive updates.
               </p>
-              <div className="mt-8 flex justify-center gap-4">
-                <Button asChild size="lg">
-                  <Link href="/signup">Get Started Free</Link>
-                </Button>
-              </div>
+              <WaitlistForm />
+              <p className="mt-4 text-sm text-muted-foreground">
+                Or{' '}
+                <Link href="/signup" className="text-primary hover:underline">
+                  sign up now
+                </Link>{' '}
+                to start using MindBase today.
+              </p>
             </div>
           </div>
         </section>
@@ -288,11 +292,11 @@ function ProcessStep({
   icon: React.ElementType;
   title: string;
   description: string;
-  color: 'blue' | 'purple' | 'green';
+  color: 'blue' | 'amber' | 'green';
 }) {
   const colorClasses = {
     blue: 'bg-blue-500/10 text-blue-500',
-    purple: 'bg-purple-500/10 text-purple-500',
+    amber: 'bg-amber-500/10 text-amber-500',
     green: 'bg-green-500/10 text-green-500',
   };
 

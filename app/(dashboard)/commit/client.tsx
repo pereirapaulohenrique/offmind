@@ -6,6 +6,15 @@ import { createClient } from '@/lib/supabase/client';
 import { useItemsStore } from '@/stores/items';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { LoadingState } from '@/components/shared/LoadingState';
+import {
+  ChevronLeft,
+  ChevronRight,
+  CheckCircle2,
+  RotateCcw,
+  Calendar,
+  MoreHorizontal,
+  Trash2,
+} from 'lucide-react';
 import { BulkAIActions, type BulkAISuggestion } from '@/components/ai/BulkAIActions';
 import { Button } from '@/components/ui/button';
 import {
@@ -320,13 +329,13 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
             </Button>
             <div className="flex items-center gap-1">
               <Button variant="ghost" size="icon" className="h-8 w-8" onClick={goToPrev}>
-                ←
+                <ChevronLeft className="h-4 w-4" />
               </Button>
               <span className="min-w-[200px] text-center text-sm font-medium">
                 {formatDateHeader()}
               </span>
               <Button variant="ghost" size="icon" className="h-8 w-8" onClick={goToNext}>
-                →
+                <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
           </div>
@@ -683,14 +692,18 @@ function CommitItemCard({
               })
             }
           >
-            <span className="text-sm">{item.is_completed ? '↩️' : '✅'}</span>
+            {item.is_completed ? (
+              <RotateCcw className="h-4 w-4" />
+            ) : (
+              <CheckCircle2 className="h-4 w-4" />
+            )}
           </Button>
 
           {/* Reschedule */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-8 w-8">
-                <span className="text-sm">📅</span>
+                <Calendar className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -713,7 +726,7 @@ function CommitItemCard({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-8 w-8">
-                <span className="text-sm">⋯</span>
+                <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -721,7 +734,7 @@ function CommitItemCard({
                 onClick={() => onDelete(item.id)}
                 className="text-destructive focus:text-destructive"
               >
-                <span className="mr-2">🗑️</span>
+                <Trash2 className="mr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>

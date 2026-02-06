@@ -2,8 +2,10 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Header } from '@/components/layout/Header';
+import { MobileSidebar } from '@/components/layout/MobileSidebar';
 import { CommandPalette } from '@/components/layout/CommandPalette';
 import { AIAssistant } from '@/components/ai/AIAssistant';
+import { CelebrationProvider } from '@/components/shared/Celebrations';
 
 export default async function DashboardLayout({
   children,
@@ -58,40 +60,51 @@ export default async function DashboardLayout({
     .order('updated_at', { ascending: false })
     .limit(5);
 
+  const sidebarProps = {
+    inboxCount: inboxCount || 0,
+    spaces: spaces || [],
+    projects: projects || [],
+    pages: pages || [],
+  };
+
   return (
-    <div className="flex min-h-screen bg-background">
-      {/* Sidebar */}
-      <Sidebar
-        inboxCount={inboxCount || 0}
-        spaces={spaces || []}
-        projects={projects || []}
-        pages={pages || []}
-      />
+    <CelebrationProvider>
+      <div className="flex min-h-screen bg-background">
+        {/* Desktop sidebar */}
+        <div className="hidden md:block">
+          <Sidebar {...sidebarProps} />
+        </div>
 
-      {/* Main content area */}
-      <div className="flex flex-1 flex-col pl-[240px] transition-all duration-200 data-[collapsed=true]:pl-16">
-        {/* Header */}
-        <Header
-          user={
-            profile
-              ? {
-                  email: profile.email,
-                  full_name: profile.full_name,
-                  avatar_url: profile.avatar_url,
-                }
-              : { email: user.email || '' }
-          }
-        />
+        {/* Main content area */}
+        <div className="flex flex-1 flex-col md:pl-[240px] transition-all duration-200">
+          {/* Header */}
+          <Header
+            user={
+              profile
+                ? {
+                    email: profile.email,
+                    full_name: profile.full_name,
+                    avatar_url: profile.avatar_url,
+                  }
+                : { email: user.email || '' }
+            }
+            mobileSidebar={
+              <MobileSidebar>
+                <Sidebar {...sidebarProps} />
+              </MobileSidebar>
+            }
+          />
 
-        {/* Page content */}
-        <main className="flex-1 overflow-auto">{children}</main>
+          {/* Page content */}
+          <main className="flex-1 overflow-auto">{children}</main>
+        </div>
+
+        {/* Command Palette (global) */}
+        <CommandPalette />
+
+        {/* AI Assistant (global) */}
+        <AIAssistant />
       </div>
-
-      {/* Command Palette (global) */}
-      <CommandPalette />
-
-      {/* AI Assistant (global) */}
-      <AIAssistant />
-    </div>
+    </CelebrationProvider>
   );
 }

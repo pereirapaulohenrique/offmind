@@ -270,23 +270,44 @@ interface NavItemProps {
 }
 
 function NavItem({ href, label, icon: Icon, isActive, isCollapsed, shortcut, badge }: NavItemProps) {
+  // Layer-specific active border colors
+  const layerBorderColor = isActive
+    ? href === '/capture'
+      ? 'border-l-blue-500'
+      : href === '/process'
+        ? 'border-l-amber-500'
+        : href === '/commit'
+          ? 'border-l-green-500'
+          : 'border-l-primary'
+    : 'border-l-transparent';
+
+  const layerIconColor = isActive
+    ? href === '/capture'
+      ? 'text-blue-400'
+      : href === '/process'
+        ? 'text-amber-400'
+        : href === '/commit'
+          ? 'text-green-400'
+          : ''
+    : '';
+
   const content = (
     <Link
       href={href}
       className={cn(
-        'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+        'flex items-center gap-3 rounded-md border-l-[3px] px-3 py-2 text-sm transition-colors',
         isActive
-          ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-          : 'text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground',
-        isCollapsed && 'justify-center px-2'
+          ? `bg-sidebar-accent/50 font-semibold text-sidebar-accent-foreground ${layerBorderColor}`
+          : `border-l-transparent text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground`,
+        isCollapsed && 'justify-center border-l-0 px-2'
       )}
     >
-      <Icon className="h-4 w-4 flex-shrink-0" />
+      <Icon className={cn('h-4 w-4 flex-shrink-0', layerIconColor)} />
       {!isCollapsed && (
         <>
           <span className="flex-1 truncate">{label}</span>
           {badge !== undefined && badge > 0 && (
-            <span className="rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+            <span className="animate-pulse-subtle rounded-full bg-blue-500/15 px-2 py-0.5 text-xs font-medium text-blue-400">
               {badge > 99 ? '99+' : badge}
             </span>
           )}

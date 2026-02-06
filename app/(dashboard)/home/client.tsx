@@ -68,45 +68,83 @@ export function HomePageClient({
 
       <div className="flex-1 p-6">
         <div className="mx-auto max-w-5xl space-y-8">
-          {/* Quick Stats Grid */}
+          {/* Three-Layer Flow */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
-            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+            className="grid gap-3 sm:grid-cols-3"
           >
-            <StatCard
-              icon={Inbox}
-              label="Inbox"
-              value={stats.inboxCount}
-              description="items to process"
-              href="/capture"
-              color="blue"
-            />
-            <StatCard
-              icon={ArrowRightLeft}
-              label="Processing"
-              value={stats.processingCount}
-              description="items organized"
-              href="/process"
-              color="purple"
-            />
-            <StatCard
-              icon={CalendarCheck}
-              label="Today"
-              value={stats.todayCount}
-              description="commitments"
-              href="/commit"
-              color="green"
-            />
-            <StatCard
-              icon={CheckCircle2}
-              label="Completed"
-              value={stats.completedTodayCount}
-              description="today"
-              color="emerald"
-            />
+            <Link href="/capture" className="group">
+              <div className="rounded-xl border border-blue-500/20 bg-blue-500/[0.04] p-5 transition-all hover:border-blue-500/40 hover:bg-blue-500/[0.08]">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/15">
+                    <Inbox className="h-5 w-5 text-blue-500" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium uppercase tracking-wider text-blue-500/70">Capture</p>
+                    <p className="text-2xl font-bold text-foreground">{stats.inboxCount}</p>
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">items in inbox</p>
+                <div className="mt-3 flex items-center gap-1 text-xs text-blue-500/60 opacity-0 transition-opacity group-hover:opacity-100">
+                  <span>Open inbox</span>
+                  <ChevronRight className="h-3 w-3" />
+                </div>
+              </div>
+            </Link>
+            <Link href="/process" className="group">
+              <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-5 transition-all hover:border-amber-500/40 hover:bg-amber-500/[0.08]">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/15">
+                    <ArrowRightLeft className="h-5 w-5 text-amber-500" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium uppercase tracking-wider text-amber-500/70">Process</p>
+                    <p className="text-2xl font-bold text-foreground">{stats.processingCount}</p>
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">items to organize</p>
+                <div className="mt-3 flex items-center gap-1 text-xs text-amber-500/60 opacity-0 transition-opacity group-hover:opacity-100">
+                  <span>Start processing</span>
+                  <ChevronRight className="h-3 w-3" />
+                </div>
+              </div>
+            </Link>
+            <Link href="/commit" className="group">
+              <div className="rounded-xl border border-green-500/20 bg-green-500/[0.04] p-5 transition-all hover:border-green-500/40 hover:bg-green-500/[0.08]">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-500/15">
+                    <CalendarCheck className="h-5 w-5 text-green-500" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium uppercase tracking-wider text-green-500/70">Commit</p>
+                    <p className="text-2xl font-bold text-foreground">{stats.todayCount}</p>
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">today's commitments</p>
+                <div className="mt-3 flex items-center gap-1 text-xs text-green-500/60 opacity-0 transition-opacity group-hover:opacity-100">
+                  <span>View schedule</span>
+                  <ChevronRight className="h-3 w-3" />
+                </div>
+              </div>
+            </Link>
           </motion.div>
+
+          {/* Completed Today Badge */}
+          {stats.completedTodayCount > 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3, delay: 0.15 }}
+              className="flex items-center gap-2 rounded-lg bg-emerald-500/10 px-4 py-2.5"
+            >
+              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+              <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                {stats.completedTodayCount} completed today
+              </span>
+            </motion.div>
+          )}
 
           {/* Main Content Grid */}
           <div className="grid gap-6 lg:grid-cols-2">
@@ -216,7 +254,7 @@ export function HomePageClient({
                             : item.layer === 'capture'
                               ? "bg-blue-500/10"
                               : item.layer === 'process'
-                                ? "bg-purple-500/10"
+                                ? "bg-amber-500/10"
                                 : "bg-green-500/10"
                         )}>
                           {item.is_completed ? (
@@ -224,7 +262,7 @@ export function HomePageClient({
                           ) : item.layer === 'capture' ? (
                             <Inbox className="h-4 w-4 text-blue-500" />
                           ) : item.layer === 'process' ? (
-                            <ArrowRightLeft className="h-4 w-4 text-purple-500" />
+                            <ArrowRightLeft className="h-4 w-4 text-amber-500" />
                           ) : (
                             <CalendarCheck className="h-4 w-4 text-green-500" />
                           )}
@@ -325,50 +363,6 @@ export function HomePageClient({
       </div>
     </div>
   );
-}
-
-function StatCard({
-  icon: Icon,
-  label,
-  value,
-  description,
-  href,
-  color,
-}: {
-  icon: React.ElementType;
-  label: string;
-  value: number;
-  description: string;
-  href?: string;
-  color: 'blue' | 'purple' | 'green' | 'emerald';
-}) {
-  const colorClasses = {
-    blue: 'bg-blue-500/10 text-blue-500',
-    purple: 'bg-purple-500/10 text-purple-500',
-    green: 'bg-green-500/10 text-green-500',
-    emerald: 'bg-emerald-500/10 text-emerald-500',
-  };
-
-  const content = (
-    <div className="rounded-xl border border-border bg-card p-5 transition-colors hover:border-primary/50">
-      <div className="flex items-center gap-3">
-        <div className={cn('flex h-10 w-10 items-center justify-center rounded-lg', colorClasses[color])}>
-          <Icon className="h-5 w-5" />
-        </div>
-        <div>
-          <p className="text-sm text-muted-foreground">{label}</p>
-          <p className="text-2xl font-bold">{value}</p>
-        </div>
-      </div>
-      <p className="mt-2 text-xs text-muted-foreground">{description}</p>
-    </div>
-  );
-
-  if (href) {
-    return <Link href={href}>{content}</Link>;
-  }
-
-  return content;
 }
 
 function QuickActionCard({

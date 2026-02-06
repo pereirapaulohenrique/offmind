@@ -4,6 +4,7 @@ import { useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUIStore } from '@/stores/ui';
 import {
+  Home,
   Inbox,
   ArrowRightLeft,
   CalendarCheck,
@@ -31,6 +32,7 @@ interface NavItem {
 }
 
 const navigationItems: NavItem[] = [
+  { label: 'Go to Home', href: '/home', Icon: Home, shortcut: '⌘0' },
   { label: 'Go to Capture', href: '/capture', Icon: Inbox, shortcut: '⌘1' },
   { label: 'Go to Process', href: '/process', Icon: ArrowRightLeft, shortcut: '⌘2' },
   { label: 'Go to Commit', href: '/commit', Icon: CalendarCheck, shortcut: '⌘3' },
@@ -64,6 +66,11 @@ export function CommandPalette() {
     const handleShortcut = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey) {
         switch (e.key) {
+          case '0':
+            e.preventDefault();
+            router.push('/home');
+            setCommandPaletteOpen(false);
+            break;
           case '1':
             e.preventDefault();
             router.push('/capture');

@@ -1,5 +1,6 @@
 'use client';
 
+import { Search } from 'lucide-react';
 import { useUIStore } from '@/stores/ui';
 import { Button } from '@/components/ui/button';
 import { UserMenu } from './UserMenu';
@@ -11,14 +12,16 @@ interface HeaderProps {
     full_name?: string | null;
     avatar_url?: string | null;
   } | null;
+  mobileSidebar?: React.ReactNode;
 }
 
-export function Header({ title, user }: HeaderProps) {
+export function Header({ title, user, mobileSidebar }: HeaderProps) {
   const { setCommandPaletteOpen, sidebarCollapsed } = useUIStore();
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur-sm">
       <div className="flex items-center gap-4">
+        {mobileSidebar}
         {title && (
           <h1 className="text-lg font-semibold text-foreground">{title}</h1>
         )}
@@ -44,7 +47,7 @@ export function Header({ title, user }: HeaderProps) {
           className="h-8 w-8 sm:hidden"
           onClick={() => setCommandPaletteOpen(true)}
         >
-          <span>🔍</span>
+          <Search className="h-4 w-4" />
         </Button>
 
         {/* User menu */}
