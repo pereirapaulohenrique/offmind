@@ -62,10 +62,10 @@ const steps = [
 
 const colorStyles = {
   primary: {
-    bg: 'bg-primary/10',
-    text: 'text-primary',
-    border: 'border-primary/20',
-    dot: 'bg-primary',
+    bg: 'bg-amber-500/10',
+    text: 'text-amber-400',
+    border: 'border-amber-500/20',
+    dot: 'bg-amber-400',
   },
   blue: {
     bg: 'bg-blue-500/10',

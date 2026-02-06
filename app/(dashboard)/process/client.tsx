@@ -14,15 +14,18 @@ import {
   CheckCircle2,
   RotateCcw,
   Trash2,
+  Target,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useItemsStore } from '@/stores/items';
+import { useUIStore } from '@/stores/ui';
 import { ItemCard } from '@/components/items/ItemCard';
 import { ItemDetailPanel } from '@/components/items/ItemDetailPanel';
 import { BulkAIActions, type BulkAISuggestion } from '@/components/ai/BulkAIActions';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { LoadingState } from '@/components/shared/LoadingState';
 import { KanbanView } from '@/components/process/KanbanView';
+import { FocusProcess } from '@/components/process/FocusProcess';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -41,8 +44,6 @@ interface ProcessPageClientProps {
   userId: string;
 }
 
-type ViewMode = 'kanban' | 'grouped' | 'list';
-
 export function ProcessPageClient({
   initialItems,
   destinations,
@@ -50,7 +51,7 @@ export function ProcessPageClient({
 }: ProcessPageClientProps) {
   const getSupabase = () => createClient();
   const { items, setItems, addItem, updateItem, removeItem, isLoading } = useItemsStore();
-  const [viewMode, setViewMode] = useState<ViewMode>('kanban');
+  const { processViewType, setProcessViewType } = useUIStore();
   const [expandedDestination, setExpandedDestination] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
@@ -79,7 +80,6 @@ export function ProcessPageClient({
             if (payload.new.layer === 'process') {
               updateItem(payload.new as Item);
             } else {
-              // Item moved to another layer
               removeItem(payload.new.id as string);
             }
           } else if (payload.eventType === 'DELETE') {
@@ -212,21 +212,21 @@ export function ProcessPageClient({
     {} as Record<string, Item[]>
   );
 
-  // Items without a destination (newly processed but not categorized)
+  // Items without a destination
   const uncategorizedItems = processItems.filter((item) => !item.destination_id);
 
   return (
     <div className="flex h-full flex-col">
       {/* Page header */}
-      <div className="border-b border-border px-4 py-4 sm:px-6">
+      <div className="border-b border-border/40 px-6 py-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0">
-            <h1 className="text-xl font-semibold text-foreground sm:text-2xl">Process</h1>
+            <h1 className="text-xl font-semibold text-foreground">Process</h1>
             <p className="hidden text-sm text-muted-foreground sm:block">
-              Organize items into destinations. Schedule when ready.
+              Organize items into destinations
             </p>
           </div>
-          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <div className="flex shrink-0 items-center gap-2">
             {/* Bulk AI Actions */}
             <BulkAIActions
               items={processItems}
@@ -236,48 +236,51 @@ export function ProcessPageClient({
             />
 
             {/* View toggle */}
-            <div className="flex rounded-md border border-border">
-              <Button
-                variant="ghost"
-                size="sm"
+            <div className="flex rounded-lg border border-border/40 bg-card/50 p-0.5">
+              <button
                 className={cn(
-                  'rounded-r-none',
-                  viewMode === 'kanban' && 'bg-accent'
+                  'rounded-md px-3 py-1 text-xs font-medium transition-all duration-150',
+                  processViewType === 'focus'
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:text-foreground'
                 )}
-                onClick={() => setViewMode('kanban')}
+                onClick={() => setProcessViewType('focus')}
+                title="Focus mode"
+              >
+                <Target className="h-3.5 w-3.5 inline-block mr-1" />
+                Focus
+              </button>
+              <button
+                className={cn(
+                  'rounded-md px-3 py-1 text-xs font-medium transition-all duration-150',
+                  processViewType === 'kanban'
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+                onClick={() => setProcessViewType('kanban')}
                 title="Kanban view"
               >
-                <LayoutGrid className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
+                <LayoutGrid className="h-3.5 w-3.5 inline-block mr-1" />
+                Board
+              </button>
+              <button
                 className={cn(
-                  'rounded-none border-x border-border',
-                  viewMode === 'grouped' && 'bg-accent'
+                  'rounded-md px-3 py-1 text-xs font-medium transition-all duration-150',
+                  processViewType === 'list'
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:text-foreground'
                 )}
-                onClick={() => setViewMode('grouped')}
-                title="Grouped view"
-              >
-                <BarChart3 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className={cn(
-                  'rounded-l-none',
-                  viewMode === 'list' && 'bg-accent'
-                )}
-                onClick={() => setViewMode('list')}
+                onClick={() => setProcessViewType('list')}
                 title="List view"
               >
-                <List className="h-4 w-4" />
-              </Button>
+                <List className="h-3.5 w-3.5 inline-block mr-1" />
+                List
+              </button>
             </div>
 
             {/* Item count */}
             {processItems.length > 0 && (
-              <span className="rounded-full bg-primary px-3 py-1 text-sm font-medium text-primary-foreground">
+              <span className="text-xs text-muted-foreground/50">
                 {processItems.length} item{processItems.length !== 1 ? 's' : ''}
               </span>
             )}
@@ -286,112 +289,76 @@ export function ProcessPageClient({
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-auto">
         {isLoading ? (
-          <LoadingState count={6} type="card" />
+          <div className="p-6">
+            <LoadingState count={6} type="card" />
+          </div>
         ) : processItems.length === 0 ? (
-          <EmptyState
-            icon={Inbox}
-            title="Nothing to process"
-            description="Items you move from Capture will appear here. Start by capturing some thoughts!"
-            variant="process"
-            action={{
-              label: 'Go to Capture',
-              href: '/capture',
-            }}
-          />
-        ) : viewMode === 'kanban' ? (
-          // Kanban view
-          <KanbanView
+          <div className="p-6">
+            <EmptyState
+              icon={Inbox}
+              title="Nothing to process"
+              description="Items you capture will appear here for processing"
+              variant="process"
+              action={{
+                label: 'Go to Capture',
+                href: '/capture',
+              }}
+            />
+          </div>
+        ) : processViewType === 'focus' ? (
+          <FocusProcess
             items={processItems}
             destinations={destinations}
             onMoveToDestination={handleMoveToDestination}
-            onUpdateItem={handleUpdateItem}
-            onDeleteItem={handleDeleteItem}
             onScheduleItem={handleScheduleItem}
-            onItemClick={(item) => setSelectedItem(item)}
+            onDeleteItem={handleDeleteItem}
           />
-        ) : viewMode === 'grouped' ? (
-          // Grouped view (by destination)
-          <div className="mx-auto max-w-6xl">
-            {/* Uncategorized items */}
-            {uncategorizedItems.length > 0 && (
-              <DestinationGroup
-                title="Uncategorized"
-                iconName="inbox"
-                color="gray"
-                items={uncategorizedItems}
-                destinations={destinations}
-                isExpanded={expandedDestination === 'uncategorized'}
-                onToggle={() =>
-                  setExpandedDestination(
-                    expandedDestination === 'uncategorized' ? null : 'uncategorized'
-                  )
-                }
-                onUpdateItem={handleUpdateItem}
-                onDeleteItem={handleDeleteItem}
-                onMoveToDestination={handleMoveToDestination}
-                onScheduleItem={handleScheduleItem}
-              />
-            )}
-
-            {/* Destination groups */}
-            {destinations.map((destination) => {
-              const destItems = itemsByDestination[destination.id] || [];
-              if (destItems.length === 0) return null;
-
-              return (
-                <DestinationGroup
-                  key={destination.id}
-                  title={destination.name}
-                  iconName={destination.icon}
-                  color={destination.color}
-                  items={destItems}
-                  destinations={destinations}
-                  isExpanded={expandedDestination === destination.id}
-                  onToggle={() =>
-                    setExpandedDestination(
-                      expandedDestination === destination.id ? null : destination.id
-                    )
-                  }
-                  onUpdateItem={handleUpdateItem}
-                  onDeleteItem={handleDeleteItem}
-                  onMoveToDestination={handleMoveToDestination}
-                  onScheduleItem={handleScheduleItem}
-                />
-              );
-            })}
+        ) : processViewType === 'kanban' ? (
+          <div className="p-6">
+            <KanbanView
+              items={processItems}
+              destinations={destinations}
+              onMoveToDestination={handleMoveToDestination}
+              onUpdateItem={handleUpdateItem}
+              onDeleteItem={handleDeleteItem}
+              onScheduleItem={handleScheduleItem}
+              onItemClick={(item) => setSelectedItem(item)}
+            />
           </div>
         ) : (
           // List view
-          <div className="mx-auto max-w-3xl space-y-3">
-            <AnimatePresence mode="popLayout">
-              {processItems.map((item) => {
-                const destination = destinations.find(
-                  (d) => d.id === item.destination_id
-                );
-                return (
-                  <motion.div
-                    key={item.id}
-                    layout
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <ProcessItemCard
-                      item={item}
-                      destination={destination}
-                      destinations={destinations}
-                      onUpdate={handleUpdateItem}
-                      onDelete={handleDeleteItem}
-                      onMoveToDestination={handleMoveToDestination}
-                      onSchedule={handleScheduleItem}
-                    />
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
+          <div className="p-6">
+            <div className="mx-auto max-w-3xl space-y-3">
+              <AnimatePresence mode="popLayout">
+                {processItems.map((item) => {
+                  const destination = destinations.find(
+                    (d) => d.id === item.destination_id
+                  );
+                  return (
+                    <motion.div
+                      key={item.id}
+                      layout
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ProcessItemCard
+                        item={item}
+                        destination={destination}
+                        destinations={destinations}
+                        onUpdate={handleUpdateItem}
+                        onDelete={handleDeleteItem}
+                        onMoveToDestination={handleMoveToDestination}
+                        onSchedule={handleScheduleItem}
+                      />
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+            </div>
           </div>
         )}
       </div>
@@ -405,99 +372,6 @@ export function ProcessPageClient({
         onUpdate={handleUpdateItem}
         onDelete={handleDeleteItem}
       />
-    </div>
-  );
-}
-
-// Destination Group Component
-interface DestinationGroupProps {
-  title: string;
-  iconName: string;
-  color: string;
-  items: Item[];
-  destinations: Destination[];
-  isExpanded: boolean;
-  onToggle: () => void;
-  onUpdateItem: (id: string, updates: Partial<Item>) => void;
-  onDeleteItem: (id: string) => void;
-  onMoveToDestination: (itemId: string, destinationId: string) => void;
-  onScheduleItem: (itemId: string, scheduledAt: string) => void;
-}
-
-function DestinationGroup({
-  title,
-  iconName,
-  color,
-  items,
-  destinations,
-  isExpanded,
-  onToggle,
-  onUpdateItem,
-  onDeleteItem,
-  onMoveToDestination,
-  onScheduleItem,
-}: DestinationGroupProps) {
-  const Icon = ICON_MAP[iconName] || Inbox;
-  const colorOption = COLOR_PALETTE.find(c => c.value === color);
-
-  return (
-    <div className="mb-6">
-      {/* Header */}
-      <button
-        onClick={onToggle}
-        className="mb-3 flex w-full items-center gap-2 text-left"
-      >
-        <div className={cn(
-          'flex h-8 w-8 items-center justify-center rounded-lg',
-          colorOption?.bgSubtle || 'bg-muted'
-        )}>
-          <Icon className={cn('h-4 w-4', colorOption?.text || 'text-muted-foreground')} />
-        </div>
-        <h2 className="text-lg font-medium text-foreground">{title}</h2>
-        <span className="text-sm text-muted-foreground">({items.length})</span>
-        <ChevronDown
-          className={cn(
-            'ml-auto h-4 w-4 text-muted-foreground transition-transform',
-            isExpanded && 'rotate-180'
-          )}
-        />
-      </button>
-
-      {/* Items */}
-      <AnimatePresence>
-        {(isExpanded || items.length <= 3) && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="space-y-2 overflow-hidden pl-10"
-          >
-            {items.map((item) => (
-              <ProcessItemCard
-                key={item.id}
-                item={item}
-                destinations={destinations}
-                onUpdate={onUpdateItem}
-                onDelete={onDeleteItem}
-                onMoveToDestination={onMoveToDestination}
-                onSchedule={onScheduleItem}
-                compact
-              />
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Show count when collapsed */}
-      {!isExpanded && items.length > 3 && (
-        <button
-          onClick={onToggle}
-          className="ml-10 text-sm text-primary hover:underline"
-        >
-          Show all {items.length} items
-        </button>
-      )}
     </div>
   );
 }
@@ -525,7 +399,6 @@ function ProcessItemCard({
   compact = false,
 }: ProcessItemCardProps) {
   const handleQuickSchedule = () => {
-    // Schedule for tomorrow at 9am
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(9, 0, 0, 0);
@@ -535,7 +408,7 @@ function ProcessItemCard({
   return (
     <div
       className={cn(
-        'group relative rounded-lg border border-border bg-card transition-colors hover:border-border-emphasis',
+        'group relative rounded-xl border border-border/40 bg-card/50 transition-all hover:border-border hover:bg-card',
         compact ? 'p-3' : 'p-4'
       )}
     >
@@ -546,7 +419,7 @@ function ProcessItemCard({
             className={cn(
               'font-medium text-foreground',
               compact ? 'text-sm' : 'text-base',
-              item.is_completed && 'line-through text-muted-foreground'
+              item.is_completed && 'completed-text'
             )}
           >
             {item.title}

@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 import { useUIStore } from '@/stores/ui';
 import {
   Home,
-  Inbox,
   ArrowRightLeft,
-  CalendarCheck,
+  Calendar,
+  BookOpen,
   Plus,
   FileText,
   Settings,
@@ -32,10 +32,10 @@ interface NavItem {
 }
 
 const navigationItems: NavItem[] = [
-  { label: 'Go to Home', href: '/home', Icon: Home, shortcut: '⌘0' },
-  { label: 'Go to Capture', href: '/capture', Icon: Inbox, shortcut: '⌘1' },
-  { label: 'Go to Process', href: '/process', Icon: ArrowRightLeft, shortcut: '⌘2' },
-  { label: 'Go to Commit', href: '/commit', Icon: CalendarCheck, shortcut: '⌘3' },
+  { label: 'Surface', href: '/home', Icon: Home, shortcut: '⌘1' },
+  { label: 'Process', href: '/process', Icon: ArrowRightLeft, shortcut: '⌘2' },
+  { label: 'Calendar', href: '/commit', Icon: Calendar, shortcut: '⌘3' },
+  { label: 'Library', href: '/spaces', Icon: BookOpen, shortcut: '⌘4' },
 ];
 
 const actionItems: NavItem[] = [
@@ -66,14 +66,9 @@ export function CommandPalette() {
     const handleShortcut = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey) {
         switch (e.key) {
-          case '0':
-            e.preventDefault();
-            router.push('/home');
-            setCommandPaletteOpen(false);
-            break;
           case '1':
             e.preventDefault();
-            router.push('/capture');
+            router.push('/home');
             setCommandPaletteOpen(false);
             break;
           case '2':
@@ -84,6 +79,11 @@ export function CommandPalette() {
           case '3':
             e.preventDefault();
             router.push('/commit');
+            setCommandPaletteOpen(false);
+            break;
+          case '4':
+            e.preventDefault();
+            router.push('/spaces');
             setCommandPaletteOpen(false);
             break;
           case ',':

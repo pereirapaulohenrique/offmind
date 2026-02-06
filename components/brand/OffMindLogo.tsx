@@ -1,10 +1,10 @@
 /**
- * OffMind Logo — Gradient sphere with two teal lines beneath.
+ * OffMind Logo — Warm amber gradient sphere with two lines beneath.
  *
  * Represents "get it off your mind" — a thought (sphere) landing
  * safely on a stable base (lines).
  *
- * Gradient: violet #8b5cf6 → violet-indigo #7c5cfc → cyan #22d3ee
+ * Gradient: deep amber #92400e → amber #d97706 → warm gold #fbbf24
  */
 
 interface OffMindLogoProps {
@@ -65,16 +65,16 @@ function SphereMark({
           y2="10"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0%" stopColor="#8b5cf6" />
-          <stop offset="40%" stopColor="#7c5cfc" />
-          <stop offset="100%" stopColor="#22d3ee" />
+          <stop offset="0%" stopColor="#92400e" />
+          <stop offset="40%" stopColor="#d97706" />
+          <stop offset="100%" stopColor="#fbbf24" />
         </linearGradient>
         <radialGradient id={`${id}-shine`} cx="0.35" cy="0.3" r="0.65">
-          <stop offset="0%" stopColor="rgba(255,255,255,0.18)" />
+          <stop offset="0%" stopColor="rgba(255,255,255,0.20)" />
           <stop offset="100%" stopColor="rgba(255,255,255,0)" />
         </radialGradient>
         <radialGradient id={`${id}-shadow`} cx="0.5" cy="0.85" r="0.5">
-          <stop offset="0%" stopColor="rgba(0,0,0,0.25)" />
+          <stop offset="0%" stopColor="rgba(0,0,0,0.30)" />
           <stop offset="100%" stopColor="rgba(0,0,0,0)" />
         </radialGradient>
       </defs>
@@ -85,8 +85,8 @@ function SphereMark({
       <circle cx="60" cy="48" r="38" fill={`url(#${id}-shadow)`} />
 
       {/* Two lines beneath */}
-      <rect x="30" y="94" width="60" height="4" rx="2" fill="#22d3ee" opacity="0.7" />
-      <rect x="38" y="103" width="44" height="3.5" rx="1.75" fill="#22d3ee" opacity="0.35" />
+      <rect x="30" y="94" width="60" height="4" rx="2" fill="#f59e0b" opacity="0.6" />
+      <rect x="38" y="103" width="44" height="3.5" rx="1.75" fill="#f59e0b" opacity="0.3" />
     </svg>
   );
 }
@@ -115,14 +115,14 @@ export function OffMindIcon({ size = 16, className = '' }: { size?: number; clas
           y2="10"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0%" stopColor="#8b5cf6" />
-          <stop offset="40%" stopColor="#7c5cfc" />
-          <stop offset="100%" stopColor="#22d3ee" />
+          <stop offset="0%" stopColor="#92400e" />
+          <stop offset="40%" stopColor="#d97706" />
+          <stop offset="100%" stopColor="#fbbf24" />
         </linearGradient>
       </defs>
       <circle cx="60" cy="48" r="38" fill={`url(#${id}-grad)`} />
-      <rect x="30" y="94" width="60" height="5" rx="2.5" fill="#22d3ee" opacity="0.7" />
-      <rect x="38" y="104" width="44" height="4" rx="2" fill="#22d3ee" opacity="0.35" />
+      <rect x="30" y="94" width="60" height="5" rx="2.5" fill="#f59e0b" opacity="0.6" />
+      <rect x="38" y="104" width="44" height="4" rx="2" fill="#f59e0b" opacity="0.3" />
     </svg>
   );
 }

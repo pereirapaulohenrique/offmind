@@ -21,9 +21,10 @@ interface UserMenuProps {
     full_name?: string | null;
     avatar_url?: string | null;
   } | null;
+  compact?: boolean;
 }
 
-export function UserMenu({ user }: UserMenuProps) {
+export function UserMenu({ user, compact = false }: UserMenuProps) {
   const router = useRouter();
   const supabase = createClient();
   const { theme, toggleTheme } = useUIStore();
@@ -43,19 +44,21 @@ export function UserMenu({ user }: UserMenuProps) {
         .slice(0, 2)
     : user?.email?.slice(0, 2).toUpperCase() || '??';
 
+  const avatarSize = compact ? 'h-7 w-7' : 'h-8 w-8';
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
+        <Button variant="ghost" className={`relative ${avatarSize} rounded-full p-0`}>
+          <Avatar className={avatarSize}>
             <AvatarImage src={user?.avatar_url || undefined} alt={user?.full_name || 'User'} />
-            <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+            <AvatarFallback className="bg-primary/20 text-primary text-[10px]">
               {initials}
             </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
+      <DropdownMenuContent className="w-56" align={compact ? 'start' : 'end'} side={compact ? 'right' : 'bottom'} forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             {user?.full_name && (

@@ -267,10 +267,10 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
   return (
     <div className="flex h-full flex-col">
       {/* Page header */}
-      <div className="border-b border-border px-6 py-4">
+      <div className="border-b border-border/40 px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-foreground">Commit</h1>
+            <h1 className="text-xl font-semibold text-foreground">Calendar</h1>
             <p className="text-sm text-muted-foreground">
               Your scheduled commitments
             </p>
@@ -285,36 +285,45 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
             />
 
             {/* View toggle */}
-            <div className="flex rounded-md border border-border">
-              <Button
-                variant="ghost"
-                size="sm"
-                className={cn('rounded-r-none', viewMode === 'agenda' && 'bg-accent')}
+            <div className="flex rounded-lg border border-border/40 bg-card/50 p-0.5">
+              <button
+                className={cn(
+                  'rounded-md px-3 py-1 text-xs font-medium transition-all duration-150',
+                  viewMode === 'agenda'
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
                 onClick={() => setViewMode('agenda')}
               >
                 Agenda
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className={cn('rounded-none', viewMode === 'day' && 'bg-accent')}
+              </button>
+              <button
+                className={cn(
+                  'rounded-md px-3 py-1 text-xs font-medium transition-all duration-150',
+                  viewMode === 'day'
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
                 onClick={() => setViewMode('day')}
               >
                 Day
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className={cn('rounded-l-none', viewMode === 'week' && 'bg-accent')}
+              </button>
+              <button
+                className={cn(
+                  'rounded-md px-3 py-1 text-xs font-medium transition-all duration-150',
+                  viewMode === 'week'
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
                 onClick={() => setViewMode('week')}
               >
                 Week
-              </Button>
+              </button>
             </div>
 
             {/* Item count */}
             {commitItems.length > 0 && (
-              <span className="rounded-full bg-primary px-3 py-1 text-sm font-medium text-primary-foreground">
+              <span className="text-xs text-muted-foreground/50">
                 {commitItems.length} scheduled
               </span>
             )}
@@ -552,7 +561,7 @@ function WeekView({
             key={dateStr}
             className={cn(
               'min-h-[200px] rounded-lg border p-2',
-              isToday ? 'border-primary bg-primary/5' : 'border-border'
+              isToday ? 'border-primary/20 bg-primary/[0.03]' : 'border-border/40'
             )}
           >
             <div className="mb-2 text-center">
@@ -644,7 +653,7 @@ function CommitItemCard({
   return (
     <div
       className={cn(
-        'group relative rounded-lg border border-border bg-card p-4 transition-colors hover:border-border-emphasis',
+        'group relative rounded-xl border border-border/40 bg-card/50 p-4 transition-all hover:border-border hover:bg-card',
         item.is_completed && 'opacity-60'
       )}
     >

@@ -255,7 +255,7 @@ export function CapturePageClient({ initialItems, destinations, spaces, projects
 
       {/* Inbox section divider */}
       {captureItems.length > 0 && (
-        <div className="flex items-center gap-3 px-6 py-3 border-b border-border">
+        <div className="flex items-center gap-3 px-6 py-3 border-b border-border/40">
           <div className="mx-auto flex w-full max-w-3xl items-center gap-3">
             <h2 className="text-sm font-medium text-muted-foreground">Inbox</h2>
             <span className="rounded-full bg-blue-500/15 px-2.5 py-0.5 text-xs font-medium text-blue-400">
