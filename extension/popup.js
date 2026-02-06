@@ -1,4 +1,4 @@
-// MindBase Extension Popup
+// OffMind Extension Popup
 
 document.addEventListener('DOMContentLoaded', async () => {
   const setupView = document.getElementById('setup-view');

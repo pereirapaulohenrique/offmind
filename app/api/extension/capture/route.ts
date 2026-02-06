@@ -30,11 +30,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Get request body
-    const { title, notes } = await request.json();
+    const { title, notes, source } = await request.json();
 
     if (!title) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 });
     }
+
+    // Accept source from extension or desktop clients
+    const itemSource = source === 'desktop' ? 'desktop' : 'extension';
 
     // Create item
     const { data, error } = await supabaseAdmin.from('items').insert({
@@ -42,7 +45,7 @@ export async function POST(request: NextRequest) {
       title,
       notes: notes || null,
       layer: 'capture',
-      source: 'extension',
+      source: itemSource,
     } as any).select().single();
 
     if (error) {

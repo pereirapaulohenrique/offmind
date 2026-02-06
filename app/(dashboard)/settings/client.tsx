@@ -400,7 +400,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
                         </Button>
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        Send <code>/connect {telegramCode}</code> to @MindBaseBot on Telegram
+                        Send <code>/connect {telegramCode}</code> to @OffMindBot on Telegram
                       </p>
                     </div>
                   ) : (

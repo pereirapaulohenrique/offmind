@@ -6,8 +6,8 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: {
-    default: 'MindBase',
-    template: '%s | MindBase',
+    default: 'OffMind',
+    template: '%s | OffMind',
   },
   description: 'The calm productivity system for overthinkers',
   keywords: ['productivity', 'gtd', 'task management', 'notes', 'ai'],
@@ -17,13 +17,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    siteName: 'MindBase',
-    title: 'MindBase',
+    siteName: 'OffMind',
+    title: 'OffMind',
     description: 'The calm productivity system for overthinkers',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MindBase',
+    title: 'OffMind',
     description: 'The calm productivity system for overthinkers',
   },
   robots: {

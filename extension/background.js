@@ -1,4 +1,4 @@
-// MindBase Browser Extension - Background Service Worker
+// OffMind Browser Extension - Background Service Worker
 
 const API_BASE = 'http://localhost:3000'; // Change to production URL when deploying
 
@@ -6,19 +6,19 @@ const API_BASE = 'http://localhost:3000'; // Change to production URL when deplo
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: 'capture-selection',
-    title: 'Capture to MindBase',
+    title: 'Capture to OffMind',
     contexts: ['selection'],
   });
 
   chrome.contextMenus.create({
     id: 'capture-page',
-    title: 'Capture page to MindBase',
+    title: 'Capture page to OffMind',
     contexts: ['page'],
   });
 
   chrome.contextMenus.create({
     id: 'capture-link',
-    title: 'Capture link to MindBase',
+    title: 'Capture link to OffMind',
     contexts: ['link'],
   });
 });
@@ -46,14 +46,14 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   }
 
   if (title) {
-    await captureToMindBase(title, notes);
+    await captureToOffMind(title, notes);
   }
 });
 
 // Handle messages from popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'capture') {
-    captureToMindBase(request.title, request.notes)
+    captureToOffMind(request.title, request.notes)
       .then((result) => sendResponse(result))
       .catch((error) => sendResponse({ success: false, error: error.message }));
     return true; // Keep channel open for async response
@@ -75,7 +75,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // Capture function
-async function captureToMindBase(title, notes = '') {
+async function captureToOffMind(title, notes = '') {
   try {
     const { apiKey } = await chrome.storage.sync.get(['apiKey']);
 

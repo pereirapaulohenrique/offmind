@@ -27,7 +27,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { ICON_MAP, COLOR_PALETTE } from '@/components/icons';
-import { MindBaseLogo } from '@/components/brand/MindBaseLogo';
+import { OffMindLogo } from '@/components/brand/OffMindLogo';
 
 // Navigation items with Lucide icons
 const mainNav: { href: string; label: string; icon: LucideIcon; shortcut: string }[] = [
@@ -76,7 +76,7 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
         {/* Header */}
         <div className="flex h-16 items-center justify-between px-4">
           <Link href="/home" className="flex items-center gap-2.5">
-            <MindBaseLogo size={32} />
+            <OffMindLogo size={32} />
             <AnimatePresence>
               {!sidebarCollapsed && (
                 <motion.span
@@ -85,7 +85,7 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
                   exit={{ opacity: 0, width: 0 }}
                   className="text-[15px] font-semibold tracking-tight text-sidebar-foreground overflow-hidden whitespace-nowrap"
                 >
-                  MindBase
+                  OffMind
                 </motion.span>
               )}
             </AnimatePresence>

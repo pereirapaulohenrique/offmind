@@ -1,0 +1,34 @@
+appId: ai.offmind.capture
+productName: OffMind Capture
+directories:
+  output: release
+  buildResources: assets
+files:
+  - dist/**/*
+  - dist-electron/**/*
+mac:
+  icon: assets/icon.icns
+  category: public.app-category.productivity
+  target:
+    - dmg
+    - zip
+win:
+  icon: assets/icon.ico
+  target:
+    - nsis
+linux:
+  icon: assets/icon.png
+  category: Utility
+  target:
+    - AppImage
+nsis:
+  oneClick: true
+  allowToChangeInstallationDirectory: false
+dmg:
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications

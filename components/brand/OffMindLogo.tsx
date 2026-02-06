@@ -1,5 +1,5 @@
 /**
- * MindBase Logo
+ * OffMind Logo
  *
  * A custom SVG monogram representing the three-layer GTD system:
  * - Three ascending arcs (Capture → Process → Commit)
@@ -9,20 +9,20 @@
  * Uses the brand violet-indigo color with optional gradient treatment.
  */
 
-interface MindBaseLogoProps {
+interface OffMindLogoProps {
   size?: number;
   className?: string;
   variant?: 'mark' | 'full';
   showGradient?: boolean;
 }
 
-export function MindBaseLogo({
+export function OffMindLogo({
   size = 32,
   className = '',
   variant = 'mark',
   showGradient = true
-}: MindBaseLogoProps) {
-  const id = `mb-gradient-${Math.random().toString(36).slice(2, 7)}`;
+}: OffMindLogoProps) {
+  const id = `om-gradient-${Math.random().toString(36).slice(2, 7)}`;
 
   if (variant === 'full') {
     return (
@@ -32,7 +32,7 @@ export function MindBaseLogo({
           className="font-semibold tracking-tight text-foreground"
           style={{ fontSize: size * 0.5 }}
         >
-          MindBase
+          OffMind
         </span>
       </div>
     );
@@ -60,7 +60,7 @@ function LogoMark({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-      aria-label="MindBase logo"
+      aria-label="OffMind logo"
     >
       <defs>
         {showGradient && (
@@ -149,7 +149,7 @@ function LogoMark({
 /**
  * Favicon-optimized version (simpler paths for small sizes)
  */
-export function MindBaseIcon({ size = 16, className = '' }: { size?: number; className?: string }) {
+export function OffMindIcon({ size = 16, className = '' }: { size?: number; className?: string }) {
   return (
     <svg
       width={size}

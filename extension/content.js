@@ -1,4 +1,4 @@
-// MindBase Content Script
+// OffMind Content Script
 // Adds keyboard shortcut and selection capture
 
 // Keyboard shortcut: Ctrl/Cmd + Shift + M

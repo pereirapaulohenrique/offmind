@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Mail, KeyRound } from 'lucide-react';
-import { MindBaseLogo } from '@/components/brand/MindBaseLogo';
+import { OffMindLogo } from '@/components/brand/OffMindLogo';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -127,7 +127,7 @@ export default function SignupPage() {
       >
         {/* Logo */}
         <div className="flex flex-col items-center gap-3 text-center">
-          <MindBaseLogo size={48} />
+          <OffMindLogo size={48} />
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">Create your account</h1>
             <p className="mt-1 text-sm text-muted-foreground">

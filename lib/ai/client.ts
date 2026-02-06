@@ -14,7 +14,7 @@ export async function callAI(prompt: string, maxTokens: number = 500): Promise<s
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
       'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-      'X-Title': process.env.NEXT_PUBLIC_APP_NAME || 'MindBase',
+      'X-Title': process.env.NEXT_PUBLIC_APP_NAME || 'OffMind',
     },
     body: JSON.stringify({
       model: 'anthropic/claude-3.5-haiku',

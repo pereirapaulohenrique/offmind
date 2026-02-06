@@ -62,7 +62,7 @@ export const BOT_COMMANDS = {
 
 // Help text
 export const HELP_TEXT = `
-🧠 <b>MindBase Bot</b>
+🧠 <b>OffMind Bot</b>
 
 <b>Commands:</b>
 /start - Start the bot
@@ -77,10 +77,10 @@ Just send any message to capture it instantly!
 
 // Welcome text for new users
 export const WELCOME_TEXT = `
-👋 <b>Welcome to MindBase!</b>
+👋 <b>Welcome to OffMind!</b>
 
 To connect your account:
-1. Go to Settings in MindBase
+1. Go to Settings in OffMind
 2. Click "Connect Telegram"
 3. Send /connect CODE with your connection code
 

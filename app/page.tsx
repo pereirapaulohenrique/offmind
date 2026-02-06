@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { WaitlistForm } from '@/components/marketing/WaitlistForm';
-import { MindBaseLogo } from '@/components/brand/MindBaseLogo';
+import { OffMindLogo } from '@/components/brand/OffMindLogo';
 import { cn } from '@/lib/utils';
 
 export default function LandingPage() {
@@ -26,7 +26,7 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl">
         <nav className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-2.5">
-            <MindBaseLogo size={32} variant="full" />
+            <OffMindLogo size={32} variant="full" />
           </Link>
           <div className="flex items-center gap-3">
             <Button asChild variant="ghost" className="text-muted-foreground hover:text-foreground">
@@ -57,7 +57,7 @@ export default function LandingPage() {
                 </span>
               </h1>
               <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground">
-                MindBase is the calm productivity system for overthinkers. Capture everything,
+                OffMind is the calm productivity system for overthinkers. Capture everything,
                 let AI help you organize, and commit only to what matters.
               </p>
               <div className="mt-12 flex flex-col gap-4 sm:flex-row">
@@ -88,8 +88,8 @@ export default function LandingPage() {
                       <div className="h-2.5 w-2.5 rounded-full bg-emerald-500/60" />
                     </div>
                     <div className="ml-3 flex items-center gap-2">
-                      <MindBaseLogo size={18} />
-                      <span className="text-xs font-medium text-muted-foreground">MindBase</span>
+                      <OffMindLogo size={18} />
+                      <span className="text-xs font-medium text-muted-foreground">OffMind</span>
                     </div>
                   </div>
                   {/* Mock three-layer cards */}
@@ -234,7 +234,7 @@ export default function LandingPage() {
               </h2>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
                 If you have 47 browser tabs, 3 note apps, and constant anxiety about
-                forgetting things - MindBase gives you a single place to dump everything
+                forgetting things - OffMind gives you a single place to dump everything
                 and lets AI do the heavy lifting of organizing it all.
               </p>
               <div className="mt-10 grid gap-4 text-left sm:grid-cols-3">
@@ -339,7 +339,7 @@ export default function LandingPage() {
                 <Link href="/signup" className="text-primary hover:underline">
                   sign up now
                 </Link>{' '}
-                to start using MindBase today.
+                to start using OffMind today.
               </p>
             </div>
           </div>
@@ -350,7 +350,7 @@ export default function LandingPage() {
       <footer className="border-t border-border/40 py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-            <MindBaseLogo size={28} variant="full" />
+            <OffMindLogo size={28} variant="full" />
             <p className="text-sm text-muted-foreground/60">
               Built with care for clarity
             </p>

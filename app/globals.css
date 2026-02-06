@@ -4,13 +4,13 @@
 @custom-variant dark (&:is(.dark *));
 
 /* =============================================================================
-   MindBase Design System
+   OffMind Design System
    Premium dark-first design with warm undertones
    Dark mode is default - use .light class for light mode
 ============================================================================= */
 
 :root {
-  /* MindBase Design Tokens */
+  /* OffMind Design Tokens */
   /* Background Layers - Dark Mode (Default) */
   /* Warmer blacks with subtle blue undertone for depth */
   --bg-base: #08080c;
@@ -56,7 +56,7 @@
   --destination-waiting: #fb923c;
   --destination-trash: #f87171;
 
-  /* Layer Colors - The heart of MindBase's identity */
+  /* Layer Colors - The heart of OffMind's identity */
   --layer-capture: #60a5fa;
   --layer-capture-bg: rgba(96, 165, 250, 0.06);
   --layer-capture-border: rgba(96, 165, 250, 0.2);
@@ -227,7 +227,7 @@
 
 /* Tailwind v4 Theme Extensions */
 @theme inline {
-  /* Custom MindBase Colors */
+  /* Custom OffMind Colors */
   --color-base: var(--bg-base);
   --color-surface: var(--bg-surface);
   --color-elevated: var(--bg-elevated);

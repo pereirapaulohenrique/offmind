@@ -1,5 +1,5 @@
 // App Constants
-export const APP_NAME = 'MindBase';
+export const APP_NAME = 'OffMind';
 export const APP_DESCRIPTION = 'The calm productivity system for overthinkers';
 
 // Layers

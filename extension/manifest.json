@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "MindBase Quick Capture",
+  "name": "OffMind Quick Capture",
   "version": "1.0.0",
-  "description": "Capture text and pages to MindBase with one click",
+  "description": "Capture text and pages to OffMind with one click",
   "permissions": [
     "activeTab",
     "contextMenus",

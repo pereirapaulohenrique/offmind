@@ -11,7 +11,7 @@ import {
   Check,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { MindBaseLogo } from '@/components/brand/MindBaseLogo';
+import { OffMindLogo } from '@/components/brand/OffMindLogo';
 import { cn } from '@/lib/utils';
 
 interface OnboardingFlowProps {
@@ -22,7 +22,7 @@ interface OnboardingFlowProps {
 const steps = [
   {
     id: 'welcome',
-    title: 'Welcome to MindBase',
+    title: 'Welcome to OffMind',
     description: 'The calm productivity system designed for overthinkers. Let us show you how it works in 30 seconds.',
     icon: null,
     color: 'primary' as const,
@@ -54,7 +54,7 @@ const steps = [
   {
     id: 'ready',
     title: 'You\'re all set!',
-    description: 'Start by capturing your first thought. The more you use MindBase, the smarter it gets at helping you organize.',
+    description: 'Start by capturing your first thought. The more you use OffMind, the smarter it gets at helping you organize.',
     icon: Sparkles,
     color: 'primary' as const,
   },
@@ -136,7 +136,7 @@ export function OnboardingFlow({ userName, onComplete }: OnboardingFlowProps) {
               {/* Icon / Logo */}
               <div className="mb-6">
                 {isFirst ? (
-                  <MindBaseLogo size={64} />
+                  <OffMindLogo size={64} />
                 ) : step.icon ? (
                   <div className={cn('flex h-16 w-16 items-center justify-center rounded-2xl', colors.bg)}>
                     <step.icon className={cn('h-8 w-8', colors.text)} />
