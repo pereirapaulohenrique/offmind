@@ -4,15 +4,16 @@ import {
   ArrowRightLeft,
   CalendarCheck,
   Sparkles,
-  FolderOpen,
+  BookOpen,
   FileText,
   CheckCircle2,
   Zap,
   Shield,
   Clock,
-  ChevronRight,
   ArrowRight,
   Check,
+  Home,
+  Target,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { WaitlistForm } from '@/components/marketing/WaitlistForm';
@@ -23,7 +24,7 @@ export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* Navigation */}
-      <header className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-border/30 bg-background/80 backdrop-blur-xl">
         <nav className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-2.5">
             <OffMindLogo size={32} variant="full" />
@@ -40,19 +41,19 @@ export default function LandingPage() {
       </header>
 
       <main className="flex-1">
-        {/* Hero Section - With gradient mesh background */}
+        {/* Hero Section */}
         <section className="relative overflow-hidden">
           <div className="gradient-mesh absolute inset-0" />
           <div className="relative container mx-auto px-4 py-28 sm:px-6 sm:py-36 lg:px-8">
             <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
               <div className="mb-6 inline-flex items-center rounded-full border border-primary/20 bg-primary/[0.06] px-4 py-1.5 text-sm text-primary">
                 <Sparkles className="mr-2 h-3.5 w-3.5" />
-                AI-Powered GTD System
+                AI-Powered Productivity System
               </div>
               <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-7xl">
                 Clear your mind.
                 <br />
-                <span className="bg-gradient-to-r from-primary via-blue-400 to-emerald-400 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 bg-clip-text text-transparent">
                   Own your day.
                 </span>
               </h1>
@@ -71,61 +72,85 @@ export default function LandingPage() {
                   <Link href="#how-it-works">See How It Works</Link>
                 </Button>
               </div>
-              <p className="mt-5 text-sm text-muted-foreground/70">
+              <p className="mt-5 text-sm text-muted-foreground/60">
                 14-day free trial. No credit card required.
               </p>
             </div>
 
-            {/* Product Preview - Visual anchor */}
+            {/* Product Preview — matches new 4-mode design */}
             <div className="mx-auto mt-20 max-w-4xl">
-              <div className="relative rounded-xl border border-border/50 bg-card/80 p-1.5 shadow-2xl shadow-black/20 backdrop-blur-sm">
-                <div className="rounded-lg border border-border/30 bg-background overflow-hidden">
-                  {/* Mock dashboard header */}
-                  <div className="flex items-center gap-2 border-b border-border/30 px-4 py-3">
-                    <div className="flex gap-1.5">
-                      <div className="h-2.5 w-2.5 rounded-full bg-red-500/60" />
-                      <div className="h-2.5 w-2.5 rounded-full bg-amber-500/60" />
-                      <div className="h-2.5 w-2.5 rounded-full bg-emerald-500/60" />
-                    </div>
-                    <div className="ml-3 flex items-center gap-2">
+              <div className="relative rounded-xl border border-border/40 bg-card/80 p-1.5 shadow-2xl shadow-black/30 backdrop-blur-sm">
+                <div className="rounded-lg border border-border/20 bg-background overflow-hidden">
+                  <div className="flex">
+                    {/* Mini sidebar mock */}
+                    <div className="w-12 border-r border-border/20 bg-[#060604] flex flex-col items-center py-3 gap-2">
                       <OffMindLogo size={18} />
-                      <span className="text-xs font-medium text-muted-foreground">OffMind</span>
+                      <div className="mt-2 h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <Home className="h-3 w-3 text-primary" />
+                      </div>
+                      <div className="h-7 w-7 rounded-lg flex items-center justify-center">
+                        <ArrowRightLeft className="h-3 w-3 text-muted-foreground/40" />
+                      </div>
+                      <div className="h-7 w-7 rounded-lg flex items-center justify-center">
+                        <CalendarCheck className="h-3 w-3 text-muted-foreground/40" />
+                      </div>
+                      <div className="h-7 w-7 rounded-lg flex items-center justify-center">
+                        <BookOpen className="h-3 w-3 text-muted-foreground/40" />
+                      </div>
+                    </div>
+                    {/* Content area */}
+                    <div className="flex-1 p-6">
+                      <div className="flex items-center justify-between mb-6">
+                        <p className="text-sm text-muted-foreground">Good morning, Paulo</p>
+                        <div className="flex gap-1 rounded-md border border-border/30 p-0.5">
+                          <span className="rounded px-2 py-0.5 text-[10px] bg-primary/10 text-primary">Surface</span>
+                          <span className="rounded px-2 py-0.5 text-[10px] text-muted-foreground/40">Agenda</span>
+                          <span className="rounded px-2 py-0.5 text-[10px] text-muted-foreground/40">Flow</span>
+                        </div>
+                      </div>
+                      {/* Surface view mock */}
+                      <div className="text-center py-4">
+                        <p className="text-xl font-semibold text-foreground mb-2">Review Q1 priorities</p>
+                        <div className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground">
+                          <Clock className="h-3 w-3" />
+                          <span>09:00</span>
+                          <span className="text-muted-foreground/30 mx-1">·</span>
+                          <span>30m</span>
+                        </div>
+                        <div className="mt-4 flex items-center justify-center gap-4 text-[11px] text-muted-foreground/50">
+                          <span>3 remaining today</span>
+                          <span className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3 text-emerald-400/50" /> 2 done</span>
+                        </div>
+                      </div>
+                      {/* Stats row */}
+                      <div className="mt-4 flex items-center justify-center gap-6">
+                        <div className="flex flex-col items-center gap-1">
+                          <div className="h-8 w-8 rounded-lg bg-blue-500/[0.06] flex items-center justify-center">
+                            <Inbox className="h-3.5 w-3.5 text-blue-400/60" />
+                          </div>
+                          <span className="text-[10px] text-muted-foreground/40">5 inbox</span>
+                        </div>
+                        <div className="flex flex-col items-center gap-1">
+                          <div className="h-8 w-8 rounded-lg bg-primary/[0.06] flex items-center justify-center">
+                            <ArrowRightLeft className="h-3.5 w-3.5 text-primary/60" />
+                          </div>
+                          <span className="text-[10px] text-muted-foreground/40">2 process</span>
+                        </div>
+                        <div className="flex flex-col items-center gap-1">
+                          <div className="h-8 w-8 rounded-lg bg-emerald-500/[0.06] flex items-center justify-center">
+                            <CalendarCheck className="h-3.5 w-3.5 text-emerald-400/60" />
+                          </div>
+                          <span className="text-[10px] text-muted-foreground/40">3 today</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  {/* Mock three-layer cards */}
-                  <div className="p-6">
-                    <p className="text-lg font-semibold text-foreground mb-4">Good morning, Paulo</p>
-                    <div className="grid grid-cols-3 gap-3">
-                      <div className="rounded-lg border border-blue-500/20 bg-blue-500/[0.04] p-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-500/15">
-                            <Inbox className="h-3.5 w-3.5 text-blue-400" />
-                          </div>
-                          <span className="text-[10px] font-semibold uppercase tracking-wide text-blue-400/80">Capture</span>
-                        </div>
-                        <p className="text-xl font-bold text-foreground">5</p>
-                        <p className="text-[10px] text-muted-foreground mt-1">items in inbox</p>
-                      </div>
-                      <div className="rounded-lg border border-amber-500/20 bg-amber-500/[0.04] p-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/15">
-                            <ArrowRightLeft className="h-3.5 w-3.5 text-amber-400" />
-                          </div>
-                          <span className="text-[10px] font-semibold uppercase tracking-wide text-amber-400/80">Process</span>
-                        </div>
-                        <p className="text-xl font-bold text-foreground">2</p>
-                        <p className="text-[10px] text-muted-foreground mt-1">to organize</p>
-                      </div>
-                      <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/[0.04] p-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/15">
-                            <CalendarCheck className="h-3.5 w-3.5 text-emerald-400" />
-                          </div>
-                          <span className="text-[10px] font-semibold uppercase tracking-wide text-emerald-400/80">Commit</span>
-                        </div>
-                        <p className="text-xl font-bold text-foreground">3</p>
-                        <p className="text-[10px] text-muted-foreground mt-1">today</p>
-                      </div>
+                  {/* Capture bar mock */}
+                  <div className="border-t border-border/20 px-4 py-2.5">
+                    <div className="mx-auto max-w-md flex items-center gap-2 rounded-xl border border-border/30 bg-card/50 px-3 py-2 text-[11px] text-muted-foreground/30">
+                      <span className="text-muted-foreground/20">+</span>
+                      <span>Capture a thought...</span>
+                      <span className="ml-auto rounded border border-border/20 px-1 py-0.5 text-[9px]">⌘N</span>
                     </div>
                   </div>
                 </div>
@@ -135,14 +160,14 @@ export default function LandingPage() {
         </section>
 
         {/* How It Works */}
-        <section id="how-it-works" className="border-y border-border/40 bg-muted/20 py-28">
+        <section id="how-it-works" className="border-y border-border/30 bg-surface py-28">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                Three simple steps to productivity peace
+                Three simple steps to clarity
               </h2>
               <p className="mt-4 text-muted-foreground">
-                Based on the proven GTD methodology, enhanced with AI for the modern age
+                Based on GTD methodology, enhanced with AI for the modern age
               </p>
             </div>
 
@@ -156,9 +181,9 @@ export default function LandingPage() {
               />
               <ProcessStep
                 number={2}
-                icon={ArrowRightLeft}
+                icon={Target}
                 title="Process"
-                description="AI suggests where each item belongs. Review and refine with a few clicks. No more decision fatigue."
+                description="AI suggests where each item belongs. Review one at a time or in bulk. No more decision fatigue."
                 color="amber"
               />
               <ProcessStep
@@ -192,41 +217,41 @@ export default function LandingPage() {
                 color="primary"
               />
               <FeatureCard
-                icon={FolderOpen}
-                title="Spaces & Projects"
-                description="Organize by life areas. Work, personal, health - all in separate contexts"
-                color="blue"
+                icon={Target}
+                title="Focus Process"
+                description="Tinder-for-tasks: review one item at a time with all destinations visible"
+                color="amber"
               />
               <FeatureCard
                 icon={FileText}
                 title="Rich Pages"
                 description="Notion-like documents linked to your tasks for deeper thinking"
-                color="violet"
+                color="blue"
               />
               <FeatureCard
                 icon={Zap}
                 title="Quick Capture"
-                description="Telegram bot, browser extension, and mobile-first web app"
-                color="amber"
+                description="Persistent capture bar, Telegram bot, browser extension, desktop app"
+                color="emerald"
               />
               <FeatureCard
                 icon={Shield}
                 title="Privacy First"
                 description="Your data stays yours. Self-hostable. No ads, no tracking"
-                color="emerald"
+                color="muted"
               />
               <FeatureCard
-                icon={Clock}
-                title="Time Blocking"
-                description="Turn processed items into scheduled commitments"
-                color="rose"
+                icon={BookOpen}
+                title="Library"
+                description="Unified spaces, projects, and pages — your entire knowledge base"
+                color="primary"
               />
             </div>
           </div>
         </section>
 
         {/* Built for Overthinkers */}
-        <section className="border-y border-border/40 bg-muted/20 py-28">
+        <section className="border-y border-border/30 bg-surface py-28">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -234,27 +259,27 @@ export default function LandingPage() {
               </h2>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
                 If you have 47 browser tabs, 3 note apps, and constant anxiety about
-                forgetting things - OffMind gives you a single place to dump everything
+                forgetting things — OffMind gives you one place to dump everything
                 and lets AI do the heavy lifting of organizing it all.
               </p>
               <div className="mt-10 grid gap-4 text-left sm:grid-cols-3">
-                <div className="rounded-xl border border-border/50 bg-card p-5">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 mb-3">
-                    <Inbox className="h-4 w-4 text-blue-400" />
+                <div className="rounded-xl border border-border/40 bg-card/50 p-5">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/[0.06] mb-3">
+                    <Inbox className="h-4 w-4 text-blue-400/70" />
                   </div>
                   <p className="text-sm font-medium mb-1">Instant brain dump</p>
                   <p className="text-xs text-muted-foreground leading-relaxed">Capture from anywhere in under 2 seconds. Think it, capture it, forget it.</p>
                 </div>
-                <div className="rounded-xl border border-border/50 bg-card p-5">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 mb-3">
-                    <Sparkles className="h-4 w-4 text-primary" />
+                <div className="rounded-xl border border-border/40 bg-card/50 p-5">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/[0.06] mb-3">
+                    <Sparkles className="h-4 w-4 text-primary/70" />
                   </div>
                   <p className="text-sm font-medium mb-1">AI organizes for you</p>
                   <p className="text-xs text-muted-foreground leading-relaxed">Stop spending mental energy on categorization. AI suggests, you approve.</p>
                 </div>
-                <div className="rounded-xl border border-border/50 bg-card p-5">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10 mb-3">
-                    <CalendarCheck className="h-4 w-4 text-emerald-400" />
+                <div className="rounded-xl border border-border/40 bg-card/50 p-5">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/[0.06] mb-3">
+                    <CalendarCheck className="h-4 w-4 text-emerald-400/70" />
                   </div>
                   <p className="text-sm font-medium mb-1">Focus on today</p>
                   <p className="text-xs text-muted-foreground leading-relaxed">Only see what you committed to. Everything else is safely stored away.</p>
@@ -278,7 +303,7 @@ export default function LandingPage() {
 
             <div className="mx-auto mt-16 grid max-w-4xl gap-6 sm:grid-cols-2">
               {/* Free Tier */}
-              <div className="rounded-2xl border border-border/50 bg-card p-8">
+              <div className="rounded-2xl border border-border/40 bg-card/50 p-8">
                 <h3 className="text-xl font-semibold">Free</h3>
                 <p className="mt-2 text-sm text-muted-foreground">For getting started</p>
                 <div className="mt-6">
@@ -297,8 +322,8 @@ export default function LandingPage() {
               </div>
 
               {/* Pro Tier */}
-              <div className="relative rounded-2xl border-2 border-primary/50 bg-card p-8 shadow-lg shadow-primary/5">
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary to-blue-400 px-4 py-1 text-xs font-semibold text-white shadow-sm">
+              <div className="relative rounded-2xl border-2 border-primary/40 bg-card/50 p-8 shadow-lg shadow-primary/5">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-xs font-semibold text-primary-foreground shadow-sm">
                   Most Popular
                 </div>
                 <h3 className="text-xl font-semibold">Pro</h3>
@@ -324,7 +349,7 @@ export default function LandingPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="border-t border-border/40 bg-muted/20 py-28">
+        <section className="border-t border-border/30 bg-surface py-28">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -347,11 +372,11 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border/40 py-12">
+      <footer className="border-t border-border/30 py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
             <OffMindLogo size={28} variant="full" />
-            <p className="text-sm text-muted-foreground/60">
+            <p className="text-sm text-muted-foreground/50">
               Built with care for clarity
             </p>
           </div>
@@ -377,22 +402,19 @@ function ProcessStep({
 }) {
   const colorClasses = {
     blue: {
-      bg: 'bg-blue-500/10',
-      text: 'text-blue-400',
-      border: 'border-blue-500/20',
-      glow: 'shadow-blue-500/10',
+      bg: 'bg-blue-500/[0.06]',
+      text: 'text-blue-400/70',
+      border: 'border-blue-500/15',
     },
     amber: {
-      bg: 'bg-amber-500/10',
-      text: 'text-amber-400',
-      border: 'border-amber-500/20',
-      glow: 'shadow-amber-500/10',
+      bg: 'bg-amber-500/[0.06]',
+      text: 'text-amber-400/70',
+      border: 'border-amber-500/15',
     },
     green: {
-      bg: 'bg-emerald-500/10',
-      text: 'text-emerald-400',
-      border: 'border-emerald-500/20',
-      glow: 'shadow-emerald-500/10',
+      bg: 'bg-emerald-500/[0.06]',
+      text: 'text-emerald-400/70',
+      border: 'border-emerald-500/15',
     },
   };
 
@@ -401,10 +423,10 @@ function ProcessStep({
   return (
     <div className="flex flex-col items-center text-center">
       <div className="relative">
-        <div className={cn('flex h-16 w-16 items-center justify-center rounded-2xl border', c.bg, c.border, `shadow-lg ${c.glow}`)}>
+        <div className={cn('flex h-16 w-16 items-center justify-center rounded-2xl border', c.bg, c.border)}>
           <Icon className={cn('h-7 w-7', c.text)} />
         </div>
-        <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-foreground text-xs font-bold text-background shadow-sm">
+        <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground shadow-sm">
           {number}
         </span>
       </div>
@@ -427,18 +449,17 @@ function FeatureCard({
   color: string;
 }) {
   const colorMap: Record<string, { bg: string; text: string }> = {
-    primary: { bg: 'bg-primary/10', text: 'text-primary' },
-    blue: { bg: 'bg-blue-500/10', text: 'text-blue-400' },
-    violet: { bg: 'bg-violet-500/10', text: 'text-violet-400' },
-    amber: { bg: 'bg-amber-500/10', text: 'text-amber-400' },
-    emerald: { bg: 'bg-emerald-500/10', text: 'text-emerald-400' },
-    rose: { bg: 'bg-rose-500/10', text: 'text-rose-400' },
+    primary: { bg: 'bg-primary/[0.06]', text: 'text-primary/70' },
+    blue: { bg: 'bg-blue-500/[0.06]', text: 'text-blue-400/70' },
+    amber: { bg: 'bg-amber-500/[0.06]', text: 'text-amber-400/70' },
+    emerald: { bg: 'bg-emerald-500/[0.06]', text: 'text-emerald-400/70' },
+    muted: { bg: 'bg-muted-foreground/[0.06]', text: 'text-muted-foreground/70' },
   };
 
   const c = colorMap[color] || colorMap.primary;
 
   return (
-    <div className="rounded-xl border border-border/50 bg-card p-6 transition-all duration-200 hover:border-border hover:shadow-sm card-hover">
+    <div className="rounded-xl border border-border/40 bg-card/50 p-6 transition-all duration-200 hover:border-border hover:bg-card card-hover">
       <div className={cn('flex h-10 w-10 items-center justify-center rounded-xl', c.bg)}>
         <Icon className={cn('h-5 w-5', c.text)} />
       </div>
@@ -452,8 +473,8 @@ function FeatureCard({
 function PricingFeature({ children }: { children: React.ReactNode }) {
   return (
     <li className="flex items-center gap-3">
-      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/10">
-        <Check className="h-3 w-3 text-emerald-400" />
+      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/[0.06]">
+        <Check className="h-3 w-3 text-primary/70" />
       </div>
       <span className="text-sm">{children}</span>
     </li>
