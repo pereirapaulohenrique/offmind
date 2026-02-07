@@ -95,14 +95,15 @@ export function HomePageClient({
             className="grid gap-4 sm:grid-cols-3"
           >
             <Link href="/inbox" className="group">
-              <div className="relative overflow-hidden rounded-xl border border-[var(--layer-capture-border)] bg-[var(--layer-capture-bg)] p-5 transition-all duration-200 hover:border-[var(--layer-capture)] hover:bg-[rgba(96,165,250,0.08)]">
+              <div className="inner-light relative overflow-hidden rounded-xl border border-[var(--layer-capture-border)] bg-[var(--layer-capture-bg)] p-5 transition-all duration-200 hover:border-[var(--layer-capture)] hover:bg-[rgba(96,165,250,0.08)]">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[rgba(96,165,250,0.10)]">
                     <Inbox className="h-5 w-5 text-[var(--layer-capture)]" />
                   </div>
                   <div>
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--layer-capture)]/70">Capture</p>
-                    <p className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">{stats.inboxCount}</p>
+                    <p className="text-2xl font-bold tracking-tight tabular-nums text-[var(--text-primary)]">{stats.inboxCount}</p>
+                    <div className="mt-2 h-0.5 w-10 rounded-full" style={{ background: 'var(--layer-capture)' }} />
                   </div>
                 </div>
                 <p className="text-xs text-[var(--text-muted)]">items in inbox</p>
@@ -113,14 +114,15 @@ export function HomePageClient({
               </div>
             </Link>
             <Link href="/review" className="group">
-              <div className="relative overflow-hidden rounded-xl border border-[var(--layer-process-border)] bg-[var(--layer-process-bg)] p-5 transition-all duration-200 hover:border-[var(--layer-process)] hover:bg-[rgba(251,191,36,0.08)]">
+              <div className="inner-light relative overflow-hidden rounded-xl border border-[var(--layer-process-border)] bg-[var(--layer-process-bg)] p-5 transition-all duration-200 hover:border-[var(--layer-process)] hover:bg-[rgba(251,191,36,0.08)]">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[rgba(251,191,36,0.10)]">
                     <ArrowRightLeft className="h-5 w-5 text-[var(--layer-process)]" />
                   </div>
                   <div>
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--layer-process)]/70">Process</p>
-                    <p className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">{stats.processingCount}</p>
+                    <p className="text-2xl font-bold tracking-tight tabular-nums text-[var(--text-primary)]">{stats.processingCount}</p>
+                    <div className="mt-2 h-0.5 w-10 rounded-full" style={{ background: 'var(--layer-process)' }} />
                   </div>
                 </div>
                 <p className="text-xs text-[var(--text-muted)]">items to organize</p>
@@ -131,14 +133,15 @@ export function HomePageClient({
               </div>
             </Link>
             <Link href="/commit" className="group">
-              <div className="relative overflow-hidden rounded-xl border border-[var(--layer-commit-border)] bg-[var(--layer-commit-bg)] p-5 transition-all duration-200 hover:border-[var(--layer-commit)] hover:bg-[rgba(52,211,153,0.08)]">
+              <div className="inner-light relative overflow-hidden rounded-xl border border-[var(--layer-commit-border)] bg-[var(--layer-commit-bg)] p-5 transition-all duration-200 hover:border-[var(--layer-commit)] hover:bg-[rgba(52,211,153,0.08)]">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[rgba(52,211,153,0.10)]">
                     <CalendarCheck className="h-5 w-5 text-[var(--layer-commit)]" />
                   </div>
                   <div>
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--layer-commit)]/70">Commit</p>
-                    <p className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">{stats.todayCount}</p>
+                    <p className="text-2xl font-bold tracking-tight tabular-nums text-[var(--text-primary)]">{stats.todayCount}</p>
+                    <div className="mt-2 h-0.5 w-10 rounded-full" style={{ background: 'var(--layer-commit)' }} />
                   </div>
                 </div>
                 <p className="text-xs text-[var(--text-muted)]">
@@ -164,12 +167,12 @@ export function HomePageClient({
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25, delay: 0.1 }}
-              className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]"
+              className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[var(--shadow-card)]"
             >
               <div className="flex items-center justify-between border-b border-[var(--border-subtle)] px-5 py-3">
                 <div className="flex items-center gap-2.5">
                   <CalendarCheck className="h-4 w-4 text-[var(--layer-commit)]" />
-                  <h2 className="text-sm font-semibold text-[var(--text-primary)]">Today&apos;s Commitments</h2>
+                  <h2 className="text-sm font-semibold tracking-tight text-[var(--text-primary)]">Today&apos;s Commitments</h2>
                 </div>
                 <Button variant="ghost" size="sm" className="text-[var(--text-muted)] hover:text-[var(--text-primary)] h-7 text-xs" asChild>
                   <Link href="/commit">
@@ -226,12 +229,12 @@ export function HomePageClient({
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25, delay: 0.15 }}
-              className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]"
+              className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[var(--shadow-card)]"
             >
               <div className="flex items-center justify-between border-b border-[var(--border-subtle)] px-5 py-3">
                 <div className="flex items-center gap-2.5">
                   <Inbox className="h-4 w-4 text-[var(--layer-capture)]" />
-                  <h2 className="text-sm font-semibold text-[var(--text-primary)]">Recent Activity</h2>
+                  <h2 className="text-sm font-semibold tracking-tight text-[var(--text-primary)]">Recent Activity</h2>
                 </div>
                 <Button variant="ghost" size="sm" className="text-[var(--text-muted)] hover:text-[var(--text-primary)] h-7 text-xs" asChild>
                   <Link href="/inbox">

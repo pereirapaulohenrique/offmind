@@ -225,7 +225,7 @@ export function ReviewPageClient({
       <div className="flex-shrink-0 border-b border-[var(--border-subtle)] px-4 py-4 sm:px-6">
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
-            <h1 className="text-xl font-semibold text-[var(--text-primary)] sm:text-2xl">Review</h1>
+            <h1 className="text-xl font-semibold text-[var(--text-primary)] sm:text-2xl" style={{ letterSpacing: 'var(--tracking-tight)' }}>Review</h1>
             <p className="hidden text-sm text-[var(--text-muted)] sm:block">
               Organize items into destinations. Schedule when ready.
             </p>
@@ -240,13 +240,13 @@ export function ReviewPageClient({
             />
 
             {/* View toggle */}
-            <div className="flex rounded-md border border-[var(--border-default)]">
+            <div className="flex rounded-lg border border-[var(--border-subtle)] shadow-[var(--shadow-xs)] bg-[var(--bg-inset)]">
               <Button
                 variant="ghost"
                 size="sm"
                 className={cn(
                   'rounded-r-none',
-                  viewMode === 'focus' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)]'
+                  viewMode === 'focus' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)] shadow-sm'
                 )}
                 onClick={() => setViewMode('focus')}
                 title="Focus view"

@@ -79,8 +79,9 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
       <motion.aside
         initial={false}
         animate={{ width: sidebarCollapsed ? 68 : 252 }}
-        transition={{ duration: 0.2, ease: 'easeInOut' }}
-        className="fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-[var(--border-subtle)] bg-[var(--sidebar)]"
+        transition={{ type: "spring", stiffness: 500, damping: 35 }}
+        className="fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-[var(--border-subtle)]"
+        style={{ background: 'linear-gradient(180deg, var(--bg-inset) 0%, var(--sidebar) 100%)' }}
       >
         {/* Header */}
         <div className="flex h-14 items-center justify-between px-4">
@@ -118,6 +119,9 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
             )}
           </AnimatePresence>
         </div>
+
+        {/* Gradient separator below logo */}
+        <div className="mx-3 h-px" style={{ background: 'linear-gradient(to right, transparent, var(--border-subtle), transparent)' }} />
 
         <ScrollArea className="flex-1 overflow-visible px-2">
           {/* Main Navigation */}
@@ -274,7 +278,7 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
 // Section header component with link
 function SectionHeader({ title, href }: { title: string; href?: string }) {
   const content = (
-    <h3 className="mb-1 px-3 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+    <h3 className="mb-1 px-3 text-[10px] font-semibold uppercase text-[var(--text-muted)]" style={{ letterSpacing: 'var(--tracking-widest)' }}>
       {title}
     </h3>
   );
@@ -302,34 +306,34 @@ interface NavItemProps {
 }
 
 function NavItem({ href, label, icon: Icon, isActive, isCollapsed, shortcut, badge }: NavItemProps) {
-  // Layer-specific active styles using CSS variables
+  // Layer-specific active styles using CSS variables — pill indicator + accent dot
   const getLayerStyles = () => {
-    if (!isActive) return { bg: '', text: '', border: 'border-l-transparent' };
+    if (!isActive) return { bg: '', text: '', dot: '' };
 
     switch (href) {
       case '/inbox':
         return {
-          bg: 'bg-[var(--layer-capture-bg)]',
+          bg: 'bg-[var(--bg-hover)]',
           text: 'text-[var(--layer-capture)]',
-          border: 'border-l-[var(--layer-capture)]',
+          dot: 'bg-[var(--layer-capture)]',
         };
       case '/review':
         return {
-          bg: 'bg-[var(--layer-process-bg)]',
+          bg: 'bg-[var(--bg-hover)]',
           text: 'text-[var(--layer-process)]',
-          border: 'border-l-[var(--layer-process)]',
+          dot: 'bg-[var(--layer-process)]',
         };
       case '/commit':
         return {
-          bg: 'bg-[var(--layer-commit-bg)]',
+          bg: 'bg-[var(--bg-hover)]',
           text: 'text-[var(--layer-commit)]',
-          border: 'border-l-[var(--layer-commit)]',
+          dot: 'bg-[var(--layer-commit)]',
         };
       default:
         return {
-          bg: 'bg-[var(--accent-subtle)]',
+          bg: 'bg-[var(--bg-hover)]',
           text: 'text-[var(--accent-base)]',
-          border: 'border-l-[var(--accent-base)]',
+          dot: 'bg-[var(--accent-base)]',
         };
     }
   };
@@ -340,13 +344,17 @@ function NavItem({ href, label, icon: Icon, isActive, isCollapsed, shortcut, bad
     <Link
       href={href}
       className={cn(
-        'flex items-center gap-3 rounded-lg border-l-2 px-3 py-2 text-[13px] transition-all duration-150',
+        'relative flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] transition-all duration-150',
         isActive
-          ? `${layerStyles.bg} ${layerStyles.border} font-medium ${layerStyles.text}`
-          : 'border-l-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]',
-        isCollapsed && 'justify-center border-l-0 px-2'
+          ? `${layerStyles.bg} font-medium ${layerStyles.text}`
+          : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] hover:translate-x-px',
+        isCollapsed && 'justify-center px-2'
       )}
     >
+      {/* Active accent dot */}
+      {isActive && !isCollapsed && (
+        <span className={cn('absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-full', layerStyles.dot)} />
+      )}
       <Icon className={cn('h-4 w-4 flex-shrink-0', isActive && layerStyles.text)} />
       {!isCollapsed && (
         <>

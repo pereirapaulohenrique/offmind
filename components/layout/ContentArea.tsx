@@ -11,9 +11,10 @@ export function ContentArea({ children }: { children: React.ReactNode }) {
 
   return (
     <div
-      className={`flex flex-1 flex-col transition-all duration-200 md:pl-[var(--sidebar-offset)] pb-20`}
+      className={`flex flex-1 flex-col md:pl-[var(--sidebar-offset)] pb-20`}
       style={{
         '--sidebar-offset': sidebarCollapsed ? '68px' : '252px',
+        transition: 'padding-left 0.3s cubic-bezier(0.32, 0.72, 0, 1)',
       } as React.CSSProperties}
     >
       {children}

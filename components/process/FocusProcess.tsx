@@ -156,6 +156,12 @@ export function FocusProcess({
         <span className="mx-1">/</span>
         <span>{unprocessedItems.length}</span>
         <span className="ml-2 text-[var(--text-disabled)]">to process</span>
+        <div className="mt-2 h-1 w-48 rounded-full bg-[var(--bg-inset)]">
+          <div
+            className="h-1 rounded-full bg-[var(--accent-base)] transition-all duration-300"
+            style={{ width: `${((currentIndex + 1) / unprocessedItems.length) * 100}%` }}
+          />
+        </div>
       </div>
 
       {/* Current item card */}
@@ -163,13 +169,13 @@ export function FocusProcess({
         {currentItem && (
           <motion.div
             key={currentItem.id}
-            initial={{ opacity: 0, x: direction * 40, scale: 0.97 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: direction * -40, scale: 0.97 }}
-            transition={{ duration: 0.2 }}
-            className="w-full max-w-lg"
+            initial={{ opacity: 0, x: direction * 40, scale: 0.97, rotateY: direction * 3 }}
+            animate={{ opacity: 1, x: 0, scale: 1, rotateY: 0 }}
+            exit={{ opacity: 0, x: direction * -40, scale: 0.97, rotateY: direction * -3 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            className="w-full max-w-xl"
           >
-            <div className="rounded-2xl border border-[var(--layer-process-border)] bg-[var(--bg-surface)] p-6 shadow-lg shadow-black/10">
+            <div className="rounded-2xl border border-[var(--layer-process-border)] bg-[var(--bg-surface)] p-6 shadow-[var(--shadow-float)] inner-light">
               <h2 className="text-xl font-semibold tracking-tight text-[var(--text-primary)] mb-2">
                 {currentItem.title}
               </h2>
@@ -206,8 +212,8 @@ export function FocusProcess({
                 className={cn(
                   'group flex items-center gap-2.5 rounded-xl border px-3.5 py-3 text-left transition-all duration-150',
                   isSelected
-                    ? 'border-[var(--layer-process)] bg-[var(--layer-process-bg)] ring-1 ring-[var(--layer-process)] shadow-sm'
-                    : 'border-[var(--border-subtle)] bg-[var(--bg-surface)]/50 hover:border-[var(--border-default)] hover:bg-[var(--bg-surface)] hover:shadow-sm'
+                    ? 'border-[var(--layer-process)] bg-[var(--layer-process-bg)] ring-1 ring-[var(--layer-process)] shadow-[var(--shadow-xs)]'
+                    : 'border-[var(--border-subtle)] bg-[var(--bg-surface)]/50 shadow-[var(--shadow-xs)] hover:border-[var(--border-default)] hover:bg-[var(--bg-surface)] hover:shadow-sm'
                 )}
               >
                 <div

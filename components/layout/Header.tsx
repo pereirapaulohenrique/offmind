@@ -19,7 +19,7 @@ export function Header({ title, user, mobileSidebar }: HeaderProps) {
   const { setCommandPaletteOpen } = useUIStore();
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-base)]/80 px-5 backdrop-blur-xl">
+    <header className="sticky top-0 z-30 flex h-12 items-center justify-between bg-[var(--bg-base)]/80 px-5 backdrop-blur-xl" style={{ backgroundImage: 'linear-gradient(to bottom, var(--bg-base) 60%, transparent)' }}>
       <div className="flex items-center gap-4">
         {mobileSidebar}
         {title && (
@@ -31,14 +31,14 @@ export function Header({ title, user, mobileSidebar }: HeaderProps) {
         {/* Command palette trigger */}
         <Button
           variant="outline"
-          className="hidden h-8 w-64 justify-between border-[var(--border-default)] text-sm text-[var(--text-muted)] hover:border-[var(--border-emphasis)] hover:text-[var(--text-secondary)] sm:flex"
+          className="hidden h-8 w-80 justify-between border-[var(--border-subtle)] text-sm text-[var(--text-muted)] hover:border-[var(--border-default)] hover:text-[var(--text-secondary)] shadow-[var(--shadow-xs)] sm:flex"
           onClick={() => setCommandPaletteOpen(true)}
         >
           <div className="flex items-center gap-2">
             <Search className="h-3.5 w-3.5" />
             <span>Search or command...</span>
           </div>
-          <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-[var(--border-default)] bg-[var(--bg-hover)] px-1.5 font-mono text-[10px] font-medium text-[var(--text-disabled)]">
+          <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-[var(--border-subtle)] bg-[var(--bg-inset)] px-1.5 font-mono text-[10px] font-medium text-[var(--text-disabled)]">
             <span className="text-xs">⌘</span>K
           </kbd>
         </Button>

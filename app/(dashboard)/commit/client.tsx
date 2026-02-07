@@ -270,7 +270,7 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
       <div className="border-b border-[var(--border-subtle)] px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-[var(--text-primary)]">Commit</h1>
+            <h1 className="text-2xl font-semibold text-[var(--text-primary)]" style={{ letterSpacing: 'var(--tracking-tight)' }}>Commit</h1>
             <p className="text-sm text-[var(--text-muted)]">
               Your scheduled commitments
             </p>
@@ -285,11 +285,11 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
             />
 
             {/* View toggle */}
-            <div className="flex rounded-md border border-[var(--border-default)]">
+            <div className="flex rounded-lg border border-[var(--border-subtle)] shadow-[var(--shadow-xs)] bg-[var(--bg-inset)]">
               <Button
                 variant="ghost"
                 size="sm"
-                className={cn('rounded-r-none', viewMode === 'agenda' && 'bg-[var(--layer-commit-bg)] text-[var(--layer-commit)]')}
+                className={cn('rounded-r-none', viewMode === 'agenda' && 'bg-[var(--layer-commit-bg)] text-[var(--layer-commit)] shadow-sm')}
                 onClick={() => setViewMode('agenda')}
               >
                 Agenda

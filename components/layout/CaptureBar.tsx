@@ -95,15 +95,15 @@ export function CaptureBar({ userId }: CaptureBarProps) {
     <div className={`fixed bottom-0 left-0 ${sidebarOffset} right-0 z-30 px-4 pb-4 pt-2 pointer-events-none transition-all duration-200`}>
       <div className="mx-auto max-w-2xl pointer-events-auto">
         <div
-          className={`capture-input flex items-center gap-3 rounded-2xl border px-4 py-3 shadow-lg transition-all duration-200 ${
+          className={`capture-input relative flex items-center gap-3 rounded-2xl border px-4 py-3 transition-all duration-200 ${
             isFocused
-              ? 'border-[var(--accent-border)] bg-[var(--bg-card,var(--bg-elevated))]/95 shadow-[0_0_20px_var(--accent-glow)]'
-              : 'border-[var(--border-default)] bg-[var(--bg-card,var(--bg-elevated))]/90'
+              ? 'border-[var(--accent-border)] bg-[var(--bg-surface)]/95 shadow-[var(--shadow-glow)]'
+              : 'border-[var(--border-subtle)] bg-[var(--bg-surface)]/70 shadow-[var(--shadow-card)]'
           } backdrop-blur-xl`}
         >
           <Plus
-            className={`h-4.5 w-4.5 flex-shrink-0 transition-colors duration-200 ${
-              isFocused ? 'text-[var(--accent-base)]' : 'text-[var(--text-muted)]'
+            className={`h-4.5 w-4.5 flex-shrink-0 transition-all duration-200 ${
+              isFocused ? 'text-[var(--accent-base)] rotate-45' : 'text-[var(--text-muted)] rotate-0'
             }`}
           />
 
@@ -122,7 +122,7 @@ export function CaptureBar({ userId }: CaptureBarProps) {
           />
 
           {!value.trim() && !isFocused && (
-            <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-[var(--border-default)] bg-[var(--bg-hover)] px-1.5 py-0.5 text-[10px] text-[var(--text-disabled)] font-mono">
+            <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-[var(--border-subtle)] bg-[var(--bg-inset)] px-1.5 py-0.5 text-[10px] text-[var(--text-disabled)] font-mono">
               ⌘N
             </kbd>
           )}

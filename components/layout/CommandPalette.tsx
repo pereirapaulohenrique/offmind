@@ -139,11 +139,13 @@ export function CommandPalette() {
               className="flex items-center justify-between"
             >
               <div className="flex items-center gap-2">
-                <item.Icon className="h-4 w-4 text-[var(--text-muted)]" />
+                <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--bg-hover)]">
+                  <item.Icon className="h-3.5 w-3.5 text-[var(--text-muted)]" />
+                </div>
                 <span>{item.label}</span>
               </div>
               {item.shortcut && (
-                <span className="text-xs text-[var(--text-muted)]">{item.shortcut}</span>
+                <kbd className="text-[10px] font-mono text-[var(--text-disabled)] bg-[var(--bg-inset)] border border-[var(--border-subtle)] rounded px-1.5 py-0.5">{item.shortcut}</kbd>
               )}
             </CommandItem>
           ))}
@@ -159,11 +161,13 @@ export function CommandPalette() {
               className="flex items-center justify-between"
             >
               <div className="flex items-center gap-2">
-                <item.Icon className="h-4 w-4 text-[var(--text-muted)]" />
+                <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--bg-hover)]">
+                  <item.Icon className="h-3.5 w-3.5 text-[var(--text-muted)]" />
+                </div>
                 <span>{item.label}</span>
               </div>
               {item.shortcut && (
-                <span className="text-xs text-[var(--text-muted)]">{item.shortcut}</span>
+                <kbd className="text-[10px] font-mono text-[var(--text-disabled)] bg-[var(--bg-inset)] border border-[var(--border-subtle)] rounded px-1.5 py-0.5">{item.shortcut}</kbd>
               )}
             </CommandItem>
           ))}

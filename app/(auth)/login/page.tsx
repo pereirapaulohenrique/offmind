@@ -90,7 +90,7 @@ export default function LoginPage() {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center bg-background px-4">
       {/* Background gradient */}
-      <div className="gradient-mesh absolute inset-0 opacity-50" />
+      <div className="gradient-mesh dot-grid absolute inset-0 opacity-50" />
 
       <motion.div
         initial={{ opacity: 0, y: 12 }}
@@ -100,9 +100,9 @@ export default function LoginPage() {
       >
         {/* Logo */}
         <div className="flex flex-col items-center gap-3 text-center">
-          <OffMindLogo size={48} />
+          <OffMindLogo size={48} className="animate-breathe" />
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">Welcome back</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground" style={{ letterSpacing: 'var(--tracking-tight)' }}>Welcome back</h1>
             <p className="mt-1 text-sm text-muted-foreground">
               Sign in to your OffMind account
             </p>
@@ -110,7 +110,7 @@ export default function LoginPage() {
         </div>
 
         {/* Login Form */}
-        <div className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)]/80 p-6 shadow-lg shadow-black/5 backdrop-blur-sm">
+        <div className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)]/80 p-6 shadow-[var(--shadow-float)] inner-light backdrop-blur-sm">
           <Tabs defaultValue="password" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-5">
               <TabsTrigger value="password" className="gap-2 text-xs">

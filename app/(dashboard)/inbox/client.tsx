@@ -198,7 +198,7 @@ export function InboxPageClient({ initialItems, destinations, spaces, projects, 
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-center gap-3">
-              <h1 className="text-xl font-semibold text-[var(--text-primary)]">Inbox</h1>
+              <h1 className="text-xl font-semibold tracking-tight text-[var(--text-primary)]">Inbox</h1>
               {captureItems.length > 0 && (
                 <span className="rounded-full bg-[var(--layer-capture-bg)] border border-[var(--layer-capture-border)] px-2.5 py-0.5 text-xs font-medium text-[var(--layer-capture)]">
                   {captureItems.length} item{captureItems.length !== 1 ? 's' : ''}
@@ -233,14 +233,14 @@ export function InboxPageClient({ initialItems, destinations, spaces, projects, 
         ) : (
           <div className="mx-auto max-w-3xl space-y-3">
             <AnimatePresence mode="popLayout">
-              {captureItems.map((item) => (
+              {captureItems.map((item, index) => (
                 <motion.div
                   key={item.id}
                   layout
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.15 }}
+                  transition={{ duration: 0.15, delay: Math.min(index * 0.03, 0.3) }}
                   className="space-y-2"
                 >
                   <ItemCard

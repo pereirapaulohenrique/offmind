@@ -79,7 +79,7 @@ export function ItemCard({
   return (
     <div
       className={cn(
-        'group relative rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 card-hover',
+        'group relative rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 card-hover shadow-[var(--shadow-card)] inner-light hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-px',
         item.is_completed && 'opacity-50',
         justCompleted && 'border-[var(--layer-commit-border)] animate-completion-flash'
       )}
@@ -189,7 +189,7 @@ export function ItemCard({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100"
+                  className="h-8 w-8 opacity-0 translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0"
                 >
                   <Send className="h-3.5 w-3.5" />
                 </Button>
@@ -217,7 +217,7 @@ export function ItemCard({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100"
+                className="h-8 w-8 opacity-0 translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0"
               >
                 <MoreHorizontal className="h-3.5 w-3.5" />
               </Button>

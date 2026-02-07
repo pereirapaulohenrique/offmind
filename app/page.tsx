@@ -49,10 +49,10 @@ export default function LandingPage() {
                 <Sparkles className="mr-2 h-3.5 w-3.5" />
                 AI-Powered GTD System
               </div>
-              <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-7xl">
+              <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-7xl" style={{ letterSpacing: '-0.04em' }}>
                 Clear your mind.
                 <br />
-                <span className="bg-gradient-to-r from-primary via-blue-400 to-emerald-400 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-[#38d9c2] via-[#38a8d4] to-[#818cf8] bg-clip-text text-transparent">
                   Own your day.
                 </span>
               </h1>
@@ -77,7 +77,7 @@ export default function LandingPage() {
             </div>
 
             {/* Product Preview - Visual anchor */}
-            <div className="mx-auto mt-20 max-w-4xl">
+            <div className="mx-auto mt-20 max-w-4xl" style={{ transform: 'perspective(2000px) rotateX(2deg)' }}>
               <div className="relative rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)]/80 p-1.5 shadow-2xl shadow-black/20 backdrop-blur-sm">
                 <div className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)] overflow-hidden">
                   {/* Mock dashboard header */}
@@ -297,7 +297,7 @@ export default function LandingPage() {
               </div>
 
               {/* Pro Tier */}
-              <div className="relative rounded-2xl border-2 border-[var(--accent-base)]/50 bg-[var(--bg-surface)] p-8 shadow-lg shadow-[var(--accent-glow)]">
+              <div className="relative rounded-2xl border-2 border-[var(--accent-base)]/50 bg-[var(--bg-surface)] p-8 shadow-lg shadow-[var(--accent-glow)] gradient-border">
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary to-blue-400 px-4 py-1 text-xs font-semibold text-white shadow-sm">
                   Most Popular
                 </div>
@@ -438,7 +438,7 @@ function FeatureCard({
   const c = colorMap[color] || colorMap.primary;
 
   return (
-    <div className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)] p-6 transition-all duration-200 hover:border-[var(--border-emphasis)] hover:shadow-sm card-hover">
+    <div className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)] p-6 transition-all duration-200 hover:border-[var(--border-emphasis)] hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-px inner-light shadow-[var(--shadow-card)] card-hover">
       <div className={cn('flex h-10 w-10 items-center justify-center rounded-xl', c.bg)}>
         <Icon className={cn('h-5 w-5', c.text)} />
       </div>
