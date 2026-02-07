@@ -232,7 +232,7 @@ export function SpaceDetailClient({
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="flex items-center gap-3 rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-3 hover:border-[var(--accent-border)] transition-colors"
+                        className="flex items-center gap-3 rounded-xl bg-[var(--bg-surface)] p-3 shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-card)] transition-[box-shadow] duration-200"
                       >
                         <div className={cn(
                           'h-2 w-2 rounded-full',
@@ -280,7 +280,7 @@ export function SpaceDetailClient({
                     <Link
                       key={project.id}
                       href={`/projects/${project.id}`}
-                      className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 hover:border-[var(--accent-border)] transition-colors"
+                      className="rounded-xl bg-[var(--bg-surface)] p-4 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-[box-shadow,transform] duration-200 hover:-translate-y-px"
                     >
                       <div className="flex items-center gap-3">
                         <div className={cn(
@@ -316,7 +316,7 @@ export function SpaceDetailClient({
                   <Link
                     key={page.id}
                     href={`/pages/${page.id}`}
-                    className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 hover:border-[var(--accent-border)] transition-colors"
+                    className="rounded-xl bg-[var(--bg-surface)] p-4 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-[box-shadow,transform] duration-200 hover:-translate-y-px"
                   >
                     <div className="flex items-center gap-3">
                       <FileText className="h-5 w-5 text-[var(--text-muted)]" />

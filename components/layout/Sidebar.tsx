@@ -79,20 +79,31 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
       <motion.aside
         initial={false}
         animate={{ width: sidebarCollapsed ? 68 : 252 }}
-        transition={{ type: "spring", stiffness: 500, damping: 35 }}
-        className="fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-[var(--border-subtle)]"
-        style={{ background: 'linear-gradient(180deg, var(--bg-inset) 0%, var(--sidebar) 100%)' }}
+        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        className={cn(
+          "fixed left-0 top-0 z-40 flex h-screen flex-col backdrop-blur-xl",
+          sidebarCollapsed && "rounded-r-2xl"
+        )}
+        style={{
+          background: sidebarCollapsed
+            ? 'linear-gradient(180deg, rgba(var(--bg-inset-rgb), 0.85) 0%, rgba(var(--sidebar-rgb), 0.9) 100%)'
+            : 'linear-gradient(180deg, rgba(var(--bg-inset-rgb), 0.9) 0%, rgba(var(--sidebar-rgb), 0.95) 100%)',
+          boxShadow: 'var(--shadow-lg)'
+        }}
       >
         {/* Header */}
         <div className="flex h-14 items-center justify-between px-4">
           <Link href="/home" className="flex items-center gap-2.5">
-            <OffMindLogo size={28} />
+            <div className="animate-breathe">
+              <OffMindLogo size={28} />
+            </div>
             <AnimatePresence>
               {!sidebarCollapsed && (
                 <motion.span
                   initial={{ opacity: 0, width: 0 }}
                   animate={{ opacity: 1, width: 'auto' }}
                   exit={{ opacity: 0, width: 0 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   className="text-[15px] font-semibold tracking-tight text-sidebar-foreground overflow-hidden whitespace-nowrap"
                 >
                   OffMind
@@ -106,11 +117,12 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
               >
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-7 w-7 text-[var(--text-muted)] hover:text-sidebar-foreground"
+                  className="h-7 w-7 text-[var(--text-muted)] hover:text-sidebar-foreground transition-colors duration-200"
                   onClick={toggleSidebar}
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -140,7 +152,7 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
             ))}
           </nav>
 
-          <Separator className="my-2 opacity-30" />
+          <div className="my-2 mx-1 h-px" style={{ background: 'linear-gradient(to right, transparent, var(--border-subtle), transparent)' }} />
 
           {/* When collapsed: show Spaces/Projects/Pages as icons */}
           {sidebarCollapsed && (
@@ -177,7 +189,7 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
                   ))}
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-sm text-[var(--text-disabled)] hover:text-[var(--accent-base)] h-8"
+                    className="w-full justify-start text-sm text-[var(--text-disabled)] hover:text-[var(--accent-base)] h-8 transition-colors duration-200"
                     asChild
                   >
                     <Link href="/spaces">
@@ -203,7 +215,7 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
                   ))}
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-sm text-[var(--text-disabled)] hover:text-[var(--accent-base)] h-8"
+                    className="w-full justify-start text-sm text-[var(--text-disabled)] hover:text-[var(--accent-base)] h-8 transition-colors duration-200"
                     asChild
                   >
                     <Link href="/projects">
@@ -228,7 +240,7 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
                   ))}
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-sm text-[var(--text-disabled)] hover:text-[var(--accent-base)] h-8"
+                    className="w-full justify-start text-sm text-[var(--text-disabled)] hover:text-[var(--accent-base)] h-8 transition-colors duration-200"
                     asChild
                   >
                     <Link href="/pages">
@@ -242,7 +254,7 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
         </ScrollArea>
 
         {/* Bottom Navigation */}
-        <div className="border-t border-[var(--border-subtle)] p-2">
+        <div className="p-2" style={{ borderTop: '1px solid', borderImage: 'linear-gradient(to right, transparent, var(--border-subtle), transparent) 1' }}>
           {/* Expand/collapse toggle */}
           {sidebarCollapsed && (
             <Tooltip>
@@ -250,7 +262,7 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="w-full h-9 mb-1 text-[var(--text-muted)] hover:text-sidebar-foreground"
+                  className="w-full h-9 mb-1 text-[var(--text-disabled)] hover:text-sidebar-foreground transition-all duration-200 rounded-full hover:bg-[var(--bg-hover)]"
                   onClick={toggleSidebar}
                 >
                   <ChevronRight className="h-4 w-4" />
@@ -285,7 +297,7 @@ function SectionHeader({ title, href }: { title: string; href?: string }) {
 
   if (href) {
     return (
-      <Link href={href} className="block hover:text-[var(--text-primary)] transition-colors">
+      <Link href={href} className="block hover:text-[var(--text-primary)] transition-colors duration-200">
         {content}
       </Link>
     );
@@ -306,32 +318,32 @@ interface NavItemProps {
 }
 
 function NavItem({ href, label, icon: Icon, isActive, isCollapsed, shortcut, badge }: NavItemProps) {
-  // Layer-specific active styles using CSS variables — pill indicator + accent dot
+  // Layer-specific active styles using CSS variables — glow effect + accent dot
   const getLayerStyles = () => {
-    if (!isActive) return { bg: '', text: '', dot: '' };
+    if (!isActive) return { glow: '', text: '', dot: '' };
 
     switch (href) {
       case '/inbox':
         return {
-          bg: 'bg-[var(--bg-hover)]',
+          glow: 'shadow-[0_0_20px_rgba(96,165,250,0.15)]',
           text: 'text-[var(--layer-capture)]',
           dot: 'bg-[var(--layer-capture)]',
         };
       case '/review':
         return {
-          bg: 'bg-[var(--bg-hover)]',
+          glow: 'shadow-[0_0_20px_rgba(251,191,36,0.15)]',
           text: 'text-[var(--layer-process)]',
           dot: 'bg-[var(--layer-process)]',
         };
       case '/commit':
         return {
-          bg: 'bg-[var(--bg-hover)]',
+          glow: 'shadow-[0_0_20px_rgba(52,211,153,0.15)]',
           text: 'text-[var(--layer-commit)]',
           dot: 'bg-[var(--layer-commit)]',
         };
       default:
         return {
-          bg: 'bg-[var(--bg-hover)]',
+          glow: 'shadow-[0_0_20px_rgba(45,212,191,0.15)]',
           text: 'text-[var(--accent-base)]',
           dot: 'bg-[var(--accent-base)]',
         };
@@ -344,18 +356,23 @@ function NavItem({ href, label, icon: Icon, isActive, isCollapsed, shortcut, bad
     <Link
       href={href}
       className={cn(
-        'relative flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] transition-all duration-150',
+        'relative flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] flow-transition-fast',
         isActive
-          ? `${layerStyles.bg} font-medium ${layerStyles.text}`
-          : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] hover:translate-x-px',
+          ? `bg-[var(--bg-hover)]/50 font-medium ${layerStyles.text} ${layerStyles.glow}`
+          : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]/30 hover:text-[var(--text-primary)] hover:translate-x-0.5',
         isCollapsed && 'justify-center px-2'
       )}
     >
-      {/* Active accent dot */}
+      {/* Active accent dot with pulse */}
       {isActive && !isCollapsed && (
-        <span className={cn('absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-full', layerStyles.dot)} />
+        <span
+          className={cn(
+            'absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-full animate-pulse-subtle',
+            layerStyles.dot
+          )}
+        />
       )}
-      <Icon className={cn('h-4 w-4 flex-shrink-0', isActive && layerStyles.text)} />
+      <Icon className={cn('h-[18px] w-[18px] flex-shrink-0', isActive && layerStyles.text)} />
       {!isCollapsed && (
         <>
           <span className="flex-1 truncate">{label}</span>
@@ -417,10 +434,10 @@ function DynamicNavItem({ href, label, iconName, color, isActive }: DynamicNavIt
     <Link
       href={href}
       className={cn(
-        'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all duration-150',
+        'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm flow-transition-fast',
         isActive
-          ? 'bg-[var(--bg-hover)] text-[var(--text-primary)]'
-          : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]'
+          ? 'bg-[var(--bg-hover)]/50 text-[var(--text-primary)]'
+          : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]/30 hover:text-[var(--text-primary)] hover:translate-x-0.5'
       )}
     >
       <div className={cn(

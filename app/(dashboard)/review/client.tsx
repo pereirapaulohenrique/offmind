@@ -222,11 +222,11 @@ export function ReviewPageClient({
   return (
     <div className="flex h-full flex-col">
       {/* Page header */}
-      <div className="flex-shrink-0 border-b border-[var(--border-subtle)] px-4 py-4 sm:px-6">
+      <div className="flex-shrink-0 px-6 py-6 sm:px-8">
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
-            <h1 className="text-xl font-semibold text-[var(--text-primary)] sm:text-2xl" style={{ letterSpacing: 'var(--tracking-tight)' }}>Review</h1>
-            <p className="hidden text-sm text-[var(--text-muted)] sm:block">
+            <h1 className="text-2xl font-semibold text-[var(--text-primary)] sm:text-3xl" style={{ letterSpacing: 'var(--tracking-tight)' }}>Review</h1>
+            <p className="mt-1 hidden text-sm text-[var(--text-muted)] sm:block">
               Organize items into destinations. Schedule when ready.
             </p>
           </div>
@@ -240,13 +240,13 @@ export function ReviewPageClient({
             />
 
             {/* View toggle */}
-            <div className="flex rounded-lg border border-[var(--border-subtle)] shadow-[var(--shadow-xs)] bg-[var(--bg-inset)]">
+            <div className="flex rounded-xl bg-[var(--bg-surface)] shadow-[var(--shadow-sm)]">
               <Button
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  'rounded-r-none',
-                  viewMode === 'focus' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)] shadow-sm'
+                  'rounded-r-none rounded-l-xl',
+                  viewMode === 'focus' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)]'
                 )}
                 onClick={() => setViewMode('focus')}
                 title="Focus view"
@@ -257,7 +257,7 @@ export function ReviewPageClient({
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  'rounded-none border-x border-[var(--border-default)]',
+                  'rounded-none',
                   viewMode === 'kanban' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)]'
                 )}
                 onClick={() => setViewMode('kanban')}
@@ -269,7 +269,7 @@ export function ReviewPageClient({
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  'rounded-none border-r border-[var(--border-default)]',
+                  'rounded-none',
                   viewMode === 'grouped' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)]'
                 )}
                 onClick={() => setViewMode('grouped')}
@@ -281,7 +281,7 @@ export function ReviewPageClient({
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  'rounded-none border-r border-[var(--border-default)]',
+                  'rounded-none',
                   viewMode === 'list' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)]'
                 )}
                 onClick={() => setViewMode('list')}
@@ -293,7 +293,7 @@ export function ReviewPageClient({
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  'rounded-l-none',
+                  'rounded-l-none rounded-r-xl',
                   viewMode === 'table' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)]'
                 )}
                 onClick={() => setViewMode('table')}
@@ -585,7 +585,7 @@ function ProcessItemCard({
   return (
     <div
       className={cn(
-        'group relative rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] transition-colors hover:border-[var(--border-emphasis)]',
+        'group relative rounded-xl bg-[var(--bg-surface)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-[box-shadow,transform] duration-200 hover:-translate-y-px',
         compact ? 'p-3' : 'p-4'
       )}
     >

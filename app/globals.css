@@ -4,296 +4,353 @@
 @custom-variant dark (&:is(.dark *));
 
 /* =============================================================================
-   OffMind Design System — Premium Edition
-   Refined teal accent · Deep charcoal depth · Linear-grade polish
-   Dark mode is default - use .light class for light mode
+   OffMind Design System — ZEN FLOW
 
-   Brand accent: Teal (#38d9c2) — clarity, mental freshness, "off your mind"
-   Layer colors: Blue (capture), Amber (process), Green (commit) — functional only
-   Backgrounds: Deep warm charcoal — rich contrast, premium depth
+   Philosophy: Spatial minimalism. Floating islands. Ambient intelligence.
+   Every element breathes. Nothing is caged. Depth through shadow, not borders.
+
+   Inspired by: Apple spatial computing · Arc Browser · Linear · Figma
+
+   The core idea: UI elements float in space like thoughts in a calm mind.
+   Borders are mostly eliminated. Depth is created through layered shadows.
+   Color is ambient — the environment subtly shifts based on context.
 ============================================================================= */
 
 :root {
-  /* OffMind Design Tokens */
+  /* ═══════════════════════════════════════════════════════════════════════
+     DARK MODE (Default) — Deep void with floating luminous elements
+     ═══════════════════════════════════════════════════════════════════════ */
 
-  /* Background Layers - Dark Mode (Default)
-     7-level depth system — each layer is visually distinct */
-  --bg-base: #0a0a0d;
-  --bg-inset: #0f0f13;
-  --bg-surface: #141418;
-  --bg-elevated: #1a1a1f;
-  --bg-hover: #1f1f25;
-  --bg-active: #27272e;
-  --bg-overlay: #2e2e36;
+  /* Background Layers — 7-level void depth system
+     Nearly black, with very slight blue undertone for screen comfort */
+  --bg-base: #08080c;
+  --bg-inset: #0c0c11;
+  --bg-surface: #111116;
+  --bg-elevated: #17171d;
+  --bg-hover: #1c1c23;
+  --bg-active: #24242c;
+  --bg-overlay: #2a2a33;
 
-  /* Borders - Warm-toned, refined */
-  --border-subtle: #1c1c24;
-  --border-default: #262630;
-  --border-emphasis: #38384a;
-  --border-focus: rgba(56, 217, 194, 0.35);
+  /* Borders — Nearly invisible. Zen Flow uses shadows, not borders.
+     When borders exist, they're barely perceptible whispers. */
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-default: rgba(255, 255, 255, 0.06);
+  --border-emphasis: rgba(255, 255, 255, 0.10);
+  --border-focus: rgba(45, 212, 191, 0.40);
 
-  /* Text - Slightly warm whites */
-  --text-primary: #ededf0;
-  --text-secondary: #9e9eac;
-  --text-muted: #6a6a78;
-  --text-disabled: #484854;
+  /* Text — Cool, crisp whites. High contrast for readability. */
+  --text-primary: #f0f0f4;
+  --text-secondary: #94949e;
+  --text-muted: #5c5c68;
+  --text-disabled: #3a3a44;
 
-  /* Accent (Teal — the OffMind brand)
-     Refined: slightly muted, reads calmer and more expensive */
-  --accent-base: #38d9c2;
+  /* Accent (Teal — OffMind brand)
+     Slightly cooler and more saturated for Zen aesthetic */
+  --accent-base: #2dd4bf;
   --accent-hover: #5eead4;
-  --accent-active: #2bb5a0;
-  --accent-subtle: rgba(56, 217, 194, 0.08);
-  --accent-border: rgba(56, 217, 194, 0.20);
-  --accent-glow: rgba(56, 217, 194, 0.06);
+  --accent-active: #14b8a6;
+  --accent-subtle: rgba(45, 212, 191, 0.06);
+  --accent-border: rgba(45, 212, 191, 0.15);
+  --accent-glow: rgba(45, 212, 191, 0.04);
 
-  /* Semantic Colors */
+  /* Semantic Colors — Softer, calmer versions */
   --success: #34d399;
-  --success-subtle: rgba(52, 211, 153, 0.12);
+  --success-subtle: rgba(52, 211, 153, 0.08);
   --warning: #fbbf24;
-  --warning-subtle: rgba(251, 191, 36, 0.12);
-  --error: #f87171;
-  --error-subtle: rgba(248, 113, 113, 0.12);
+  --warning-subtle: rgba(251, 191, 36, 0.08);
+  --error: #fb7185;
+  --error-subtle: rgba(251, 113, 133, 0.08);
   --info: #60a5fa;
-  --info-subtle: rgba(96, 165, 250, 0.12);
+  --info-subtle: rgba(96, 165, 250, 0.08);
 
-  /* Destination Colors — untouched, these are functional */
+  /* Destination Colors */
   --destination-backlog: #60a5fa;
   --destination-reference: #a78bfa;
   --destination-incubating: #fbbf24;
   --destination-someday: #6b7280;
   --destination-questions: #f472b6;
   --destination-waiting: #fb923c;
-  --destination-trash: #f87171;
+  --destination-trash: #fb7185;
 
-  /* Layer Colors — the heart of OffMind's identity, untouched */
+  /* Layer Colors — Ambient tints that color the entire environment */
   --layer-capture: #60a5fa;
-  --layer-capture-bg: rgba(96, 165, 250, 0.06);
-  --layer-capture-border: rgba(96, 165, 250, 0.2);
-  --layer-capture-glow: rgba(96, 165, 250, 0.15);
+  --layer-capture-bg: rgba(96, 165, 250, 0.04);
+  --layer-capture-border: rgba(96, 165, 250, 0.10);
+  --layer-capture-glow: rgba(96, 165, 250, 0.12);
   --layer-process: #fbbf24;
-  --layer-process-bg: rgba(251, 191, 36, 0.06);
-  --layer-process-border: rgba(251, 191, 36, 0.2);
-  --layer-process-glow: rgba(251, 191, 36, 0.15);
+  --layer-process-bg: rgba(251, 191, 36, 0.04);
+  --layer-process-border: rgba(251, 191, 36, 0.10);
+  --layer-process-glow: rgba(251, 191, 36, 0.12);
   --layer-commit: #34d399;
-  --layer-commit-bg: rgba(52, 211, 153, 0.06);
-  --layer-commit-border: rgba(52, 211, 153, 0.2);
-  --layer-commit-glow: rgba(52, 211, 153, 0.15);
+  --layer-commit-bg: rgba(52, 211, 153, 0.04);
+  --layer-commit-border: rgba(52, 211, 153, 0.10);
+  --layer-commit-glow: rgba(52, 211, 153, 0.12);
 
-  /* Typography Scale */
-  --text-xs: 0.75rem;
+  /* Typography Scale — Bigger display sizes for spatial presence */
+  --text-xs: 0.6875rem;
   --text-sm: 0.8125rem;
-  --text-base: 0.875rem;
-  --text-lg: 1rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 2rem;
-  --text-4xl: 2.5rem;
-  --text-display: 3.5rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.0625rem;
+  --text-xl: 1.3125rem;
+  --text-2xl: 1.625rem;
+  --text-3xl: 2.25rem;
+  --text-4xl: 3rem;
+  --text-display: 4.5rem;
 
-  /* Letter Spacing — tight headings feel premium */
-  --tracking-tighter: -0.04em;
-  --tracking-tight: -0.025em;
-  --tracking-normal: -0.011em;
-  --tracking-wide: 0.05em;
-  --tracking-widest: 0.1em;
+  /* Letter Spacing */
+  --tracking-tighter: -0.05em;
+  --tracking-tight: -0.03em;
+  --tracking-normal: -0.015em;
+  --tracking-wide: 0.02em;
+  --tracking-widest: 0.08em;
 
-  /* Spacing Scale — tighter = more premium */
-  --space-page-x: 1.5rem;
-  --space-page-y: 1.5rem;
-  --space-section: 2.5rem;
-  --space-card: 1.25rem;
-  --space-stack: 0.375rem;
+  /* Spacing — Generous. The Zen way is space. */
+  --space-page-x: 2rem;
+  --space-page-y: 2rem;
+  --space-section: 4rem;
+  --space-card: 1.5rem;
+  --space-stack: 0.5rem;
 
-  /* Animation Durations — snappier feels premium */
-  --duration-instant: 50ms;
-  --duration-fast: 100ms;
-  --duration-normal: 150ms;
-  --duration-slow: 250ms;
-  --duration-slower: 400ms;
+  /* Animation — Fluid springs. Natural. Organic. */
+  --duration-instant: 60ms;
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+  --duration-slow: 350ms;
+  --duration-slower: 600ms;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-soft: cubic-bezier(0.25, 0.1, 0.25, 1);
 
   /* Layout */
-  --sidebar-width: 252px;
-  --sidebar-collapsed: 68px;
-  --header-height: 48px;
-  --capture-bar-height: 64px;
-  --content-max-width: 1200px;
+  --sidebar-width: 260px;
+  --sidebar-collapsed: 72px;
+  --header-height: 52px;
+  --capture-bar-height: 72px;
+  --content-max-width: 1120px;
 
-  /* Radius */
-  --radius: 0.625rem;
+  /* Radius — Large, soft, organic */
+  --radius: 0.875rem;
 
-  /* Premium Shadow System — layered for depth */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.25);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.35), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.35);
-  --shadow-card: 0 0 0 1px var(--border-subtle), 0 2px 8px rgba(0, 0, 0, 0.25);
-  --shadow-card-hover: 0 0 0 1px var(--border-default), 0 4px 16px rgba(0, 0, 0, 0.35), 0 0 0 0 transparent;
-  --shadow-float: 0 0 0 1px var(--border-default), 0 16px 48px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.25);
-  --shadow-glow: 0 0 0 1px var(--accent-border), 0 0 24px rgba(56, 217, 194, 0.08), 0 8px 32px rgba(0, 0, 0, 0.3);
+  /* ═══════════════════════════════════════════════════════════════════════
+     THE ZEN SHADOW SYSTEM
 
-  /* Premium Gradients */
-  --gradient-accent: linear-gradient(135deg, #38d9c2, #38a8d4);
-  --gradient-subtle: linear-gradient(180deg, rgba(56, 217, 194, 0.06), transparent);
+     No borders. Only layered shadows create depth.
+     Each shadow uses 3-4 layers: ambient, edge, spread, highlight.
+     This is the defining characteristic of Zen Flow.
+     ═══════════════════════════════════════════════════════════════════════ */
+  --shadow-xs:
+    0 1px 2px rgba(0, 0, 0, 0.12),
+    0 0 1px rgba(0, 0, 0, 0.08);
+  --shadow-sm:
+    0 1px 3px rgba(0, 0, 0, 0.16),
+    0 1px 2px rgba(0, 0, 0, 0.10),
+    0 0 0 0.5px rgba(255, 255, 255, 0.03);
+  --shadow-md:
+    0 4px 12px rgba(0, 0, 0, 0.20),
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 0 0 0.5px rgba(255, 255, 255, 0.03);
+  --shadow-lg:
+    0 8px 24px rgba(0, 0, 0, 0.28),
+    0 2px 6px rgba(0, 0, 0, 0.16),
+    0 0 0 0.5px rgba(255, 255, 255, 0.04);
+  --shadow-xl:
+    0 16px 48px rgba(0, 0, 0, 0.36),
+    0 4px 12px rgba(0, 0, 0, 0.20),
+    0 0 0 0.5px rgba(255, 255, 255, 0.04);
+  --shadow-card:
+    0 2px 8px rgba(0, 0, 0, 0.18),
+    0 0 0 0.5px rgba(255, 255, 255, 0.04),
+    0 0 1px rgba(0, 0, 0, 0.12);
+  --shadow-card-hover:
+    0 8px 32px rgba(0, 0, 0, 0.28),
+    0 2px 8px rgba(0, 0, 0, 0.16),
+    0 0 0 0.5px rgba(255, 255, 255, 0.06);
+  --shadow-float:
+    0 24px 80px rgba(0, 0, 0, 0.40),
+    0 8px 24px rgba(0, 0, 0, 0.24),
+    0 0 0 0.5px rgba(255, 255, 255, 0.05);
+  --shadow-glow:
+    0 0 40px rgba(45, 212, 191, 0.08),
+    0 0 0 1px rgba(45, 212, 191, 0.10),
+    0 8px 32px rgba(0, 0, 0, 0.24);
+
+  /* Gradients */
+  --gradient-accent: linear-gradient(135deg, #2dd4bf, #22d3ee);
+  --gradient-subtle: linear-gradient(180deg, rgba(45, 212, 191, 0.04), transparent);
   --gradient-surface: linear-gradient(180deg, var(--bg-surface), var(--bg-base));
 
-  /* shadcn/ui Variables - Dark Mode Default */
-  --background: #0a0a0d;
-  --foreground: #ededf0;
-  --card: #141418;
-  --card-foreground: #ededf0;
-  --popover: #1a1a1f;
-  --popover-foreground: #ededf0;
-  --primary: #38d9c2;
-  --primary-foreground: #0a0a0d;
-  --secondary: #1f1f25;
-  --secondary-foreground: #ededf0;
-  --muted: #1f1f25;
-  --muted-foreground: #9e9eac;
-  --accent: #1f1f25;
-  --accent-foreground: #ededf0;
-  --destructive: #f87171;
+  /* shadcn/ui Variables */
+  --background: #08080c;
+  --foreground: #f0f0f4;
+  --card: #111116;
+  --card-foreground: #f0f0f4;
+  --popover: #17171d;
+  --popover-foreground: #f0f0f4;
+  --primary: #2dd4bf;
+  --primary-foreground: #08080c;
+  --secondary: #1c1c23;
+  --secondary-foreground: #f0f0f4;
+  --muted: #1c1c23;
+  --muted-foreground: #94949e;
+  --accent: #1c1c23;
+  --accent-foreground: #f0f0f4;
+  --destructive: #fb7185;
   --destructive-foreground: #ffffff;
-  --border: #262630;
-  --input: #1f1f25;
-  --ring: #38d9c2;
+  --border: rgba(255, 255, 255, 0.06);
+  --input: #17171d;
+  --ring: #2dd4bf;
 
   /* Chart Colors */
-  --chart-1: #38d9c2;
+  --chart-1: #2dd4bf;
   --chart-2: #34d399;
   --chart-3: #fbbf24;
   --chart-4: #f472b6;
   --chart-5: #a78bfa;
 
-  /* Sidebar */
-  --sidebar: #0c0c10;
-  --sidebar-foreground: #ededf0;
-  --sidebar-primary: #38d9c2;
-  --sidebar-primary-foreground: #0a0a0d;
-  --sidebar-accent: #1c1c24;
-  --sidebar-accent-foreground: #ededf0;
-  --sidebar-border: #1c1c24;
-  --sidebar-ring: #38d9c2;
+  /* Sidebar — Slightly elevated from base, floating */
+  --sidebar: #0a0a0f;
+  --sidebar-foreground: #f0f0f4;
+  --sidebar-primary: #2dd4bf;
+  --sidebar-primary-foreground: #08080c;
+  --sidebar-accent: rgba(255, 255, 255, 0.04);
+  --sidebar-accent-foreground: #f0f0f4;
+  --sidebar-border: rgba(255, 255, 255, 0.04);
+  --sidebar-ring: #2dd4bf;
 }
 
-/* Light Mode - Warm, refined, accessible */
+/* ═══════════════════════════════════════════════════════════════════════════
+   LIGHT MODE — Bright, airy, ethereal. Like clouds.
+   ═══════════════════════════════════════════════════════════════════════════ */
 .light {
-  --bg-base: #fafaf8;
-  --bg-inset: #f4f4f1;
+  --bg-base: #f8f9fc;
+  --bg-inset: #f2f3f7;
   --bg-surface: #ffffff;
   --bg-elevated: #ffffff;
-  --bg-hover: #f0f0ec;
-  --bg-active: #e8e8e3;
-  --bg-overlay: #ddddd8;
+  --bg-hover: #f0f1f5;
+  --bg-active: #e8e9ee;
+  --bg-overlay: #dddee4;
 
-  --border-subtle: #edede9;
-  --border-default: #e0e0db;
-  --border-emphasis: #d0d0c9;
-  --border-focus: rgba(13, 148, 136, 0.35);
+  --border-subtle: rgba(0, 0, 0, 0.04);
+  --border-default: rgba(0, 0, 0, 0.06);
+  --border-emphasis: rgba(0, 0, 0, 0.10);
+  --border-focus: rgba(13, 148, 136, 0.40);
 
-  --text-primary: #1a1a1e;
-  --text-secondary: #6b6b78;
-  --text-muted: #9e9eac;
-  --text-disabled: #c4c4cc;
+  --text-primary: #111118;
+  --text-secondary: #5c5c6e;
+  --text-muted: #8e8e9e;
+  --text-disabled: #c0c0cc;
 
-  /* Accent stays teal but darker for contrast on light backgrounds */
   --accent-base: #0d9488;
   --accent-hover: #14b8a6;
   --accent-active: #0f766e;
-  --accent-subtle: rgba(13, 148, 136, 0.06);
-  --accent-border: rgba(13, 148, 136, 0.20);
-  --accent-glow: rgba(13, 148, 136, 0.08);
+  --accent-subtle: rgba(13, 148, 136, 0.04);
+  --accent-border: rgba(13, 148, 136, 0.12);
+  --accent-glow: rgba(13, 148, 136, 0.06);
 
-  /* Layer colors - slightly boosted opacity for visibility on light bg */
-  --layer-capture-bg: rgba(96, 165, 250, 0.08);
-  --layer-capture-border: rgba(96, 165, 250, 0.25);
-  --layer-process-bg: rgba(251, 191, 36, 0.08);
-  --layer-process-border: rgba(251, 191, 36, 0.25);
-  --layer-commit-bg: rgba(52, 211, 153, 0.08);
-  --layer-commit-border: rgba(52, 211, 153, 0.25);
+  --layer-capture-bg: rgba(96, 165, 250, 0.05);
+  --layer-capture-border: rgba(96, 165, 250, 0.12);
+  --layer-process-bg: rgba(251, 191, 36, 0.05);
+  --layer-process-border: rgba(251, 191, 36, 0.12);
+  --layer-commit-bg: rgba(52, 211, 153, 0.05);
+  --layer-commit-border: rgba(52, 211, 153, 0.12);
 
-  /* Premium Shadow System — lighter for light mode */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
-  --shadow-card: 0 0 0 1px var(--border-subtle), 0 1px 3px rgba(0, 0, 0, 0.04);
-  --shadow-card-hover: 0 0 0 1px var(--border-default), 0 2px 8px rgba(0, 0, 0, 0.06);
-  --shadow-float: 0 0 0 1px var(--border-default), 0 12px 36px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.05);
-  --shadow-glow: 0 0 0 1px var(--accent-border), 0 0 20px rgba(13, 148, 136, 0.06), 0 8px 24px rgba(0, 0, 0, 0.06);
+  /* Light mode Zen shadows — soft, diffused, dreamy */
+  --shadow-xs:
+    0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-sm:
+    0 1px 4px rgba(0, 0, 0, 0.04),
+    0 0 1px rgba(0, 0, 0, 0.02);
+  --shadow-md:
+    0 4px 16px rgba(0, 0, 0, 0.05),
+    0 1px 4px rgba(0, 0, 0, 0.03);
+  --shadow-lg:
+    0 8px 32px rgba(0, 0, 0, 0.06),
+    0 2px 8px rgba(0, 0, 0, 0.03);
+  --shadow-xl:
+    0 16px 56px rgba(0, 0, 0, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.04);
+  --shadow-card:
+    0 2px 12px rgba(0, 0, 0, 0.04),
+    0 0 0 0.5px rgba(0, 0, 0, 0.03);
+  --shadow-card-hover:
+    0 8px 40px rgba(0, 0, 0, 0.06),
+    0 2px 12px rgba(0, 0, 0, 0.04);
+  --shadow-float:
+    0 24px 80px rgba(0, 0, 0, 0.08),
+    0 8px 24px rgba(0, 0, 0, 0.05);
+  --shadow-glow:
+    0 0 40px rgba(13, 148, 136, 0.05),
+    0 0 0 1px rgba(13, 148, 136, 0.08),
+    0 8px 32px rgba(0, 0, 0, 0.04);
 
-  /* shadcn/ui Variables - Light Mode */
-  --background: #fafaf8;
-  --foreground: #1a1a1e;
+  /* shadcn/ui Variables - Light */
+  --background: #f8f9fc;
+  --foreground: #111118;
   --card: #ffffff;
-  --card-foreground: #1a1a1e;
+  --card-foreground: #111118;
   --popover: #ffffff;
-  --popover-foreground: #1a1a1e;
+  --popover-foreground: #111118;
   --primary: #0d9488;
   --primary-foreground: #ffffff;
-  --secondary: #f0f0ec;
-  --secondary-foreground: #1a1a1e;
-  --muted: #f0f0ec;
-  --muted-foreground: #6b6b78;
-  --accent: #f0f0ec;
-  --accent-foreground: #1a1a1e;
+  --secondary: #f0f1f5;
+  --secondary-foreground: #111118;
+  --muted: #f0f1f5;
+  --muted-foreground: #5c5c6e;
+  --accent: #f0f1f5;
+  --accent-foreground: #111118;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #e0e0db;
-  --input: #f0f0ec;
+  --border: rgba(0, 0, 0, 0.06);
+  --input: #f0f1f5;
   --ring: #0d9488;
 
-  /* Chart Colors - Light */
   --chart-1: #0d9488;
 
-  /* Sidebar Light */
-  --sidebar: #f5f5f2;
-  --sidebar-foreground: #1a1a1e;
+  --sidebar: #f4f5f9;
+  --sidebar-foreground: #111118;
   --sidebar-primary: #0d9488;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f0f0ec;
-  --sidebar-accent-foreground: #1a1a1e;
-  --sidebar-border: #e0e0db;
+  --sidebar-accent: rgba(0, 0, 0, 0.03);
+  --sidebar-accent-foreground: #111118;
+  --sidebar-border: rgba(0, 0, 0, 0.04);
   --sidebar-ring: #0d9488;
 }
 
-/* Keep .dark class for shadcn compatibility (mirrors :root dark values) */
 .dark {
-  --background: #0a0a0d;
-  --foreground: #ededf0;
-  --card: #141418;
-  --card-foreground: #ededf0;
-  --popover: #1a1a1f;
-  --popover-foreground: #ededf0;
-  --primary: #38d9c2;
-  --primary-foreground: #0a0a0d;
-  --secondary: #1f1f25;
-  --secondary-foreground: #ededf0;
-  --muted: #1f1f25;
-  --muted-foreground: #9e9eac;
-  --accent: #1f1f25;
-  --accent-foreground: #ededf0;
-  --destructive: #f87171;
+  --background: #08080c;
+  --foreground: #f0f0f4;
+  --card: #111116;
+  --card-foreground: #f0f0f4;
+  --popover: #17171d;
+  --popover-foreground: #f0f0f4;
+  --primary: #2dd4bf;
+  --primary-foreground: #08080c;
+  --secondary: #1c1c23;
+  --secondary-foreground: #f0f0f4;
+  --muted: #1c1c23;
+  --muted-foreground: #94949e;
+  --accent: #1c1c23;
+  --accent-foreground: #f0f0f4;
+  --destructive: #fb7185;
   --destructive-foreground: #ffffff;
-  --border: #262630;
-  --input: #1f1f25;
-  --ring: #38d9c2;
+  --border: rgba(255, 255, 255, 0.06);
+  --input: #17171d;
+  --ring: #2dd4bf;
 
-  --sidebar: #0c0c10;
-  --sidebar-foreground: #ededf0;
-  --sidebar-primary: #38d9c2;
-  --sidebar-primary-foreground: #0a0a0d;
-  --sidebar-accent: #1c1c24;
-  --sidebar-accent-foreground: #ededf0;
-  --sidebar-border: #1c1c24;
-  --sidebar-ring: #38d9c2;
+  --sidebar: #0a0a0f;
+  --sidebar-foreground: #f0f0f4;
+  --sidebar-primary: #2dd4bf;
+  --sidebar-primary-foreground: #08080c;
+  --sidebar-accent: rgba(255, 255, 255, 0.04);
+  --sidebar-accent-foreground: #f0f0f4;
+  --sidebar-border: rgba(255, 255, 255, 0.04);
+  --sidebar-ring: #2dd4bf;
 }
 
-/* Tailwind v4 Theme Extensions */
+/* ═══════════════════════════════════════════════════════════════════════════
+   TAILWIND v4 THEME EXTENSIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
 @theme inline {
-  /* Custom OffMind Colors */
   --color-base: var(--bg-base);
   --color-inset: var(--bg-inset);
   --color-surface: var(--bg-surface);
@@ -324,7 +381,6 @@
   --color-info: var(--info);
   --color-info-subtle: var(--info-subtle);
 
-  /* Destination Colors */
   --color-backlog: var(--destination-backlog);
   --color-reference: var(--destination-reference);
   --color-incubating: var(--destination-incubating);
@@ -333,11 +389,9 @@
   --color-waiting: var(--destination-waiting);
   --color-trash: var(--destination-trash);
 
-  /* Fonts - Geist (Vercel's premium typeface) */
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, 'Fira Code', monospace;
 
-  /* shadcn compatibility */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -371,7 +425,6 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* Radius */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -379,9 +432,12 @@
   --radius-2xl: calc(var(--radius) + 8px);
 }
 
-/* Base Styles */
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
 html {
   color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 html.light {
@@ -393,22 +449,24 @@ body {
   letter-spacing: var(--tracking-normal);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-/* Focus Styles for Accessibility */
+/* Focus — Minimal, clean ring */
 :focus-visible {
   outline: 2px solid var(--accent-base);
-  outline-offset: 2px;
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
 }
 
 :focus:not(:focus-visible) {
   outline: none;
 }
 
-/* Scrollbar Styling — thinner, more refined */
+/* Scrollbar — Near-invisible until hovered */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -416,251 +474,389 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-default);
-  border-radius: 4px;
+  background: transparent;
+  border-radius: 6px;
+  transition: background 0.2s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--border-emphasis);
 }
 
-/* Selection */
+*:hover > ::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+}
+
+/* Selection — Subtle teal highlight */
 ::selection {
-  background-color: var(--accent-subtle);
+  background-color: rgba(45, 212, 191, 0.15);
   color: var(--text-primary);
 }
 
-/* Container defaults */
 .container {
   width: 100%;
   max-width: 1280px;
 }
 
-/* =============================================================================
-   Premium Utility Classes
-============================================================================= */
+/* ═══════════════════════════════════════════════════════════════════════════
+   ZEN FLOW UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Subtle pulse for inbox badge */
-@keyframes pulse-subtle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-.animate-pulse-subtle {
-  animation: pulse-subtle 2.5s ease-in-out infinite;
-}
-
-/* Checkmark completion animation */
-@keyframes check-bounce {
-  0% { transform: scale(0.8); opacity: 0.5; }
-  40% { transform: scale(1.2); opacity: 1; }
-  70% { transform: scale(0.95); }
-  100% { transform: scale(1); opacity: 1; }
-}
-.animate-check {
-  animation: check-bounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+/* ── ZEN CARD ──
+   The signature Zen Flow card: no visible border, floats with shadow alone.
+   On hover, it rises and the shadow deepens. */
+.zen-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  border: none;
+  transition:
+    box-shadow var(--duration-slow) var(--ease-out-expo),
+    transform var(--duration-slow) var(--ease-out-expo);
 }
 
-/* Completion flash - green ripple on item when checked */
-@keyframes completion-flash {
-  0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.3); }
-  50% { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0.08); }
-  100% { box-shadow: 0 0 0 12px rgba(52, 211, 153, 0); }
-}
-.animate-completion-flash {
-  animation: completion-flash 0.6s ease-out;
+.zen-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
 }
 
-/* Item slide-out when moving between layers */
-@keyframes slide-out-right {
-  0% { transform: translateX(0); opacity: 1; }
-  100% { transform: translateX(20px); opacity: 0; }
-}
-.animate-slide-out {
-  animation: slide-out-right 0.25s ease-in forwards;
+.zen-card:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
-/* Item slide-in when appearing in new layer */
-@keyframes slide-in-left {
-  0% { transform: translateX(-20px); opacity: 0; }
-  100% { transform: translateX(0); opacity: 1; }
-}
-.animate-slide-in {
-  animation: slide-in-left 0.25s ease-out;
+/* ── ZEN GLOW ──
+   Ambient accent glow for primary interactive elements */
+.zen-glow {
+  box-shadow: var(--shadow-glow);
 }
 
-/* Strikethrough animation for completed text */
-@keyframes strike {
-  0% { text-decoration-color: transparent; }
-  100% { text-decoration-color: var(--text-muted); }
-}
-.animate-strike {
-  animation: strike 0.3s ease-out forwards;
-  text-decoration: line-through;
-  text-decoration-thickness: 1.5px;
-}
-
-/* Logo breathing animation */
-@keyframes breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.03); }
-}
-.animate-breathe {
-  animation: breathe 3s ease-in-out infinite;
-}
-
-/* Glow effects — refined teal brand accent */
-.glow-primary {
-  box-shadow: 0 0 20px var(--accent-glow), 0 0 60px rgba(56, 217, 194, 0.04);
-}
-
-.glow-capture {
-  box-shadow: 0 0 20px var(--layer-capture-glow), 0 0 60px rgba(96, 165, 250, 0.04);
-}
-
-.glow-process {
-  box-shadow: 0 0 20px var(--layer-process-glow), 0 0 60px rgba(251, 191, 36, 0.04);
-}
-
-.glow-commit {
-  box-shadow: 0 0 20px var(--layer-commit-glow), 0 0 60px rgba(52, 211, 153, 0.04);
-}
-
-/* Capture input focus ring - refined teal accent glow */
-.capture-input {
-  transition: box-shadow var(--duration-slow) cubic-bezier(0.4, 0, 0.2, 1), border-color var(--duration-slow) ease;
-}
-
-.capture-input:focus-within {
-  border-color: var(--accent-border);
+.zen-glow:hover {
   box-shadow:
-    0 0 0 2px var(--accent-glow),
-    0 8px 32px rgba(56, 217, 194, 0.06),
-    inset 0 1px 0 rgba(56, 217, 194, 0.04);
+    0 0 60px rgba(45, 212, 191, 0.10),
+    0 0 0 1px rgba(45, 212, 191, 0.15),
+    0 12px 40px rgba(0, 0, 0, 0.28);
 }
 
-/* Noise texture overlay for depth */
-.texture-noise::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  opacity: 0.012;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
+/* ── AMBIENT BACKGROUNDS ──
+   Subtle environmental coloring based on current layer */
+.ambient-capture {
+  background-image: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    rgba(96, 165, 250, 0.03),
+    transparent
+  );
 }
 
-/* Gradient mesh for hero sections — 4-layer with violet depth */
+.ambient-process {
+  background-image: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    rgba(251, 191, 36, 0.02),
+    transparent
+  );
+}
+
+.ambient-commit {
+  background-image: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    rgba(52, 211, 153, 0.03),
+    transparent
+  );
+}
+
+/* ── FLOW TRANSITION ──
+   Smooth spring-like transitions for page elements */
+.flow-transition {
+  transition: all var(--duration-slow) var(--ease-out-expo);
+}
+
+.flow-transition-fast {
+  transition: all var(--duration-normal) var(--ease-out-expo);
+}
+
+/* ── GLASS ──
+   Premium frosted glass for overlays and floating panels */
+.glass {
+  background: rgba(8, 8, 12, 0.75);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+}
+
+.light .glass {
+  background: rgba(248, 249, 252, 0.80);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+}
+
+/* ── GRADIENT MESH ──
+   Multi-layered ambient background for hero/special sections */
 .gradient-mesh {
   background-image:
-    radial-gradient(at 0% 0%, rgba(56, 217, 194, 0.06) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(56, 168, 212, 0.04) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(52, 211, 153, 0.03) 0px, transparent 50%),
-    radial-gradient(at 80% 60%, rgba(139, 92, 246, 0.02) 0px, transparent 40%);
+    radial-gradient(ellipse at 20% 20%, rgba(45, 212, 191, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 10%, rgba(96, 165, 250, 0.04) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 80%, rgba(52, 211, 153, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 70%, rgba(168, 85, 247, 0.02) 0%, transparent 40%);
 }
 
-/* Card hover effect — premium elevation with lift */
+.light .gradient-mesh {
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(13, 148, 136, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 10%, rgba(96, 165, 250, 0.03) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 80%, rgba(52, 211, 153, 0.02) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 70%, rgba(168, 85, 247, 0.015) 0%, transparent 40%);
+}
+
+/* ── ANIMATED GRADIENT MESH ──
+   Slowly drifting ambient colors for hero sections */
+@keyframes mesh-drift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 100% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+}
+
+.gradient-mesh-animated {
+  background-size: 200% 200%;
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(45, 212, 191, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 10%, rgba(96, 165, 250, 0.05) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 80%, rgba(52, 211, 153, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 70%, rgba(168, 85, 247, 0.03) 0%, transparent 40%);
+  animation: mesh-drift 20s ease-in-out infinite;
+}
+
+.light .gradient-mesh-animated {
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(13, 148, 136, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 10%, rgba(96, 165, 250, 0.04) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 80%, rgba(52, 211, 153, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 70%, rgba(168, 85, 247, 0.02) 0%, transparent 40%);
+}
+
+/* ── CARD HOVER ── */
 .card-hover {
-  transition: border-color var(--duration-normal) ease, box-shadow var(--duration-slow) ease, transform var(--duration-slow) ease;
+  transition:
+    box-shadow var(--duration-slow) var(--ease-out-expo),
+    transform var(--duration-slow) var(--ease-out-expo);
 }
 .card-hover:hover {
-  border-color: var(--border-default);
   box-shadow: var(--shadow-card-hover);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
-/* Premium glass effect for overlays */
-.glass {
-  background: rgba(10, 10, 13, 0.82);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-}
-
-/* Inner light — top-edge highlight for dimensional surfaces */
+/* ── INNER LIGHT ── Top-edge luminosity */
 .inner-light {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
-
-/* Title glow — ambient glow behind headings */
-.title-glow {
-  text-shadow: 0 0 40px rgba(56, 217, 194, 0.15);
+.light .inner-light {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
-/* Smooth line-through for completed items */
-.completed-text {
-  text-decoration: line-through;
-  text-decoration-color: var(--text-muted);
-  text-decoration-thickness: 1.5px;
-  color: var(--text-muted);
-}
-
-/* Gradient border technique for premium cards */
+/* ── GRADIENT BORDER ── */
 .gradient-border {
   background: linear-gradient(var(--bg-surface), var(--bg-surface)) padding-box,
               var(--gradient-accent) border-box;
   border: 1px solid transparent;
 }
-
-/* Subtle dot grid pattern for auth/hero backgrounds */
-.dot-grid {
-  background-image: radial-gradient(circle, var(--border-subtle) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-/* =============================================================================
-   Light Mode Overrides for Premium Utilities
-============================================================================= */
-
-.light .gradient-mesh {
-  background-image:
-    radial-gradient(at 0% 0%, rgba(13, 148, 136, 0.05) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(56, 168, 212, 0.03) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(52, 211, 153, 0.02) 0px, transparent 50%),
-    radial-gradient(at 80% 60%, rgba(139, 92, 246, 0.015) 0px, transparent 40%);
-}
-
-.light .glass {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-}
-
-.light .card-hover:hover {
-  border-color: var(--border-emphasis);
-  box-shadow: var(--shadow-card-hover);
-  transform: translateY(-1px);
-}
-
-.light .inner-light {
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
-.light .glow-primary {
-  box-shadow: 0 0 16px rgba(13, 148, 136, 0.1), 0 0 40px rgba(13, 148, 136, 0.03);
-}
-
-.light .capture-input:focus-within {
-  border-color: rgba(13, 148, 136, 0.30);
-  box-shadow:
-    0 0 0 2px rgba(13, 148, 136, 0.06),
-    0 4px 16px rgba(13, 148, 136, 0.04);
-}
-
-.light .title-glow {
-  text-shadow: 0 0 40px rgba(13, 148, 136, 0.1);
-}
-
 .light .gradient-border {
   background: linear-gradient(var(--bg-surface), var(--bg-surface)) padding-box,
               linear-gradient(135deg, #0d9488, #0284c7) border-box;
   border: 1px solid transparent;
 }
 
+/* ── DOT GRID ── Subtle background pattern */
+.dot-grid {
+  background-image: radial-gradient(circle, var(--border-subtle) 0.5px, transparent 0.5px);
+  background-size: 32px 32px;
+}
 .light .dot-grid {
-  background-image: radial-gradient(circle, var(--border-default) 1px, transparent 1px);
-  background-size: 24px 24px;
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.05) 0.5px, transparent 0.5px);
+  background-size: 32px 32px;
 }
 
-/* shadcn base layer */
+/* ── TITLE GLOW ── */
+.title-glow {
+  text-shadow: 0 0 60px rgba(45, 212, 191, 0.12);
+}
+.light .title-glow {
+  text-shadow: 0 0 60px rgba(13, 148, 136, 0.08);
+}
+
+/* ── CAPTURE INPUT ── Focus ring */
+.capture-input {
+  transition:
+    box-shadow var(--duration-slow) var(--ease-out-expo),
+    border-color var(--duration-slow) var(--ease-soft);
+}
+
+.capture-input:focus-within {
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow-glow);
+}
+
+.light .capture-input:focus-within {
+  border-color: rgba(13, 148, 136, 0.20);
+  box-shadow:
+    0 0 40px rgba(13, 148, 136, 0.04),
+    0 0 0 1px rgba(13, 148, 136, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+/* ── COMPLETED TEXT ── */
+.completed-text {
+  text-decoration: line-through;
+  text-decoration-color: var(--text-disabled);
+  text-decoration-thickness: 1px;
+  color: var(--text-muted);
+}
+
+/* ── NOISE TEXTURE ── */
+.texture-noise::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.008;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ZEN FLOW ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Float in from below — primary entrance animation */
+@keyframes zen-float-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-zen-float-up {
+  animation: zen-float-up 0.6s var(--ease-out-expo) both;
+}
+
+/* Subtle pulse for inbox badge */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+/* Check bounce */
+@keyframes check-bounce {
+  0% { transform: scale(0.7); opacity: 0; }
+  50% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-check {
+  animation: check-bounce 0.5s var(--ease-spring);
+}
+
+/* Completion flash — Zen: soft expanding ring */
+@keyframes completion-flash {
+  0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.25); }
+  70% { box-shadow: 0 0 0 10px rgba(52, 211, 153, 0); }
+  100% { box-shadow: 0 0 0 10px rgba(52, 211, 153, 0); }
+}
+.animate-completion-flash {
+  animation: completion-flash 0.8s ease-out;
+}
+
+/* Slide out/in */
+@keyframes slide-out-right {
+  0% { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(30px); opacity: 0; }
+}
+.animate-slide-out {
+  animation: slide-out-right 0.3s var(--ease-out-expo) forwards;
+}
+
+@keyframes slide-in-left {
+  0% { transform: translateX(-30px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+.animate-slide-in {
+  animation: slide-in-left 0.3s var(--ease-out-expo);
+}
+
+/* Strikethrough */
+@keyframes strike {
+  0% { text-decoration-color: transparent; }
+  100% { text-decoration-color: var(--text-disabled); }
+}
+.animate-strike {
+  animation: strike 0.4s ease-out forwards;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+/* Logo breathing */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+.animate-breathe {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* Glow effects */
+.glow-primary {
+  box-shadow: 0 0 30px var(--accent-glow), 0 0 80px rgba(45, 212, 191, 0.03);
+}
+.glow-capture {
+  box-shadow: 0 0 30px var(--layer-capture-glow);
+}
+.glow-process {
+  box-shadow: 0 0 30px var(--layer-process-glow);
+}
+.glow-commit {
+  box-shadow: 0 0 30px var(--layer-commit-glow);
+}
+.light .glow-primary {
+  box-shadow: 0 0 20px rgba(13, 148, 136, 0.06);
+}
+
+/* ── FLOW LINE ──
+   Animated connection line for the 3-step flow */
+@keyframes flow-line-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+.flow-line {
+  background: linear-gradient(90deg,
+    var(--layer-capture) 0%,
+    var(--layer-process) 50%,
+    var(--layer-commit) 100%
+  );
+  animation: flow-line-pulse 3s ease-in-out infinite;
+}
+
+/* ── STAGGER DELAYS for entrance animations ── */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.10s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.20s; }
+.stagger-5 { animation-delay: 0.25s; }
+.stagger-6 { animation-delay: 0.30s; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SHADCN BASE LAYER
+   ═══════════════════════════════════════════════════════════════════════════ */
 @layer base {
   * {
     @apply border-border outline-ring/50;

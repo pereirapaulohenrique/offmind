@@ -244,11 +244,11 @@ export function ProjectsPageClient({
   return (
     <div className="flex h-full flex-col">
       {/* Page header */}
-      <div className="border-b border-[var(--border-subtle)] px-6 py-4">
+      <div className="px-6 py-6 sm:px-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-[var(--text-primary)]">Projects</h1>
-            <p className="text-sm text-[var(--text-muted)]">
+            <h1 className="text-2xl font-semibold text-[var(--text-primary)] sm:text-3xl" style={{ letterSpacing: 'var(--tracking-tight)' }}>Projects</h1>
+            <p className="mt-1 text-sm text-[var(--text-muted)]">
               Track your ongoing projects and initiatives.
             </p>
           </div>
@@ -416,7 +416,7 @@ function ProjectCard({ project, space, onEdit, onArchive, onDelete }: ProjectCar
     >
       <Link
         href={`/projects/${project.id}`}
-        className="group block rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 transition-colors hover:border-[var(--accent-border)]"
+        className="group block rounded-xl bg-[var(--bg-surface)] p-5 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-[box-shadow,transform] duration-200 hover:-translate-y-px"
       >
         <div className="flex items-start gap-4">
           {/* Icon */}

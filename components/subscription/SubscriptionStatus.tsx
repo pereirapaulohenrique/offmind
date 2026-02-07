@@ -10,7 +10,7 @@ export function SubscriptionStatus() {
 
   if (isLoading) {
     return (
-      <div className="animate-pulse rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6">
+      <div className="animate-pulse rounded-xl bg-[var(--bg-surface)] p-6 shadow-[var(--shadow-card)]">
         <div className="h-6 w-32 rounded bg-[var(--bg-hover)]" />
         <div className="mt-2 h-4 w-48 rounded bg-[var(--bg-hover)]" />
       </div>
@@ -46,7 +46,7 @@ export function SubscriptionStatus() {
   const status = getStatusDisplay();
 
   return (
-    <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6">
+    <div className="rounded-xl bg-[var(--bg-surface)] p-6 shadow-[var(--shadow-card)]">
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-3">

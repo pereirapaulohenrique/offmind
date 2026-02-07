@@ -267,11 +267,11 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
   return (
     <div className="flex h-full flex-col">
       {/* Page header */}
-      <div className="border-b border-[var(--border-subtle)] px-6 py-4">
+      <div className="px-6 py-6 sm:px-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-[var(--text-primary)]" style={{ letterSpacing: 'var(--tracking-tight)' }}>Commit</h1>
-            <p className="text-sm text-[var(--text-muted)]">
+            <h1 className="text-2xl font-semibold text-[var(--text-primary)] sm:text-3xl" style={{ letterSpacing: 'var(--tracking-tight)' }}>Commit</h1>
+            <p className="mt-1 text-sm text-[var(--text-muted)]">
               Your scheduled commitments
             </p>
           </div>
@@ -285,7 +285,7 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
             />
 
             {/* View toggle */}
-            <div className="flex rounded-lg border border-[var(--border-subtle)] shadow-[var(--shadow-xs)] bg-[var(--bg-inset)]">
+            <div className="flex rounded-xl bg-[var(--bg-surface)] shadow-[var(--shadow-sm)]">
               <Button
                 variant="ghost"
                 size="sm"
@@ -297,7 +297,7 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
               <Button
                 variant="ghost"
                 size="sm"
-                className={cn('rounded-none border-x border-[var(--border-default)]', viewMode === 'day' && 'bg-[var(--layer-commit-bg)] text-[var(--layer-commit)]')}
+                className={cn('rounded-none', viewMode === 'day' && 'bg-[var(--layer-commit-bg)] text-[var(--layer-commit)]')}
                 onClick={() => setViewMode('day')}
               >
                 Day
@@ -488,7 +488,7 @@ function DayView({
 }: DayViewProps) {
   if (items.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-border p-8 text-center">
+      <div className="rounded-xl bg-[var(--bg-surface)] shadow-[var(--shadow-sm)] p-8 text-center">
         <p className="text-muted-foreground">No items scheduled for this day</p>
       </div>
     );
@@ -551,8 +551,8 @@ function WeekView({
           <div
             key={dateStr}
             className={cn(
-              'min-h-[200px] rounded-lg border p-2',
-              isToday ? 'border-[var(--layer-commit)] bg-[var(--layer-commit-bg)]' : 'border-[var(--border-default)]'
+              'min-h-[200px] rounded-xl p-3 shadow-[var(--shadow-card)]',
+              isToday ? 'bg-[var(--layer-commit-bg)]' : 'bg-[var(--bg-surface)]'
             )}
           >
             <div className="mb-2 text-center">
@@ -644,7 +644,7 @@ function CommitItemCard({
   return (
     <div
       className={cn(
-        'group relative rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 transition-colors hover:border-[var(--border-emphasis)]',
+        'group relative rounded-xl bg-[var(--bg-surface)] p-4 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-[box-shadow,transform] duration-200 hover:-translate-y-px',
         item.is_completed && 'opacity-60'
       )}
     >
