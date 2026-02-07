@@ -4,7 +4,7 @@
  * Represents the continuous GTD flow: capture (teal/blue) → process → commit (terracotta/warm).
  * The infinity loop = thoughts flowing endlessly until OffMind breaks the cycle.
  *
- * Colors: Teal #22b8cf → Terracotta #c2410c
+ * Colors: Teal #06b6d4 → Terracotta #ea580c (vibrant)
  */
 
 interface OffMindLogoProps {
@@ -22,14 +22,9 @@ export function OffMindLogo({
 
   if (variant === 'full') {
     return (
-      <div className={`flex items-center gap-2.5 ${className}`}>
+      <div className={`flex items-center gap-3 ${className}`}>
         <InfinityMark size={size} id={id} />
-        <span
-          className="font-semibold tracking-tight text-foreground"
-          style={{ fontSize: size * 0.5 }}
-        >
-          OffMind
-        </span>
+        <Wordmark size={size} id={id} />
       </div>
     );
   }
@@ -37,6 +32,61 @@ export function OffMindLogo({
   return <InfinityMark size={size} id={id} className={className} />;
 }
 
+/* ─── Wordmark: "Off" light + "Mind" bold, gradient text ─── */
+function Wordmark({ size, id }: { size: number; id: string }) {
+  const fontSize = size * 0.48;
+
+  return (
+    <svg
+      width={fontSize * 4.2}
+      height={fontSize * 1.3}
+      viewBox="0 0 210 65"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient
+          id={`${id}-wg`}
+          x1="0"
+          y1="32"
+          x2="210"
+          y2="32"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop offset="0%" stopColor="#08c4dc" />
+          <stop offset="40%" stopColor="#a0866a" />
+          <stop offset="100%" stopColor="#ea580c" />
+        </linearGradient>
+      </defs>
+      {/* "Off" — lighter weight */}
+      <text
+        x="0"
+        y="48"
+        fontFamily="var(--font-geist-sans), 'Geist Sans', system-ui, sans-serif"
+        fontSize="52"
+        fontWeight="300"
+        letterSpacing="-1"
+        fill={`url(#${id}-wg)`}
+      >
+        Off
+      </text>
+      {/* "Mind" — bold weight */}
+      <text
+        x="82"
+        y="48"
+        fontFamily="var(--font-geist-sans), 'Geist Sans', system-ui, sans-serif"
+        fontSize="52"
+        fontWeight="700"
+        letterSpacing="-1.5"
+        fill={`url(#${id}-wg)`}
+      >
+        Mind
+      </text>
+    </svg>
+  );
+}
+
+/* ─── Infinity mark: elongated oval loops, thick strokes ─── */
 function InfinityMark({
   size,
   id,
@@ -46,150 +96,151 @@ function InfinityMark({
   id: string;
   className?: string;
 }) {
-  // Aspect ratio: the infinity symbol is wider than tall
+  // Wider aspect ratio — elongated ovals, not circles
   const width = size;
-  const height = size * 0.62;
+  const height = size * 0.5;
 
   return (
     <svg
       width={width}
       height={height}
-      viewBox="0 0 200 124"
+      viewBox="0 0 260 104"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       aria-label="OffMind logo"
     >
       <defs>
-        {/* Main gradient: teal (left) to terracotta (right) */}
+        {/* Main gradient: vibrant teal (left) to vibrant terracotta (right) */}
         <linearGradient
           id={`${id}-main`}
           x1="0"
-          y1="62"
-          x2="200"
-          y2="62"
+          y1="52"
+          x2="260"
+          y2="52"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0%" stopColor="#22b8cf" />
-          <stop offset="35%" stopColor="#3ba5c4" />
-          <stop offset="50%" stopColor="#b07040" />
-          <stop offset="65%" stopColor="#d45a1a" />
-          <stop offset="100%" stopColor="#c2410c" />
+          <stop offset="0%" stopColor="#06b6d4" />
+          <stop offset="30%" stopColor="#0891b2" />
+          <stop offset="50%" stopColor="#b8703a" />
+          <stop offset="70%" stopColor="#ea580c" />
+          <stop offset="100%" stopColor="#dc2626" />
         </linearGradient>
 
         {/* Top highlight for 3D depth */}
         <linearGradient
           id={`${id}-highlight`}
-          x1="100"
+          x1="130"
           y1="0"
-          x2="100"
-          y2="124"
+          x2="130"
+          y2="104"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0%" stopColor="rgba(255,255,255,0.25)" />
-          <stop offset="50%" stopColor="rgba(255,255,255,0)" />
-          <stop offset="100%" stopColor="rgba(0,0,0,0.1)" />
+          <stop offset="0%" stopColor="rgba(255,255,255,0.3)" />
+          <stop offset="45%" stopColor="rgba(255,255,255,0)" />
+          <stop offset="100%" stopColor="rgba(0,0,0,0.12)" />
         </linearGradient>
 
-        {/* Left loop gradient (teal emphasis) */}
+        {/* Left loop gradient (vibrant teal) */}
         <linearGradient
           id={`${id}-left`}
           x1="0"
-          y1="30"
-          x2="100"
-          y2="90"
+          y1="20"
+          x2="130"
+          y2="80"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0%" stopColor="#0ea5c7" />
-          <stop offset="60%" stopColor="#22b8cf" />
-          <stop offset="100%" stopColor="#45a0b0" />
+          <stop offset="0%" stopColor="#06b6d4" />
+          <stop offset="50%" stopColor="#08c4dc" />
+          <stop offset="100%" stopColor="#0e9aaf" />
         </linearGradient>
 
-        {/* Right loop gradient (terracotta emphasis) */}
+        {/* Right loop gradient (vibrant terracotta/orange) */}
         <linearGradient
           id={`${id}-right`}
-          x1="100"
-          y1="30"
-          x2="200"
-          y2="90"
+          x1="130"
+          y1="20"
+          x2="260"
+          y2="80"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0%" stopColor="#d4680e" />
-          <stop offset="40%" stopColor="#c2410c" />
-          <stop offset="100%" stopColor="#ea580c" />
+          <stop offset="0%" stopColor="#f06520" />
+          <stop offset="50%" stopColor="#ea580c" />
+          <stop offset="100%" stopColor="#dc4510" />
         </linearGradient>
 
         {/* Cross-over front piece gradient (blend zone) */}
         <linearGradient
           id={`${id}-cross`}
-          x1="70"
-          y1="20"
-          x2="130"
-          y2="104"
+          x1="95"
+          y1="14"
+          x2="165"
+          y2="90"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0%" stopColor="#22b8cf" />
-          <stop offset="50%" stopColor="#8a7050" />
-          <stop offset="100%" stopColor="#c2410c" />
+          <stop offset="0%" stopColor="#06b6d4" />
+          <stop offset="50%" stopColor="#a07848" />
+          <stop offset="100%" stopColor="#ea580c" />
         </linearGradient>
 
         {/* Subtle drop shadow */}
         <filter id={`${id}-shadow`} x="-10%" y="-10%" width="120%" height="130%">
-          <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#000000" floodOpacity="0.12" />
+          <feDropShadow dx="0" dy="3" stdDeviation="5" floodColor="#000000" floodOpacity="0.10" />
         </filter>
       </defs>
 
       <g filter={`url(#${id}-shadow)`}>
         {/*
-          Infinity symbol constructed as two overlapping loops.
-          The back strand goes behind, front strand crosses over.
+          Infinity symbol — elongated oval loops.
+          Wider viewBox (260x104) with ovals stretched to x extremes.
+          Back strands render first, front crossover on top.
         */}
 
-        {/* BACK STRAND: right loop going behind the crossover */}
+        {/* BACK STRAND: right loop (oval, stretched right) */}
         <path
-          d="M100,52 C100,52 108,20 140,14 C172,8 192,28 192,62 C192,96 172,116 140,110 C118,106 106,88 100,72"
+          d="M130,42 C138,24 156,8 190,8 C232,8 252,28 252,52 C252,76 232,96 190,96 C160,96 142,78 130,62"
           stroke={`url(#${id}-right)`}
-          strokeWidth="18"
+          strokeWidth="24"
           strokeLinecap="round"
           fill="none"
         />
 
-        {/* BACK STRAND: left loop going behind the crossover */}
+        {/* BACK STRAND: left loop (oval, stretched left) */}
         <path
-          d="M100,72 C100,72 92,104 60,110 C28,116 8,96 8,62 C8,28 28,8 60,14 C82,18 94,36 100,52"
+          d="M130,62 C122,80 104,96 70,96 C28,96 8,76 8,52 C8,28 28,8 70,8 C100,8 118,26 130,42"
           stroke={`url(#${id}-left)`}
-          strokeWidth="18"
+          strokeWidth="24"
           strokeLinecap="round"
           fill="none"
         />
 
-        {/* FRONT STRAND: the crossover piece (teal coming from top-left, going to bottom-right) */}
+        {/* FRONT STRAND: crossover piece (teal top-left → terracotta bottom-right) */}
         <path
-          d="M88,38 C94,48 106,76 112,86"
+          d="M116,30 C122,40 138,64 144,74"
           stroke={`url(#${id}-cross)`}
-          strokeWidth="19"
+          strokeWidth="26"
           strokeLinecap="round"
           fill="none"
         />
 
-        {/* Highlight overlay for 3D effect on left loop */}
+        {/* Highlight overlay — left loop */}
         <path
-          d="M100,72 C100,72 92,104 60,110 C28,116 8,96 8,62 C8,28 28,8 60,14 C82,18 94,36 100,52"
+          d="M130,62 C122,80 104,96 70,96 C28,96 8,76 8,52 C8,28 28,8 70,8 C100,8 118,26 130,42"
           stroke={`url(#${id}-highlight)`}
-          strokeWidth="18"
+          strokeWidth="24"
           strokeLinecap="round"
           fill="none"
-          opacity="0.4"
+          opacity="0.35"
         />
 
-        {/* Highlight overlay for 3D effect on right loop */}
+        {/* Highlight overlay — right loop */}
         <path
-          d="M100,52 C100,52 108,20 140,14 C172,8 192,28 192,62 C192,96 172,116 140,110 C118,106 106,88 100,72"
+          d="M130,42 C138,24 156,8 190,8 C232,8 252,28 252,52 C252,76 232,96 190,96 C160,96 142,78 130,62"
           stroke={`url(#${id}-highlight)`}
-          strokeWidth="18"
+          strokeWidth="24"
           strokeLinecap="round"
           fill="none"
-          opacity="0.4"
+          opacity="0.35"
         />
       </g>
     </svg>
@@ -203,13 +254,13 @@ export function OffMindIcon({ size = 16, className = '' }: { size?: number; clas
   const id = `om-ico-${Math.random().toString(36).slice(2, 7)}`;
 
   const width = size;
-  const height = size * 0.62;
+  const height = size * 0.5;
 
   return (
     <svg
       width={width}
       height={height}
-      viewBox="0 0 200 124"
+      viewBox="0 0 260 104"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
@@ -218,22 +269,22 @@ export function OffMindIcon({ size = 16, className = '' }: { size?: number; clas
         <linearGradient
           id={`${id}-g`}
           x1="0"
-          y1="62"
-          x2="200"
-          y2="62"
+          y1="52"
+          x2="260"
+          y2="52"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0%" stopColor="#22b8cf" />
-          <stop offset="45%" stopColor="#6a8a70" />
-          <stop offset="100%" stopColor="#c2410c" />
+          <stop offset="0%" stopColor="#06b6d4" />
+          <stop offset="45%" stopColor="#7a8a5a" />
+          <stop offset="100%" stopColor="#ea580c" />
         </linearGradient>
       </defs>
 
       {/* Simplified single-path infinity for small sizes */}
       <path
-        d="M100,52 C94,36 82,18 60,14 C28,8 8,28 8,62 C8,96 28,116 60,110 C92,104 100,72 100,72 C100,72 108,40 140,14 C172,8 192,28 192,62 C192,96 172,116 140,110 C108,104 100,52 100,52 Z"
+        d="M130,42 C118,26 100,8 70,8 C28,8 8,28 8,52 C8,76 28,96 70,96 C104,96 122,80 130,62 C138,78 156,96 190,96 C232,96 252,76 252,52 C252,28 232,8 190,8 C156,8 142,26 130,42 Z"
         stroke={`url(#${id}-g)`}
-        strokeWidth="16"
+        strokeWidth="20"
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
