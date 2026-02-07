@@ -1,13 +1,13 @@
 import { createClient } from '@/lib/supabase/server';
 import { ensureProfile } from '@/lib/supabase/ensure-profile';
-import { CapturePageClient } from './client';
+import { InboxPageClient } from './client';
 import type { Item, Destination, Space, Project } from '@/types/database';
 
 export const metadata = {
-  title: 'Capture',
+  title: 'Inbox',
 };
 
-export default async function CapturePage() {
+export default async function InboxPage() {
   const supabase = await createClient();
 
   // Get current user
@@ -54,7 +54,7 @@ export default async function CapturePage() {
     .order('sort_order');
 
   return (
-    <CapturePageClient
+    <InboxPageClient
       initialItems={(items || []) as Item[]}
       destinations={(destinations || []) as Destination[]}
       spaces={(spaces || []) as Space[]}

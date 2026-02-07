@@ -353,7 +353,7 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
             description="Schedule items from your backlog to commit to specific times."
             action={{
               label: 'View Backlog',
-              href: '/process',
+              href: '/review',
             }}
           />
         ) : viewMode === 'agenda' ? (

@@ -39,7 +39,7 @@ import { cn } from '@/lib/utils';
 import type { Item, Destination } from '@/types/database';
 import { toast } from 'sonner';
 
-interface ProcessPageClientProps {
+interface ReviewPageClientProps {
   initialItems: Item[];
   destinations: Destination[];
   userId: string;
@@ -47,11 +47,11 @@ interface ProcessPageClientProps {
 
 type ViewMode = 'focus' | 'kanban' | 'grouped' | 'list' | 'table';
 
-export function ProcessPageClient({
+export function ReviewPageClient({
   initialItems,
   destinations,
   userId,
-}: ProcessPageClientProps) {
+}: ReviewPageClientProps) {
   const getSupabase = () => createClient();
   const { items, setItems, addItem, updateItem, removeItem, isLoading } = useItemsStore();
   const [viewMode, setViewMode] = useState<ViewMode>('focus');
@@ -222,15 +222,15 @@ export function ProcessPageClient({
   return (
     <div className="flex h-full flex-col">
       {/* Page header */}
-      <div className="border-b border-[var(--border-subtle)] px-4 py-4 sm:px-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex-shrink-0 border-b border-[var(--border-subtle)] px-4 py-4 sm:px-6">
+        <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
-            <h1 className="text-xl font-semibold text-[var(--text-primary)] sm:text-2xl">Process</h1>
+            <h1 className="text-xl font-semibold text-[var(--text-primary)] sm:text-2xl">Review</h1>
             <p className="hidden text-sm text-[var(--text-muted)] sm:block">
               Organize items into destinations. Schedule when ready.
             </p>
           </div>
-          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <div className="flex shrink-0 items-center gap-2 overflow-x-auto sm:gap-3">
             {/* Bulk AI Actions */}
             <BulkAIActions
               items={processItems}
@@ -320,12 +320,12 @@ export function ProcessPageClient({
         ) : processItems.length === 0 ? (
           <EmptyState
             icon={Inbox}
-            title="Nothing to process"
-            description="Items you move from Capture will appear here. Start by capturing some thoughts!"
+            title="Nothing to review"
+            description="Items from your Inbox will appear here. Start by capturing some thoughts!"
             variant="process"
             action={{
-              label: 'Go to Capture',
-              href: '/capture',
+              label: 'Go to Inbox',
+              href: '/inbox',
             }}
           />
         ) : viewMode === 'focus' ? (
@@ -499,15 +499,15 @@ function DestinationGroup({
       >
         <div className={cn(
           'flex h-8 w-8 items-center justify-center rounded-lg',
-          colorOption?.bgSubtle || 'bg-muted'
+          colorOption?.bgSubtle || 'bg-[var(--bg-hover)]'
         )}>
-          <Icon className={cn('h-4 w-4', colorOption?.text || 'text-muted-foreground')} />
+          <Icon className={cn('h-4 w-4', colorOption?.text || 'text-[var(--text-muted)]')} />
         </div>
-        <h2 className="text-lg font-medium text-foreground">{title}</h2>
-        <span className="text-sm text-muted-foreground">({items.length})</span>
+        <h2 className="text-lg font-medium text-[var(--text-primary)]">{title}</h2>
+        <span className="text-sm text-[var(--text-muted)]">({items.length})</span>
         <ChevronDown
           className={cn(
-            'ml-auto h-4 w-4 text-muted-foreground transition-transform',
+            'ml-auto h-4 w-4 text-[var(--text-muted)] transition-transform',
             isExpanded && 'rotate-180'
           )}
         />
@@ -594,16 +594,16 @@ function ProcessItemCard({
         <div className="flex-1 min-w-0">
           <h3
             className={cn(
-              'font-medium text-foreground',
+              'font-medium text-[var(--text-primary)]',
               compact ? 'text-sm' : 'text-base',
-              item.is_completed && 'line-through text-muted-foreground'
+              item.is_completed && 'line-through text-[var(--text-muted)]'
             )}
           >
             {item.title}
           </h3>
 
           {!compact && item.notes && (
-            <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
+            <p className="mt-1 text-sm text-[var(--text-muted)] line-clamp-2">
               {item.notes}
             </p>
           )}

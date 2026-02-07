@@ -1,13 +1,13 @@
 import { createClient } from '@/lib/supabase/server';
 import { ensureProfile } from '@/lib/supabase/ensure-profile';
-import { ProcessPageClient } from './client';
+import { ReviewPageClient } from './client';
 import type { Item, Destination } from '@/types/database';
 
 export const metadata = {
-  title: 'Process',
+  title: 'Review',
 };
 
-export default async function ProcessPage() {
+export default async function ReviewPage() {
   const supabase = await createClient();
 
   // Get current user
@@ -39,7 +39,7 @@ export default async function ProcessPage() {
     .order('sort_order');
 
   return (
-    <ProcessPageClient
+    <ReviewPageClient
       initialItems={(items || []) as Item[]}
       destinations={(destinations || []) as Destination[]}
       userId={user.id}

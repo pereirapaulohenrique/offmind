@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 import { useItemsStore } from '@/stores/items';
 import { useAISuggestion } from '@/hooks/useAISuggestion';
-import { QuickCapture } from '@/components/layout/QuickCapture';
 import { ItemCard } from '@/components/items/ItemCard';
 import { ItemDetailPanel } from '@/components/items/ItemDetailPanel';
 import { AISuggestionBadge } from '@/components/items/AISuggestionBadge';
@@ -15,7 +14,7 @@ import { LoadingState } from '@/components/shared/LoadingState';
 import type { Item, Destination, Space, Project } from '@/types/database';
 import { toast } from 'sonner';
 
-interface CapturePageClientProps {
+interface InboxPageClientProps {
   initialItems: Item[];
   destinations: Destination[];
   spaces: Space[];
@@ -23,11 +22,10 @@ interface CapturePageClientProps {
   userId: string;
 }
 
-export function CapturePageClient({ initialItems, destinations, spaces, projects, userId }: CapturePageClientProps) {
+export function InboxPageClient({ initialItems, destinations, spaces, projects, userId }: InboxPageClientProps) {
   const getSupabase = () => createClient();
   const { items, setItems, addItem, updateItem, removeItem, isLoading } = useItemsStore();
   const { suggestDestination, suggestion, isLoading: isAILoading, clearSuggestion } = useAISuggestion();
-  const [isCapturing, setIsCapturing] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [aiSuggestItemId, setAiSuggestItemId] = useState<string | null>(null);
 
@@ -70,41 +68,6 @@ export function CapturePageClient({ initialItems, destinations, spaces, projects
       supabase.removeChannel(channel);
     };
   }, [userId, addItem, updateItem, removeItem]);
-
-  // Handle capture
-  const handleCapture = useCallback(
-    async (title: string) => {
-      setIsCapturing(true);
-      const supabase = getSupabase();
-
-      try {
-        const newItem = {
-          user_id: userId,
-          title,
-          layer: 'capture',
-          source: 'web',
-        };
-
-        const { data, error } = await supabase
-          .from('items')
-          .insert(newItem as any)
-          .select()
-          .single();
-
-        if (error) throw error;
-
-        // Optimistically add (realtime will confirm)
-        if (data) addItem(data as Item);
-        toast.success('Captured!');
-      } catch (error: any) {
-        console.error('Error capturing item:', error?.message || error?.code || JSON.stringify(error));
-        toast.error(error?.message || 'Failed to capture item');
-      } finally {
-        setIsCapturing(false);
-      }
-    },
-    [userId, addItem]
-  );
 
   // Handle item update
   const handleUpdateItem = useCallback(
@@ -230,41 +193,32 @@ export function CapturePageClient({ initialItems, destinations, spaces, projects
 
   return (
     <div className="flex h-full flex-col">
-      {/* Capture input - hero zone at TOP */}
-      <div className="border-b-2 border-b-[var(--layer-capture-border)] bg-[var(--layer-capture-bg)] px-4 py-5 sm:px-6 sm:py-6">
-        <div className="mx-auto max-w-3xl">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <h1 className="text-xl font-semibold text-[var(--text-primary)]">Capture</h1>
-              <p className="hidden text-sm text-[var(--text-muted)] sm:block">
-                Get thoughts out of your head. Process them later.
-              </p>
+      {/* Page header */}
+      <div className="border-b border-[var(--border-subtle)] px-4 py-4 sm:px-6">
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <div className="flex items-center gap-3">
+              <h1 className="text-xl font-semibold text-[var(--text-primary)]">Inbox</h1>
+              {captureItems.length > 0 && (
+                <span className="rounded-full bg-[var(--layer-capture-bg)] border border-[var(--layer-capture-border)] px-2.5 py-0.5 text-xs font-medium text-[var(--layer-capture)]">
+                  {captureItems.length} item{captureItems.length !== 1 ? 's' : ''}
+                </span>
+              )}
             </div>
-            <div className="flex shrink-0 items-center gap-3">
-              <BulkAIActions
-                items={captureItems}
-                destinations={destinations}
-                pageType="capture"
-                onApplySuggestions={handleApplyBulkSuggestions}
-              />
-            </div>
+            <p className="hidden text-sm text-[var(--text-muted)] sm:block">
+              Unprocessed items. Assign destinations, schedule, or delete.
+            </p>
           </div>
-          <QuickCapture onCapture={handleCapture} isLoading={isCapturing} />
+          <div className="flex shrink-0 items-center gap-3">
+            <BulkAIActions
+              items={captureItems}
+              destinations={destinations}
+              pageType="capture"
+              onApplySuggestions={handleApplyBulkSuggestions}
+            />
+          </div>
         </div>
       </div>
-
-      {/* Inbox section divider */}
-      {captureItems.length > 0 && (
-        <div className="flex items-center gap-3 px-6 py-3 border-b border-[var(--border-subtle)]">
-          <div className="mx-auto flex w-full max-w-3xl items-center gap-3">
-            <h2 className="text-sm font-medium text-[var(--text-muted)]">Inbox</h2>
-            <span className="rounded-full bg-[var(--layer-capture-bg)] border border-[var(--layer-capture-border)] px-2.5 py-0.5 text-xs font-medium text-[var(--layer-capture)]">
-              {captureItems.length} item{captureItems.length !== 1 ? 's' : ''}
-            </span>
-            <div className="flex-1 border-t border-[var(--border-subtle)]" />
-          </div>
-        </div>
-      )}
 
       {/* Items list */}
       <div className="flex-1 overflow-auto p-6">
@@ -274,7 +228,7 @@ export function CapturePageClient({ initialItems, destinations, spaces, projects
           <EmptyState
             iconName="check-circle-2"
             title="Inbox Zero!"
-            description="All captured thoughts have been processed. Capture something new above."
+            description="All captured thoughts have been processed. Use the capture bar below to add something new."
           />
         ) : (
           <div className="mx-auto max-w-3xl space-y-3">

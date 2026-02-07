@@ -7,6 +7,7 @@ import {
   Trash2,
   SkipForward,
   Sparkles,
+  Check,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ICON_MAP, COLOR_PALETTE } from '@/components/icons';
@@ -32,6 +33,7 @@ export function FocusProcess({
 }: FocusProcessProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [selectedDestinationId, setSelectedDestinationId] = useState<string | null>(null);
 
   const unprocessedItems = items.filter((item) => !item.destination_id);
   const currentItem = unprocessedItems[currentIndex];
@@ -42,13 +44,23 @@ export function FocusProcess({
     }
   }, [unprocessedItems.length, currentIndex]);
 
-  const handleMoveToDestination = useCallback(
+  // Reset selection when current item changes
+  useEffect(() => {
+    setSelectedDestinationId(null);
+  }, [currentItem?.id]);
+
+  const handleConfirmDestination = useCallback(() => {
+    if (!currentItem || !selectedDestinationId) return;
+    setDirection(1);
+    onMoveToDestination(currentItem.id, selectedDestinationId);
+    setSelectedDestinationId(null);
+  }, [currentItem, selectedDestinationId, onMoveToDestination]);
+
+  const handleSelectDestination = useCallback(
     (destinationId: string) => {
-      if (!currentItem) return;
-      setDirection(1);
-      onMoveToDestination(currentItem.id, destinationId);
+      setSelectedDestinationId((prev) => (prev === destinationId ? null : destinationId));
     },
-    [currentItem, onMoveToDestination]
+    []
   );
 
   const handleSchedule = useCallback(() => {
@@ -62,16 +74,18 @@ export function FocusProcess({
 
   const handleSkip = useCallback(() => {
     setDirection(1);
+    setSelectedDestinationId(null);
     setCurrentIndex((prev) => Math.min(prev + 1, unprocessedItems.length - 1));
   }, [unprocessedItems.length]);
 
   const handleDelete = useCallback(() => {
     if (!currentItem) return;
     setDirection(-1);
+    setSelectedDestinationId(null);
     onDeleteItem(currentItem.id);
   }, [currentItem, onDeleteItem]);
 
-  // Keyboard shortcuts: 1-9 for destinations, S for schedule, D for delete, → for skip
+  // Keyboard shortcuts: 1-9 select destination, Enter confirms, S schedule, D delete, → skip
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!currentItem) return;
@@ -80,11 +94,17 @@ export function FocusProcess({
       const num = parseInt(e.key);
       if (num >= 1 && num <= destinations.length) {
         e.preventDefault();
-        handleMoveToDestination(destinations[num - 1].id);
+        handleSelectDestination(destinations[num - 1].id);
         return;
       }
 
       switch (e.key.toLowerCase()) {
+        case 'enter':
+          if (selectedDestinationId) {
+            e.preventDefault();
+            handleConfirmDestination();
+          }
+          break;
         case 's':
           e.preventDefault();
           handleSchedule();
@@ -99,12 +119,15 @@ export function FocusProcess({
           e.preventDefault();
           handleSkip();
           break;
+        case 'escape':
+          setSelectedDestinationId(null);
+          break;
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentItem, destinations, handleMoveToDestination, handleSchedule, handleDelete, handleSkip]);
+  }, [currentItem, destinations, selectedDestinationId, handleSelectDestination, handleConfirmDestination, handleSchedule, handleDelete, handleSkip]);
 
   // All done state
   if (unprocessedItems.length === 0) {
@@ -174,14 +197,17 @@ export function FocusProcess({
           {destinations.map((dest, index) => {
             const Icon = ICON_MAP[dest.icon] || ICON_MAP['inbox'];
             const colorOption = COLOR_PALETTE.find((c) => c.value === dest.color);
+            const isSelected = selectedDestinationId === dest.id;
 
             return (
               <button
                 key={dest.id}
-                onClick={() => handleMoveToDestination(dest.id)}
+                onClick={() => handleSelectDestination(dest.id)}
                 className={cn(
-                  'group flex items-center gap-2.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]/50 px-3.5 py-3 text-left transition-all duration-150',
-                  'hover:border-[var(--border-default)] hover:bg-[var(--bg-surface)] hover:shadow-sm'
+                  'group flex items-center gap-2.5 rounded-xl border px-3.5 py-3 text-left transition-all duration-150',
+                  isSelected
+                    ? 'border-[var(--layer-process)] bg-[var(--layer-process-bg)] ring-1 ring-[var(--layer-process)] shadow-sm'
+                    : 'border-[var(--border-subtle)] bg-[var(--bg-surface)]/50 hover:border-[var(--border-default)] hover:bg-[var(--bg-surface)] hover:shadow-sm'
                 )}
               >
                 <div
@@ -198,7 +224,10 @@ export function FocusProcess({
                   />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-medium text-[var(--text-secondary)]">
+                  <span className={cn(
+                    'block truncate text-sm font-medium',
+                    isSelected ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'
+                  )}>
                     {dest.name}
                   </span>
                 </div>
@@ -209,6 +238,29 @@ export function FocusProcess({
             );
           })}
         </div>
+
+        {/* Confirm button - appears when destination is selected */}
+        <AnimatePresence>
+          {selectedDestinationId && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.15 }}
+              className="mt-3 flex justify-center"
+            >
+              <Button
+                onClick={handleConfirmDestination}
+                size="sm"
+                className="gap-1.5 shadow-sm"
+              >
+                <Check className="h-3.5 w-3.5" />
+                Save
+                <kbd className="ml-1 font-mono text-[10px] opacity-70">↵</kbd>
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Action row */}
         <div className="mt-4 flex items-center justify-between">

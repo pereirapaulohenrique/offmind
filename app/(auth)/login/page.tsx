@@ -78,7 +78,7 @@ export default function LoginPage() {
       if (error) {
         setMessage({ type: 'error', text: error.message });
       } else {
-        router.push('/inbox');
+        router.push('/home');
       }
     } catch (error) {
       setMessage({ type: 'error', text: 'An unexpected error occurred' });

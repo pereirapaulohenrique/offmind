@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { Plus, CornerDownLeft, Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useUIStore } from '@/stores/ui';
+import { useItemsStore } from '@/stores/items';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
@@ -17,6 +18,7 @@ export function CaptureBar({ userId }: CaptureBarProps) {
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { sidebarCollapsed, setCaptureBarFocused } = useUIStore();
+  const { addItem } = useItemsStore();
 
   // Cmd+N to focus capture bar
   useEffect(() => {
@@ -38,17 +40,20 @@ export function CaptureBar({ userId }: CaptureBarProps) {
     setIsLoading(true);
     try {
       const supabase = createClient();
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('items')
         .insert({
           user_id: userId,
           title: trimmedValue,
           layer: 'capture',
           source: 'web',
-        } as any);
+        } as any)
+        .select()
+        .single();
 
       if (error) throw error;
 
+      if (data) addItem(data as any);
       setValue('');
       toast.success('Captured', {
         description: trimmedValue.length > 50 ? trimmedValue.slice(0, 50) + '...' : trimmedValue,
@@ -60,7 +65,7 @@ export function CaptureBar({ userId }: CaptureBarProps) {
     } finally {
       setIsLoading(false);
     }
-  }, [value, isLoading, userId]);
+  }, [value, isLoading, userId, addItem]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {

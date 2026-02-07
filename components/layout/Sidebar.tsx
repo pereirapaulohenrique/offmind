@@ -35,8 +35,8 @@ import { OffMindLogo } from '@/components/brand/OffMindLogo';
 // Navigation items with Lucide icons
 const mainNav: { href: string; label: string; icon: LucideIcon; shortcut: string }[] = [
   { href: '/home', label: 'Home', icon: Home, shortcut: '⌘0' },
-  { href: '/capture', label: 'Capture', icon: Inbox, shortcut: '⌘1' },
-  { href: '/process', label: 'Process', icon: ArrowRight, shortcut: '⌘2' },
+  { href: '/inbox', label: 'Inbox', icon: Inbox, shortcut: '⌘1' },
+  { href: '/review', label: 'Review', icon: ArrowRight, shortcut: '⌘2' },
   { href: '/commit', label: 'Commit', icon: Calendar, shortcut: '⌘3' },
 ];
 
@@ -119,9 +119,9 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
           </AnimatePresence>
         </div>
 
-        <ScrollArea className="flex-1 px-2">
+        <ScrollArea className="flex-1 overflow-visible px-2">
           {/* Main Navigation */}
-          <nav className="space-y-0.5 py-2">
+          <nav className="space-y-0.5 overflow-visible py-2">
             {mainNav.map((item) => (
               <NavItem
                 key={item.href}
@@ -131,7 +131,7 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
                 isActive={pathname === item.href}
                 isCollapsed={sidebarCollapsed}
                 shortcut={item.shortcut}
-                badge={item.href === '/capture' && inboxCount > 0 ? inboxCount : undefined}
+                badge={item.href === '/inbox' && inboxCount > 0 ? inboxCount : undefined}
               />
             ))}
           </nav>
@@ -307,13 +307,13 @@ function NavItem({ href, label, icon: Icon, isActive, isCollapsed, shortcut, bad
     if (!isActive) return { bg: '', text: '', border: 'border-l-transparent' };
 
     switch (href) {
-      case '/capture':
+      case '/inbox':
         return {
           bg: 'bg-[var(--layer-capture-bg)]',
           text: 'text-[var(--layer-capture)]',
           border: 'border-l-[var(--layer-capture)]',
         };
-      case '/process':
+      case '/review':
         return {
           bg: 'bg-[var(--layer-process-bg)]',
           text: 'text-[var(--layer-process)]',
@@ -372,7 +372,7 @@ function NavItem({ href, label, icon: Icon, isActive, isCollapsed, shortcut, bad
 
   if (isCollapsed) {
     return (
-      <div className="relative">
+      <div className="relative overflow-visible">
         <Tooltip>
           <TooltipTrigger asChild>{content}</TooltipTrigger>
           <TooltipContent side="right" className="flex items-center gap-2">

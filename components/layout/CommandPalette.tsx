@@ -33,8 +33,8 @@ interface NavItem {
 
 const navigationItems: NavItem[] = [
   { label: 'Go to Home', href: '/home', Icon: Home, shortcut: '⌘0' },
-  { label: 'Go to Capture', href: '/capture', Icon: Inbox, shortcut: '⌘1' },
-  { label: 'Go to Process', href: '/process', Icon: ArrowRightLeft, shortcut: '⌘2' },
+  { label: 'Go to Inbox', href: '/inbox', Icon: Inbox, shortcut: '⌘1' },
+  { label: 'Go to Review', href: '/review', Icon: ArrowRightLeft, shortcut: '⌘2' },
   { label: 'Go to Commit', href: '/commit', Icon: CalendarCheck, shortcut: '⌘3' },
 ];
 
@@ -73,12 +73,12 @@ export function CommandPalette() {
             break;
           case '1':
             e.preventDefault();
-            router.push('/capture');
+            router.push('/inbox');
             setCommandPaletteOpen(false);
             break;
           case '2':
             e.preventDefault();
-            router.push('/process');
+            router.push('/review');
             setCommandPaletteOpen(false);
             break;
           case '3':
@@ -112,7 +112,7 @@ export function CommandPalette() {
             if (captureInput) {
               captureInput.focus();
             } else {
-              router.push('/capture');
+              router.push('/inbox');
             }
             break;
           case 'new-page':
