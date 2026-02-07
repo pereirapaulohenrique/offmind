@@ -89,17 +89,23 @@ export function CaptureBar({ userId }: CaptureBarProps) {
   };
 
   // Sidebar-aware left offset
-  const sidebarOffset = sidebarCollapsed ? 'md:left-[68px]' : 'md:left-[252px]';
+  const sidebarOffset = sidebarCollapsed ? '72px' : '260px';
 
   return (
-    <div className={`fixed bottom-0 left-0 ${sidebarOffset} right-0 z-30 px-4 pb-4 pt-2 pointer-events-none transition-all duration-200`}>
+    <div
+      className="fixed bottom-0 left-0 right-0 z-30 px-5 pb-5 pt-2 pointer-events-none"
+      style={{
+        paddingLeft: `calc(${sidebarOffset} + 1.25rem)`,
+        transition: 'padding-left 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)',
+      }}
+    >
       <div className="mx-auto max-w-2xl pointer-events-auto">
         <div
-          className={`capture-input relative flex items-center gap-3 rounded-2xl border px-4 py-3 transition-all duration-200 ${
+          className={`capture-input relative flex items-center gap-3 rounded-2xl border px-5 py-3.5 transition-all duration-300 ${
             isFocused
               ? 'border-[var(--accent-border)] bg-[var(--bg-surface)]/95 shadow-[var(--shadow-glow)]'
-              : 'border-[var(--border-subtle)] bg-[var(--bg-surface)]/70 shadow-[var(--shadow-card)]'
-          } backdrop-blur-xl`}
+              : 'border-[var(--border-default)] bg-[var(--bg-surface)]/80 shadow-[var(--shadow-card)]'
+          } backdrop-blur-2xl`}
         >
           <Plus
             className={`h-4.5 w-4.5 flex-shrink-0 transition-all duration-200 ${

@@ -157,7 +157,7 @@ export function PageEditorClient({
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <div className="border-b border-[var(--border-subtle)] px-6 py-3">
+      <div className="px-6 py-3 sm:px-8 warm-glass" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" onClick={() => router.push('/pages')}>

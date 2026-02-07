@@ -162,11 +162,11 @@ export function PagesListClient({
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <div className="border-b border-[var(--border-subtle)] px-6 py-4">
+      <div className="px-6 py-5 sm:px-8" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-[var(--text-primary)]">Pages</h1>
-            <p className="text-sm text-[var(--text-muted)]">
+            <h1 className="text-2xl font-semibold text-[var(--text-primary)] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>Pages</h1>
+            <p className="hidden text-sm text-[var(--text-muted)] sm:block">
               Your documents and notes
             </p>
           </div>
@@ -178,7 +178,7 @@ export function PagesListClient({
       </div>
 
       {/* Filters */}
-      <div className="border-b border-[var(--border-subtle)] px-6 py-3">
+      <div className="px-6 py-3 sm:px-8" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
         <div className="flex flex-wrap items-center gap-3">
           <Input
             placeholder="Search pages..."
@@ -264,7 +264,7 @@ export function PagesListClient({
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
-                      className="group relative rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 hover:border-[var(--accent-border)] hover:shadow-sm cursor-pointer transition-all"
+                      className="group relative rounded-2xl bg-[var(--bg-surface)] p-5 shadow-[var(--shadow-card)] cursor-pointer transition-all duration-200 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-px"
                       onClick={() => router.push(`/pages/${page.id}`)}
                     >
                       {/* Favorite indicator */}

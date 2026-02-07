@@ -170,11 +170,11 @@ export function SpacesPageClient({
   return (
     <div className="flex h-full flex-col">
       {/* Page header */}
-      <div className="border-b border-[var(--border-subtle)] px-6 py-4">
+      <div className="px-6 py-5 sm:px-8" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-[var(--text-primary)]">Spaces</h1>
-            <p className="text-sm text-[var(--text-muted)]">
+            <h1 className="text-2xl font-semibold text-[var(--text-primary)] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>Spaces</h1>
+            <p className="hidden text-sm text-[var(--text-muted)] sm:block">
               Organize your life into distinct areas.
             </p>
           </div>
@@ -244,7 +244,7 @@ export function SpacesPageClient({
                   >
                     <Link
                       href={`/spaces/${space.id}`}
-                      className="group block rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 transition-colors hover:border-[var(--accent-border)]"
+                      className="group block rounded-2xl bg-[var(--bg-surface)] p-5 shadow-[var(--shadow-card)] transition-all duration-200 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-px"
                     >
                       <div className="flex items-start gap-4">
                         {/* Icon */}

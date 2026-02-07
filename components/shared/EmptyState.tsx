@@ -47,7 +47,7 @@ export function EmptyState({
       transition={{ duration: 0.25 }}
       className="flex flex-col items-center justify-center py-16 px-4 text-center"
     >
-      <div className={cn('flex h-14 w-14 items-center justify-center rounded-2xl mb-5', styles.bg)}>
+      <div className={cn('flex h-16 w-16 items-center justify-center rounded-2xl mb-5', styles.bg)}>
         <Icon className={cn('h-6 w-6', styles.text)} strokeWidth={1.5} />
       </div>
 

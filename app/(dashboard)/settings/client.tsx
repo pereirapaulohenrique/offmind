@@ -330,9 +330,9 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
 
   return (
     <div className="flex h-full flex-col">
-      <div className="border-b border-[var(--border-subtle)] px-6 py-4">
-        <h1 className="text-2xl font-semibold text-[var(--text-primary)]">Settings</h1>
-        <p className="text-sm text-[var(--text-muted)]">
+      <div className="px-6 py-5 sm:px-8" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+        <h1 className="text-2xl font-semibold text-[var(--text-primary)] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>Settings</h1>
+        <p className="hidden text-sm text-[var(--text-muted)] sm:block">
           Manage your account and subscription
         </p>
       </div>
@@ -355,7 +355,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
           {/* Telegram Integration */}
           <section>
             <h2 className="mb-4 text-lg font-semibold">Telegram Bot</h2>
-            <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6">
+            <div className="rounded-2xl bg-[var(--bg-surface)] shadow-[var(--shadow-card)] p-6">
               {isLoadingTelegram ? (
                 <div className="animate-pulse">
                   <div className="h-4 w-32 rounded bg-[var(--bg-hover)]" />
@@ -416,7 +416,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
           {/* Browser Extension */}
           <section>
             <h2 className="mb-4 text-lg font-semibold">Browser Extension</h2>
-            <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6">
+            <div className="rounded-2xl bg-[var(--bg-surface)] shadow-[var(--shadow-card)] p-6">
               {isLoadingExtension ? (
                 <div className="animate-pulse">
                   <div className="h-4 w-32 rounded bg-[var(--bg-hover)]" />
@@ -469,7 +469,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
           {/* Profile Settings */}
           <section>
             <h2 className="mb-4 text-lg font-semibold">Profile</h2>
-            <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6">
+            <div className="rounded-2xl bg-[var(--bg-surface)] shadow-[var(--shadow-card)] p-6">
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="email">Email</Label>
@@ -512,7 +512,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
                 Add Destination
               </Button>
             </div>
-            <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
+            <div className="rounded-2xl bg-[var(--bg-surface)] shadow-[var(--shadow-card)] overflow-hidden">
               {destinations.length === 0 ? (
                 <div className="p-6 text-center text-[var(--text-muted)]">
                   No destinations yet. Create your first destination to organize your items.
@@ -526,7 +526,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
                     return (
                       <div
                         key={dest.id}
-                        className="flex items-center gap-4 p-4 hover:bg-[var(--bg-hover)] transition-colors"
+                        className="flex items-center gap-4 p-4 hover:bg-[var(--bg-hover)] transition-colors duration-200"
                       >
                         <div className={cn(
                           'flex h-10 w-10 items-center justify-center rounded-lg',
@@ -587,7 +587,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
           {/* Danger Zone */}
           <section>
             <h2 className="mb-4 text-lg font-semibold text-red-500">Danger Zone</h2>
-            <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-6">
+            <div className="rounded-2xl border border-red-500/30 bg-red-500/5 p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-medium">Sign Out</h3>

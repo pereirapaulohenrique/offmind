@@ -78,22 +78,26 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
     <TooltipProvider delayDuration={0}>
       <motion.aside
         initial={false}
-        animate={{ width: sidebarCollapsed ? 68 : 252 }}
-        transition={{ type: "spring", stiffness: 500, damping: 35 }}
-        className="fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-[var(--border-subtle)]"
-        style={{ background: 'linear-gradient(180deg, var(--bg-inset) 0%, var(--sidebar) 100%)' }}
+        animate={{ width: sidebarCollapsed ? 68 : 260 }}
+        transition={{ type: "spring", stiffness: 350, damping: 28 }}
+        className="fixed left-0 top-0 z-40 flex h-screen flex-col rounded-r-2xl"
+        style={{
+          background: 'var(--bg-inset)',
+          boxShadow: '4px 0 16px rgba(80,50,20,0.08)',
+        }}
       >
         {/* Header */}
-        <div className="flex h-14 items-center justify-between px-4">
-          <Link href="/home" className="flex items-center gap-2.5">
-            <OffMindLogo size={28} />
+        <div className="flex h-16 items-center justify-between px-4">
+          <Link href="/home" className="flex items-center gap-3">
+            <OffMindLogo size={30} />
             <AnimatePresence>
               {!sidebarCollapsed && (
                 <motion.span
                   initial={{ opacity: 0, width: 0 }}
                   animate={{ opacity: 1, width: 'auto' }}
                   exit={{ opacity: 0, width: 0 }}
-                  className="text-[15px] font-semibold tracking-tight text-sidebar-foreground overflow-hidden whitespace-nowrap"
+                  transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                  className="text-[16px] font-semibold tracking-tight text-sidebar-foreground overflow-hidden whitespace-nowrap"
                 >
                   OffMind
                 </motion.span>
@@ -103,14 +107,15 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
           <AnimatePresence>
             {!sidebarCollapsed && (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ type: "spring", stiffness: 350, damping: 28 }}
               >
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-7 w-7 text-[var(--text-muted)] hover:text-sidebar-foreground"
+                  className="h-8 w-8 rounded-xl text-[var(--text-muted)] hover:text-sidebar-foreground hover:bg-[var(--bg-hover)] transition-all duration-200"
                   onClick={toggleSidebar}
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -120,12 +125,17 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
           </AnimatePresence>
         </div>
 
-        {/* Gradient separator below logo */}
-        <div className="mx-3 h-px" style={{ background: 'linear-gradient(to right, transparent, var(--border-subtle), transparent)' }} />
+        {/* Warm gradient separator below header */}
+        <div
+          className="mx-4 h-[2px] rounded-full"
+          style={{
+            background: 'linear-gradient(to right, transparent, rgba(194,65,12,0.15), rgba(161,98,7,0.1), transparent)',
+          }}
+        />
 
-        <ScrollArea className="flex-1 overflow-visible px-2">
+        <ScrollArea className="flex-1 overflow-visible px-3">
           {/* Main Navigation */}
-          <nav className="space-y-0.5 overflow-visible py-2">
+          <nav className="space-y-1 overflow-visible py-3">
             {mainNav.map((item) => (
               <NavItem
                 key={item.href}
@@ -140,11 +150,17 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
             ))}
           </nav>
 
-          <Separator className="my-2 opacity-30" />
+          {/* Warm separator */}
+          <div
+            className="mx-2 h-[1.5px] rounded-full my-1"
+            style={{
+              background: 'linear-gradient(to right, transparent, rgba(194,65,12,0.1), rgba(161,98,7,0.08), transparent)',
+            }}
+          />
 
           {/* When collapsed: show Spaces/Projects/Pages as icons */}
           {sidebarCollapsed && (
-            <nav className="space-y-0.5 py-2">
+            <nav className="space-y-1 py-3">
               {secondaryNav.map((item) => (
                 <NavItem
                   key={item.href}
@@ -162,9 +178,9 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
           {!sidebarCollapsed && (
             <>
               {/* Spaces Section */}
-              <div className="py-2">
+              <div className="py-3">
                 <SectionHeader title="Spaces" href="/spaces" />
-                <div className="mt-1 space-y-0.5">
+                <div className="mt-1.5 space-y-0.5">
                   {spaces.map((space) => (
                     <DynamicNavItem
                       key={space.id}
@@ -177,7 +193,7 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
                   ))}
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-sm text-[var(--text-disabled)] hover:text-[var(--accent-base)] h-8"
+                    className="w-full justify-start text-sm text-[var(--text-disabled)] hover:text-[#c2410c] hover:bg-[rgba(194,65,12,0.06)] h-9 rounded-xl transition-all duration-200"
                     asChild
                   >
                     <Link href="/spaces">
@@ -188,9 +204,9 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
               </div>
 
               {/* Projects Section */}
-              <div className="py-2">
+              <div className="py-3">
                 <SectionHeader title="Projects" href="/projects" />
-                <div className="mt-1 space-y-0.5">
+                <div className="mt-1.5 space-y-0.5">
                   {projects.map((project) => (
                     <DynamicNavItem
                       key={project.id}
@@ -203,7 +219,7 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
                   ))}
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-sm text-[var(--text-disabled)] hover:text-[var(--accent-base)] h-8"
+                    className="w-full justify-start text-sm text-[var(--text-disabled)] hover:text-[#c2410c] hover:bg-[rgba(194,65,12,0.06)] h-9 rounded-xl transition-all duration-200"
                     asChild
                   >
                     <Link href="/projects">
@@ -214,9 +230,9 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
               </div>
 
               {/* Pages Section */}
-              <div className="py-2">
+              <div className="py-3">
                 <SectionHeader title="Pages" href="/pages" />
-                <div className="mt-1 space-y-0.5">
+                <div className="mt-1.5 space-y-0.5">
                   {pages.slice(0, 5).map((page) => (
                     <DynamicNavItem
                       key={page.id}
@@ -228,7 +244,7 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
                   ))}
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-sm text-[var(--text-disabled)] hover:text-[var(--accent-base)] h-8"
+                    className="w-full justify-start text-sm text-[var(--text-disabled)] hover:text-[#c2410c] hover:bg-[rgba(194,65,12,0.06)] h-9 rounded-xl transition-all duration-200"
                     asChild
                   >
                     <Link href="/pages">
@@ -242,7 +258,15 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
         </ScrollArea>
 
         {/* Bottom Navigation */}
-        <div className="border-t border-[var(--border-subtle)] p-2">
+        <div className="p-3">
+          {/* Warm gradient separator */}
+          <div
+            className="mx-1 mb-3 h-[1.5px] rounded-full"
+            style={{
+              background: 'linear-gradient(to right, transparent, rgba(194,65,12,0.12), rgba(161,98,7,0.08), transparent)',
+            }}
+          />
+
           {/* Expand/collapse toggle */}
           {sidebarCollapsed && (
             <Tooltip>
@@ -250,7 +274,7 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="w-full h-9 mb-1 text-[var(--text-muted)] hover:text-sidebar-foreground"
+                  className="w-full h-10 mb-1.5 rounded-xl text-[var(--text-muted)] hover:text-sidebar-foreground hover:bg-[var(--bg-hover)] border border-transparent hover:border-[rgba(194,65,12,0.12)] transition-all duration-200"
                   onClick={toggleSidebar}
                 >
                   <ChevronRight className="h-4 w-4" />
@@ -275,17 +299,17 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
   );
 }
 
-// Section header component with link
+// Section header component with link — Bloom: friendly normal case, no decorators
 function SectionHeader({ title, href }: { title: string; href?: string }) {
   const content = (
-    <h3 className="mb-1 px-3 text-[10px] font-semibold uppercase text-[var(--text-muted)]" style={{ letterSpacing: 'var(--tracking-widest)' }}>
+    <h3 className="mb-1 px-3 text-[12px] font-medium text-[var(--text-muted)] tracking-wide">
       {title}
     </h3>
   );
 
   if (href) {
     return (
-      <Link href={href} className="block hover:text-[var(--text-primary)] transition-colors">
+      <Link href={href} className="block hover:text-[var(--text-primary)] transition-colors duration-200">
         {content}
       </Link>
     );
@@ -306,34 +330,38 @@ interface NavItemProps {
 }
 
 function NavItem({ href, label, icon: Icon, isActive, isCollapsed, shortcut, badge }: NavItemProps) {
-  // Layer-specific active styles using CSS variables — pill indicator + accent dot
+  // Layer-specific active styles — Bloom: warm-tinted backgrounds + terracotta pill
   const getLayerStyles = () => {
-    if (!isActive) return { bg: '', text: '', dot: '' };
+    if (!isActive) return { bg: '', text: '', pill: '', activeBg: '' };
 
     switch (href) {
       case '/inbox':
         return {
-          bg: 'bg-[var(--bg-hover)]',
+          bg: 'bg-[rgba(96,165,250,0.08)]',
           text: 'text-[var(--layer-capture)]',
-          dot: 'bg-[var(--layer-capture)]',
+          pill: 'bg-[var(--layer-capture)]',
+          activeBg: 'rgba(96,165,250,0.08)',
         };
       case '/review':
         return {
-          bg: 'bg-[var(--bg-hover)]',
+          bg: 'bg-[rgba(251,191,36,0.08)]',
           text: 'text-[var(--layer-process)]',
-          dot: 'bg-[var(--layer-process)]',
+          pill: 'bg-[var(--layer-process)]',
+          activeBg: 'rgba(251,191,36,0.08)',
         };
       case '/commit':
         return {
-          bg: 'bg-[var(--bg-hover)]',
+          bg: 'bg-[rgba(52,211,153,0.08)]',
           text: 'text-[var(--layer-commit)]',
-          dot: 'bg-[var(--layer-commit)]',
+          pill: 'bg-[var(--layer-commit)]',
+          activeBg: 'rgba(52,211,153,0.08)',
         };
       default:
         return {
-          bg: 'bg-[var(--bg-hover)]',
-          text: 'text-[var(--accent-base)]',
-          dot: 'bg-[var(--accent-base)]',
+          bg: 'bg-[rgba(194,65,12,0.08)]',
+          text: 'text-[#c2410c]',
+          pill: 'bg-[#c2410c]',
+          activeBg: 'rgba(194,65,12,0.08)',
         };
     }
   };
@@ -344,34 +372,38 @@ function NavItem({ href, label, icon: Icon, isActive, isCollapsed, shortcut, bad
     <Link
       href={href}
       className={cn(
-        'relative flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] transition-all duration-150',
+        'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] transition-all duration-200',
         isActive
           ? `${layerStyles.bg} font-medium ${layerStyles.text}`
-          : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] hover:translate-x-px',
+          : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] hover:scale-[1.01]',
         isCollapsed && 'justify-center px-2'
       )}
     >
-      {/* Active accent dot */}
+      {/* Active pill indicator — rounded, layer-colored */}
       {isActive && !isCollapsed && (
-        <span className={cn('absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-full', layerStyles.dot)} />
+        <motion.span
+          layoutId="sidebar-active-pill"
+          className={cn('absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full', layerStyles.pill)}
+          transition={{ type: "spring", stiffness: 350, damping: 28 }}
+        />
       )}
-      <Icon className={cn('h-4 w-4 flex-shrink-0', isActive && layerStyles.text)} />
+      <Icon className={cn('h-[18px] w-[18px] flex-shrink-0 transition-colors duration-200', isActive && layerStyles.text)} />
       {!isCollapsed && (
         <>
           <span className="flex-1 truncate">{label}</span>
           {badge !== undefined && badge > 0 && (
-            <span className="animate-pulse-subtle rounded-full bg-[var(--layer-capture-bg)] border border-[var(--layer-capture-border)] px-2 py-0.5 text-[11px] font-medium text-[var(--layer-capture)] tabular-nums">
+            <span className="rounded-full bg-[rgba(234,88,12,0.12)] px-2.5 py-1 text-[11px] font-medium text-[#c2410c] tabular-nums">
               {badge > 99 ? '99+' : badge}
             </span>
           )}
           {shortcut && (
-            <span className="text-[11px] text-[var(--text-disabled)]">{shortcut}</span>
+            <span className="text-[11px] text-[var(--text-disabled)] opacity-0 group-hover:opacity-100 transition-opacity duration-200">{shortcut}</span>
           )}
         </>
       )}
       {/* Badge visible even when collapsed */}
       {isCollapsed && badge !== undefined && badge > 0 && (
-        <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--layer-capture)] text-[9px] font-bold text-[var(--bg-base)] px-1">
+        <span className="absolute -top-1 -right-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#c2410c] text-[9px] font-bold text-white px-1 shadow-[0_2px_6px_rgba(194,65,12,0.3)]">
           {badge > 99 ? '99+' : badge}
         </span>
       )}
@@ -383,10 +415,10 @@ function NavItem({ href, label, icon: Icon, isActive, isCollapsed, shortcut, bad
       <div className="relative overflow-visible">
         <Tooltip>
           <TooltipTrigger asChild>{content}</TooltipTrigger>
-          <TooltipContent side="right" className="flex items-center gap-2">
+          <TooltipContent side="right" className="flex items-center gap-2 rounded-xl">
             <span>{label}</span>
             {badge !== undefined && badge > 0 && (
-              <span className="rounded-full bg-[var(--layer-capture)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--bg-base)]">
+              <span className="rounded-full bg-[rgba(234,88,12,0.12)] px-1.5 py-0.5 text-[10px] font-medium text-[#c2410c]">
                 {badge}
               </span>
             )}
@@ -417,17 +449,17 @@ function DynamicNavItem({ href, label, iconName, color, isActive }: DynamicNavIt
     <Link
       href={href}
       className={cn(
-        'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all duration-150',
+        'flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition-all duration-200',
         isActive
-          ? 'bg-[var(--bg-hover)] text-[var(--text-primary)]'
-          : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]'
+          ? 'bg-[rgba(194,65,12,0.08)] text-[var(--text-primary)]'
+          : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] hover:scale-[1.01]'
       )}
     >
       <div className={cn(
-        'flex h-5 w-5 items-center justify-center rounded',
-        colorOption?.bgSubtle || 'bg-[var(--bg-hover)]'
+        'flex h-6 w-6 items-center justify-center rounded-xl transition-colors duration-200',
+        colorOption?.bgSubtle || 'bg-[rgba(194,65,12,0.06)]'
       )}>
-        <Icon className={cn('h-3 w-3', colorOption?.text || 'text-[var(--text-muted)]')} />
+        <Icon className={cn('h-3.5 w-3.5', colorOption?.text || 'text-[var(--text-muted)]')} />
       </div>
       <span className="flex-1 truncate">{label}</span>
     </Link>

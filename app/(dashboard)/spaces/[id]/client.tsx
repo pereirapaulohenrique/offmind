@@ -147,7 +147,7 @@ export function SpaceDetailClient({
   return (
     <div className="flex-1 flex flex-col h-full">
       {/* Header */}
-      <div className="border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]/50 p-4">
+      <div className="px-6 py-5 sm:px-8 warm-glass" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
             <Link href="/spaces">
