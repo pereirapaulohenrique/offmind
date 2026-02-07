@@ -4,7 +4,7 @@ export function HomePageSkeleton() {
   return (
     <div className="flex h-full flex-col overflow-auto">
       {/* Header */}
-      <div className="border-b border-border px-6 py-6">
+      <div className="border-b border-[var(--border-subtle)] px-6 py-6">
         <div className="space-y-2">
           <Skeleton className="h-8 w-48" />
           <Skeleton className="h-4 w-64" />

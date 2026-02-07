@@ -79,9 +79,9 @@ export function ItemCard({
   return (
     <div
       className={cn(
-        'group relative rounded-xl border border-border/50 bg-card p-5 card-hover',
+        'group relative rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 card-hover',
         item.is_completed && 'opacity-50',
-        justCompleted && 'border-emerald-500/30 animate-completion-flash'
+        justCompleted && 'border-[var(--layer-commit-border)] animate-completion-flash'
       )}
     >
       <div className="flex items-start gap-3">
@@ -93,7 +93,7 @@ export function ItemCard({
               onCheckedChange={handleComplete}
               className={cn(
                 'h-[18px] w-[18px] rounded-full transition-colors',
-                item.is_completed && 'border-emerald-500 bg-emerald-500 text-white data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500'
+                item.is_completed && 'border-[var(--layer-commit)] bg-[var(--layer-commit)] text-white data-[state=checked]:bg-[var(--layer-commit)] data-[state=checked]:border-[var(--layer-commit)]'
               )}
             />
           </div>

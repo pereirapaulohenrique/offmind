@@ -22,7 +22,7 @@ export function PricingSection() {
     <div className="py-8">
       <div className="mb-8 text-center">
         <h2 className="text-2xl font-bold">Choose Your Plan</h2>
-        <p className="mt-2 text-muted-foreground">
+        <p className="mt-2 text-[var(--text-muted)]">
           Upgrade to unlock all features and support development
         </p>
       </div>

@@ -52,11 +52,11 @@ export function QuickCapture({ onCapture, isLoading = false }: QuickCaptureProps
   };
 
   return (
-    <div className="capture-input rounded-xl border border-border/60 bg-card/80 backdrop-blur-sm">
+    <div className="capture-input rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)]/80 backdrop-blur-sm">
       <div className="relative flex items-center gap-2">
         <div className="relative flex-1">
           <div className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2">
-            <Plus className={`h-5 w-5 transition-colors duration-200 ${isFocused ? 'text-blue-400' : 'text-muted-foreground'}`} />
+            <Plus className={`h-5 w-5 transition-colors duration-200 ${isFocused ? 'text-[var(--layer-capture)]' : 'text-[var(--text-muted)]'}`} />
           </div>
           <Textarea
             ref={textareaRef}
@@ -66,7 +66,7 @@ export function QuickCapture({ onCapture, isLoading = false }: QuickCaptureProps
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             placeholder="What's on your mind?"
-            className="min-h-[56px] resize-none border-0 bg-transparent py-4 pl-12 pr-28 text-[15px] placeholder:text-muted-foreground/60 focus-visible:ring-0"
+            className="min-h-[56px] resize-none border-0 bg-transparent py-4 pl-12 pr-28 text-[15px] placeholder:text-[var(--text-disabled)] focus-visible:ring-0"
             rows={1}
             disabled={isLoading}
           />

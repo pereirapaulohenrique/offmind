@@ -43,8 +43,8 @@ export function PricingCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        'relative rounded-xl border bg-card p-6 shadow-sm',
-        isPopular && 'border-primary ring-2 ring-primary/20',
+        'relative rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)] p-6 shadow-sm',
+        isPopular && 'border-[var(--accent-base)] ring-2 ring-[var(--accent-glow)]',
         isCurrentPlan && 'border-green-500/50 bg-green-500/5'
       )}
     >
@@ -66,7 +66,7 @@ export function PricingCard({
           <span className="text-3xl font-bold">{price}</span>
         </div>
         {description && (
-          <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+          <p className="mt-1 text-sm text-[var(--text-muted)]">{description}</p>
         )}
       </div>
 

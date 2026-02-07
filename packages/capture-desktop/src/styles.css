@@ -4,25 +4,25 @@
 
 :root {
   /* Background Layers */
-  --bg-base: #08080c;
-  --bg-surface: #0c0c12;
-  --bg-elevated: #141419;
-  --bg-hover: #1e1e26;
+  --bg-base: #0e0e11;
+  --bg-surface: #141418;
+  --bg-elevated: #1b1b20;
+  --bg-hover: #222228;
 
   /* Borders */
-  --border-subtle: #1a1a24;
-  --border-default: #25252f;
-  --border-emphasis: #3a3a48;
+  --border-subtle: #1f1f27;
+  --border-default: #2a2a33;
+  --border-emphasis: #3d3d4a;
 
   /* Text */
-  --text-primary: #f0f0f4;
-  --text-secondary: #9d9dab;
-  --text-muted: #6b6b7b;
+  --text-primary: #ededf0;
+  --text-secondary: #9e9eac;
+  --text-muted: #6a6a78;
 
-  /* Accent (Violet-Indigo) */
-  --accent-base: #7c5cfc;
-  --accent-hover: #9b82fd;
-  --accent-glow: rgba(124, 92, 252, 0.25);
+  /* Accent (Teal) */
+  --accent-base: #2dd4bf;
+  --accent-hover: #5eead4;
+  --accent-glow: rgba(45, 212, 191, 0.25);
 
   /* Layer Colors */
   --layer-capture: #60a5fa;

@@ -4,7 +4,7 @@
  * Represents "get it off your mind" — a thought (sphere) landing
  * safely on a stable base (lines).
  *
- * Gradient: violet #8b5cf6 → violet-indigo #7c5cfc → cyan #22d3ee
+ * Gradient: violet #8b5cf6 → teal #2dd4bf
  */
 
 interface OffMindLogoProps {
@@ -66,8 +66,8 @@ function SphereMark({
           gradientUnits="userSpaceOnUse"
         >
           <stop offset="0%" stopColor="#8b5cf6" />
-          <stop offset="40%" stopColor="#7c5cfc" />
-          <stop offset="100%" stopColor="#22d3ee" />
+          <stop offset="50%" stopColor="#5eead4" />
+          <stop offset="100%" stopColor="#2dd4bf" />
         </linearGradient>
         <radialGradient id={`${id}-shine`} cx="0.35" cy="0.3" r="0.65">
           <stop offset="0%" stopColor="rgba(255,255,255,0.18)" />
@@ -85,8 +85,8 @@ function SphereMark({
       <circle cx="60" cy="48" r="38" fill={`url(#${id}-shadow)`} />
 
       {/* Two lines beneath */}
-      <rect x="30" y="94" width="60" height="4" rx="2" fill="#22d3ee" opacity="0.7" />
-      <rect x="38" y="103" width="44" height="3.5" rx="1.75" fill="#22d3ee" opacity="0.35" />
+      <rect x="30" y="94" width="60" height="4" rx="2" fill="#2dd4bf" opacity="0.7" />
+      <rect x="38" y="103" width="44" height="3.5" rx="1.75" fill="#2dd4bf" opacity="0.35" />
     </svg>
   );
 }
@@ -116,13 +116,13 @@ export function OffMindIcon({ size = 16, className = '' }: { size?: number; clas
           gradientUnits="userSpaceOnUse"
         >
           <stop offset="0%" stopColor="#8b5cf6" />
-          <stop offset="40%" stopColor="#7c5cfc" />
-          <stop offset="100%" stopColor="#22d3ee" />
+          <stop offset="50%" stopColor="#5eead4" />
+          <stop offset="100%" stopColor="#2dd4bf" />
         </linearGradient>
       </defs>
       <circle cx="60" cy="48" r="38" fill={`url(#${id}-grad)`} />
-      <rect x="30" y="94" width="60" height="5" rx="2.5" fill="#22d3ee" opacity="0.7" />
-      <rect x="38" y="104" width="44" height="4" rx="2" fill="#22d3ee" opacity="0.35" />
+      <rect x="30" y="94" width="60" height="5" rx="2.5" fill="#2dd4bf" opacity="0.7" />
+      <rect x="38" y="104" width="44" height="4" rx="2" fill="#2dd4bf" opacity="0.35" />
     </svg>
   );
 }

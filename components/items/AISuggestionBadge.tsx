@@ -31,9 +31,9 @@ export function AISuggestionBadge({
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center gap-2 rounded-lg border border-border bg-muted/50 px-3 py-2"
+        className="flex items-center gap-2 rounded-lg border border-[var(--border-default)] bg-[var(--bg-hover)] px-3 py-2"
       >
-        <Sparkles className="h-4 w-4 text-primary animate-pulse" />
+        <Sparkles className="h-4 w-4 text-[var(--accent-base)] animate-pulse" />
         <span className="text-sm text-muted-foreground animate-pulse">
           Analyzing...
         </span>
@@ -49,12 +49,12 @@ export function AISuggestionBadge({
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="rounded-lg border border-primary/30 bg-primary/5 p-3"
+      className="rounded-lg border border-[var(--accent-border)] bg-[var(--accent-subtle)] p-3"
     >
       <div className="flex items-start gap-3">
         {/* AI icon */}
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
-          <Bot className="h-4 w-4 text-primary" />
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--accent-subtle)]">
+          <Bot className="h-4 w-4 text-[var(--accent-base)]" />
         </div>
 
         {/* Content */}

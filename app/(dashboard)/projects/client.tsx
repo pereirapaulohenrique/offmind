@@ -244,11 +244,11 @@ export function ProjectsPageClient({
   return (
     <div className="flex h-full flex-col">
       {/* Page header */}
-      <div className="border-b border-border px-6 py-4">
+      <div className="border-b border-[var(--border-subtle)] px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-foreground">Projects</h1>
-            <p className="text-sm text-muted-foreground">
+            <h1 className="text-2xl font-semibold text-[var(--text-primary)]">Projects</h1>
+            <p className="text-sm text-[var(--text-muted)]">
               Track your ongoing projects and initiatives.
             </p>
           </div>
@@ -312,10 +312,10 @@ export function ProjectsPageClient({
 
               return (
                 <div key={space.id}>
-                  <h2 className="mb-4 flex items-center gap-2 text-lg font-medium text-foreground">
-                    <SpaceIcon className={cn('h-5 w-5', spaceColor?.text || 'text-muted-foreground')} />
+                  <h2 className="mb-4 flex items-center gap-2 text-lg font-medium text-[var(--text-primary)]">
+                    <SpaceIcon className={cn('h-5 w-5', spaceColor?.text || 'text-[var(--text-muted)]')} />
                     <span>{space.name}</span>
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-sm text-[var(--text-muted)]">
                       ({spaceProjects.length})
                     </span>
                   </h2>
@@ -340,10 +340,10 @@ export function ProjectsPageClient({
             {/* Unassigned projects */}
             {unassignedProjects.length > 0 && (
               <div>
-                <h2 className="mb-4 flex items-center gap-2 text-lg font-medium text-foreground">
-                  <ClipboardList className="h-5 w-5 text-muted-foreground" />
+                <h2 className="mb-4 flex items-center gap-2 text-lg font-medium text-[var(--text-primary)]">
+                  <ClipboardList className="h-5 w-5 text-[var(--text-muted)]" />
                   <span>Unassigned</span>
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-sm text-[var(--text-muted)]">
                     ({unassignedProjects.length})
                   </span>
                 </h2>
@@ -416,22 +416,22 @@ function ProjectCard({ project, space, onEdit, onArchive, onDelete }: ProjectCar
     >
       <Link
         href={`/projects/${project.id}`}
-        className="group block rounded-lg border border-border bg-card p-4 transition-colors hover:border-primary/50"
+        className="group block rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 transition-colors hover:border-[var(--accent-border)]"
       >
         <div className="flex items-start gap-4">
           {/* Icon */}
           <div className={cn(
             'flex h-10 w-10 items-center justify-center rounded-lg',
-            colorOption?.bgSubtle || 'bg-muted'
+            colorOption?.bgSubtle || 'bg-[var(--bg-hover)]'
           )}>
-            <ProjectIcon className={cn('h-5 w-5', colorOption?.text || 'text-muted-foreground')} />
+            <ProjectIcon className={cn('h-5 w-5', colorOption?.text || 'text-[var(--text-muted)]')} />
           </div>
 
           {/* Content */}
           <div className="flex-1">
-            <h3 className="font-medium text-foreground">{project.name}</h3>
+            <h3 className="font-medium text-[var(--text-primary)]">{project.name}</h3>
             {project.description && (
-              <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
+              <p className="mt-1 text-sm text-[var(--text-muted)] line-clamp-2">
                 {project.description}
               </p>
             )}

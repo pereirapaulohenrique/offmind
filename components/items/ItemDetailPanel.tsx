@@ -423,15 +423,21 @@ export function ItemDetailPanel({
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-            className="fixed right-0 top-0 z-50 flex h-full w-full max-w-lg flex-col border-l border-border bg-background shadow-xl"
+            className="fixed right-0 top-0 z-50 flex h-full w-full max-w-lg flex-col border-l border-[var(--border-default)] bg-[var(--bg-base)] shadow-xl"
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-border px-6 py-4">
+            <div className="flex items-center justify-between border-b border-[var(--border-subtle)] px-6 py-4">
               <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted">
-                  <LayerIcon className="h-4 w-4 text-muted-foreground" />
+                <div className={cn(
+                  'flex h-8 w-8 items-center justify-center rounded-lg',
+                  item.layer === 'capture' ? 'bg-[var(--layer-capture-bg)]' : item.layer === 'process' ? 'bg-[var(--layer-process-bg)]' : 'bg-[var(--layer-commit-bg)]'
+                )}>
+                  <LayerIcon className={cn(
+                    'h-4 w-4',
+                    item.layer === 'capture' ? 'text-[var(--layer-capture)]' : item.layer === 'process' ? 'text-[var(--layer-process)]' : 'text-[var(--layer-commit)]'
+                  )} />
                 </div>
-                <span className="text-sm text-muted-foreground capitalize">
+                <span className="text-sm text-[var(--text-muted)] capitalize">
                   {item.layer} layer
                 </span>
               </div>
@@ -539,8 +545,8 @@ export function ItemDetailPanel({
                           className={cn(
                             'flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors',
                             isSelected
-                              ? 'border-primary bg-primary/10 text-primary'
-                              : 'border-border hover:border-primary/50 hover:bg-muted'
+                              ? 'border-[var(--accent-base)] bg-[var(--accent-subtle)] text-[var(--accent-base)]'
+                              : 'border-[var(--border-default)] hover:border-[var(--accent-border)] hover:bg-[var(--bg-hover)]'
                           )}
                         >
                           <DestIcon className={cn('h-4 w-4', colorOption?.text || 'text-muted-foreground')} />
@@ -776,7 +782,7 @@ export function ItemDetailPanel({
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-between border-t border-border px-6 py-4">
+            <div className="flex items-center justify-between border-t border-[var(--border-subtle)] px-6 py-4">
               <Button
                 variant="ghost"
                 size="sm"

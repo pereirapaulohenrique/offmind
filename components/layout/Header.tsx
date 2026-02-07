@@ -16,14 +16,14 @@ interface HeaderProps {
 }
 
 export function Header({ title, user, mobileSidebar }: HeaderProps) {
-  const { setCommandPaletteOpen, sidebarCollapsed } = useUIStore();
+  const { setCommandPaletteOpen } = useUIStore();
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border/60 bg-background/70 px-5 backdrop-blur-xl">
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-base)]/80 px-5 backdrop-blur-xl">
       <div className="flex items-center gap-4">
         {mobileSidebar}
         {title && (
-          <h1 className="text-lg font-semibold tracking-tight text-foreground">{title}</h1>
+          <h1 className="text-[15px] font-semibold tracking-tight text-[var(--text-primary)]">{title}</h1>
         )}
       </div>
 
@@ -31,14 +31,14 @@ export function Header({ title, user, mobileSidebar }: HeaderProps) {
         {/* Command palette trigger */}
         <Button
           variant="outline"
-          className="hidden h-9 w-72 justify-between border-border/60 text-sm text-muted-foreground hover:border-border hover:text-foreground sm:flex"
+          className="hidden h-8 w-64 justify-between border-[var(--border-default)] text-sm text-[var(--text-muted)] hover:border-[var(--border-emphasis)] hover:text-[var(--text-secondary)] sm:flex"
           onClick={() => setCommandPaletteOpen(true)}
         >
           <div className="flex items-center gap-2">
             <Search className="h-3.5 w-3.5" />
             <span>Search or command...</span>
           </div>
-          <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-border/60 bg-muted/50 px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+          <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-[var(--border-default)] bg-[var(--bg-hover)] px-1.5 font-mono text-[10px] font-medium text-[var(--text-disabled)]">
             <span className="text-xs">⌘</span>K
           </kbd>
         </Button>
@@ -47,7 +47,7 @@ export function Header({ title, user, mobileSidebar }: HeaderProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="h-9 w-9 sm:hidden"
+          className="h-8 w-8 sm:hidden"
           onClick={() => setCommandPaletteOpen(true)}
         >
           <Search className="h-4 w-4" />

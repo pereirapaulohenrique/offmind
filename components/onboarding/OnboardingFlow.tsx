@@ -62,28 +62,28 @@ const steps = [
 
 const colorStyles = {
   primary: {
-    bg: 'bg-primary/10',
-    text: 'text-primary',
-    border: 'border-primary/20',
-    dot: 'bg-primary',
+    bg: 'bg-[var(--accent-subtle)]',
+    text: 'text-[var(--accent-base)]',
+    border: 'border-[var(--accent-border)]',
+    dot: 'bg-[var(--accent-base)]',
   },
   blue: {
-    bg: 'bg-blue-500/10',
-    text: 'text-blue-400',
-    border: 'border-blue-500/20',
-    dot: 'bg-blue-400',
+    bg: 'bg-[var(--layer-capture-bg)]',
+    text: 'text-[var(--layer-capture)]',
+    border: 'border-[var(--layer-capture-border)]',
+    dot: 'bg-[var(--layer-capture)]',
   },
   amber: {
-    bg: 'bg-amber-500/10',
-    text: 'text-amber-400',
-    border: 'border-amber-500/20',
-    dot: 'bg-amber-400',
+    bg: 'bg-[var(--layer-process-bg)]',
+    text: 'text-[var(--layer-process)]',
+    border: 'border-[var(--layer-process-border)]',
+    dot: 'bg-[var(--layer-process)]',
   },
   green: {
-    bg: 'bg-emerald-500/10',
-    text: 'text-emerald-400',
-    border: 'border-emerald-500/20',
-    dot: 'bg-emerald-400',
+    bg: 'bg-[var(--layer-commit-bg)]',
+    text: 'text-[var(--layer-commit)]',
+    border: 'border-[var(--layer-commit-border)]',
+    dot: 'bg-[var(--layer-commit)]',
   },
 };
 
@@ -107,18 +107,18 @@ export function OnboardingFlow({ userName, onComplete }: OnboardingFlowProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/90 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--bg-base)]/90 backdrop-blur-md">
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         className="relative w-full max-w-lg mx-4"
       >
-        <div className="rounded-2xl border border-border/60 bg-card p-8 shadow-2xl shadow-black/20">
+        <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--bg-surface)] p-8 shadow-2xl shadow-black/20">
           {/* Skip button */}
           {!isLast && (
             <button
               onClick={skip}
-              className="absolute top-5 right-5 text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+              className="absolute top-5 right-5 text-xs text-[var(--text-disabled)] hover:text-[var(--text-muted)] transition-colors"
             >
               Skip intro
             </button>
@@ -154,7 +154,7 @@ export function OnboardingFlow({ userName, onComplete }: OnboardingFlowProps) {
               </h2>
 
               {/* Description */}
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground max-w-sm">
+              <p className="mt-3 text-sm leading-relaxed text-[var(--text-muted)] max-w-sm">
                 {step.description}
               </p>
 
@@ -162,7 +162,7 @@ export function OnboardingFlow({ userName, onComplete }: OnboardingFlowProps) {
               {'tip' in step && step.tip && (
                 <div className={cn('mt-5 rounded-lg border px-4 py-2.5 text-xs', colors.border, colors.bg)}>
                   <span className={cn('font-medium', colors.text)}>Tip: </span>
-                  <span className="text-muted-foreground">{step.tip}</span>
+                  <span className="text-[var(--text-muted)]">{step.tip}</span>
                 </div>
               )}
             </motion.div>
@@ -180,8 +180,8 @@ export function OnboardingFlow({ userName, onComplete }: OnboardingFlowProps) {
                     i === currentStep
                       ? `w-6 ${colors.dot}`
                       : i < currentStep
-                        ? 'w-1.5 bg-muted-foreground/30'
-                        : 'w-1.5 bg-border'
+                        ? 'w-1.5 bg-[var(--text-disabled)]'
+                        : 'w-1.5 bg-[var(--border-default)]'
                   )}
                 />
               ))}

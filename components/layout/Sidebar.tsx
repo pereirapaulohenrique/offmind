@@ -24,6 +24,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Plus,
+  LayoutGrid,
+  FolderKanban,
+  FileText,
   type LucideIcon,
 } from 'lucide-react';
 import { ICON_MAP, COLOR_PALETTE } from '@/components/icons';
@@ -35,6 +38,12 @@ const mainNav: { href: string; label: string; icon: LucideIcon; shortcut: string
   { href: '/capture', label: 'Capture', icon: Inbox, shortcut: '⌘1' },
   { href: '/process', label: 'Process', icon: ArrowRight, shortcut: '⌘2' },
   { href: '/commit', label: 'Commit', icon: Calendar, shortcut: '⌘3' },
+];
+
+const secondaryNav: { href: string; label: string; icon: LucideIcon }[] = [
+  { href: '/spaces', label: 'Spaces', icon: LayoutGrid },
+  { href: '/projects', label: 'Projects', icon: FolderKanban },
+  { href: '/pages', label: 'Pages', icon: FileText },
 ];
 
 const bottomNav: { href: string; label: string; icon: LucideIcon }[] = [
@@ -71,12 +80,12 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
         initial={false}
         animate={{ width: sidebarCollapsed ? 68 : 252 }}
         transition={{ duration: 0.2, ease: 'easeInOut' }}
-        className="fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-border/60 bg-sidebar"
+        className="fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-[var(--border-subtle)] bg-[var(--sidebar)]"
       >
         {/* Header */}
-        <div className="flex h-16 items-center justify-between px-4">
+        <div className="flex h-14 items-center justify-between px-4">
           <Link href="/home" className="flex items-center gap-2.5">
-            <OffMindLogo size={32} />
+            <OffMindLogo size={28} />
             <AnimatePresence>
               {!sidebarCollapsed && (
                 <motion.span
@@ -90,19 +99,27 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
               )}
             </AnimatePresence>
           </Link>
-          {!sidebarCollapsed && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7 text-muted-foreground hover:text-sidebar-foreground"
-              onClick={toggleSidebar}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-          )}
+          <AnimatePresence>
+            {!sidebarCollapsed && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7 text-[var(--text-muted)] hover:text-sidebar-foreground"
+                  onClick={toggleSidebar}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        <ScrollArea className="flex-1 px-2.5">
+        <ScrollArea className="flex-1 px-2">
           {/* Main Navigation */}
           <nav className="space-y-0.5 py-2">
             {mainNav.map((item) => (
@@ -119,94 +136,125 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
             ))}
           </nav>
 
-          <Separator className="my-3 opacity-50" />
+          <Separator className="my-2 opacity-30" />
 
-          {/* Spaces Section */}
-          {!sidebarCollapsed && (
-            <div className="py-2">
-              <SectionHeader title="Spaces" href="/spaces" />
-              <div className="mt-1 space-y-0.5">
-                {spaces.map((space) => (
-                  <DynamicNavItem
-                    key={space.id}
-                    href={`/spaces/${space.id}`}
-                    label={space.name}
-                    iconName={space.icon}
-                    color={space.color}
-                    isActive={pathname === `/spaces/${space.id}`}
-                  />
-                ))}
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start text-sm text-muted-foreground/70 hover:text-foreground h-8"
-                  asChild
-                >
-                  <Link href="/spaces">
-                    <Plus className="h-3.5 w-3.5 mr-2" /> Add Space
-                  </Link>
-                </Button>
-              </div>
-            </div>
+          {/* When collapsed: show Spaces/Projects/Pages as icons */}
+          {sidebarCollapsed && (
+            <nav className="space-y-0.5 py-2">
+              {secondaryNav.map((item) => (
+                <NavItem
+                  key={item.href}
+                  href={item.href}
+                  label={item.label}
+                  icon={item.icon}
+                  isActive={pathname.startsWith(item.href)}
+                  isCollapsed={true}
+                />
+              ))}
+            </nav>
           )}
 
-          {/* Projects Section */}
+          {/* When expanded: show full Spaces/Projects/Pages sections */}
           {!sidebarCollapsed && (
-            <div className="py-2">
-              <SectionHeader title="Projects" href="/projects" />
-              <div className="mt-1 space-y-0.5">
-                {projects.map((project) => (
-                  <DynamicNavItem
-                    key={project.id}
-                    href={`/projects/${project.id}`}
-                    label={project.name}
-                    iconName={project.icon}
-                    color={project.color}
-                    isActive={pathname === `/projects/${project.id}`}
-                  />
-                ))}
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start text-sm text-muted-foreground/70 hover:text-foreground h-8"
-                  asChild
-                >
-                  <Link href="/projects">
-                    <Plus className="h-3.5 w-3.5 mr-2" /> Add Project
-                  </Link>
-                </Button>
+            <>
+              {/* Spaces Section */}
+              <div className="py-2">
+                <SectionHeader title="Spaces" href="/spaces" />
+                <div className="mt-1 space-y-0.5">
+                  {spaces.map((space) => (
+                    <DynamicNavItem
+                      key={space.id}
+                      href={`/spaces/${space.id}`}
+                      label={space.name}
+                      iconName={space.icon}
+                      color={space.color}
+                      isActive={pathname === `/spaces/${space.id}`}
+                    />
+                  ))}
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start text-sm text-[var(--text-disabled)] hover:text-[var(--accent-base)] h-8"
+                    asChild
+                  >
+                    <Link href="/spaces">
+                      <Plus className="h-3.5 w-3.5 mr-2" /> Add Space
+                    </Link>
+                  </Button>
+                </div>
               </div>
-            </div>
-          )}
 
-          {/* Pages Section */}
-          {!sidebarCollapsed && (
-            <div className="py-2">
-              <SectionHeader title="Pages" href="/pages" />
-              <div className="mt-1 space-y-0.5">
-                {pages.slice(0, 5).map((page) => (
-                  <DynamicNavItem
-                    key={page.id}
-                    href={`/pages/${page.id}`}
-                    label={page.title}
-                    iconName={page.icon || 'file-text'}
-                    isActive={pathname === `/pages/${page.id}`}
-                  />
-                ))}
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start text-sm text-muted-foreground/70 hover:text-foreground h-8"
-                  asChild
-                >
-                  <Link href="/pages">
-                    <Plus className="h-3.5 w-3.5 mr-2" /> New Page
-                  </Link>
-                </Button>
+              {/* Projects Section */}
+              <div className="py-2">
+                <SectionHeader title="Projects" href="/projects" />
+                <div className="mt-1 space-y-0.5">
+                  {projects.map((project) => (
+                    <DynamicNavItem
+                      key={project.id}
+                      href={`/projects/${project.id}`}
+                      label={project.name}
+                      iconName={project.icon}
+                      color={project.color}
+                      isActive={pathname === `/projects/${project.id}`}
+                    />
+                  ))}
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start text-sm text-[var(--text-disabled)] hover:text-[var(--accent-base)] h-8"
+                    asChild
+                  >
+                    <Link href="/projects">
+                      <Plus className="h-3.5 w-3.5 mr-2" /> Add Project
+                    </Link>
+                  </Button>
+                </div>
               </div>
-            </div>
+
+              {/* Pages Section */}
+              <div className="py-2">
+                <SectionHeader title="Pages" href="/pages" />
+                <div className="mt-1 space-y-0.5">
+                  {pages.slice(0, 5).map((page) => (
+                    <DynamicNavItem
+                      key={page.id}
+                      href={`/pages/${page.id}`}
+                      label={page.title}
+                      iconName={page.icon || 'file-text'}
+                      isActive={pathname === `/pages/${page.id}`}
+                    />
+                  ))}
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start text-sm text-[var(--text-disabled)] hover:text-[var(--accent-base)] h-8"
+                    asChild
+                  >
+                    <Link href="/pages">
+                      <Plus className="h-3.5 w-3.5 mr-2" /> New Page
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </>
           )}
         </ScrollArea>
 
         {/* Bottom Navigation */}
-        <div className="border-t border-border/50 p-2.5">
+        <div className="border-t border-[var(--border-subtle)] p-2">
+          {/* Expand/collapse toggle */}
+          {sidebarCollapsed && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="w-full h-9 mb-1 text-[var(--text-muted)] hover:text-sidebar-foreground"
+                  onClick={toggleSidebar}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right">Expand sidebar</TooltipContent>
+            </Tooltip>
+          )}
           {bottomNav.map((item) => (
             <NavItem
               key={item.href}
@@ -218,20 +266,6 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
             />
           ))}
         </div>
-
-        {/* Expand button when collapsed */}
-        {sidebarCollapsed && (
-          <div className="border-t border-border/50 p-2.5">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="w-full h-9"
-              onClick={toggleSidebar}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        )}
       </motion.aside>
     </TooltipProvider>
   );
@@ -240,14 +274,14 @@ export function Sidebar({ inboxCount = 0, spaces = [], projects = [], pages = []
 // Section header component with link
 function SectionHeader({ title, href }: { title: string; href?: string }) {
   const content = (
-    <h3 className="mb-1 px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground/60">
+    <h3 className="mb-1 px-3 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
       {title}
     </h3>
   );
 
   if (href) {
     return (
-      <Link href={href} className="block hover:text-foreground transition-colors">
+      <Link href={href} className="block hover:text-[var(--text-primary)] transition-colors">
         {content}
       </Link>
     );
@@ -268,64 +302,90 @@ interface NavItemProps {
 }
 
 function NavItem({ href, label, icon: Icon, isActive, isCollapsed, shortcut, badge }: NavItemProps) {
-  // Layer-specific active styles
-  const layerAccent = isActive
-    ? href === '/capture'
-      ? 'border-l-blue-400 bg-blue-500/[0.06]'
-      : href === '/process'
-        ? 'border-l-amber-400 bg-amber-500/[0.06]'
-        : href === '/commit'
-          ? 'border-l-emerald-400 bg-emerald-500/[0.06]'
-          : 'border-l-primary bg-primary/[0.06]'
-    : 'border-l-transparent';
+  // Layer-specific active styles using CSS variables
+  const getLayerStyles = () => {
+    if (!isActive) return { bg: '', text: '', border: 'border-l-transparent' };
 
-  const layerIconColor = isActive
-    ? href === '/capture'
-      ? 'text-blue-400'
-      : href === '/process'
-        ? 'text-amber-400'
-        : href === '/commit'
-          ? 'text-emerald-400'
-          : 'text-primary'
-    : '';
+    switch (href) {
+      case '/capture':
+        return {
+          bg: 'bg-[var(--layer-capture-bg)]',
+          text: 'text-[var(--layer-capture)]',
+          border: 'border-l-[var(--layer-capture)]',
+        };
+      case '/process':
+        return {
+          bg: 'bg-[var(--layer-process-bg)]',
+          text: 'text-[var(--layer-process)]',
+          border: 'border-l-[var(--layer-process)]',
+        };
+      case '/commit':
+        return {
+          bg: 'bg-[var(--layer-commit-bg)]',
+          text: 'text-[var(--layer-commit)]',
+          border: 'border-l-[var(--layer-commit)]',
+        };
+      default:
+        return {
+          bg: 'bg-[var(--accent-subtle)]',
+          text: 'text-[var(--accent-base)]',
+          border: 'border-l-[var(--accent-base)]',
+        };
+    }
+  };
+
+  const layerStyles = getLayerStyles();
 
   const content = (
     <Link
       href={href}
       className={cn(
-        'flex items-center gap-3 rounded-lg border-l-2 px-3 py-2.5 text-sm transition-all duration-150',
+        'flex items-center gap-3 rounded-lg border-l-2 px-3 py-2 text-[13px] transition-all duration-150',
         isActive
-          ? `${layerAccent} font-medium text-sidebar-accent-foreground`
-          : `border-l-transparent text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground`,
+          ? `${layerStyles.bg} ${layerStyles.border} font-medium ${layerStyles.text}`
+          : 'border-l-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]',
         isCollapsed && 'justify-center border-l-0 px-2'
       )}
     >
-      <Icon className={cn('h-4 w-4 flex-shrink-0', layerIconColor)} />
+      <Icon className={cn('h-4 w-4 flex-shrink-0', isActive && layerStyles.text)} />
       {!isCollapsed && (
         <>
           <span className="flex-1 truncate">{label}</span>
           {badge !== undefined && badge > 0 && (
-            <span className="animate-pulse-subtle rounded-full bg-blue-500/15 px-2 py-0.5 text-[11px] font-medium text-blue-400 tabular-nums">
+            <span className="animate-pulse-subtle rounded-full bg-[var(--layer-capture-bg)] border border-[var(--layer-capture-border)] px-2 py-0.5 text-[11px] font-medium text-[var(--layer-capture)] tabular-nums">
               {badge > 99 ? '99+' : badge}
             </span>
           )}
           {shortcut && (
-            <span className="text-[11px] text-muted-foreground/50">{shortcut}</span>
+            <span className="text-[11px] text-[var(--text-disabled)]">{shortcut}</span>
           )}
         </>
+      )}
+      {/* Badge visible even when collapsed */}
+      {isCollapsed && badge !== undefined && badge > 0 && (
+        <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--layer-capture)] text-[9px] font-bold text-[var(--bg-base)] px-1">
+          {badge > 99 ? '99+' : badge}
+        </span>
       )}
     </Link>
   );
 
   if (isCollapsed) {
     return (
-      <Tooltip>
-        <TooltipTrigger asChild>{content}</TooltipTrigger>
-        <TooltipContent side="right">
-          <span>{label}</span>
-          {shortcut && <span className="ml-2 text-muted-foreground">{shortcut}</span>}
-        </TooltipContent>
-      </Tooltip>
+      <div className="relative">
+        <Tooltip>
+          <TooltipTrigger asChild>{content}</TooltipTrigger>
+          <TooltipContent side="right" className="flex items-center gap-2">
+            <span>{label}</span>
+            {badge !== undefined && badge > 0 && (
+              <span className="rounded-full bg-[var(--layer-capture)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--bg-base)]">
+                {badge}
+              </span>
+            )}
+            {shortcut && <span className="text-[var(--text-muted)]">{shortcut}</span>}
+          </TooltipContent>
+        </Tooltip>
+      </div>
     );
   }
 
@@ -351,15 +411,15 @@ function DynamicNavItem({ href, label, iconName, color, isActive }: DynamicNavIt
       className={cn(
         'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all duration-150',
         isActive
-          ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-          : 'text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
+          ? 'bg-[var(--bg-hover)] text-[var(--text-primary)]'
+          : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]'
       )}
     >
       <div className={cn(
         'flex h-5 w-5 items-center justify-center rounded',
-        colorOption?.bgSubtle || 'bg-muted'
+        colorOption?.bgSubtle || 'bg-[var(--bg-hover)]'
       )}>
-        <Icon className={cn('h-3 w-3', colorOption?.text || 'text-muted-foreground')} />
+        <Icon className={cn('h-3 w-3', colorOption?.text || 'text-[var(--text-muted)]')} />
       </div>
       <span className="flex-1 truncate">{label}</span>
     </Link>

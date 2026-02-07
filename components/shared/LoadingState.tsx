@@ -37,7 +37,7 @@ export function LoadingState({ count = 3, type = 'card' }: LoadingStateProps) {
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
-          className="p-4 rounded-lg border border-border bg-card"
+          className="p-4 rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]"
         >
           <div className="flex items-start gap-3">
             <Skeleton className="h-5 w-5 rounded mt-0.5" />

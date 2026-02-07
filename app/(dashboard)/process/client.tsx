@@ -14,6 +14,8 @@ import {
   CheckCircle2,
   RotateCcw,
   Trash2,
+  Crosshair,
+  Table2,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useItemsStore } from '@/stores/items';
@@ -23,6 +25,8 @@ import { BulkAIActions, type BulkAISuggestion } from '@/components/ai/BulkAIActi
 import { EmptyState } from '@/components/shared/EmptyState';
 import { LoadingState } from '@/components/shared/LoadingState';
 import { KanbanView } from '@/components/process/KanbanView';
+import { FocusProcess } from '@/components/process/FocusProcess';
+import { TableView } from '@/components/process/TableView';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -41,7 +45,7 @@ interface ProcessPageClientProps {
   userId: string;
 }
 
-type ViewMode = 'kanban' | 'grouped' | 'list';
+type ViewMode = 'focus' | 'kanban' | 'grouped' | 'list' | 'table';
 
 export function ProcessPageClient({
   initialItems,
@@ -50,7 +54,7 @@ export function ProcessPageClient({
 }: ProcessPageClientProps) {
   const getSupabase = () => createClient();
   const { items, setItems, addItem, updateItem, removeItem, isLoading } = useItemsStore();
-  const [viewMode, setViewMode] = useState<ViewMode>('kanban');
+  const [viewMode, setViewMode] = useState<ViewMode>('focus');
   const [expandedDestination, setExpandedDestination] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
@@ -218,11 +222,11 @@ export function ProcessPageClient({
   return (
     <div className="flex h-full flex-col">
       {/* Page header */}
-      <div className="border-b border-border px-4 py-4 sm:px-6">
+      <div className="border-b border-[var(--border-subtle)] px-4 py-4 sm:px-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0">
-            <h1 className="text-xl font-semibold text-foreground sm:text-2xl">Process</h1>
-            <p className="hidden text-sm text-muted-foreground sm:block">
+            <h1 className="text-xl font-semibold text-[var(--text-primary)] sm:text-2xl">Process</h1>
+            <p className="hidden text-sm text-[var(--text-muted)] sm:block">
               Organize items into destinations. Schedule when ready.
             </p>
           </div>
@@ -236,13 +240,25 @@ export function ProcessPageClient({
             />
 
             {/* View toggle */}
-            <div className="flex rounded-md border border-border">
+            <div className="flex rounded-md border border-[var(--border-default)]">
               <Button
                 variant="ghost"
                 size="sm"
                 className={cn(
                   'rounded-r-none',
-                  viewMode === 'kanban' && 'bg-accent'
+                  viewMode === 'focus' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)]'
+                )}
+                onClick={() => setViewMode('focus')}
+                title="Focus view"
+              >
+                <Crosshair className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  'rounded-none border-x border-[var(--border-default)]',
+                  viewMode === 'kanban' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)]'
                 )}
                 onClick={() => setViewMode('kanban')}
                 title="Kanban view"
@@ -253,8 +269,8 @@ export function ProcessPageClient({
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  'rounded-none border-x border-border',
-                  viewMode === 'grouped' && 'bg-accent'
+                  'rounded-none border-r border-[var(--border-default)]',
+                  viewMode === 'grouped' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)]'
                 )}
                 onClick={() => setViewMode('grouped')}
                 title="Grouped view"
@@ -265,19 +281,31 @@ export function ProcessPageClient({
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  'rounded-l-none',
-                  viewMode === 'list' && 'bg-accent'
+                  'rounded-none border-r border-[var(--border-default)]',
+                  viewMode === 'list' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)]'
                 )}
                 onClick={() => setViewMode('list')}
                 title="List view"
               >
                 <List className="h-4 w-4" />
               </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  'rounded-l-none',
+                  viewMode === 'table' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)]'
+                )}
+                onClick={() => setViewMode('table')}
+                title="Table view"
+              >
+                <Table2 className="h-4 w-4" />
+              </Button>
             </div>
 
             {/* Item count */}
             {processItems.length > 0 && (
-              <span className="rounded-full bg-primary px-3 py-1 text-sm font-medium text-primary-foreground">
+              <span className="rounded-full bg-[var(--layer-process-bg)] border border-[var(--layer-process-border)] px-3 py-1 text-sm font-medium text-[var(--layer-process)]">
                 {processItems.length} item{processItems.length !== 1 ? 's' : ''}
               </span>
             )}
@@ -299,6 +327,15 @@ export function ProcessPageClient({
               label: 'Go to Capture',
               href: '/capture',
             }}
+          />
+        ) : viewMode === 'focus' ? (
+          // Focus view (tinder-style card flow)
+          <FocusProcess
+            items={processItems}
+            destinations={destinations}
+            onMoveToDestination={handleMoveToDestination}
+            onScheduleItem={handleScheduleItem}
+            onDeleteItem={handleDeleteItem}
           />
         ) : viewMode === 'kanban' ? (
           // Kanban view
@@ -361,6 +398,19 @@ export function ProcessPageClient({
                 />
               );
             })}
+          </div>
+        ) : viewMode === 'table' ? (
+          // Table view
+          <div className="mx-auto max-w-6xl">
+            <TableView
+              items={processItems}
+              destinations={destinations}
+              onMoveToDestination={handleMoveToDestination}
+              onUpdateItem={handleUpdateItem}
+              onDeleteItem={handleDeleteItem}
+              onScheduleItem={handleScheduleItem}
+              onItemClick={(item) => setSelectedItem(item)}
+            />
           </div>
         ) : (
           // List view
@@ -535,7 +585,7 @@ function ProcessItemCard({
   return (
     <div
       className={cn(
-        'group relative rounded-lg border border-border bg-card transition-colors hover:border-border-emphasis',
+        'group relative rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] transition-colors hover:border-[var(--border-emphasis)]',
         compact ? 'p-3' : 'p-4'
       )}
     >

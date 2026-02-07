@@ -272,7 +272,7 @@ function SuggestionCard({
       layout
       className={cn(
         'rounded-lg border p-4 transition-colors cursor-pointer',
-        isAccepted ? 'border-primary bg-primary/5' : 'border-border bg-card opacity-60'
+        isAccepted ? 'border-[var(--accent-base)] bg-[var(--accent-subtle)]' : 'border-[var(--border-default)] bg-[var(--bg-surface)] opacity-60'
       )}
       onClick={onToggle}
     >
@@ -280,7 +280,7 @@ function SuggestionCard({
         <div
           className={cn(
             'flex h-6 w-6 items-center justify-center rounded-full border-2 transition-colors',
-            isAccepted ? 'border-primary bg-primary text-primary-foreground' : 'border-muted'
+            isAccepted ? 'border-[var(--accent-base)] bg-[var(--accent-base)] text-[var(--bg-base)]' : 'border-[var(--border-default)]'
           )}
         >
           {isAccepted && <Check className="h-3 w-3" />}

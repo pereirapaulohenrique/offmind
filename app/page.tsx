@@ -23,7 +23,7 @@ export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* Navigation */}
-      <header className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-[var(--border-subtle)] bg-[var(--bg-base)]/80 backdrop-blur-xl">
         <nav className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-2.5">
             <OffMindLogo size={32} variant="full" />
@@ -45,7 +45,7 @@ export default function LandingPage() {
           <div className="gradient-mesh absolute inset-0" />
           <div className="relative container mx-auto px-4 py-28 sm:px-6 sm:py-36 lg:px-8">
             <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-              <div className="mb-6 inline-flex items-center rounded-full border border-primary/20 bg-primary/[0.06] px-4 py-1.5 text-sm text-primary">
+              <div className="mb-6 inline-flex items-center rounded-full border border-[var(--accent-border)] bg-[var(--accent-subtle)] px-4 py-1.5 text-sm text-[var(--accent-base)]">
                 <Sparkles className="mr-2 h-3.5 w-3.5" />
                 AI-Powered GTD System
               </div>
@@ -78,10 +78,10 @@ export default function LandingPage() {
 
             {/* Product Preview - Visual anchor */}
             <div className="mx-auto mt-20 max-w-4xl">
-              <div className="relative rounded-xl border border-border/50 bg-card/80 p-1.5 shadow-2xl shadow-black/20 backdrop-blur-sm">
-                <div className="rounded-lg border border-border/30 bg-background overflow-hidden">
+              <div className="relative rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)]/80 p-1.5 shadow-2xl shadow-black/20 backdrop-blur-sm">
+                <div className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)] overflow-hidden">
                   {/* Mock dashboard header */}
-                  <div className="flex items-center gap-2 border-b border-border/30 px-4 py-3">
+                  <div className="flex items-center gap-2 border-b border-[var(--border-subtle)] px-4 py-3">
                     <div className="flex gap-1.5">
                       <div className="h-2.5 w-2.5 rounded-full bg-red-500/60" />
                       <div className="h-2.5 w-2.5 rounded-full bg-amber-500/60" />
@@ -135,7 +135,7 @@ export default function LandingPage() {
         </section>
 
         {/* How It Works */}
-        <section id="how-it-works" className="border-y border-border/40 bg-muted/20 py-28">
+        <section id="how-it-works" className="border-y border-[var(--border-subtle)] bg-[var(--bg-surface)]/30 py-28">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -226,7 +226,7 @@ export default function LandingPage() {
         </section>
 
         {/* Built for Overthinkers */}
-        <section className="border-y border-border/40 bg-muted/20 py-28">
+        <section className="border-y border-[var(--border-subtle)] bg-[var(--bg-surface)]/30 py-28">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -238,26 +238,26 @@ export default function LandingPage() {
                 and lets AI do the heavy lifting of organizing it all.
               </p>
               <div className="mt-10 grid gap-4 text-left sm:grid-cols-3">
-                <div className="rounded-xl border border-border/50 bg-card p-5">
+                <div className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)] p-5">
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 mb-3">
                     <Inbox className="h-4 w-4 text-blue-400" />
                   </div>
                   <p className="text-sm font-medium mb-1">Instant brain dump</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">Capture from anywhere in under 2 seconds. Think it, capture it, forget it.</p>
+                  <p className="text-xs text-[var(--text-muted)] leading-relaxed">Capture from anywhere in under 2 seconds. Think it, capture it, forget it.</p>
                 </div>
-                <div className="rounded-xl border border-border/50 bg-card p-5">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 mb-3">
-                    <Sparkles className="h-4 w-4 text-primary" />
+                <div className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)] p-5">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent-subtle)] mb-3">
+                    <Sparkles className="h-4 w-4 text-[var(--accent-base)]" />
                   </div>
                   <p className="text-sm font-medium mb-1">AI organizes for you</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">Stop spending mental energy on categorization. AI suggests, you approve.</p>
+                  <p className="text-xs text-[var(--text-muted)] leading-relaxed">Stop spending mental energy on categorization. AI suggests, you approve.</p>
                 </div>
-                <div className="rounded-xl border border-border/50 bg-card p-5">
+                <div className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)] p-5">
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10 mb-3">
                     <CalendarCheck className="h-4 w-4 text-emerald-400" />
                   </div>
                   <p className="text-sm font-medium mb-1">Focus on today</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">Only see what you committed to. Everything else is safely stored away.</p>
+                  <p className="text-xs text-[var(--text-muted)] leading-relaxed">Only see what you committed to. Everything else is safely stored away.</p>
                 </div>
               </div>
             </div>
@@ -278,7 +278,7 @@ export default function LandingPage() {
 
             <div className="mx-auto mt-16 grid max-w-4xl gap-6 sm:grid-cols-2">
               {/* Free Tier */}
-              <div className="rounded-2xl border border-border/50 bg-card p-8">
+              <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--bg-surface)] p-8">
                 <h3 className="text-xl font-semibold">Free</h3>
                 <p className="mt-2 text-sm text-muted-foreground">For getting started</p>
                 <div className="mt-6">
@@ -297,7 +297,7 @@ export default function LandingPage() {
               </div>
 
               {/* Pro Tier */}
-              <div className="relative rounded-2xl border-2 border-primary/50 bg-card p-8 shadow-lg shadow-primary/5">
+              <div className="relative rounded-2xl border-2 border-[var(--accent-base)]/50 bg-[var(--bg-surface)] p-8 shadow-lg shadow-[var(--accent-glow)]">
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary to-blue-400 px-4 py-1 text-xs font-semibold text-white shadow-sm">
                   Most Popular
                 </div>
@@ -324,7 +324,7 @@ export default function LandingPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="border-t border-border/40 bg-muted/20 py-28">
+        <section className="border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]/30 py-28">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -347,7 +347,7 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border/40 py-12">
+      <footer className="border-t border-[var(--border-subtle)] py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
             <OffMindLogo size={28} variant="full" />
@@ -438,7 +438,7 @@ function FeatureCard({
   const c = colorMap[color] || colorMap.primary;
 
   return (
-    <div className="rounded-xl border border-border/50 bg-card p-6 transition-all duration-200 hover:border-border hover:shadow-sm card-hover">
+    <div className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)] p-6 transition-all duration-200 hover:border-[var(--border-emphasis)] hover:shadow-sm card-hover">
       <div className={cn('flex h-10 w-10 items-center justify-center rounded-xl', c.bg)}>
         <Icon className={cn('h-5 w-5', c.text)} />
       </div>

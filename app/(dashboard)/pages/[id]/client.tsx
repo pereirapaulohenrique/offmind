@@ -157,21 +157,21 @@ export function PageEditorClient({
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <div className="border-b border-border px-6 py-3">
+      <div className="border-b border-[var(--border-subtle)] px-6 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" onClick={() => router.push('/pages')}>
               ← Pages
             </Button>
-            <span className="text-muted-foreground">/</span>
-            <span className="text-sm text-muted-foreground truncate max-w-[200px]">
+            <span className="text-[var(--text-muted)]">/</span>
+            <span className="text-sm text-[var(--text-muted)] truncate max-w-[200px]">
               {page.title || 'Untitled'}
             </span>
           </div>
 
           <div className="flex items-center gap-3">
             {/* Save status */}
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-[var(--text-muted)]">
               {isSaving ? 'Saving...' : `Saved ${formatDistanceToNow(lastSaved, { addSuffix: true })}`}
             </span>
 
@@ -215,7 +215,7 @@ export function PageEditorClient({
               {/* Icon picker */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-16 w-16 p-0 text-4xl hover:bg-muted">
+                  <Button variant="ghost" className="h-16 w-16 p-0 text-4xl hover:bg-[var(--bg-hover)]">
                     {page.icon || '📄'}
                   </Button>
                 </DropdownMenuTrigger>
@@ -246,7 +246,7 @@ export function PageEditorClient({
             <div className="mt-4 flex flex-wrap items-center gap-4 text-sm">
               {/* Space selector */}
               <div className="flex items-center gap-2">
-                <span className="text-muted-foreground">Space:</span>
+                <span className="text-[var(--text-muted)]">Space:</span>
                 <Select
                   value={page.space_id || 'none'}
                   onValueChange={handleSpaceChange}
@@ -267,7 +267,7 @@ export function PageEditorClient({
 
               {/* Project selector */}
               <div className="flex items-center gap-2">
-                <span className="text-muted-foreground">Project:</span>
+                <span className="text-[var(--text-muted)]">Project:</span>
                 <Select
                   value={page.project_id || 'none'}
                   onValueChange={handleProjectChange}
@@ -289,8 +289,8 @@ export function PageEditorClient({
               {/* Linked item */}
               {linkedItem && (
                 <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground">Linked to:</span>
-                  <span className="rounded-full bg-muted px-2 py-0.5">
+                  <span className="text-[var(--text-muted)]">Linked to:</span>
+                  <span className="rounded-full bg-[var(--bg-hover)] px-2 py-0.5">
                     {linkedItem.title}
                   </span>
                 </div>

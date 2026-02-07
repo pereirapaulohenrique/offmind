@@ -35,7 +35,7 @@ export function CelebrationProvider({ children }: { children: React.ReactNode })
   const [confetti, setConfetti] = useState<ConfettiPiece[]>([]);
 
   const generateConfetti = useCallback(() => {
-    const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
+    const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#2dd4bf', '#ec4899'];
     const pieces: ConfettiPiece[] = [];
 
     for (let i = 0; i < 50; i++) {
@@ -126,7 +126,7 @@ export function CelebrationProvider({ children }: { children: React.ReactNode })
                 stiffness: 260,
                 damping: 20,
               }}
-              className="flex flex-col items-center gap-4 bg-card rounded-2xl shadow-2xl p-8 border border-border"
+              className="flex flex-col items-center gap-4 bg-[var(--bg-surface)] rounded-2xl shadow-2xl p-8 border border-[var(--border-default)]"
             >
               <motion.div
                 initial={{ rotate: -10 }}
@@ -145,10 +145,10 @@ export function CelebrationProvider({ children }: { children: React.ReactNode })
               </motion.div>
 
               <div className="text-center">
-                <h2 className="text-3xl font-bold text-foreground mb-2">
+                <h2 className="text-3xl font-bold text-[var(--text-primary)] mb-2">
                   {celebration === 'inboxZero' ? 'Inbox Zero!' : 'All done for today!'}
                 </h2>
-                <p className="text-muted-foreground">
+                <p className="text-[var(--text-muted)]">
                   {celebration === 'inboxZero'
                     ? 'Your inbox is clear and organized'
                     : 'You have completed all your commitments'}
@@ -171,7 +171,7 @@ export function CelebrationProvider({ children }: { children: React.ReactNode })
               stiffness: 260,
               damping: 20,
             }}
-            className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-card rounded-lg shadow-lg border border-border px-4 py-3"
+            className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-[var(--bg-surface)] rounded-lg shadow-lg border border-[var(--border-default)] px-4 py-3"
           >
             <motion.div
               initial={{ scale: 0 }}
@@ -180,7 +180,7 @@ export function CelebrationProvider({ children }: { children: React.ReactNode })
             >
               <CheckCircle2 className="w-6 h-6 text-emerald-500" />
             </motion.div>
-            <span className="text-sm font-medium text-foreground">
+            <span className="text-sm font-medium text-[var(--text-primary)]">
               Task completed!
             </span>
           </motion.div>

@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Header } from '@/components/layout/Header';
 import { MobileSidebar } from '@/components/layout/MobileSidebar';
+import { ContentArea } from '@/components/layout/ContentArea';
+import { CaptureBar } from '@/components/layout/CaptureBar';
 import { CommandPalette } from '@/components/layout/CommandPalette';
 import { AIAssistant } from '@/components/ai/AIAssistant';
 import { CelebrationProvider } from '@/components/shared/Celebrations';
@@ -75,8 +77,8 @@ export default async function DashboardLayout({
           <Sidebar {...sidebarProps} />
         </div>
 
-        {/* Main content area */}
-        <div className="flex flex-1 flex-col md:pl-[252px] transition-all duration-200">
+        {/* Main content area - sidebar-aware margins + capture bar padding */}
+        <ContentArea>
           {/* Header */}
           <Header
             user={
@@ -97,7 +99,10 @@ export default async function DashboardLayout({
 
           {/* Page content */}
           <main className="flex-1 overflow-auto">{children}</main>
-        </div>
+        </ContentArea>
+
+        {/* Persistent capture bar */}
+        <CaptureBar userId={user.id} />
 
         {/* Command Palette (global) */}
         <CommandPalette />

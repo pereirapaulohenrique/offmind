@@ -71,17 +71,17 @@ export function HomePageClient({
         />
       )}
       {/* Page header - Bigger, more presence */}
-      <div className="border-b border-border/50 px-8 py-8">
+      <div className="border-b border-[var(--border-subtle)] px-8 py-8">
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25 }}
         >
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+          <h1 className="text-3xl font-semibold tracking-tight text-[var(--text-primary)]">
             {greeting}, {userName}
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Here's what's on your mind today
+          <p className="mt-2 text-sm text-[var(--text-muted)]">
+            Here&apos;s what&apos;s on your mind today
           </p>
         </motion.div>
       </div>
@@ -96,54 +96,54 @@ export function HomePageClient({
             className="grid gap-4 sm:grid-cols-3"
           >
             <Link href="/capture" className="group">
-              <div className="relative overflow-hidden rounded-xl border border-blue-500/15 bg-blue-500/[0.03] p-6 transition-all duration-200 hover:border-blue-500/30 hover:bg-blue-500/[0.06]">
+              <div className="relative overflow-hidden rounded-xl border border-[var(--layer-capture-border)] bg-[var(--layer-capture-bg)] p-6 transition-all duration-200 hover:border-[var(--layer-capture)] hover:bg-[rgba(96,165,250,0.08)]">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10">
-                    <Inbox className="h-5 w-5 text-blue-400" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[rgba(96,165,250,0.10)]">
+                    <Inbox className="h-5 w-5 text-[var(--layer-capture)]" />
                   </div>
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-blue-400/70">Capture</p>
-                    <p className="text-2xl font-bold tracking-tight text-foreground">{stats.inboxCount}</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--layer-capture)]/70">Capture</p>
+                    <p className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">{stats.inboxCount}</p>
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground">items in inbox</p>
-                <div className="mt-3 flex items-center gap-1 text-xs text-blue-400/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                <p className="text-xs text-[var(--text-muted)]">items in inbox</p>
+                <div className="mt-3 flex items-center gap-1 text-xs text-[var(--layer-capture)]/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                   <span>Open inbox</span>
                   <ChevronRight className="h-3 w-3" />
                 </div>
               </div>
             </Link>
             <Link href="/process" className="group">
-              <div className="relative overflow-hidden rounded-xl border border-amber-500/15 bg-amber-500/[0.03] p-6 transition-all duration-200 hover:border-amber-500/30 hover:bg-amber-500/[0.06]">
+              <div className="relative overflow-hidden rounded-xl border border-[var(--layer-process-border)] bg-[var(--layer-process-bg)] p-6 transition-all duration-200 hover:border-[var(--layer-process)] hover:bg-[rgba(251,191,36,0.08)]">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10">
-                    <ArrowRightLeft className="h-5 w-5 text-amber-400" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[rgba(251,191,36,0.10)]">
+                    <ArrowRightLeft className="h-5 w-5 text-[var(--layer-process)]" />
                   </div>
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-400/70">Process</p>
-                    <p className="text-2xl font-bold tracking-tight text-foreground">{stats.processingCount}</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--layer-process)]/70">Process</p>
+                    <p className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">{stats.processingCount}</p>
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground">items to organize</p>
-                <div className="mt-3 flex items-center gap-1 text-xs text-amber-400/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                <p className="text-xs text-[var(--text-muted)]">items to organize</p>
+                <div className="mt-3 flex items-center gap-1 text-xs text-[var(--layer-process)]/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                   <span>Start processing</span>
                   <ChevronRight className="h-3 w-3" />
                 </div>
               </div>
             </Link>
             <Link href="/commit" className="group">
-              <div className="relative overflow-hidden rounded-xl border border-emerald-500/15 bg-emerald-500/[0.03] p-6 transition-all duration-200 hover:border-emerald-500/30 hover:bg-emerald-500/[0.06]">
+              <div className="relative overflow-hidden rounded-xl border border-[var(--layer-commit-border)] bg-[var(--layer-commit-bg)] p-6 transition-all duration-200 hover:border-[var(--layer-commit)] hover:bg-[rgba(52,211,153,0.08)]">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10">
-                    <CalendarCheck className="h-5 w-5 text-emerald-400" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[rgba(52,211,153,0.10)]">
+                    <CalendarCheck className="h-5 w-5 text-[var(--layer-commit)]" />
                   </div>
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-emerald-400/70">Commit</p>
-                    <p className="text-2xl font-bold tracking-tight text-foreground">{stats.todayCount}</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--layer-commit)]/70">Commit</p>
+                    <p className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">{stats.todayCount}</p>
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground">today's commitments</p>
-                <div className="mt-3 flex items-center gap-1 text-xs text-emerald-400/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                <p className="text-xs text-[var(--text-muted)]">today&apos;s commitments</p>
+                <div className="mt-3 flex items-center gap-1 text-xs text-[var(--layer-commit)]/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                   <span>View schedule</span>
                   <ChevronRight className="h-3 w-3" />
                 </div>
@@ -157,10 +157,10 @@ export function HomePageClient({
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.2, delay: 0.1 }}
-              className="flex items-center gap-2.5 rounded-xl bg-emerald-500/[0.06] border border-emerald-500/15 px-5 py-3"
+              className="flex items-center gap-2.5 rounded-xl bg-[var(--layer-commit-bg)] border border-[var(--layer-commit-border)] px-5 py-3"
             >
-              <Flame className="h-4 w-4 text-emerald-400" />
-              <span className="text-sm font-medium text-emerald-400">
+              <Flame className="h-4 w-4 text-[var(--layer-commit)]" />
+              <span className="text-sm font-medium text-[var(--layer-commit)]">
                 {stats.completedTodayCount} completed today
               </span>
             </motion.div>
@@ -173,14 +173,14 @@ export function HomePageClient({
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25, delay: 0.1 }}
-              className="rounded-xl border border-border/50 bg-card"
+              className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]"
             >
-              <div className="flex items-center justify-between border-b border-border/50 px-6 py-4">
+              <div className="flex items-center justify-between border-b border-[var(--border-subtle)] px-6 py-4">
                 <div className="flex items-center gap-2.5">
-                  <CalendarCheck className="h-4 w-4 text-emerald-400" />
-                  <h2 className="text-sm font-semibold">Today's Commitments</h2>
+                  <CalendarCheck className="h-4 w-4 text-[var(--layer-commit)]" />
+                  <h2 className="text-sm font-semibold text-[var(--text-primary)]">Today&apos;s Commitments</h2>
                 </div>
-                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground h-7 text-xs" asChild>
+                <Button variant="ghost" size="sm" className="text-[var(--text-muted)] hover:text-[var(--text-primary)] h-7 text-xs" asChild>
                   <Link href="/commit">
                     View all
                     <ChevronRight className="ml-0.5 h-3 w-3" />
@@ -190,10 +190,10 @@ export function HomePageClient({
               <div className="p-5">
                 {todayItems.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-10 text-center">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-muted/50">
-                      <CalendarCheck className="h-5 w-5 text-muted-foreground/40" />
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--bg-hover)]">
+                      <CalendarCheck className="h-5 w-5 text-[var(--text-disabled)]" />
                     </div>
-                    <p className="mt-4 text-sm text-muted-foreground">
+                    <p className="mt-4 text-sm text-[var(--text-muted)]">
                       No commitments for today
                     </p>
                     <Button variant="outline" size="sm" className="mt-4 h-8 text-xs" asChild>
@@ -207,10 +207,10 @@ export function HomePageClient({
                     {todayItems.map((item) => (
                       <li
                         key={item.id}
-                        className="flex items-center gap-3 rounded-lg border border-border/30 bg-background/50 p-3.5 transition-colors hover:border-border/60"
+                        className="flex items-center gap-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)]/50 p-3.5 transition-colors hover:border-[var(--border-default)]"
                       >
-                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/8">
-                          <Clock className="h-3.5 w-3.5 text-emerald-400" />
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--layer-commit-bg)]">
+                          <Clock className="h-3.5 w-3.5 text-[var(--layer-commit)]" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium truncate">{item.title}</p>
@@ -235,14 +235,14 @@ export function HomePageClient({
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25, delay: 0.15 }}
-              className="rounded-xl border border-border/50 bg-card"
+              className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]"
             >
-              <div className="flex items-center justify-between border-b border-border/50 px-6 py-4">
+              <div className="flex items-center justify-between border-b border-[var(--border-subtle)] px-6 py-4">
                 <div className="flex items-center gap-2.5">
-                  <Inbox className="h-4 w-4 text-blue-400" />
-                  <h2 className="text-sm font-semibold">Recent Activity</h2>
+                  <Inbox className="h-4 w-4 text-[var(--layer-capture)]" />
+                  <h2 className="text-sm font-semibold text-[var(--text-primary)]">Recent Activity</h2>
                 </div>
-                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground h-7 text-xs" asChild>
+                <Button variant="ghost" size="sm" className="text-[var(--text-muted)] hover:text-[var(--text-primary)] h-7 text-xs" asChild>
                   <Link href="/capture">
                     View inbox
                     <ChevronRight className="ml-0.5 h-3 w-3" />
@@ -252,10 +252,10 @@ export function HomePageClient({
               <div className="p-5">
                 {recentItems.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-10 text-center">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-muted/50">
-                      <Inbox className="h-5 w-5 text-muted-foreground/40" />
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--bg-hover)]">
+                      <Inbox className="h-5 w-5 text-[var(--text-disabled)]" />
                     </div>
-                    <p className="mt-4 text-sm text-muted-foreground">
+                    <p className="mt-4 text-sm text-[var(--text-muted)]">
                       No recent items
                     </p>
                     <Button variant="outline" size="sm" className="mt-4 h-8 text-xs" asChild>
@@ -269,26 +269,26 @@ export function HomePageClient({
                     {recentItems.map((item) => (
                       <li
                         key={item.id}
-                        className="flex items-center gap-3 rounded-lg border border-border/30 bg-background/50 p-3.5 transition-colors hover:border-border/60"
+                        className="flex items-center gap-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)]/50 p-3.5 transition-colors hover:border-[var(--border-default)]"
                       >
                         <div className={cn(
                           "flex h-8 w-8 items-center justify-center rounded-lg",
                           item.is_completed
-                            ? "bg-emerald-500/8"
+                            ? "bg-[var(--layer-commit-bg)]"
                             : item.layer === 'capture'
-                              ? "bg-blue-500/8"
+                              ? "bg-[var(--layer-capture-bg)]"
                               : item.layer === 'process'
-                                ? "bg-amber-500/8"
-                                : "bg-emerald-500/8"
+                                ? "bg-[var(--layer-process-bg)]"
+                                : "bg-[var(--layer-commit-bg)]"
                         )}>
                           {item.is_completed ? (
-                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+                            <CheckCircle2 className="h-3.5 w-3.5 text-[var(--layer-commit)]" />
                           ) : item.layer === 'capture' ? (
-                            <Inbox className="h-3.5 w-3.5 text-blue-400" />
+                            <Inbox className="h-3.5 w-3.5 text-[var(--layer-capture)]" />
                           ) : item.layer === 'process' ? (
-                            <ArrowRightLeft className="h-3.5 w-3.5 text-amber-400" />
+                            <ArrowRightLeft className="h-3.5 w-3.5 text-[var(--layer-process)]" />
                           ) : (
-                            <CalendarCheck className="h-3.5 w-3.5 text-emerald-400" />
+                            <CalendarCheck className="h-3.5 w-3.5 text-[var(--layer-commit)]" />
                           )}
                         </div>
                         <div className="flex-1 min-w-0">

@@ -159,7 +159,7 @@ export function ProjectDetailClient({
   return (
     <div className="flex-1 flex flex-col h-full">
       {/* Header */}
-      <div className="border-b border-border bg-card/50 p-4">
+      <div className="border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]/50 p-4">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
             <Link href="/projects">
@@ -169,14 +169,14 @@ export function ProjectDetailClient({
 
           <div className={cn(
             'flex h-10 w-10 items-center justify-center rounded-lg',
-            colorOption?.bgSubtle || 'bg-muted'
+            colorOption?.bgSubtle || 'bg-[var(--bg-hover)]'
           )}>
-            <ProjectIcon className={cn('h-5 w-5', colorOption?.text || 'text-muted-foreground')} />
+            <ProjectIcon className={cn('h-5 w-5', colorOption?.text || 'text-[var(--text-muted)]')} />
           </div>
 
           <div className="flex-1">
-            <h1 className="text-xl font-semibold">{project.name}</h1>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <h1 className="text-xl font-semibold text-[var(--text-primary)]">{project.name}</h1>
+            <div className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
               {parentSpace && (
                 <>
                   <Link href={`/spaces/${parentSpace.id}`} className="hover:text-foreground">
@@ -216,7 +216,7 @@ export function ProjectDetailClient({
         {totalItems > 0 && (
           <div className="mt-4">
             <div className="flex items-center justify-between text-sm mb-1">
-              <span className="text-muted-foreground">Progress</span>
+              <span className="text-[var(--text-muted)]">Progress</span>
               <span className="font-medium">{completedItems}/{totalItems} ({progressPercent}%)</span>
             </div>
             <Progress value={progressPercent} className="h-2" />
@@ -259,21 +259,21 @@ export function ProjectDetailClient({
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="flex items-center gap-3 rounded-lg border bg-card p-3 hover:border-primary/50 transition-colors"
+                        className="flex items-center gap-3 rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-3 hover:border-[var(--accent-border)] transition-colors"
                       >
                         {item.is_completed ? (
                           <CheckCircle2 className="h-4 w-4 text-green-500" />
                         ) : (
-                          <div className="h-4 w-4 rounded-full border-2 border-muted-foreground" />
+                          <div className="h-4 w-4 rounded-full border-2 border-[var(--text-muted)]" />
                         )}
                         <span className={cn(
                           'flex-1',
-                          item.is_completed && 'line-through text-muted-foreground'
+                          item.is_completed && 'line-through text-[var(--text-muted)]'
                         )}>
                           {item.title}
                         </span>
                         {dest && DestIcon && (
-                          <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <span className="flex items-center gap-1 text-xs text-[var(--text-muted)]">
                             <DestIcon className="h-3 w-3" />
                             {dest.name}
                           </span>
@@ -304,13 +304,13 @@ export function ProjectDetailClient({
                   <Link
                     key={page.id}
                     href={`/pages/${page.id}`}
-                    className="rounded-lg border bg-card p-4 hover:border-primary/50 transition-colors"
+                    className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 hover:border-[var(--accent-border)] transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <FileText className="h-5 w-5 text-muted-foreground" />
+                      <FileText className="h-5 w-5 text-[var(--text-muted)]" />
                       <div className="flex-1 min-w-0">
                         <span className="font-medium truncate block">{page.title || 'Untitled'}</span>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs text-[var(--text-muted)]">
                           Updated {formatDistanceToNow(new Date(page.updated_at), { addSuffix: true })}
                         </span>
                       </div>

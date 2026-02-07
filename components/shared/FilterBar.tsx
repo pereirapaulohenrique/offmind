@@ -85,7 +85,7 @@ export function FilterBar({
     <div className={cn('flex flex-wrap items-center gap-3', className)}>
       {/* Search */}
       <div className="relative flex-1 min-w-[200px]">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]">
           🔍
         </span>
         <Input
@@ -265,7 +265,7 @@ export function FilterBar({
             clearAllFilters();
             setSearchInput('');
           }}
-          className="text-muted-foreground"
+          className="text-[var(--text-muted)]"
         >
           Clear all
         </Button>

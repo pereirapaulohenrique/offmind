@@ -330,9 +330,9 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
 
   return (
     <div className="flex h-full flex-col">
-      <div className="border-b border-border px-6 py-4">
-        <h1 className="text-2xl font-semibold text-foreground">Settings</h1>
-        <p className="text-sm text-muted-foreground">
+      <div className="border-b border-[var(--border-subtle)] px-6 py-4">
+        <h1 className="text-2xl font-semibold text-[var(--text-primary)]">Settings</h1>
+        <p className="text-sm text-[var(--text-muted)]">
           Manage your account and subscription
         </p>
       </div>
@@ -355,10 +355,10 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
           {/* Telegram Integration */}
           <section>
             <h2 className="mb-4 text-lg font-semibold">Telegram Bot</h2>
-            <div className="rounded-lg border bg-card p-6">
+            <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6">
               {isLoadingTelegram ? (
                 <div className="animate-pulse">
-                  <div className="h-4 w-32 rounded bg-muted" />
+                  <div className="h-4 w-32 rounded bg-[var(--bg-hover)]" />
                 </div>
               ) : telegramConnection?.connected ? (
                 <div className="flex items-center justify-between">
@@ -367,7 +367,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
                       <CheckCircle2 className="h-5 w-5 text-green-500" />
                       <span className="font-medium">Connected</span>
                     </div>
-                    <p className="mt-1 text-sm text-muted-foreground">
+                    <p className="mt-1 text-sm text-[var(--text-muted)]">
                       {telegramConnection.firstName}
                       {telegramConnection.username && ` (@${telegramConnection.username})`}
                     </p>
@@ -378,14 +378,14 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[var(--text-muted)]">
                     Connect Telegram to capture items instantly by sending messages to our bot.
                   </p>
                   {telegramCode ? (
                     <div className="space-y-2">
                       <p className="text-sm">Your connection code:</p>
                       <div className="flex items-center gap-2">
-                        <code className="rounded bg-muted px-4 py-2 text-2xl font-mono font-bold tracking-widest">
+                        <code className="rounded bg-[var(--bg-hover)] px-4 py-2 text-2xl font-mono font-bold tracking-widest">
                           {telegramCode}
                         </code>
                         <Button
@@ -399,7 +399,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
                           Copy
                         </Button>
                       </div>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-[var(--text-muted)]">
                         Send <code>/connect {telegramCode}</code> to @OffMindBot on Telegram
                       </p>
                     </div>
@@ -416,10 +416,10 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
           {/* Browser Extension */}
           <section>
             <h2 className="mb-4 text-lg font-semibold">Browser Extension</h2>
-            <div className="rounded-lg border bg-card p-6">
+            <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6">
               {isLoadingExtension ? (
                 <div className="animate-pulse">
-                  <div className="h-4 w-32 rounded bg-muted" />
+                  <div className="h-4 w-32 rounded bg-[var(--bg-hover)]" />
                 </div>
               ) : extensionApiKey ? (
                 <div className="space-y-4">
@@ -429,7 +429,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
                         <Key className="h-5 w-5 text-primary" />
                         <span className="font-medium">API Key Active</span>
                       </div>
-                      <p className="mt-1 text-sm text-muted-foreground">
+                      <p className="mt-1 text-sm text-[var(--text-muted)]">
                         Copy this key to your browser extension
                       </p>
                     </div>
@@ -438,7 +438,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
                     </Button>
                   </div>
                   <div className="flex items-center gap-2">
-                    <code className="flex-1 rounded bg-muted px-3 py-2 font-mono text-xs break-all">
+                    <code className="flex-1 rounded bg-[var(--bg-hover)] px-3 py-2 font-mono text-xs break-all">
                       {extensionApiKey}
                     </code>
                     <Button
@@ -455,7 +455,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[var(--text-muted)]">
                     Generate an API key to use the browser extension for quick capture.
                   </p>
                   <Button onClick={handleGenerateExtensionKey}>
@@ -469,7 +469,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
           {/* Profile Settings */}
           <section>
             <h2 className="mb-4 text-lg font-semibold">Profile</h2>
-            <div className="rounded-lg border bg-card p-6">
+            <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6">
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="email">Email</Label>
@@ -480,7 +480,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
                     disabled
                     className="mt-1"
                   />
-                  <p className="mt-1 text-xs text-muted-foreground">
+                  <p className="mt-1 text-xs text-[var(--text-muted)]">
                     Contact support to change your email
                   </p>
                 </div>
@@ -512,13 +512,13 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
                 Add Destination
               </Button>
             </div>
-            <div className="rounded-lg border bg-card">
+            <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
               {destinations.length === 0 ? (
-                <div className="p-6 text-center text-muted-foreground">
+                <div className="p-6 text-center text-[var(--text-muted)]">
                   No destinations yet. Create your first destination to organize your items.
                 </div>
               ) : (
-                <div className="divide-y divide-border">
+                <div className="divide-y divide-[var(--border-subtle)]">
                   {destinations.map((dest) => {
                     const Icon = ICON_MAP[dest.icon] || ICON_MAP['list-todo'];
                     const colorOption = COLOR_PALETTE.find(c => c.value === dest.color);
@@ -526,30 +526,30 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
                     return (
                       <div
                         key={dest.id}
-                        className="flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors"
+                        className="flex items-center gap-4 p-4 hover:bg-[var(--bg-hover)] transition-colors"
                       >
                         <div className={cn(
                           'flex h-10 w-10 items-center justify-center rounded-lg',
-                          colorOption?.bgSubtle || 'bg-muted'
+                          colorOption?.bgSubtle || 'bg-[var(--bg-hover)]'
                         )}>
-                          <Icon className={cn('h-5 w-5', colorOption?.text || 'text-muted-foreground')} />
+                          <Icon className={cn('h-5 w-5', colorOption?.text || 'text-[var(--text-muted)]')} />
                         </div>
 
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <span className="font-medium">{dest.name}</span>
                             {dest.is_system && (
-                              <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                              <span className="rounded-full bg-[var(--bg-hover)] px-2 py-0.5 text-xs text-[var(--text-muted)]">
                                 System
                               </span>
                             )}
                             {dest.is_default && (
-                              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
+                              <span className="rounded-full bg-[var(--accent-subtle)] px-2 py-0.5 text-xs text-[var(--accent-base)]">
                                 Default
                               </span>
                             )}
                           </div>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-[var(--text-muted)]">
                             {dest.slug}
                           </p>
                         </div>
@@ -591,7 +591,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-medium">Sign Out</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[var(--text-muted)]">
                     Sign out of your account on this device
                   </p>
                 </div>

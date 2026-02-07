@@ -137,7 +137,7 @@ export default function SignupPage() {
         </div>
 
         {/* Signup Form */}
-        <div className="rounded-xl border border-border/60 bg-card/80 p-6 shadow-lg shadow-black/5 backdrop-blur-sm">
+        <div className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)]/80 p-6 shadow-lg shadow-black/5 backdrop-blur-sm">
           <Tabs defaultValue="password" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-5">
               <TabsTrigger value="password" className="gap-2 text-xs">

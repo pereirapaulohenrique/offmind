@@ -10,9 +10,9 @@ export function SubscriptionStatus() {
 
   if (isLoading) {
     return (
-      <div className="animate-pulse rounded-lg border bg-card p-6">
-        <div className="h-6 w-32 rounded bg-muted" />
-        <div className="mt-2 h-4 w-48 rounded bg-muted" />
+      <div className="animate-pulse rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6">
+        <div className="h-6 w-32 rounded bg-[var(--bg-hover)]" />
+        <div className="mt-2 h-4 w-48 rounded bg-[var(--bg-hover)]" />
       </div>
     );
   }
@@ -26,10 +26,10 @@ export function SubscriptionStatus() {
   };
 
   const getStatusDisplay = () => {
-    if (!subscription) return { label: 'Unknown', color: 'text-muted-foreground', bg: 'bg-muted' };
+    if (!subscription) return { label: 'Unknown', color: 'text-[var(--text-muted)]', bg: 'bg-[var(--bg-hover)]' };
 
     if (subscription.type === 'lifetime') {
-      return { label: 'Lifetime', color: 'text-purple-500', bg: 'bg-purple-500/10' };
+      return { label: 'Lifetime', color: 'text-[var(--accent-base)]', bg: 'bg-[var(--accent-subtle)]' };
     }
     if (subscription.type === 'annual') {
       return { label: 'Annual', color: 'text-blue-500', bg: 'bg-blue-500/10' };
@@ -46,7 +46,7 @@ export function SubscriptionStatus() {
   const status = getStatusDisplay();
 
   return (
-    <div className="rounded-lg border bg-card p-6">
+    <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6">
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-3">
@@ -57,7 +57,7 @@ export function SubscriptionStatus() {
           </div>
 
           {isTrial && subscription?.daysRemaining !== undefined && (
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-1 text-sm text-[var(--text-muted)]">
               {subscription.daysRemaining} days remaining in your trial
             </p>
           )}
@@ -69,13 +69,13 @@ export function SubscriptionStatus() {
           )}
 
           {isActive && !isTrial && subscription?.type !== 'lifetime' && (
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-1 text-sm text-[var(--text-muted)]">
               Your subscription is active
             </p>
           )}
 
           {subscription?.type === 'lifetime' && (
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-1 text-sm text-[var(--text-muted)]">
               You have lifetime access. Thank you for your support!
             </p>
           )}

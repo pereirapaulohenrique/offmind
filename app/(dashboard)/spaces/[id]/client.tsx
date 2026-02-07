@@ -147,7 +147,7 @@ export function SpaceDetailClient({
   return (
     <div className="flex-1 flex flex-col h-full">
       {/* Header */}
-      <div className="border-b border-border bg-card/50 p-4">
+      <div className="border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]/50 p-4">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
             <Link href="/spaces">
@@ -157,14 +157,14 @@ export function SpaceDetailClient({
 
           <div className={cn(
             'flex h-10 w-10 items-center justify-center rounded-lg',
-            colorOption?.bgSubtle || 'bg-muted'
+            colorOption?.bgSubtle || 'bg-[var(--bg-hover)]'
           )}>
-            <SpaceIcon className={cn('h-5 w-5', colorOption?.text || 'text-muted-foreground')} />
+            <SpaceIcon className={cn('h-5 w-5', colorOption?.text || 'text-[var(--text-muted)]')} />
           </div>
 
           <div className="flex-1">
-            <h1 className="text-xl font-semibold">{space.name}</h1>
-            <p className="text-sm text-muted-foreground">
+            <h1 className="text-xl font-semibold text-[var(--text-primary)]">{space.name}</h1>
+            <p className="text-sm text-[var(--text-muted)]">
               {totalItems} items · {totalProjects} projects · {totalPages} pages
             </p>
           </div>
@@ -232,20 +232,20 @@ export function SpaceDetailClient({
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="flex items-center gap-3 rounded-lg border bg-card p-3 hover:border-primary/50 transition-colors"
+                        className="flex items-center gap-3 rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-3 hover:border-[var(--accent-border)] transition-colors"
                       >
                         <div className={cn(
                           'h-2 w-2 rounded-full',
-                          item.is_completed ? 'bg-green-500' : 'bg-muted-foreground'
+                          item.is_completed ? 'bg-green-500' : 'bg-[var(--text-muted)]'
                         )} />
                         <span className={cn(
                           'flex-1',
-                          item.is_completed && 'line-through text-muted-foreground'
+                          item.is_completed && 'line-through text-[var(--text-muted)]'
                         )}>
                           {item.title}
                         </span>
                         {dest && DestIcon && (
-                          <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <span className="flex items-center gap-1 text-xs text-[var(--text-muted)]">
                             <DestIcon className="h-3 w-3" />
                             {dest.name}
                           </span>
@@ -280,14 +280,14 @@ export function SpaceDetailClient({
                     <Link
                       key={project.id}
                       href={`/projects/${project.id}`}
-                      className="rounded-lg border bg-card p-4 hover:border-primary/50 transition-colors"
+                      className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 hover:border-[var(--accent-border)] transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <div className={cn(
                           'flex h-8 w-8 items-center justify-center rounded',
-                          projColor?.bgSubtle || 'bg-muted'
+                          projColor?.bgSubtle || 'bg-[var(--bg-hover)]'
                         )}>
-                          <ProjectIcon className={cn('h-4 w-4', projColor?.text || 'text-muted-foreground')} />
+                          <ProjectIcon className={cn('h-4 w-4', projColor?.text || 'text-[var(--text-muted)]')} />
                         </div>
                         <span className="font-medium">{project.name}</span>
                       </div>
@@ -316,13 +316,13 @@ export function SpaceDetailClient({
                   <Link
                     key={page.id}
                     href={`/pages/${page.id}`}
-                    className="rounded-lg border bg-card p-4 hover:border-primary/50 transition-colors"
+                    className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 hover:border-[var(--accent-border)] transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <FileText className="h-5 w-5 text-muted-foreground" />
+                      <FileText className="h-5 w-5 text-[var(--text-muted)]" />
                       <div className="flex-1 min-w-0">
                         <span className="font-medium truncate block">{page.title || 'Untitled'}</span>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs text-[var(--text-muted)]">
                           Updated {formatDistanceToNow(new Date(page.updated_at), { addSuffix: true })}
                         </span>
                       </div>

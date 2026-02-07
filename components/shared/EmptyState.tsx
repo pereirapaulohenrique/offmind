@@ -26,7 +26,7 @@ const variantStyles: Record<EmptyStateVariant, { text: string; bg: string }> = {
   capture: { text: 'text-blue-400', bg: 'bg-blue-500/10' },
   process: { text: 'text-amber-400', bg: 'bg-amber-500/10' },
   commit: { text: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-  default: { text: 'text-muted-foreground', bg: 'bg-muted/50' },
+  default: { text: 'text-[var(--text-muted)]', bg: 'bg-[var(--bg-hover)]' },
 };
 
 export function EmptyState({
@@ -53,7 +53,7 @@ export function EmptyState({
 
       <h3 className="text-base font-semibold mb-1.5">{title}</h3>
 
-      <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">
+      <p className="text-sm text-[var(--text-muted)] max-w-xs leading-relaxed">
         {description}
       </p>
 

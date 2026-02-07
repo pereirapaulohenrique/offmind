@@ -61,7 +61,7 @@ export function UserMenu({ user }: UserMenuProps) {
             {user?.full_name && (
               <p className="text-sm font-medium leading-none">{user.full_name}</p>
             )}
-            <p className="text-xs leading-none text-muted-foreground">
+            <p className="text-xs leading-none text-[var(--text-muted)]">
               {user?.email}
             </p>
           </div>

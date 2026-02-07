@@ -162,11 +162,11 @@ export function PagesListClient({
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <div className="border-b border-border px-6 py-4">
+      <div className="border-b border-[var(--border-subtle)] px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-foreground">Pages</h1>
-            <p className="text-sm text-muted-foreground">
+            <h1 className="text-2xl font-semibold text-[var(--text-primary)]">Pages</h1>
+            <p className="text-sm text-[var(--text-muted)]">
               Your documents and notes
             </p>
           </div>
@@ -178,7 +178,7 @@ export function PagesListClient({
       </div>
 
       {/* Filters */}
-      <div className="border-b border-border px-6 py-3">
+      <div className="border-b border-[var(--border-subtle)] px-6 py-3">
         <div className="flex flex-wrap items-center gap-3">
           <Input
             placeholder="Search pages..."
@@ -264,7 +264,7 @@ export function PagesListClient({
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
-                      className="group relative rounded-lg border bg-card p-4 hover:border-primary/50 hover:shadow-sm cursor-pointer transition-all"
+                      className="group relative rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 hover:border-[var(--accent-border)] hover:shadow-sm cursor-pointer transition-all"
                       onClick={() => router.push(`/pages/${page.id}`)}
                     >
                       {/* Favorite indicator */}
@@ -274,12 +274,12 @@ export function PagesListClient({
 
                       {/* Icon and title */}
                       <div className="flex items-start gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
-                          <FileText className="h-5 w-5 text-muted-foreground" />
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--bg-hover)]">
+                          <FileText className="h-5 w-5 text-[var(--text-muted)]" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="font-medium truncate">{page.title || 'Untitled'}</h3>
-                          <p className="text-xs text-muted-foreground mt-1">
+                          <p className="text-xs text-[var(--text-muted)] mt-1">
                             Updated {formatDistanceToNow(new Date(page.updated_at), { addSuffix: true })}
                           </p>
                         </div>
@@ -288,13 +288,13 @@ export function PagesListClient({
                       {/* Space/Project badges */}
                       <div className="mt-3 flex flex-wrap gap-1">
                         {pageSpace && PageSpaceIcon && (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-[var(--bg-hover)] px-2 py-0.5 text-xs">
                             <PageSpaceIcon className="h-3 w-3" />
                             {pageSpace.name}
                           </span>
                         )}
                         {pageProject && PageProjectIcon && (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-[var(--bg-hover)] px-2 py-0.5 text-xs">
                             <PageProjectIcon className="h-3 w-3" />
                             {pageProject.name}
                           </span>

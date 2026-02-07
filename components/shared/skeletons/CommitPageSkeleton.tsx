@@ -4,7 +4,7 @@ export function CommitPageSkeleton() {
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <div className="border-b border-border px-6 py-4">
+      <div className="border-b border-[var(--border-subtle)] px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <Skeleton className="h-7 w-24" />

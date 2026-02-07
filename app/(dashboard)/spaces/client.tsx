@@ -170,11 +170,11 @@ export function SpacesPageClient({
   return (
     <div className="flex h-full flex-col">
       {/* Page header */}
-      <div className="border-b border-border px-6 py-4">
+      <div className="border-b border-[var(--border-subtle)] px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-foreground">Spaces</h1>
-            <p className="text-sm text-muted-foreground">
+            <h1 className="text-2xl font-semibold text-[var(--text-primary)]">Spaces</h1>
+            <p className="text-sm text-[var(--text-muted)]">
               Organize your life into distinct areas.
             </p>
           </div>
@@ -244,7 +244,7 @@ export function SpacesPageClient({
                   >
                     <Link
                       href={`/spaces/${space.id}`}
-                      className="group block rounded-lg border border-border bg-card p-4 transition-colors hover:border-primary/50"
+                      className="group block rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 transition-colors hover:border-[var(--accent-border)]"
                     >
                       <div className="flex items-start gap-4">
                         {/* Icon */}
@@ -252,15 +252,15 @@ export function SpacesPageClient({
                           'flex h-12 w-12 items-center justify-center rounded-lg',
                           colorOption?.bgSubtle || 'bg-muted'
                         )}>
-                          <SpaceIcon className={cn('h-6 w-6', colorOption?.text || 'text-muted-foreground')} />
+                          <SpaceIcon className={cn('h-6 w-6', colorOption?.text || 'text-[var(--text-muted)]')} />
                         </div>
 
                         {/* Content */}
                         <div className="flex-1">
-                          <h3 className="text-lg font-medium text-foreground">
+                          <h3 className="text-lg font-medium text-[var(--text-primary)]">
                             {space.name}
                           </h3>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-[var(--text-muted)]">
                             {projects.length} project{projects.length !== 1 ? 's' : ''}
                           </p>
 
@@ -272,7 +272,7 @@ export function SpacesPageClient({
                                 return (
                                   <span
                                     key={project.id}
-                                    className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground"
+                                    className="inline-flex items-center gap-1 rounded-full bg-[var(--bg-hover)] px-2 py-0.5 text-xs text-[var(--text-muted)]"
                                   >
                                     <ProjectIcon className="h-3 w-3" />
                                     {project.name}
@@ -280,7 +280,7 @@ export function SpacesPageClient({
                                 );
                               })}
                               {projects.length > 3 && (
-                                <span className="text-xs text-muted-foreground">
+                                <span className="text-xs text-[var(--text-muted)]">
                                   +{projects.length - 3} more
                                 </span>
                               )}

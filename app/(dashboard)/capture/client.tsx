@@ -231,12 +231,12 @@ export function CapturePageClient({ initialItems, destinations, spaces, projects
   return (
     <div className="flex h-full flex-col">
       {/* Capture input - hero zone at TOP */}
-      <div className="border-b-2 border-b-blue-500/30 bg-blue-500/[0.03] px-4 py-5 sm:px-6 sm:py-6">
+      <div className="border-b-2 border-b-[var(--layer-capture-border)] bg-[var(--layer-capture-bg)] px-4 py-5 sm:px-6 sm:py-6">
         <div className="mx-auto max-w-3xl">
           <div className="mb-3 flex items-center justify-between gap-3">
             <div className="min-w-0">
-              <h1 className="text-xl font-semibold text-foreground">Capture</h1>
-              <p className="hidden text-sm text-muted-foreground sm:block">
+              <h1 className="text-xl font-semibold text-[var(--text-primary)]">Capture</h1>
+              <p className="hidden text-sm text-[var(--text-muted)] sm:block">
                 Get thoughts out of your head. Process them later.
               </p>
             </div>
@@ -255,13 +255,13 @@ export function CapturePageClient({ initialItems, destinations, spaces, projects
 
       {/* Inbox section divider */}
       {captureItems.length > 0 && (
-        <div className="flex items-center gap-3 px-6 py-3 border-b border-border">
+        <div className="flex items-center gap-3 px-6 py-3 border-b border-[var(--border-subtle)]">
           <div className="mx-auto flex w-full max-w-3xl items-center gap-3">
-            <h2 className="text-sm font-medium text-muted-foreground">Inbox</h2>
-            <span className="rounded-full bg-blue-500/15 px-2.5 py-0.5 text-xs font-medium text-blue-400">
+            <h2 className="text-sm font-medium text-[var(--text-muted)]">Inbox</h2>
+            <span className="rounded-full bg-[var(--layer-capture-bg)] border border-[var(--layer-capture-border)] px-2.5 py-0.5 text-xs font-medium text-[var(--layer-capture)]">
               {captureItems.length} item{captureItems.length !== 1 ? 's' : ''}
             </span>
-            <div className="flex-1 border-t border-border" />
+            <div className="flex-1 border-t border-[var(--border-subtle)]" />
           </div>
         </div>
       )}

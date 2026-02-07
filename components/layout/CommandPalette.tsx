@@ -139,11 +139,11 @@ export function CommandPalette() {
               className="flex items-center justify-between"
             >
               <div className="flex items-center gap-2">
-                <item.Icon className="h-4 w-4 text-muted-foreground" />
+                <item.Icon className="h-4 w-4 text-[var(--text-muted)]" />
                 <span>{item.label}</span>
               </div>
               {item.shortcut && (
-                <span className="text-xs text-muted-foreground">{item.shortcut}</span>
+                <span className="text-xs text-[var(--text-muted)]">{item.shortcut}</span>
               )}
             </CommandItem>
           ))}
@@ -159,11 +159,11 @@ export function CommandPalette() {
               className="flex items-center justify-between"
             >
               <div className="flex items-center gap-2">
-                <item.Icon className="h-4 w-4 text-muted-foreground" />
+                <item.Icon className="h-4 w-4 text-[var(--text-muted)]" />
                 <span>{item.label}</span>
               </div>
               {item.shortcut && (
-                <span className="text-xs text-muted-foreground">{item.shortcut}</span>
+                <span className="text-xs text-[var(--text-muted)]">{item.shortcut}</span>
               )}
             </CommandItem>
           ))}

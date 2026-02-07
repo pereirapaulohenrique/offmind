@@ -4,7 +4,7 @@ export function CapturePageSkeleton() {
   return (
     <div className="flex h-full flex-col">
       {/* Header skeleton */}
-      <div className="border-b border-border px-6 py-6">
+      <div className="border-b border-[var(--border-subtle)] px-6 py-6">
         <div className="mx-auto max-w-3xl">
           <div className="mb-3 flex items-center justify-between">
             <div className="space-y-2">

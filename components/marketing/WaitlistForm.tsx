@@ -36,7 +36,7 @@ export function WaitlistForm() {
 
   if (status === 'success') {
     return (
-      <div className="mt-8 flex items-center justify-center gap-2 text-green-600 dark:text-green-400">
+      <div className="mt-8 flex items-center justify-center gap-2 text-[var(--layer-commit)]">
         <CheckCircle2 className="h-5 w-5" />
         <span className="font-medium">You're on the list! We'll be in touch.</span>
       </div>
@@ -54,7 +54,7 @@ export function WaitlistForm() {
           if (status === 'error') setStatus('idle');
         }}
         required
-        className="h-12 w-full max-w-sm rounded-lg border border-border bg-background px-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 sm:w-72"
+        className="h-12 w-full max-w-sm rounded-lg border border-[var(--border-default)] bg-[var(--bg-base)] px-4 text-sm outline-none focus:border-[var(--accent-base)] focus:ring-2 focus:ring-[var(--accent-glow)] sm:w-72"
       />
       <Button type="submit" size="lg" disabled={status === 'loading'} className="w-full sm:w-auto">
         {status === 'loading' ? (

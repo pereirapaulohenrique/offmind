@@ -14,13 +14,17 @@ interface UIState {
   quickCaptureOpen: boolean;
   setQuickCaptureOpen: (open: boolean) => void;
 
+  // Capture bar focus
+  captureBarFocused: boolean;
+  setCaptureBarFocused: (focused: boolean) => void;
+
   // Item editor
   editingItemId: string | null;
   setEditingItemId: (id: string | null) => void;
 
   // View type for Process page
-  processViewType: 'list' | 'kanban' | 'table';
-  setProcessViewType: (type: 'list' | 'kanban' | 'table') => void;
+  processViewType: 'focus' | 'list' | 'kanban' | 'table';
+  setProcessViewType: (type: 'focus' | 'list' | 'kanban' | 'table') => void;
 
   // Theme (dark by default)
   theme: 'dark' | 'light';
@@ -29,8 +33,8 @@ interface UIState {
 }
 
 export const useUIStore = create<UIState>((set) => ({
-  // Sidebar
-  sidebarCollapsed: false,
+  // Sidebar - collapsed by default for more content space
+  sidebarCollapsed: true,
   toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
   setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
 
@@ -42,12 +46,16 @@ export const useUIStore = create<UIState>((set) => ({
   quickCaptureOpen: false,
   setQuickCaptureOpen: (open) => set({ quickCaptureOpen: open }),
 
+  // Capture bar focus
+  captureBarFocused: false,
+  setCaptureBarFocused: (focused) => set({ captureBarFocused: focused }),
+
   // Item editor
   editingItemId: null,
   setEditingItemId: (id) => set({ editingItemId: id }),
 
-  // View type
-  processViewType: 'list',
+  // View type - Focus (tinder-style) is default
+  processViewType: 'focus',
   setProcessViewType: (type) => set({ processViewType: type }),
 
   // Theme
