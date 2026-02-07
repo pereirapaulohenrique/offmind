@@ -267,10 +267,10 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
   return (
     <div className="flex h-full flex-col">
       {/* Page header */}
-      <div className="border-b border-[var(--border-subtle)] px-6 py-4">
+      <div className="px-5 py-4 sm:px-6" style={{ borderBottom: '1px solid rgba(0,212,255,0.06)' }}>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-[var(--text-primary)]" style={{ letterSpacing: 'var(--tracking-tight)' }}>Commit</h1>
+            <h1 className="text-xl font-semibold text-[var(--text-primary)] sm:text-2xl" style={{ letterSpacing: 'var(--tracking-tight)' }}>Commit</h1>
             <p className="text-sm text-[var(--text-muted)]">
               Your scheduled commitments
             </p>
@@ -285,11 +285,11 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
             />
 
             {/* View toggle */}
-            <div className="flex rounded-lg border border-[var(--border-subtle)] shadow-[var(--shadow-xs)] bg-[var(--bg-inset)]">
+            <div className="flex rounded-md bg-[var(--bg-inset)]" style={{ border: '1px solid rgba(0,212,255,0.08)' }}>
               <Button
                 variant="ghost"
                 size="sm"
-                className={cn('rounded-r-none', viewMode === 'agenda' && 'bg-[var(--layer-commit-bg)] text-[var(--layer-commit)] shadow-sm')}
+                className={cn('rounded-r-none h-8 px-3 text-xs font-mono', viewMode === 'agenda' && 'bg-[var(--layer-commit-bg)] text-[var(--layer-commit)]')}
                 onClick={() => setViewMode('agenda')}
               >
                 Agenda
@@ -297,7 +297,7 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
               <Button
                 variant="ghost"
                 size="sm"
-                className={cn('rounded-none border-x border-[var(--border-default)]', viewMode === 'day' && 'bg-[var(--layer-commit-bg)] text-[var(--layer-commit)]')}
+                className={cn('rounded-none h-8 px-3 text-xs font-mono', viewMode === 'day' && 'bg-[var(--layer-commit-bg)] text-[var(--layer-commit)]')}
                 onClick={() => setViewMode('day')}
               >
                 Day
@@ -305,7 +305,7 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
               <Button
                 variant="ghost"
                 size="sm"
-                className={cn('rounded-l-none', viewMode === 'week' && 'bg-[var(--layer-commit-bg)] text-[var(--layer-commit)]')}
+                className={cn('rounded-l-none h-8 px-3 text-xs font-mono', viewMode === 'week' && 'bg-[var(--layer-commit-bg)] text-[var(--layer-commit)]')}
                 onClick={() => setViewMode('week')}
               >
                 Week
@@ -551,9 +551,10 @@ function WeekView({
           <div
             key={dateStr}
             className={cn(
-              'min-h-[200px] rounded-lg border p-2',
-              isToday ? 'border-[var(--layer-commit)] bg-[var(--layer-commit-bg)]' : 'border-[var(--border-default)]'
+              'min-h-[200px] rounded-md p-2',
+              isToday ? 'bg-[var(--layer-commit-bg)]' : ''
             )}
+            style={{ border: isToday ? '1px solid rgba(52,211,153,0.15)' : '1px solid rgba(0,212,255,0.06)' }}
           >
             <div className="mb-2 text-center">
               <div className="text-xs text-muted-foreground">
@@ -644,14 +645,15 @@ function CommitItemCard({
   return (
     <div
       className={cn(
-        'group relative rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 transition-colors hover:border-[var(--border-emphasis)]',
+        'group relative rounded-md bg-[var(--bg-surface)] p-4 transition-all duration-150 hover:shadow-[var(--shadow-card-hover)]',
         item.is_completed && 'opacity-60'
       )}
+      style={{ border: '1px solid rgba(0,212,255,0.06)' }}
     >
       <div className="flex items-start gap-3">
         {/* Time */}
         {(showTime || time) && (
-          <div className="w-16 shrink-0 text-sm text-muted-foreground">
+          <div className="w-16 shrink-0 text-xs font-mono text-muted-foreground tabular-nums">
             {item.is_all_day ? 'All day' : time}
           </div>
         )}

@@ -79,7 +79,7 @@ export function ItemCard({
   return (
     <div
       className={cn(
-        'group relative rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 card-hover shadow-[var(--shadow-card)] inner-light hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-px',
+        'group relative rounded-md bg-[var(--bg-surface)] p-4 shadow-[var(--shadow-card)] transition-all duration-150 hover:shadow-[var(--shadow-card-hover)]',
         item.is_completed && 'opacity-50',
         justCompleted && 'border-[var(--layer-commit-border)] animate-completion-flash'
       )}

@@ -159,7 +159,7 @@ export function ProjectDetailClient({
   return (
     <div className="flex-1 flex flex-col h-full">
       {/* Header */}
-      <div className="border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]/50 p-4">
+      <div className="neural-glass p-4" style={{ borderBottom: '1px solid rgba(0,212,255,0.06)' }}>
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
             <Link href="/projects">
@@ -259,7 +259,7 @@ export function ProjectDetailClient({
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="flex items-center gap-3 rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-3 hover:border-[var(--accent-border)] transition-colors"
+                        className="flex items-center gap-3 rounded-md bg-[var(--bg-surface)] p-3 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-all duration-150"
                       >
                         {item.is_completed ? (
                           <CheckCircle2 className="h-4 w-4 text-green-500" />
@@ -304,7 +304,7 @@ export function ProjectDetailClient({
                   <Link
                     key={page.id}
                     href={`/pages/${page.id}`}
-                    className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 hover:border-[var(--accent-border)] transition-colors"
+                    className="rounded-md bg-[var(--bg-surface)] p-4 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-all duration-150"
                   >
                     <div className="flex items-center gap-3">
                       <FileText className="h-5 w-5 text-[var(--text-muted)]" />

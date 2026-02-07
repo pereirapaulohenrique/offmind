@@ -194,11 +194,11 @@ export function InboxPageClient({ initialItems, destinations, spaces, projects, 
   return (
     <div className="flex h-full flex-col">
       {/* Page header */}
-      <div className="border-b border-[var(--border-subtle)] px-4 py-4 sm:px-6">
+      <div className="px-5 py-4 sm:px-6" style={{ borderBottom: '1px solid rgba(0,212,255,0.06)' }}>
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-center gap-3">
-              <h1 className="text-xl font-semibold tracking-tight text-[var(--text-primary)]">Inbox</h1>
+              <h1 className="text-xl font-semibold text-[var(--text-primary)] sm:text-2xl" style={{ letterSpacing: 'var(--tracking-tight)' }}>Inbox</h1>
               {captureItems.length > 0 && (
                 <span className="rounded-full bg-[var(--layer-capture-bg)] border border-[var(--layer-capture-border)] px-2.5 py-0.5 text-xs font-medium text-[var(--layer-capture)]">
                   {captureItems.length} item{captureItems.length !== 1 ? 's' : ''}

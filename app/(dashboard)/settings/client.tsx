@@ -330,8 +330,8 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
 
   return (
     <div className="flex h-full flex-col">
-      <div className="border-b border-[var(--border-subtle)] px-6 py-4">
-        <h1 className="text-2xl font-semibold text-[var(--text-primary)]">Settings</h1>
+      <div className="px-5 py-4 sm:px-6" style={{ borderBottom: '1px solid rgba(0,212,255,0.06)' }}>
+        <h1 className="text-xl font-semibold text-[var(--text-primary)] sm:text-2xl" style={{ letterSpacing: 'var(--tracking-tight)' }}>Settings</h1>
         <p className="text-sm text-[var(--text-muted)]">
           Manage your account and subscription
         </p>
@@ -355,7 +355,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
           {/* Telegram Integration */}
           <section>
             <h2 className="mb-4 text-lg font-semibold">Telegram Bot</h2>
-            <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6">
+            <div className="rounded-md bg-[var(--bg-surface)] p-6 shadow-[var(--shadow-card)]">
               {isLoadingTelegram ? (
                 <div className="animate-pulse">
                   <div className="h-4 w-32 rounded bg-[var(--bg-hover)]" />
@@ -416,7 +416,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
           {/* Browser Extension */}
           <section>
             <h2 className="mb-4 text-lg font-semibold">Browser Extension</h2>
-            <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6">
+            <div className="rounded-md bg-[var(--bg-surface)] p-6 shadow-[var(--shadow-card)]">
               {isLoadingExtension ? (
                 <div className="animate-pulse">
                   <div className="h-4 w-32 rounded bg-[var(--bg-hover)]" />
@@ -469,7 +469,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
           {/* Profile Settings */}
           <section>
             <h2 className="mb-4 text-lg font-semibold">Profile</h2>
-            <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6">
+            <div className="rounded-md bg-[var(--bg-surface)] p-6 shadow-[var(--shadow-card)]">
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="email">Email</Label>

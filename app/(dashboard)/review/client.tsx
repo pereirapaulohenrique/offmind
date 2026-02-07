@@ -222,7 +222,7 @@ export function ReviewPageClient({
   return (
     <div className="flex h-full flex-col">
       {/* Page header */}
-      <div className="flex-shrink-0 border-b border-[var(--border-subtle)] px-4 py-4 sm:px-6">
+      <div className="flex-shrink-0 px-5 py-4 sm:px-6" style={{ borderBottom: '1px solid rgba(0,212,255,0.06)' }}>
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
             <h1 className="text-xl font-semibold text-[var(--text-primary)] sm:text-2xl" style={{ letterSpacing: 'var(--tracking-tight)' }}>Review</h1>
@@ -240,66 +240,66 @@ export function ReviewPageClient({
             />
 
             {/* View toggle */}
-            <div className="flex rounded-lg border border-[var(--border-subtle)] shadow-[var(--shadow-xs)] bg-[var(--bg-inset)]">
+            <div className="flex rounded-md bg-[var(--bg-inset)]" style={{ border: '1px solid rgba(0,212,255,0.08)' }}>
               <Button
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  'rounded-r-none',
-                  viewMode === 'focus' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)] shadow-sm'
+                  'rounded-r-none h-8 px-2.5',
+                  viewMode === 'focus' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)]'
                 )}
                 onClick={() => setViewMode('focus')}
                 title="Focus view"
               >
-                <Crosshair className="h-4 w-4" />
+                <Crosshair className="h-3.5 w-3.5" />
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  'rounded-none border-x border-[var(--border-default)]',
+                  'rounded-none h-8 px-2.5',
                   viewMode === 'kanban' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)]'
                 )}
                 onClick={() => setViewMode('kanban')}
                 title="Kanban view"
               >
-                <LayoutGrid className="h-4 w-4" />
+                <LayoutGrid className="h-3.5 w-3.5" />
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  'rounded-none border-r border-[var(--border-default)]',
+                  'rounded-none h-8 px-2.5',
                   viewMode === 'grouped' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)]'
                 )}
                 onClick={() => setViewMode('grouped')}
                 title="Grouped view"
               >
-                <BarChart3 className="h-4 w-4" />
+                <BarChart3 className="h-3.5 w-3.5" />
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  'rounded-none border-r border-[var(--border-default)]',
+                  'rounded-none h-8 px-2.5',
                   viewMode === 'list' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)]'
                 )}
                 onClick={() => setViewMode('list')}
                 title="List view"
               >
-                <List className="h-4 w-4" />
+                <List className="h-3.5 w-3.5" />
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  'rounded-l-none',
+                  'rounded-l-none h-8 px-2.5',
                   viewMode === 'table' && 'bg-[var(--layer-process-bg)] text-[var(--layer-process)]'
                 )}
                 onClick={() => setViewMode('table')}
                 title="Table view"
               >
-                <Table2 className="h-4 w-4" />
+                <Table2 className="h-3.5 w-3.5" />
               </Button>
             </div>
 
@@ -585,9 +585,10 @@ function ProcessItemCard({
   return (
     <div
       className={cn(
-        'group relative rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] transition-colors hover:border-[var(--border-emphasis)]',
+        'group relative rounded-md bg-[var(--bg-surface)] transition-all duration-150 hover:shadow-[var(--shadow-card-hover)]',
         compact ? 'p-3' : 'p-4'
       )}
+      style={{ border: '1px solid rgba(0,212,255,0.06)', }}
     >
       <div className="flex items-start gap-3">
         {/* Content */}

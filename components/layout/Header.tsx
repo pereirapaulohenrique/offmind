@@ -19,7 +19,7 @@ export function Header({ title, user, mobileSidebar }: HeaderProps) {
   const { setCommandPaletteOpen } = useUIStore();
 
   return (
-    <header className="sticky top-0 z-30 flex h-12 items-center justify-between bg-[var(--bg-base)]/80 px-5 backdrop-blur-xl" style={{ backgroundImage: 'linear-gradient(to bottom, var(--bg-base) 60%, transparent)' }}>
+    <header className="sticky top-0 z-30 flex h-12 items-center justify-between neural-glass px-5" style={{ borderBottom: '1px solid rgba(0,212,255,0.06)' }}>
       <div className="flex items-center gap-4">
         {mobileSidebar}
         {title && (
