@@ -7,27 +7,28 @@ OffMind is a GTD (Getting Things Done) productivity app for overthinkers. The co
 **Target audience:** Knowledge workers, overthinkers, people with too many tabs and note apps.
 **Business model:** Free tier + Pro at $9/month (Stripe integration exists).
 **Domain:** offmind.ai
+**Core values:** "Zero friction — never lose a thought" + "Full flexibility with no complexity"
 
 ## Core Concept: The 3-Layer Workflow
 
 Everything flows through three layers:
 
-1. **Capture** (Blue `#60a5fa`) - Zero-friction brain dump. Thoughts, tasks, ideas, links pour in from any source: web app, persistent capture bar, Telegram bot, Chrome extension, desktop app. No organizing, no thinking - just dump it.
+1. **Capture** (Blue `#6daef7`) - Zero-friction brain dump. Text, images, audio recordings pour in from: web app, persistent capture bar, Telegram bot, Chrome extension, desktop app. No organizing — just dump it.
 
-2. **Process** (Amber `#fbbf24`) - AI-assisted triage. One item at a time ("tinder for tasks"), the user decides where it goes. AI suggests destinations with confidence scores. Available destinations: Backlog, Reference, Incubating, Someday, Questions, Waiting, Trash, + custom user-created destinations.
+2. **Process / Organize** (Amber `#f0b429`) - Triage & organize. Items get assigned destinations (Backlog, Reference, Incubating, Someday, Questions, Waiting, Trash, + custom). Processing Panel slides in from the right on any page.
 
-3. **Commit** (Green `#34d399`) - Scheduled, actionable items. What you've committed to doing, with dates. Shows as an agenda/day/week view. Google Calendar integration to display external events alongside tasks.
+3. **Commit / Schedule** (Green `#3dd68c`) - Scheduled, actionable items. Calendar with day/week views. Google Calendar integration.
 
 ## Tech Stack
 
 - **Framework:** Next.js 14 (App Router)
 - **Language:** TypeScript
-- **Styling:** Tailwind CSS + CSS custom properties
+- **Styling:** Tailwind CSS v4 + CSS custom properties (Bloom design system)
 - **UI Components:** Radix UI primitives (shadcn/ui pattern)
 - **Animations:** Framer Motion
-- **Database:** Supabase (PostgreSQL + Auth + Real-time subscriptions)
-- **AI:** OpenAI API (GPT-4) for smart capture, destination suggestions, bulk processing
-- **Payments:** Stripe (checkout, portal, webhooks)
+- **Database:** Supabase (PostgreSQL + Auth + Real-time + Storage for attachments)
+- **AI:** OpenAI API (GPT-4)
+- **Payments:** Stripe
 - **Fonts:** Geist Sans (primary), Geist Mono (code)
 - **Drag & Drop:** @dnd-kit
 - **Rich Editor:** Tiptap (for Pages)
@@ -39,113 +40,111 @@ Everything flows through three layers:
 ```
 mindbase/
 ├── app/
-│   ├── (auth)/           # Login, signup pages
-│   ├── (dashboard)/      # Protected app pages
-│   │   ├── home/         # Dashboard home
-│   │   ├── capture/      # Inbox / capture layer
-│   │   ├── process/      # Processing / organizing layer
-│   │   ├── commit/       # Calendar / committed items layer
-│   │   ├── spaces/       # Spaces management + [id] detail
-│   │   ├── projects/     # Projects management + [id] detail
-│   │   ├── pages/        # Pages (Tiptap editor) + [id] detail
-│   │   ├── settings/     # Settings + billing + destinations + integrations
-│   │   ├── search/       # Global search
-│   │   └── layout.tsx    # Dashboard layout (sidebar, header, command palette)
-│   ├── api/              # API routes
-│   │   ├── ai/           # AI endpoints (smart-capture, suggest, bulk, brainstorm, etc.)
-│   │   ├── stripe/       # Payment endpoints
-│   │   ├── telegram/     # Telegram bot endpoints
-│   │   ├── extension/    # Chrome extension endpoints
-│   │   └── waitlist/     # Waitlist signup
-│   ├── globals.css       # Design system tokens + global styles
-│   ├── layout.tsx        # Root layout (fonts, metadata)
-│   └── page.tsx          # Landing page
+│   ├── (auth)/             # Login, signup pages
+│   ├── (dashboard)/        # Protected app pages
+│   │   ├── today/          # Default landing — overdue, scheduled, starred
+│   │   ├── inbox/          # Capture layer — unprocessed items
+│   │   ├── organize/       # All items by destination (columns/list/grid views)
+│   │   ├── schedule/       # Calendar deep dive (day/week views)
+│   │   ├── backlog/        # Backlog deep dive (priority-sortable)
+│   │   ├── waiting-for/    # Waiting For deep dive (grouped by contact)
+│   │   ├── spaces/         # Spaces management + [id] detail
+│   │   ├── projects/       # Projects management + [id] detail
+│   │   ├── pages/          # Pages (Tiptap editor) + [id] detail
+│   │   ├── settings/       # Settings + billing + destinations + custom fields
+│   │   ├── search/         # Global search
+│   │   ├── home/           # Redirect → /today
+│   │   ├── review/         # Redirect → /organize
+│   │   ├── commit/         # Redirect → /schedule
+│   │   └── layout.tsx      # Dashboard layout (sidebar, header, command palette, processing panel)
+│   ├── api/                # API routes (ai/, stripe/, telegram/, extension/, waitlist/)
+│   ├── globals.css         # Bloom design system tokens + global styles
+│   ├── layout.tsx          # Root layout (fonts, metadata)
+│   └── page.tsx            # Landing page
 ├── components/
-│   ├── layout/           # Sidebar, Header, MobileSidebar, CommandPalette, QuickCapture, CaptureBar
-│   ├── items/            # ItemCard, ItemDetailPanel
-│   ├── process/          # KanbanView, FocusProcess
-│   ├── ai/               # AIAssistant, BulkAIActions, AISuggestionBadge
-│   ├── onboarding/       # OnboardingFlow
-│   ├── subscription/     # SubscriptionStatus, PricingSection
-│   └── ui/               # Radix/shadcn primitives (button, dialog, card, etc.)
-├── lib/                  # Utilities (supabase client, helpers)
-├── stores/               # Zustand stores (ui.ts)
+│   ├── layout/             # Sidebar (tree nav), Header, CaptureBar (text+image+audio), CommandPalette
+│   ├── processing/         # ProcessingPanel (40% width, expandable, replaces ItemDetailPanel)
+│   ├── organize/           # ColumnView, ListView, GridView
+│   ├── items/              # ItemCard (with attachment indicators)
+│   ├── ai/                 # AIAssistant, BulkAIActions, AISuggestionBadge
+│   ├── onboarding/         # OnboardingFlow
+│   ├── subscription/       # SubscriptionStatus, PricingSection
+│   ├── shared/             # EmptyState, LoadingState, IconPicker, ColorPicker
+│   └── ui/                 # Radix/shadcn primitives
+├── hooks/                  # useAudioRecorder, useSubscription, etc.
+├── lib/
+│   ├── supabase/           # client.ts, server.ts, middleware.ts, storage.ts
+│   └── utils/              # constants.ts, dates.ts, helpers
+├── stores/                 # Zustand stores (ui.ts with processingPanel, organizeViewType, sidebarTree)
+├── types/                  # database.ts (includes Attachment type), index.ts
 ├── packages/
-│   ├── capture-desktop/  # Electron quick-capture app
+│   ├── capture-desktop/    # Electron quick-capture app
 │   └── ...
-├── public/               # Static assets
-└── supabase/             # Database migrations and config
+├── public/                 # Static assets
+└── supabase/               # Database migrations and config
 ```
 
-## Current State & What We're Doing
+## Navigation (Sidebar)
 
-The `main` branch has a fully functional app with all features working. A redesign branch (`claude/review-app-design-BeZL5`) attempted a visual overhaul but broke navigation and lost features.
+### Primary Navigation
+- **Today** (Sun icon, ⌘0) — default landing, shows overdue + scheduled + completed
+- **Inbox** (Inbox icon, ⌘1) — unprocessed items, badge with count
+- **Organize** (Columns icon, ⌘2) — all items by destination (columns/list/grid views)
 
-**We are creating a new branch from main** that:
-1. Applies a new design system (teal accent + warm charcoal backgrounds) over the existing functional app
-2. Ports the good ideas from the redesign (CaptureBar, FocusProcess) without breaking anything
-3. Ensures every feature and route remains accessible
+### Destination Deep Dives
+- **Schedule** (Calendar icon, ⌘3) — calendar day/week views
+- **Backlog** (ListTodo icon) — priority-sortable list
+- **Waiting For** (Clock icon) — grouped by contact
 
-## Key Design Decisions
+### Spaces Tree (collapsible)
+- Space > Project > Pages — tree hierarchy in sidebar
+- Spaces expandable to show projects, projects expandable to show pages
 
-### Visual Identity
-- **Brand accent:** Teal `#2dd4bf` (not the old violet, not the redesign's amber)
-- **Backgrounds:** Warm charcoal (subtly warm, not cold zinc, not hot amber)
-- **Layer colors:** Blue (capture), Amber (process), Green (commit) - functional, not brand
-- **Both dark and light mode** from launch
+### Settings (bottom)
 
-### Layout
-- **Sidebar:** Defaults to collapsed (68px icon-only), expandable to 252px
-- **Header:** Kept (search/command palette trigger + user avatar)
-- **Capture bar:** Persistent at bottom of all dashboard views
-- **Content area:** Gets maximum space by default
+## Key UX Patterns
 
-### Navigation (Sidebar Items)
-When expanded:
-- Home (^0)
-- Capture / Inbox with badge count (^1)
-- Process (^2)
-- Commit (^3)
-- Divider
-- Spaces section (list + "Add Space")
-- Projects section (list + "Add Project")
-- Pages section (recent 5 + "New Page")
-- Divider
-- Settings (bottom)
+### Processing Panel
+- Opens from ANY page when clicking an item
+- 40% width right-side panel, expandable to full width
+- Semi-transparent backdrop overlay
+- Auto-saves every field change (500ms debounce)
+- Destination buttons, scheduling fields, space/project selectors
+- Controlled by Zustand: `processingPanelOpen`, `processingItemId`, `processingPanelExpanded`
 
-When collapsed:
-- Logo (sphere)
-- Home, Capture (with badge), Process, Commit icons
-- Divider
-- Spaces, Projects, Pages icons (navigate to list pages)
-- Settings icon (bottom)
-- All with tooltips
+### CaptureBar
+- Persistent at bottom of all dashboard views
+- Supports: text, image upload, audio recording
+- Attachments stored in Supabase Storage, referenced in `items.attachments` JSON column
 
-### Views
-- **Home:** Stats overview, recent captures, today's commitments
-- **Capture/Inbox:** List of unprocessed items + quick capture + AI suggestions + "Process All" button
-- **Process:** Toggle between Focus (tinder-style, default) / Kanban / List / Table views
-- **Commit:** Agenda/Day/Week views + Google Calendar events overlay
-- **Spaces/Projects/Pages:** Management + detail views
-- **Settings:** Profile, subscription, Telegram, extension, destinations, danger zone
+### Organize Views
+- **Columns** (default): One column per destination, horizontal scroll
+- **List**: Collapsible destination groups, compact rows
+- **Grid**: Card grid grouped by destination sections
 
-### AI Features (All Kept)
-1. Smart capture (auto-categorize on input)
-2. Destination suggestions (single item, with confidence)
-3. Bulk processing (categorize, find similar, cleanup, improve titles, suggest schedule)
-4. AI assistant (Cmd+J): expand notes, extract dates, brainstorm
-5. AI-generated daily summary
-6. Natural language task creation
-7. AI scheduling suggestions for uncommitted tasks
+## Visual Identity (Bloom Design System)
 
-### Keyboard Shortcuts
+- **Brand accent:** Terracotta `#c2410c` — warmth, earth, craft
+- **Secondary:** Sage green `#65a30d`, Lavender `#7c3aed`
+- **Layer colors:** Warm blue (capture), Golden amber (process), Warm emerald (commit)
+- **Dark mode:** Warm charcoal backgrounds (#1a1614 base)
+- **Light mode:** Warm cream backgrounds (#faf8f5 base, white cards)
+- **Radius:** Large everywhere (rounded-2xl), organic & soft
+- **Shadows:** Warm brown-tinted, thick and tactile
+
+## Keyboard Shortcuts
+
 - Cmd+K: Command palette
 - Cmd+J: AI assistant
 - Cmd+N: Focus capture bar
 - Cmd+\: Toggle sidebar
 - Cmd+Shift+N: New page
-- Cmd+0 through Cmd+3: Navigate layers
+- Cmd+0: Today
+- Cmd+1: Inbox
+- Cmd+2: Organize
+- Cmd+3: Schedule
 - Cmd+,: Settings
+- Escape: Close processing panel
 
 ## Coding Conventions
 
@@ -156,14 +155,12 @@ When collapsed:
 - Follow existing component patterns in components/ui/
 - CSS variables for all design tokens (defined in globals.css)
 - Tailwind for layout and spacing, CSS variables for colors
-- Keep file structure consistent with existing patterns
 - All API routes use Next.js route handlers in app/api/
 
 ## What NOT to Do
 
 - Don't remove or break existing features
-- Don't create a new navigation architecture (keep the 3-layer Capture/Process/Commit)
 - Don't change the database schema unless absolutely necessary
 - Don't replace Radix/shadcn components with custom implementations
 - Don't over-animate (subtle, fast, purposeful only)
-- Don't use amber as the brand accent (teal is the brand, amber is the Process layer)
+- Don't use amber as the brand accent (terracotta is the brand, amber is the Process layer)

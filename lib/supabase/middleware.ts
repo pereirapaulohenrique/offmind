@@ -56,7 +56,7 @@ export async function updateSession(request: NextRequest) {
   // If user is logged in and trying to access login/signup
   if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/signup')) {
     const url = request.nextUrl.clone();
-    url.pathname = '/home';
+    url.pathname = '/today';
     return NextResponse.redirect(url);
   }
 

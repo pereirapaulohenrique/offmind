@@ -6,6 +6,10 @@ interface UIState {
   toggleSidebar: () => void;
   setSidebarCollapsed: (collapsed: boolean) => void;
 
+  // Sidebar tree expansion
+  sidebarExpandedNodes: string[];
+  toggleSidebarNode: (nodeId: string) => void;
+
   // Command palette
   commandPaletteOpen: boolean;
   setCommandPaletteOpen: (open: boolean) => void;
@@ -18,13 +22,21 @@ interface UIState {
   captureBarFocused: boolean;
   setCaptureBarFocused: (focused: boolean) => void;
 
-  // Item editor
+  // Processing panel (replaces editingItemId)
+  processingPanelOpen: boolean;
+  processingItemId: string | null;
+  processingPanelExpanded: boolean;
+  openProcessingPanel: (itemId: string) => void;
+  closeProcessingPanel: () => void;
+  toggleProcessingPanelExpanded: () => void;
+
+  // Legacy: editingItemId (for backward compatibility during migration)
   editingItemId: string | null;
   setEditingItemId: (id: string | null) => void;
 
-  // View type for Process page
-  processViewType: 'focus' | 'list' | 'kanban' | 'table';
-  setProcessViewType: (type: 'focus' | 'list' | 'kanban' | 'table') => void;
+  // View type for Organize page
+  organizeViewType: 'columns' | 'list' | 'grid';
+  setOrganizeViewType: (type: 'columns' | 'list' | 'grid') => void;
 
   // Theme (dark by default)
   theme: 'dark' | 'light';
@@ -38,6 +50,15 @@ export const useUIStore = create<UIState>((set) => ({
   toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
   setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
 
+  // Sidebar tree
+  sidebarExpandedNodes: [],
+  toggleSidebarNode: (nodeId) =>
+    set((state) => ({
+      sidebarExpandedNodes: state.sidebarExpandedNodes.includes(nodeId)
+        ? state.sidebarExpandedNodes.filter((id) => id !== nodeId)
+        : [...state.sidebarExpandedNodes, nodeId],
+    })),
+
   // Command palette
   commandPaletteOpen: false,
   setCommandPaletteOpen: (open) => set({ commandPaletteOpen: open }),
@@ -50,13 +71,30 @@ export const useUIStore = create<UIState>((set) => ({
   captureBarFocused: false,
   setCaptureBarFocused: (focused) => set({ captureBarFocused: focused }),
 
-  // Item editor
-  editingItemId: null,
-  setEditingItemId: (id) => set({ editingItemId: id }),
+  // Processing panel
+  processingPanelOpen: false,
+  processingItemId: null,
+  processingPanelExpanded: false,
+  openProcessingPanel: (itemId) =>
+    set({ processingPanelOpen: true, processingItemId: itemId, editingItemId: itemId }),
+  closeProcessingPanel: () =>
+    set({ processingPanelOpen: false, processingItemId: null, processingPanelExpanded: false, editingItemId: null }),
+  toggleProcessingPanelExpanded: () =>
+    set((state) => ({ processingPanelExpanded: !state.processingPanelExpanded })),
 
-  // View type - Focus (tinder-style) is default
-  processViewType: 'focus',
-  setProcessViewType: (type) => set({ processViewType: type }),
+  // Legacy editingItemId
+  editingItemId: null,
+  setEditingItemId: (id) => {
+    if (id) {
+      set({ editingItemId: id, processingPanelOpen: true, processingItemId: id });
+    } else {
+      set({ editingItemId: null, processingPanelOpen: false, processingItemId: null, processingPanelExpanded: false });
+    }
+  },
+
+  // View type - Columns is default for Organize
+  organizeViewType: 'columns',
+  setOrganizeViewType: (type) => set({ organizeViewType: type }),
 
   // Theme
   theme: 'dark',

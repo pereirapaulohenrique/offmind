@@ -225,6 +225,7 @@ export interface Database {
           completed_at: string | null;
           source: string;
           sort_order: number;
+          attachments: Json;
           created_at: string;
           updated_at: string;
         };
@@ -247,6 +248,7 @@ export interface Database {
           completed_at?: string | null;
           source?: string;
           sort_order?: number;
+          attachments?: Json;
           created_at?: string;
           updated_at?: string;
         };
@@ -269,6 +271,7 @@ export interface Database {
           completed_at?: string | null;
           source?: string;
           sort_order?: number;
+          attachments?: Json;
           created_at?: string;
           updated_at?: string;
         };
@@ -421,3 +424,14 @@ export type Item = Tables<'items'>;
 export type Page = Tables<'pages'>;
 export type AILog = Tables<'ai_logs'>;
 export type TelegramConnection = Tables<'telegram_connections'>;
+
+// Attachment type for items
+export interface Attachment {
+  id: string;
+  type: 'image' | 'audio';
+  url: string;
+  filename: string;
+  size: number;
+  duration?: number; // seconds, for audio
+  created_at: string;
+}

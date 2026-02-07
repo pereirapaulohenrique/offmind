@@ -104,7 +104,7 @@ export default function SignupPage() {
             text: 'Account created! Check your email to confirm, then sign in.',
           });
         } else {
-          router.push('/home');
+          router.push('/today');
         }
       }
     } catch (error) {

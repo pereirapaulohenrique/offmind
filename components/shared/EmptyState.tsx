@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Inbox, ArrowRightLeft, CalendarCheck, Search, FolderOpen, Briefcase, type LucideIcon } from 'lucide-react';
+import { Inbox, ArrowRightLeft, CalendarCheck, Search, FolderOpen, Briefcase, Sun, ListTodo, Clock, Columns3, type LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ICON_MAP } from '@/components/icons';
 import { cn } from '@/lib/utils';
@@ -136,6 +136,54 @@ export function EmptyProject() {
       icon={Briefcase}
       title="No items in this project"
       description="Add tasks or notes to organize your work."
+      variant="default"
+    />
+  );
+}
+
+export function EmptyToday() {
+  return (
+    <EmptyState
+      icon={Sun}
+      title="Your mind is clear"
+      description="Nothing scheduled today. Capture something when inspiration strikes."
+      variant="default"
+    />
+  );
+}
+
+export function EmptyOrganize() {
+  return (
+    <EmptyState
+      icon={Columns3}
+      title="Nothing organized yet"
+      description="Process items from your Inbox to see them organized by destination here."
+      variant="process"
+      action={{
+        label: 'Go to Inbox',
+        href: '/inbox',
+      }}
+    />
+  );
+}
+
+export function EmptyBacklog() {
+  return (
+    <EmptyState
+      icon={ListTodo}
+      title="Backlog clear!"
+      description="All tasks are scheduled or complete. Enjoy the calm."
+      variant="commit"
+    />
+  );
+}
+
+export function EmptyWaitingFor() {
+  return (
+    <EmptyState
+      icon={Clock}
+      title="Nothing pending"
+      description="No one owes you anything. What a feeling."
       variant="default"
     />
   );

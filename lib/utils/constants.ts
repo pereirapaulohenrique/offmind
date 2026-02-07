@@ -55,9 +55,9 @@ export const SHORTCUTS = {
   newItem: 'mod+n',
   newPage: 'mod+shift+n',
   toggleSidebar: 'mod+\\',
-  goToCapture: 'mod+1',
-  goToProcess: 'mod+2',
-  goToCommit: 'mod+3',
+  goToInbox: 'mod+1',
+  goToOrganize: 'mod+2',
+  goToSchedule: 'mod+3',
   openSettings: 'mod+,',
   escape: 'escape',
 } as const;
@@ -82,6 +82,7 @@ export const FIELD_TYPES = {
   MULTISELECT: 'multiselect',
   CHECKBOX: 'checkbox',
   URL: 'url',
+  IMAGE: 'image',
 } as const;
 
 export type FieldType = (typeof FIELD_TYPES)[keyof typeof FIELD_TYPES];

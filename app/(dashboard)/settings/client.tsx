@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   Key,
   MoreHorizontal,
+  X,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -38,8 +39,10 @@ import { ICON_MAP, COLOR_PALETTE, getSuggestedColor } from '@/components/icons';
 import { useSubscription } from '@/hooks/useSubscription';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { User } from '@supabase/supabase-js';
 import type { Profile, Destination } from '@/types/database';
+import type { CustomFieldDefinition } from '@/types';
 
 interface SettingsPageClientProps {
   user: User;
@@ -76,6 +79,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
     icon: 'list-todo',
     color: suggestedColor.value,
     description: '',
+    custom_fields: [] as CustomFieldDefinition[],
   });
   const [isDestSaving, setIsDestSaving] = useState(false);
 
@@ -188,6 +192,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
       icon: 'list-todo',
       color: newSuggestedColor.value,
       description: '',
+      custom_fields: [],
     });
   };
 
@@ -199,12 +204,16 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
 
   const openEditDestination = (dest: Destination) => {
     setEditingDest(dest);
+    const fields = Array.isArray(dest.custom_fields)
+      ? (dest.custom_fields as unknown as CustomFieldDefinition[])
+      : [];
     setDestForm({
       name: dest.name,
       slug: dest.slug,
       icon: dest.icon,
       color: dest.color,
-      description: '', // We'll add description to schema later if needed
+      description: '',
+      custom_fields: fields,
     });
     setIsDestDialogOpen(true);
   };
@@ -231,6 +240,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
             slug,
             icon: destForm.icon,
             color: destForm.color,
+            custom_fields: destForm.custom_fields,
           } as any)
           .eq('id', editingDest.id);
 
@@ -238,7 +248,7 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
 
         setDestinations(destinations.map(d =>
           d.id === editingDest.id
-            ? { ...d, name: destForm.name.trim(), slug, icon: destForm.icon, color: destForm.color }
+            ? { ...d, name: destForm.name.trim(), slug, icon: destForm.icon, color: destForm.color, custom_fields: destForm.custom_fields as any }
             : d
         ));
         toast.success('Destination updated');
@@ -644,6 +654,95 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
                   onChange={(color) => setDestForm({ ...destForm, color })}
                 />
               </div>
+            </div>
+
+            {/* Custom Fields */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <Label>Custom Fields</Label>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 text-xs gap-1"
+                  onClick={() => {
+                    const newField: CustomFieldDefinition = {
+                      id: crypto.randomUUID(),
+                      name: '',
+                      type: 'text',
+                    };
+                    setDestForm({
+                      ...destForm,
+                      custom_fields: [...destForm.custom_fields, newField],
+                    });
+                  }}
+                >
+                  <Plus className="h-3 w-3" />
+                  Add Field
+                </Button>
+              </div>
+
+              {destForm.custom_fields.length === 0 ? (
+                <p className="text-xs text-[var(--text-muted)] py-2">
+                  No custom fields. Add fields to collect extra info for items in this destination.
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {destForm.custom_fields.map((field, idx) => (
+                    <div
+                      key={field.id}
+                      className="flex items-center gap-2 rounded-xl bg-[var(--bg-hover)] p-2.5"
+                    >
+                      <Input
+                        value={field.name}
+                        onChange={(e) => {
+                          const updated = [...destForm.custom_fields];
+                          updated[idx] = { ...field, name: e.target.value };
+                          setDestForm({ ...destForm, custom_fields: updated });
+                        }}
+                        placeholder="Field name"
+                        className="h-8 text-xs flex-1"
+                      />
+                      <Select
+                        value={field.type}
+                        onValueChange={(val) => {
+                          const updated = [...destForm.custom_fields];
+                          updated[idx] = { ...field, type: val as CustomFieldDefinition['type'] };
+                          setDestForm({ ...destForm, custom_fields: updated });
+                        }}
+                      >
+                        <SelectTrigger className="h-8 w-[120px] text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="text">Text</SelectItem>
+                          <SelectItem value="longtext">Long Text</SelectItem>
+                          <SelectItem value="number">Number</SelectItem>
+                          <SelectItem value="date">Date</SelectItem>
+                          <SelectItem value="url">URL</SelectItem>
+                          <SelectItem value="dropdown">Dropdown</SelectItem>
+                          <SelectItem value="multiselect">Multi-select</SelectItem>
+                          <SelectItem value="checkbox">Checkbox</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 shrink-0 text-[var(--text-muted)] hover:text-destructive"
+                        onClick={() => {
+                          setDestForm({
+                            ...destForm,
+                            custom_fields: destForm.custom_fields.filter((_, i) => i !== idx),
+                          });
+                        }}
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           <DialogFooter>

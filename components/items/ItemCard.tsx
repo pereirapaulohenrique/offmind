@@ -11,6 +11,8 @@ import {
   Calendar,
   Inbox,
   Check,
+  ImageIcon,
+  Mic,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatRelativeTime } from '@/lib/utils/dates';
@@ -124,6 +126,18 @@ export function ItemCard({
 
           {/* Meta row */}
           <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            {/* Attachment indicators */}
+            {Array.isArray(item.attachments) && (item.attachments as any[]).length > 0 && (
+              <span className="inline-flex items-center gap-1 text-[var(--text-muted)]">
+                {(item.attachments as any[]).some((a: any) => a.type === 'image') && (
+                  <ImageIcon className="h-3 w-3" />
+                )}
+                {(item.attachments as any[]).some((a: any) => a.type === 'audio') && (
+                  <Mic className="h-3 w-3" />
+                )}
+              </span>
+            )}
+
             {/* Destination badge */}
             {destination && (
               <span

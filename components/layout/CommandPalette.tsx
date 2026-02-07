@@ -32,10 +32,10 @@ interface NavItem {
 }
 
 const navigationItems: NavItem[] = [
-  { label: 'Go to Home', href: '/home', Icon: Home, shortcut: '⌘0' },
+  { label: 'Go to Today', href: '/today', Icon: Home, shortcut: '⌘0' },
   { label: 'Go to Inbox', href: '/inbox', Icon: Inbox, shortcut: '⌘1' },
-  { label: 'Go to Review', href: '/review', Icon: ArrowRightLeft, shortcut: '⌘2' },
-  { label: 'Go to Commit', href: '/commit', Icon: CalendarCheck, shortcut: '⌘3' },
+  { label: 'Go to Organize', href: '/organize', Icon: ArrowRightLeft, shortcut: '⌘2' },
+  { label: 'Go to Schedule', href: '/schedule', Icon: CalendarCheck, shortcut: '⌘3' },
 ];
 
 const actionItems: NavItem[] = [
@@ -68,7 +68,7 @@ export function CommandPalette() {
         switch (e.key) {
           case '0':
             e.preventDefault();
-            router.push('/home');
+            router.push('/today');
             setCommandPaletteOpen(false);
             break;
           case '1':
@@ -78,12 +78,12 @@ export function CommandPalette() {
             break;
           case '2':
             e.preventDefault();
-            router.push('/review');
+            router.push('/organize');
             setCommandPaletteOpen(false);
             break;
           case '3':
             e.preventDefault();
-            router.push('/commit');
+            router.push('/schedule');
             setCommandPaletteOpen(false);
             break;
           case ',':

@@ -27,14 +27,14 @@ import { cn } from '@/lib/utils';
 import type { Item } from '@/types/database';
 import { toast } from 'sonner';
 
-interface CommitPageClientProps {
+interface SchedulePageClientProps {
   initialItems: Item[];
   userId: string;
 }
 
 type ViewMode = 'day' | 'week' | 'agenda';
 
-export function CommitPageClient({ initialItems, userId }: CommitPageClientProps) {
+export function SchedulePageClient({ initialItems, userId }: SchedulePageClientProps) {
   const getSupabase = () => createClient();
   const { items, setItems, addItem, updateItem, removeItem, isLoading } = useItemsStore();
   const [viewMode, setViewMode] = useState<ViewMode>('agenda');
@@ -270,9 +270,9 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
       <div className="px-6 py-5 sm:px-8" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-[var(--text-primary)] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>Commit</h1>
+            <h1 className="text-2xl font-semibold text-[var(--text-primary)] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>Schedule</h1>
             <p className="hidden text-sm text-[var(--text-muted)] sm:block">
-              Your scheduled commitments
+              Your scheduled items
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -350,10 +350,10 @@ export function CommitPageClient({ initialItems, userId }: CommitPageClientProps
           <EmptyState
             iconName="calendar"
             title="Nothing scheduled"
-            description="Schedule items from your backlog to commit to specific times."
+            description="Schedule items from your backlog to plan your time."
             action={{
               label: 'View Backlog',
-              href: '/review',
+              href: '/organize',
             }}
           />
         ) : viewMode === 'agenda' ? (
