@@ -16,6 +16,7 @@ import { useUIStore } from '@/stores/ui';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { List, LayoutGrid, Rows3 } from 'lucide-react';
+import { ItemEditModal } from '@/components/items/ItemEditModal';
 import type { Item, Destination, Space, Project } from '@/types/database';
 import { toast } from 'sonner';
 
@@ -33,6 +34,7 @@ export function InboxPageClient({ initialItems, destinations, spaces, projects, 
   const { suggestDestination, suggestion, isLoading: isAILoading, clearSuggestion } = useAISuggestion();
   const { openProcessingPanel, inboxViewType, setInboxViewType } = useUIStore();
   const [aiSuggestItemId, setAiSuggestItemId] = useState<string | null>(null);
+  const [editingItem, setEditingItem] = useState<Item | null>(null);
 
   // Initialize items from server
   useEffect(() => {
@@ -279,6 +281,8 @@ export function InboxPageClient({ initialItems, destinations, spaces, projects, 
                     onDelete={handleDeleteItem}
                     onMove={handleMoveToDestination}
                     onClick={() => openProcessingPanel(item.id)}
+                    onEdit={(item) => setEditingItem(item)}
+                    onProcess={(item) => openProcessingPanel(item.id)}
                     onAISuggest={handleAISuggest}
                     showAIButton
                   />
@@ -317,6 +321,16 @@ export function InboxPageClient({ initialItems, destinations, spaces, projects, 
           />
         )}
       </div>
+
+      {/* Edit Modal */}
+      <ItemEditModal
+        item={editingItem}
+        isOpen={!!editingItem}
+        onClose={() => setEditingItem(null)}
+        onSave={async (id, updates) => {
+          handleUpdateItem(id, updates);
+        }}
+      />
     </div>
   );
 }

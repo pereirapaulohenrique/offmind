@@ -121,7 +121,7 @@ export default async function DashboardLayout({
           />
 
           {/* Page content */}
-          <main className="flex-1 overflow-auto">{children}</main>
+          <main className="flex-1 overflow-hidden">{children}</main>
         </ContentArea>
 
         {/* Processing Panel (global) */}
