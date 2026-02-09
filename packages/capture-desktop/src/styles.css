@@ -1,36 +1,37 @@
 @import "tailwindcss";
 
-/* OffMind Capture Desktop - Design tokens matching the web app */
+/* OffMind Capture Desktop - Bloom Design System */
 
 :root {
-  /* Background Layers */
-  --bg-base: #0e0e11;
-  --bg-surface: #141418;
-  --bg-elevated: #1b1b20;
-  --bg-hover: #222228;
+  /* Bloom Design System — Desktop Companion */
+  --bg-base: #1a1614;
+  --bg-surface: #231f1c;
+  --bg-elevated: #2c2724;
+  --bg-hover: #352f2b;
 
-  /* Borders */
-  --border-subtle: #1f1f27;
-  --border-default: #2a2a33;
-  --border-emphasis: #3d3d4a;
+  --text-primary: #f5f0eb;
+  --text-secondary: #b8a99a;
+  --text-muted: #8a7a6b;
+  --text-disabled: #5c4f43;
 
-  /* Text */
-  --text-primary: #ededf0;
-  --text-secondary: #9e9eac;
-  --text-muted: #6a6a78;
+  --accent-base: #c2410c;
+  --accent-hover: #ea580c;
+  --accent-subtle: rgba(194, 65, 12, 0.12);
 
-  /* Accent (Teal) */
-  --accent-base: #2dd4bf;
-  --accent-hover: #5eead4;
-  --accent-glow: rgba(45, 212, 191, 0.25);
+  --layer-capture: #6daef7;
+  --layer-capture-bg: rgba(109, 174, 247, 0.1);
 
-  /* Layer Colors */
-  --layer-capture: #60a5fa;
-  --layer-capture-glow: rgba(96, 165, 250, 0.15);
-
-  /* Semantic */
-  --success: #34d399;
+  --success: #3dd68c;
   --error: #f87171;
+  --warning: #fbbf24;
+
+  --border: #3a3330;
+  --border-subtle: #2e2925;
+
+  --radius: 16px;
+  --radius-sm: 12px;
+
+  --shadow-float: 0 8px 32px rgba(26, 22, 20, 0.6), 0 2px 8px rgba(26, 22, 20, 0.4);
 }
 
 *,
@@ -43,39 +44,51 @@
 
 html,
 body {
-  background: transparent;
+  background: var(--bg-base);
   overflow: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   font-size: 14px;
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   user-select: none;
+  height: 100%;
 }
 
-/* Capture container - the glass pill */
+/* Window wrapper — centers the container with padding */
+.capture-window {
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  padding: 8px 8px 10px;
+}
+
+/* Capture container */
 .capture-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   background: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  border-radius: 16px;
-  box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.3),
-    0 8px 40px rgba(0, 0, 0, 0.5),
-    0 2px 12px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-float);
   overflow: hidden;
-  transition: box-shadow 0.2s ease;
+  transition: border-color 0.2s ease;
 }
 
 .capture-container:focus-within {
-  border-color: var(--layer-capture);
-  box-shadow:
-    0 0 0 1px rgba(96, 165, 250, 0.3),
-    0 0 20px var(--layer-capture-glow),
-    0 8px 40px rgba(0, 0, 0, 0.5),
-    0 2px 12px rgba(0, 0, 0, 0.4);
+  border-color: var(--accent-base);
+  box-shadow: var(--shadow-float), 0 0 0 2px rgba(194, 65, 12, 0.15);
 }
 
-/* Input */
+/* Input area */
+.capture-body {
+  flex: 1;
+  padding: 14px 16px 6px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
 .capture-input {
   width: 100%;
   background: transparent;
@@ -83,13 +96,98 @@ body {
   outline: none;
   color: var(--text-primary);
   font-size: 15px;
-  line-height: 1.5;
+  line-height: 1.6;
   resize: none;
   font-family: inherit;
+  min-height: 24px;
 }
 
 .capture-input::placeholder {
   color: var(--text-muted);
+}
+
+/* Footer bar */
+.capture-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px 10px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.capture-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.capture-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.capture-status-text {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.capture-hint {
+  font-size: 11px;
+  color: var(--text-disabled);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+
+.capture-action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  transition: opacity 0.15s;
+}
+
+.capture-action-btn:hover {
+  opacity: 0.8;
+}
+
+/* Send button */
+.capture-send-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  color: var(--text-disabled);
+  background: var(--bg-elevated);
+  transition: all 0.15s ease;
+}
+
+.capture-send-btn:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.capture-send-btn--active {
+  color: white;
+  background: var(--accent-base);
+  opacity: 1;
+}
+
+.capture-send-btn--active:hover {
+  background: var(--accent-hover);
 }
 
 /* Status indicators */
@@ -97,6 +195,7 @@ body {
   width: 6px;
   height: 6px;
   border-radius: 50%;
+  flex-shrink: 0;
   transition: background-color 0.2s ease;
 }
 
@@ -117,12 +216,29 @@ body {
   background: var(--error);
 }
 
+/* Close button */
+.close-btn {
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+}
+.close-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
 /* Keyboard hint */
 .kbd {
   display: inline-flex;
   align-items: center;
   padding: 1px 5px;
-  font-size: 11px;
+  font-size: 10px;
   font-family: inherit;
   color: var(--text-muted);
   background: var(--bg-elevated);
@@ -131,7 +247,7 @@ body {
   line-height: 1.4;
 }
 
-/* Submit flash animation */
+/* Animations */
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
@@ -139,7 +255,7 @@ body {
 
 @keyframes success-flash {
   0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.05); }
+  50% { transform: scale(1.02); }
   100% { transform: scale(1); opacity: 1; }
 }
 
@@ -151,16 +267,19 @@ body {
 .settings-container {
   background: var(--bg-base);
   color: var(--text-primary);
-  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .settings-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--border-subtle);
+  padding: 12px 16px;
   -webkit-app-region: drag;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .settings-header button {
@@ -169,16 +288,18 @@ body {
 
 .settings-body {
   padding: 20px;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .settings-input {
   width: 100%;
   background: var(--bg-elevated);
-  border: 1px solid var(--border-default);
-  border-radius: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   padding: 8px 12px;
-  color: var(--text-primary);
   font-size: 13px;
+  color: var(--text-primary);
   font-family: inherit;
   outline: none;
   transition: border-color 0.15s ease;
@@ -213,16 +334,55 @@ body {
   margin-bottom: 12px;
 }
 
+/* Auth form */
+.auth-form {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-base);
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.auth-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.auth-tab:hover {
+  color: var(--text-secondary);
+}
+
+.auth-tab--active {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
 /* Toggle switch */
 .toggle {
-  position: relative;
   width: 36px;
   height: 20px;
   border-radius: 10px;
-  background: var(--bg-hover);
-  border: 1px solid var(--border-default);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  padding: 2px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+  position: relative;
 }
 
 .toggle--active {
@@ -245,17 +405,17 @@ body {
   transform: translateX(16px);
 }
 
-/* Button */
+/* Buttons */
 .btn-primary {
   background: var(--accent-base);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 8px 16px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .btn-primary:hover {
@@ -266,7 +426,7 @@ body {
   background: transparent;
   color: var(--text-secondary);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 8px 16px;
   font-size: 13px;
   cursor: pointer;
@@ -275,6 +435,19 @@ body {
 
 .btn-ghost:hover {
   color: var(--text-primary);
+}
+
+.btn-danger {
+  color: var(--error) !important;
+}
+
+.btn-danger:hover {
+  background: rgba(248, 113, 113, 0.1) !important;
+}
+
+/* Utility */
+.w-full {
+  width: 100%;
 }
 
 /* Scrollbar */
@@ -287,6 +460,6 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-default);
+  background: var(--border);
   border-radius: 3px;
 }

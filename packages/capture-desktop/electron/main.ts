@@ -23,15 +23,15 @@ function createCaptureWindow(): BrowserWindow {
   const { width: screenW, height: screenH, x: screenX, y: screenY } = activeDisplay.workArea;
 
   const winWidth = 620;
-  const winHeight = 72;
+  const winHeight = 110;
 
   const win = new BrowserWindow({
     width: winWidth,
     height: winHeight,
     x: screenX + Math.round((screenW - winWidth) / 2),
-    y: screenY + Math.round(screenH * 0.25),
+    y: screenY + screenH - winHeight - 60,  // above taskbar
     frame: false,
-    transparent: true,
+    transparent: false,
     resizable: false,
     movable: false,
     minimizable: false,
@@ -41,8 +41,7 @@ function createCaptureWindow(): BrowserWindow {
     alwaysOnTop: true,
     show: false,
     hasShadow: true,
-    vibrancy: 'under-window',
-    visualEffectState: 'active',
+    backgroundColor: '#1a1614',
     webPreferences: {
       preload: join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -51,17 +50,12 @@ function createCaptureWindow(): BrowserWindow {
     },
   });
 
-  // Load the renderer
-  if (isDev) {
-    win.loadURL('http://localhost:5173');
+  // Try Vite dev server first, fall back to built files
+  if (isDev && process.env.VITE_DEV_SERVER_URL) {
+    win.loadURL(process.env.VITE_DEV_SERVER_URL);
   } else {
     win.loadFile(join(__dirname, '../dist/index.html'));
   }
-
-  // Hide when losing focus
-  win.on('blur', () => {
-    hideCaptureWindow();
-  });
 
   return win;
 }
@@ -77,23 +71,24 @@ function showCaptureWindow(): void {
   const { width: screenW, height: screenH, x: screenX, y: screenY } = activeDisplay.workArea;
 
   const winWidth = 620;
+  const winHeight = 110;
   captureWindow.setPosition(
     screenX + Math.round((screenW - winWidth) / 2),
-    screenY + Math.round(screenH * 0.25)
+    screenY + screenH - winHeight - 60  // above taskbar
   );
 
   // Reset height to default (will expand when typing)
-  captureWindow.setSize(winWidth, 72);
+  captureWindow.setSize(winWidth, winHeight);
 
   captureWindow.show();
   captureWindow.focus();
+  captureWindow.webContents.send('capture:reset');
   captureWindow.webContents.send('capture:focus');
 }
 
 function hideCaptureWindow(): void {
   if (captureWindow && !captureWindow.isDestroyed()) {
     captureWindow.hide();
-    captureWindow.webContents.send('capture:reset');
   }
 }
 
@@ -128,8 +123,9 @@ function createSettingsWindow(): void {
     },
   });
 
-  if (isDev) {
-    settingsWindow.loadURL('http://localhost:5173/#/settings');
+  // Try Vite dev server first, fall back to built files
+  if (isDev && process.env.VITE_DEV_SERVER_URL) {
+    settingsWindow.loadURL(`${process.env.VITE_DEV_SERVER_URL}#/settings`);
   } else {
     settingsWindow.loadFile(join(__dirname, '../dist/index.html'), {
       hash: '/settings',
@@ -143,6 +139,184 @@ function createSettingsWindow(): void {
   settingsWindow.on('closed', () => {
     settingsWindow = null;
   });
+}
+
+async function signInWithCredentials(email: string, password: string): Promise<{ success: boolean; error?: string }> {
+  const supabaseUrl = store.get('supabaseUrl', 'https://xxipgnrcxyagxsfnulwo.supabase.co') as string;
+  const supabaseAnonKey = store.get('supabaseAnonKey', '') as string;
+
+  try {
+    const response = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': supabaseAnonKey,
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      return { success: false, error: data.error_description || data.msg || 'Invalid credentials' };
+    }
+
+    const data = await response.json();
+
+    store.set('accessToken', data.access_token);
+    store.set('refreshToken', data.refresh_token);
+    store.set('tokenExpiresAt', Math.floor(Date.now() / 1000) + (data.expires_in || 3600));
+    store.set('userId', data.user?.id || '');
+    store.set('userEmail', data.user?.email || email);
+
+    // Notify settings window if open
+    if (settingsWindow && !settingsWindow.isDestroyed()) {
+      settingsWindow.webContents.send('auth:updated');
+    }
+
+    return { success: true };
+  } catch (err) {
+    return { success: false, error: 'Network error. Check your connection.' };
+  }
+}
+
+async function signInWithMagicLink(email: string): Promise<{ success: boolean; error?: string }> {
+  const supabaseUrl = store.get('supabaseUrl', 'https://xxipgnrcxyagxsfnulwo.supabase.co') as string;
+  const supabaseAnonKey = store.get('supabaseAnonKey', '') as string;
+  const apiUrl = store.get('apiUrl', 'https://mindbase.vercel.app') as string;
+
+  try {
+    const response = await fetch(`${supabaseUrl}/auth/v1/magiclink`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': supabaseAnonKey,
+      },
+      body: JSON.stringify({
+        email,
+        options: { emailRedirectTo: `${apiUrl}/callback` },
+      }),
+    });
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      return { success: false, error: data.error_description || data.msg || 'Failed to send magic link' };
+    }
+
+    return { success: true };
+  } catch (err) {
+    return { success: false, error: 'Network error. Check your connection.' };
+  }
+}
+
+async function captureItem(title: string, notes?: string): Promise<{ success: boolean; error?: string; queued?: boolean }> {
+  const accessToken = store.get('accessToken', '') as string;
+  const userId = store.get('userId', '') as string;
+  const supabaseUrl = store.get('supabaseUrl', 'https://xxipgnrcxyagxsfnulwo.supabase.co') as string;
+  const supabaseAnonKey = store.get('supabaseAnonKey', '') as string;
+
+  if (!accessToken || !userId) {
+    return { success: false, error: 'Not signed in' };
+  }
+
+  // Check if token needs refresh
+  const tokenExpiresAt = store.get('tokenExpiresAt', 0) as number;
+  const now = Math.floor(Date.now() / 1000);
+  let token = accessToken;
+
+  if (tokenExpiresAt && now >= tokenExpiresAt - 60) {
+    const refreshed = await refreshAccessToken();
+    if (!refreshed) return { success: false, error: 'Session expired. Please sign in again.' };
+    token = store.get('accessToken', '') as string;
+  }
+
+  try {
+    // Insert directly into Supabase via REST API
+    const response = await fetch(`${supabaseUrl}/rest/v1/items`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': supabaseAnonKey,
+        'Authorization': `Bearer ${token}`,
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        title: title.trim(),
+        notes: notes ? notes.trim() : null,
+        layer: 'capture',
+        source: 'desktop',
+      }),
+    });
+
+    if (response.status === 401) {
+      // Try refresh once
+      const refreshed = await refreshAccessToken();
+      if (refreshed) {
+        const newToken = store.get('accessToken', '') as string;
+        const retry = await fetch(`${supabaseUrl}/rest/v1/items`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': supabaseAnonKey,
+            'Authorization': `Bearer ${newToken}`,
+            'Prefer': 'return=minimal',
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            title: title.trim(),
+            notes: notes ? notes.trim() : null,
+            layer: 'capture',
+            source: 'desktop',
+          }),
+        });
+        if (retry.ok || retry.status === 201) return { success: true };
+      }
+      return { success: false, error: 'Session expired. Please sign in again.' };
+    }
+
+    if (!response.ok && response.status !== 201) {
+      const data = await response.json().catch(() => ({}));
+      return { success: false, error: data.message || `HTTP ${response.status}` };
+    }
+
+    return { success: true };
+  } catch (err) {
+    // Network error — queue for later
+    const queue = store.get('offlineQueue', []) as unknown[];
+    queue.push({ title, notes, timestamp: Date.now() });
+    store.set('offlineQueue', queue);
+    return { success: true, queued: true };
+  }
+}
+
+async function refreshAccessToken(): Promise<boolean> {
+  const refreshToken = store.get('refreshToken', '') as string;
+  const supabaseUrl = store.get('supabaseUrl', 'https://xxipgnrcxyagxsfnulwo.supabase.co') as string;
+  const supabaseAnonKey = store.get('supabaseAnonKey', '') as string;
+
+  if (!refreshToken) return false;
+
+  try {
+    const response = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=refresh_token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': supabaseAnonKey,
+      },
+      body: JSON.stringify({ refresh_token: refreshToken }),
+    });
+
+    if (!response.ok) return false;
+
+    const data = await response.json();
+    store.set('accessToken', data.access_token);
+    store.set('refreshToken', data.refresh_token);
+    store.set('tokenExpiresAt', Math.floor(Date.now() / 1000) + (data.expires_in || 3600));
+
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function registerGlobalShortcut(): void {
@@ -165,15 +339,20 @@ function setupIPC(): void {
   ipcMain.on('capture:resize', (_event, height: number) => {
     if (captureWindow && !captureWindow.isDestroyed()) {
       const [width] = captureWindow.getSize();
-      captureWindow.setSize(width, Math.min(Math.max(height, 72), 220));
+      captureWindow.setSize(width, Math.min(Math.max(height, 110), 260));
     }
   });
 
   // Settings
   ipcMain.handle('settings:get', () => {
     return {
-      apiKey: store.get('apiKey', '') as string,
+      accessToken: store.get('accessToken', '') as string,
+      refreshToken: store.get('refreshToken', '') as string,
+      tokenExpiresAt: store.get('tokenExpiresAt', 0) as number,
+      userId: store.get('userId', '') as string,
+      userEmail: store.get('userEmail', '') as string,
       apiUrl: store.get('apiUrl', 'https://offmind.ai') as string,
+      supabaseUrl: store.get('supabaseUrl', '') as string,
       shortcut: store.get('shortcut', 'CommandOrControl+Shift+Space') as string,
       launchAtLogin: store.get('launchAtLogin', false) as boolean,
       theme: store.get('theme', 'dark') as string,
@@ -210,6 +389,31 @@ function setupIPC(): void {
     }
   });
 
+  // Auth
+  ipcMain.handle('auth:sign-in', async (_event, email: string, password: string) => {
+    return signInWithCredentials(email, password);
+  });
+
+  ipcMain.handle('auth:magic-link', async (_event, email: string) => {
+    return signInWithMagicLink(email);
+  });
+
+  ipcMain.on('auth:sign-out', () => {
+    store.set('accessToken', '');
+    store.set('refreshToken', '');
+    store.set('tokenExpiresAt', 0);
+    store.set('userId', '');
+    store.set('userEmail', '');
+
+    if (settingsWindow && !settingsWindow.isDestroyed()) {
+      settingsWindow.webContents.send('auth:updated');
+    }
+  });
+
+  ipcMain.handle('auth:refresh', async () => {
+    return refreshAccessToken();
+  });
+
   // Offline queue
   ipcMain.handle('queue:get', () => {
     return store.get('offlineQueue', []) as unknown[];
@@ -233,6 +437,21 @@ function setupIPC(): void {
     store.set('offlineQueue', queue);
     return queue.length;
   });
+
+  // Capture (main process handles fetch to avoid CORS)
+  ipcMain.handle('capture:send', async (_event, title: string, notes?: string) => {
+    return captureItem(title, notes);
+  });
+
+  // Draft persistence
+  ipcMain.handle('draft:get', () => {
+    return store.get('draft', '') as string;
+  });
+
+  ipcMain.handle('draft:set', (_event, text: string) => {
+    store.set('draft', text);
+    return true;
+  });
 }
 
 // App lifecycle
@@ -242,9 +461,9 @@ app.whenReady().then(() => {
   createTray(toggleCaptureWindow, createSettingsWindow);
   captureWindow = createCaptureWindow();
 
-  // Show settings on first launch if no API key
-  const apiKey = store.get('apiKey', '') as string;
-  if (!apiKey) {
+  // Show settings on first launch if not authenticated
+  const accessToken = store.get('accessToken', '') as string;
+  if (!accessToken) {
     createSettingsWindow();
   }
 });

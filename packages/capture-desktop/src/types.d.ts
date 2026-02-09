@@ -11,16 +11,35 @@ interface OffMindAPI {
   openSettings: () => void;
   closeSettings: () => void;
 
+  // Auth
+  signIn(email: string, password: string): Promise<{ success: boolean; error?: string }>;
+  sendMagicLink(email: string): Promise<{ success: boolean; error?: string }>;
+  signOut(): void;
+  refreshToken(): Promise<boolean>;
+  onAuthUpdated(callback: () => void): () => void;
+
+  // Capture
+  sendCapture(title: string, notes?: string): Promise<{ success: boolean; error?: string; queued?: boolean }>;
+
   // Offline queue
   getQueue: () => Promise<QueueItem[]>;
   addToQueue: (item: QueueItem) => Promise<number>;
   clearQueue: () => Promise<boolean>;
   removeFromQueue: (index: number) => Promise<number>;
+
+  // Draft
+  getDraft(): Promise<string>;
+  setDraft(text: string): Promise<boolean>;
 }
 
 interface AppSettings {
-  apiKey: string;
+  accessToken: string;
+  refreshToken: string;
+  tokenExpiresAt: number;
+  userId: string;
+  userEmail: string;
   apiUrl: string;
+  supabaseUrl: string;
   shortcut: string;
   launchAtLogin: boolean;
   theme: string;

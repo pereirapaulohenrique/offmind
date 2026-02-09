@@ -7,24 +7,37 @@ export function createTray(
   onCapture: () => void,
   onSettings: () => void
 ): void {
-  // Create a 16x16 tray icon
-  // In production, this would be a proper icon file
-  // For now, create a simple template image
-  const iconPath = join(__dirname, '../assets/tray-icon.png');
-  let icon: Electron.NativeImage;
+  // Create a 16x16 tray icon programmatically (OffMind terracotta circle)
+  const size = 16;
+  const canvas = Buffer.alloc(size * size * 4);
 
-  try {
-    icon = nativeImage.createFromPath(iconPath);
-    icon = icon.resize({ width: 16, height: 16 });
-  } catch {
-    // Fallback: create a simple icon programmatically
-    icon = nativeImage.createEmpty();
+  // Draw a filled circle (terracotta color #c2410c = rgb(194, 65, 12))
+  const cx = size / 2;
+  const cy = size / 2;
+  const r = 6;
+
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const idx = (y * size + x) * 4;
+      const dist = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2);
+
+      if (dist <= r) {
+        // Anti-aliased edge
+        const alpha = dist > r - 1 ? Math.max(0, Math.min(255, (r - dist) * 255)) : 255;
+        canvas[idx] = 194;     // R
+        canvas[idx + 1] = 65;  // G
+        canvas[idx + 2] = 12;  // B
+        canvas[idx + 3] = Math.round(alpha); // A
+      } else {
+        canvas[idx] = 0;
+        canvas[idx + 1] = 0;
+        canvas[idx + 2] = 0;
+        canvas[idx + 3] = 0;
+      }
+    }
   }
 
-  // On macOS, use template image for proper menu bar appearance
-  if (process.platform === 'darwin') {
-    icon.setTemplateImage(true);
-  }
+  const icon = nativeImage.createFromBuffer(canvas, { width: size, height: size });
 
   tray = new Tray(icon);
   tray.setToolTip('OffMind Capture');
@@ -50,13 +63,10 @@ export function createTray(
   ]);
 
   tray.setContextMenu(contextMenu);
-
-  // Click tray icon to open capture (macOS)
   tray.on('click', onCapture);
 }
 
 export function updateTrayIcon(hasQueuedItems: boolean): void {
-  // Could update the icon to show a dot when items are queued
   if (tray) {
     tray.setToolTip(
       hasQueuedItems

@@ -11,19 +11,46 @@ interface CaptureResult {
   queued?: boolean;
 }
 
-export async function captureItem(payload: CapturePayload): Promise<CaptureResult> {
+interface QueueItem {
+  title: string;
+  notes?: string;
+  timestamp: number;
+}
+
+async function getValidToken(): Promise<string | null> {
   const settings = await offmind.getSettings();
 
-  if (!settings.apiKey) {
-    return { success: false, error: 'No API key configured' };
+  if (!settings.accessToken) return null;
+
+  // Check if token is expired (with 60s buffer)
+  const now = Math.floor(Date.now() / 1000);
+  if (settings.tokenExpiresAt && now >= settings.tokenExpiresAt - 60) {
+    // Try to refresh
+    const refreshed = await offmind.refreshToken();
+    if (!refreshed) return null;
+
+    // Get updated settings
+    const updated = await offmind.getSettings();
+    return updated.accessToken || null;
+  }
+
+  return settings.accessToken;
+}
+
+export async function captureItem(payload: CapturePayload): Promise<CaptureResult> {
+  const settings = await offmind.getSettings();
+  const token = await getValidToken();
+
+  if (!token) {
+    return { success: false, error: 'Not signed in' };
   }
 
   try {
-    const response = await fetch(`${settings.apiUrl}/api/extension/capture`, {
+    const response = await fetch(`${settings.apiUrl}/api/capture`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${settings.apiKey}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         title: payload.title,
@@ -32,14 +59,39 @@ export async function captureItem(payload: CapturePayload): Promise<CaptureResul
       }),
     });
 
+    if (response.status === 401) {
+      // Token expired, try refresh once
+      const refreshed = await offmind.refreshToken();
+      if (refreshed) {
+        const updated = await offmind.getSettings();
+        const retry = await fetch(`${settings.apiUrl}/api/capture`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${updated.accessToken}`,
+          },
+          body: JSON.stringify({
+            title: payload.title,
+            notes: payload.notes || undefined,
+            source: 'desktop',
+          }),
+        });
+
+        if (retry.ok) {
+          drainQueue(updated.accessToken, settings.apiUrl);
+          return { success: true };
+        }
+      }
+      return { success: false, error: 'Session expired. Please sign in again.' };
+    }
+
     if (!response.ok) {
       const data = await response.json().catch(() => ({}));
       throw new Error(data.error || `HTTP ${response.status}`);
     }
 
-    // Flush any queued items now that we're online
-    drainQueue(settings.apiKey, settings.apiUrl);
-
+    // Flush queued items
+    drainQueue(token, settings.apiUrl);
     return { success: true };
   } catch (err) {
     // Network error → queue for later
@@ -48,28 +100,22 @@ export async function captureItem(payload: CapturePayload): Promise<CaptureResul
       notes: payload.notes,
       timestamp: Date.now(),
     };
-
     await offmind.addToQueue(queueItem);
     return { success: true, queued: true };
   }
 }
 
-/**
- * Try to send all queued items. Runs in background, non-blocking.
- */
-async function drainQueue(apiKey: string, apiUrl: string): Promise<void> {
+async function drainQueue(accessToken: string, apiUrl: string): Promise<void> {
   const queue = await offmind.getQueue();
   if (queue.length === 0) return;
 
-  const failed: number[] = [];
-
   for (let i = 0; i < queue.length; i++) {
     try {
-      const response = await fetch(`${apiUrl}/api/extension/capture`, {
+      const response = await fetch(`${apiUrl}/api/capture`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           title: queue[i].title,
@@ -77,33 +123,23 @@ async function drainQueue(apiKey: string, apiUrl: string): Promise<void> {
           source: 'desktop',
         }),
       });
-
-      if (!response.ok) {
-        failed.push(i);
-      }
+      if (!response.ok) break;
     } catch {
-      // Still offline for this one, stop trying
       break;
     }
   }
-
-  // Clear successfully sent items
-  if (failed.length === 0) {
-    await offmind.clearQueue();
-  }
+  await offmind.clearQueue();
 }
 
-/**
- * Attempt to drain the queue on startup if we have connectivity.
- */
 export async function retryQueuedItems(): Promise<number> {
-  const settings = await offmind.getSettings();
-  if (!settings.apiKey) return 0;
+  const token = await getValidToken();
+  if (!token) return 0;
 
   const queue = await offmind.getQueue();
   if (queue.length === 0) return 0;
 
-  await drainQueue(settings.apiKey, settings.apiUrl);
+  const settings = await offmind.getSettings();
+  await drainQueue(token, settings.apiUrl);
   const remaining = await offmind.getQueue();
   return remaining.length;
 }
