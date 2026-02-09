@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Maximize2, Minimize2, Trash2, CheckCircle2, Loader2, Send, Archive } from 'lucide-react';
+import { X, Maximize2, Minimize2, Trash2, CheckCircle2, Loader2, Send, Archive, ImageIcon, Volume2, Pause, Play } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { softDeleteItem } from '@/lib/utils/soft-delete';
 import { useUIStore } from '@/stores/ui';
@@ -14,8 +14,131 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { ICON_MAP, COLOR_PALETTE } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import type { Item, Destination, Space, Project, Contact, Json } from '@/types/database';
+import type { Item, Destination, Space, Project, Contact, Json, Attachment } from '@/types/database';
 import type { CustomFieldDefinition } from '@/types';
+
+// ---------------------------------------------------------------------------
+// Lightbox (fullscreen image viewer)
+// ---------------------------------------------------------------------------
+
+function ImageLightbox({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm cursor-zoom-out"
+      onClick={onClose}
+    >
+      <motion.img
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+        src={src}
+        alt={alt}
+        className="max-h-[85vh] max-w-[90vw] rounded-2xl object-contain shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      />
+      <button
+        onClick={onClose}
+        className="absolute top-5 right-5 rounded-full bg-white/10 p-2 text-white/70 hover:bg-white/20 hover:text-white transition-colors"
+      >
+        <X className="h-5 w-5" />
+      </button>
+    </motion.div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Audio player (inline)
+// ---------------------------------------------------------------------------
+
+function AudioPlayer({ src, duration: initialDuration }: { src: string; duration?: number }) {
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [audioDuration, setAudioDuration] = useState(initialDuration ?? 0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const rafRef = useRef<number>(0);
+
+  useEffect(() => {
+    const audio = new Audio(src);
+    audioRef.current = audio;
+
+    audio.addEventListener('loadedmetadata', () => {
+      if (audio.duration && isFinite(audio.duration)) {
+        setAudioDuration(audio.duration);
+      }
+    });
+
+    audio.addEventListener('ended', () => {
+      setPlaying(false);
+      setProgress(0);
+      setCurrentTime(0);
+    });
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      audio.pause();
+      audio.src = '';
+    };
+  }, [src]);
+
+  const tick = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (audio.duration && isFinite(audio.duration)) {
+      setProgress(audio.currentTime / audio.duration);
+      setCurrentTime(audio.currentTime);
+    }
+    rafRef.current = requestAnimationFrame(tick);
+  }, []);
+
+  const toggle = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (playing) {
+      audio.pause();
+      cancelAnimationFrame(rafRef.current);
+    } else {
+      audio.play();
+      rafRef.current = requestAnimationFrame(tick);
+    }
+    setPlaying(!playing);
+  };
+
+  const fmt = (s: number) => {
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return `${m}:${sec.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2.5">
+      <button
+        onClick={toggle}
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#c2410c] text-white hover:bg-[#c2410c]/80 transition-colors"
+      >
+        {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5 ml-0.5" />}
+      </button>
+
+      <div className="flex-1 min-w-0">
+        <div className="h-1.5 rounded-full bg-white/[0.08] overflow-hidden">
+          <div
+            className="h-full rounded-full bg-[#c2410c] transition-[width] duration-100"
+            style={{ width: `${progress * 100}%` }}
+          />
+        </div>
+      </div>
+
+      <span className="shrink-0 text-[11px] font-mono text-neutral-500">
+        {fmt(currentTime)}/{fmt(audioDuration)}
+      </span>
+    </div>
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Types
@@ -133,6 +256,9 @@ export function ProcessingPanel({
 
   // Delete confirmation
   const [confirmDelete, setConfirmDelete] = useState(false);
+
+  // Lightbox for image attachments
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
 
   // Refs
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -780,6 +906,7 @@ export function ProcessingPanel({
 
   // ---- Render ----
   return (
+    <>
     <AnimatePresence mode="wait">
       {processingPanelOpen && (
         <>
@@ -900,6 +1027,56 @@ export function ProcessingPanel({
                     )}
                     style={{ minHeight: '80px' }}
                   />
+
+                  {/* ---- Attachments ---- */}
+                  {(() => {
+                    const attachments: Attachment[] = (() => {
+                      try {
+                        const raw = (item as any).attachments;
+                        if (Array.isArray(raw)) return raw;
+                        return [];
+                      } catch {
+                        return [];
+                      }
+                    })();
+
+                    if (attachments.length === 0) return null;
+
+                    const images = attachments.filter((a) => a.type === 'image');
+                    const audios = attachments.filter((a) => a.type === 'audio');
+
+                    return (
+                      <div className="space-y-3">
+                        {/* Image thumbnails */}
+                        {images.length > 0 && (
+                          <div className="flex flex-wrap gap-2">
+                            {images.map((att) => (
+                              <button
+                                key={att.id}
+                                type="button"
+                                onClick={() => setLightboxSrc(att.url)}
+                                className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.03] transition-all hover:border-white/[0.16] hover:shadow-lg cursor-zoom-in"
+                              >
+                                <img
+                                  src={att.url}
+                                  alt={att.filename}
+                                  className="h-24 w-32 object-cover transition-transform duration-200 group-hover:scale-105"
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition-colors">
+                                  <Maximize2 className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Audio players */}
+                        {audios.map((att) => (
+                          <AudioPlayer key={att.id} src={att.url} duration={att.duration} />
+                        ))}
+                      </div>
+                    );
+                  })()}
 
                   {/* ---- Divider: DESTINATION ---- */}
                   <div className="flex items-center gap-3">
@@ -1199,5 +1376,17 @@ export function ProcessingPanel({
         </>
       )}
     </AnimatePresence>
+
+    {/* ---- Image Lightbox ---- */}
+    <AnimatePresence>
+      {lightboxSrc && (
+        <ImageLightbox
+          src={lightboxSrc}
+          alt="Attachment"
+          onClose={() => setLightboxSrc(null)}
+        />
+      )}
+    </AnimatePresence>
+    </>
   );
 }
