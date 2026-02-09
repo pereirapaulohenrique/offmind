@@ -68,45 +68,53 @@ export async function POST(request: NextRequest) {
     const token = authHeader.replace('Bearer ', '');
 
     let userId: string;
-    let authMethod: 'supabase' | 'api_key';
+    let authMethod: 'supabase' | 'api_key' | 'quick_capture';
 
-    // Try Supabase access token first
-    const supabase = await createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    // Try static quick-capture key first (for iOS Shortcuts, Siri, etc.)
+    const quickCaptureKey = process.env.QUICK_CAPTURE_KEY;
+    const quickCaptureUserId = process.env.QUICK_CAPTURE_USER_ID;
 
-    if (user && !authError) {
-      // Authenticated via Supabase access token
-      userId = user.id;
-      authMethod = 'supabase';
+    if (quickCaptureKey && quickCaptureUserId && token === quickCaptureKey) {
+      userId = quickCaptureUserId;
+      authMethod = 'quick_capture';
     } else {
-      // Try API key authentication
-      const serviceClient = await createServiceClient();
-      const { data: profile, error: profileError } = await serviceClient
-        .from('profiles')
-        .select('id, settings')
-        .eq('id', token) // First try token as direct user ID
-        .single();
+      // Try Supabase access token
+      const supabase = await createClient();
+      const { data: { user }, error: authError } = await supabase.auth.getUser(token);
 
-      if (profile) {
-        userId = profile.id;
-        authMethod = 'api_key';
+      if (user && !authError) {
+        userId = user.id;
+        authMethod = 'supabase';
       } else {
-        // Try finding by api_key in settings
-        const { data: profiles, error: searchError } = await serviceClient
+        // Try API key authentication
+        const serviceClient = await createServiceClient();
+        const { data: profile, error: profileError } = await serviceClient
           .from('profiles')
           .select('id, settings')
-          .filter('settings->>api_key', 'eq', token)
-          .limit(1);
+          .eq('id', token)
+          .single();
 
-        if (!profiles || profiles.length === 0) {
-          return NextResponse.json(
-            { error: 'Invalid authentication token' },
-            { status: 401 }
-          );
+        if (profile) {
+          userId = profile.id;
+          authMethod = 'api_key';
+        } else {
+          // Try finding by api_key in settings
+          const { data: profiles, error: searchError } = await serviceClient
+            .from('profiles')
+            .select('id, settings')
+            .filter('settings->>api_key', 'eq', token)
+            .limit(1);
+
+          if (!profiles || profiles.length === 0) {
+            return NextResponse.json(
+              { error: 'Invalid authentication token' },
+              { status: 401 }
+            );
+          }
+
+          userId = profiles[0].id;
+          authMethod = 'api_key';
         }
-
-        userId = profiles[0].id;
-        authMethod = 'api_key';
       }
     }
 
