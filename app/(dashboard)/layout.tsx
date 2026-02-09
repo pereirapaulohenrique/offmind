@@ -94,7 +94,7 @@ export default async function DashboardLayout({
 
   return (
     <CelebrationProvider>
-      <div className="flex h-screen overflow-hidden bg-background">
+      <div className="flex min-h-screen bg-background">
         {/* Desktop sidebar */}
         <div className="hidden md:block">
           <Sidebar {...sidebarProps} />

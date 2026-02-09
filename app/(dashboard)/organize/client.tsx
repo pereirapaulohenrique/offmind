@@ -143,12 +143,7 @@ export function OrganizePageClient({
       </div>
 
       {/* Content */}
-      <div className={cn(
-        "flex-1 p-6",
-        organizeViewType === 'columns'
-          ? 'overflow-x-auto overflow-y-hidden'
-          : 'overflow-auto'
-      )}>
+      <div className="flex-1 overflow-auto p-6">
         {isLoading ? (
           <LoadingState count={6} type="card" />
         ) : organizedItems.length === 0 ? (

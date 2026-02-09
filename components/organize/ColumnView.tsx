@@ -24,7 +24,7 @@ export function ColumnView({ items, destinations, spaces, projects }: ColumnView
   }));
 
   return (
-    <div className="flex gap-4 overflow-x-auto pb-4 h-full">
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4 pb-4">
       {columns.map((column) => {
         const Icon = ICON_MAP[column.destination.icon] || ICON_MAP['folder'];
         const colorOption = COLOR_PALETTE.find((c) => c.value === column.destination.color);
@@ -32,7 +32,7 @@ export function ColumnView({ items, destinations, spaces, projects }: ColumnView
         return (
           <div
             key={column.destination.id}
-            className="flex-shrink-0 w-72 flex flex-col rounded-2xl bg-[var(--bg-surface)] shadow-[var(--shadow-card)]"
+            className="flex flex-col rounded-2xl bg-[var(--bg-surface)] shadow-[var(--shadow-card)] max-h-[45vh]"
           >
             {/* Column header */}
             <div className="flex items-center gap-2 px-4 py-3 border-b border-[var(--border-subtle)]">
