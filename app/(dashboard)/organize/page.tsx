@@ -27,6 +27,7 @@ export default async function OrganizePage() {
     .eq('user_id', user.id)
     .not('destination_id', 'is', null)
     .eq('is_completed', false)
+    .is('archived_at', null)
     .order('sort_order');
 
   // Get all destinations

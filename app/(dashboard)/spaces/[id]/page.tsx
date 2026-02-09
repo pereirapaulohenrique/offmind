@@ -34,6 +34,7 @@ export default async function SpaceDetailPage({ params }: SpaceDetailPageProps) 
     .select('*, destinations(*)')
     .eq('space_id', id)
     .eq('user_id', user.id)
+    .is('archived_at', null)
     .order('created_at', { ascending: false });
 
   // Fetch projects in this space

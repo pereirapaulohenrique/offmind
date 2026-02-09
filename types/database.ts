@@ -226,6 +226,7 @@ export interface Database {
           source: string;
           sort_order: number;
           attachments: Json;
+          archived_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -249,6 +250,7 @@ export interface Database {
           source?: string;
           sort_order?: number;
           attachments?: Json;
+          archived_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -272,6 +274,7 @@ export interface Database {
           source?: string;
           sort_order?: number;
           attachments?: Json;
+          archived_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };

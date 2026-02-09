@@ -27,6 +27,7 @@ export default async function SchedulePage() {
     .eq('user_id', user.id)
     .not('scheduled_at', 'is', null)
     .eq('is_completed', false)
+    .is('archived_at', null)
     .order('scheduled_at');
 
   return (

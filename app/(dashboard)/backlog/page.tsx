@@ -38,6 +38,7 @@ export default async function BacklogPage() {
         .eq('user_id', user.id)
         .eq('destination_id', backlogDest.id)
         .eq('is_completed', false)
+        .is('archived_at', null)
         .order('created_at', { ascending: false })
     : { data: [] };
 

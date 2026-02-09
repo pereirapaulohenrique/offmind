@@ -28,6 +28,7 @@ export default async function InboxPage() {
     .select('*')
     .eq('user_id', user.id)
     .eq('layer', 'capture')
+    .is('archived_at', null)
     .order('created_at', { ascending: false });
 
   // Get destinations (excluding trash)

@@ -60,7 +60,7 @@ export function WaitingForPageClient({
         (payload) => {
           if (payload.eventType === 'INSERT') {
             const newItem = payload.new as Item;
-            if (!newItem.is_completed && newItem.destination_id) {
+            if (!newItem.is_completed && newItem.destination_id && !newItem.archived_at) {
               setItems((prev) => {
                 if (prev.some((i) => i.id === newItem.id)) return prev;
                 return [newItem, ...prev];
@@ -68,7 +68,7 @@ export function WaitingForPageClient({
             }
           } else if (payload.eventType === 'UPDATE') {
             const updated = payload.new as Item;
-            if (updated.is_completed) {
+            if (updated.archived_at || updated.is_completed) {
               setItems((prev) => prev.filter((i) => i.id !== updated.id));
             } else {
               setItems((prev) =>

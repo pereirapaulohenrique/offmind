@@ -54,12 +54,14 @@ export function OrganizePageClient({
         (payload) => {
           if (payload.eventType === 'INSERT') {
             const newItem = payload.new as Item;
-            if (newItem.destination_id && !newItem.is_completed) {
+            if (newItem.destination_id && !newItem.is_completed && !newItem.archived_at) {
               addItem(newItem);
             }
           } else if (payload.eventType === 'UPDATE') {
             const updated = payload.new as Item;
-            if (updated.destination_id && !updated.is_completed) {
+            if (updated.archived_at) {
+              removeItem(updated.id);
+            } else if (updated.destination_id && !updated.is_completed) {
               updateItem(updated);
             } else {
               removeItem(updated.id);

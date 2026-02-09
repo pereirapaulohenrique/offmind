@@ -74,8 +74,8 @@ export function BacklogPageClient({
         (payload) => {
           if (payload.eventType === 'INSERT') {
             const newItem = payload.new as Item;
-            // Only add if it belongs in backlog (non-completed, same destination)
-            if (!newItem.is_completed && newItem.destination_id) {
+            // Only add if it belongs in backlog (non-completed, same destination, not archived)
+            if (!newItem.is_completed && newItem.destination_id && !newItem.archived_at) {
               setItems((prev) => {
                 if (prev.some((i) => i.id === newItem.id)) return prev;
                 return [newItem, ...prev];
@@ -83,8 +83,8 @@ export function BacklogPageClient({
             }
           } else if (payload.eventType === 'UPDATE') {
             const updated = payload.new as Item;
-            if (updated.is_completed || updated.layer === 'commit') {
-              // Item completed or scheduled — remove from backlog
+            if (updated.archived_at || updated.is_completed || updated.layer === 'commit') {
+              // Item archived, completed or scheduled — remove from backlog
               setItems((prev) => prev.filter((i) => i.id !== updated.id));
             } else {
               setItems((prev) =>

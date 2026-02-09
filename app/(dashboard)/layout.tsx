@@ -38,7 +38,8 @@ export default async function DashboardLayout({
     .from('items')
     .select('*', { count: 'exact', head: true })
     .eq('user_id', user.id)
-    .eq('layer', 'capture');
+    .eq('layer', 'capture')
+    .is('archived_at', null);
 
   // Get spaces with nested projects
   const { data: spaces } = await supabase

@@ -18,6 +18,7 @@ export function GridView({ items, destinations, spaces, projects }: GridViewProp
   const { openProcessingPanel } = useUIStore();
 
   const groups = destinations
+    .filter((dest) => dest.slug !== 'trash')
     .map((dest) => ({
       destination: dest,
       items: items.filter((item) => item.destination_id === dest.id),

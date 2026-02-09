@@ -38,6 +38,7 @@ export default async function WaitingForPage() {
         .eq('user_id', user.id)
         .eq('destination_id', waitingDest.id)
         .eq('is_completed', false)
+        .is('archived_at', null)
         .order('waiting_since', { ascending: true })
     : { data: [] };
 

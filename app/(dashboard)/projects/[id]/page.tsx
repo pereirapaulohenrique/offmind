@@ -34,6 +34,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
     .select('*, destinations(*)')
     .eq('project_id', id)
     .eq('user_id', user.id)
+    .is('archived_at', null)
     .order('created_at', { ascending: false });
 
   // Fetch pages in this project

@@ -59,10 +59,12 @@ export function SchedulePageClient({ initialItems, userId }: SchedulePageClientP
           filter: `user_id=eq.${userId}`,
         },
         (payload) => {
-          if (payload.eventType === 'INSERT' && payload.new.layer === 'commit') {
+          if (payload.eventType === 'INSERT' && payload.new.layer === 'commit' && !payload.new.archived_at) {
             addItem(payload.new as Item);
           } else if (payload.eventType === 'UPDATE') {
-            if (payload.new.layer === 'commit') {
+            if (payload.new.archived_at) {
+              removeItem(payload.new.id as string);
+            } else if (payload.new.layer === 'commit') {
               updateItem(payload.new as Item);
             } else {
               // Item moved to another layer

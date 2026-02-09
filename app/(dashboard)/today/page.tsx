@@ -36,7 +36,8 @@ export default async function TodayPage() {
     .from('items')
     .select('*', { count: 'exact', head: true })
     .eq('user_id', user.id)
-    .eq('layer', 'capture');
+    .eq('layer', 'capture')
+    .is('archived_at', null);
 
   // Get destinations to find backlog and waiting slugs
   const { data: destinations } = await supabase
@@ -56,6 +57,7 @@ export default async function TodayPage() {
         .eq('user_id', user.id)
         .eq('destination_id', backlogDest.id)
         .eq('is_completed', false)
+        .is('archived_at', null)
     : { count: 0 };
 
   // Get waiting-for count
@@ -66,6 +68,7 @@ export default async function TodayPage() {
         .eq('user_id', user.id)
         .eq('destination_id', waitingDest.id)
         .eq('is_completed', false)
+        .is('archived_at', null)
     : { count: 0 };
 
   // Get overdue items (scheduled before today, not completed)
@@ -76,6 +79,7 @@ export default async function TodayPage() {
     .eq('is_completed', false)
     .not('scheduled_at', 'is', null)
     .lt('scheduled_at', today.toISOString())
+    .is('archived_at', null)
     .order('scheduled_at', { ascending: true });
 
   // Get today's scheduled items
@@ -86,6 +90,7 @@ export default async function TodayPage() {
     .eq('is_completed', false)
     .gte('scheduled_at', today.toISOString())
     .lt('scheduled_at', tomorrow.toISOString())
+    .is('archived_at', null)
     .order('scheduled_at', { ascending: true });
 
   // Get starred/favorite items (items with is_favorite or flagged — using is_completed=false for active)

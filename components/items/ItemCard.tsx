@@ -14,6 +14,7 @@ import {
   ImageIcon,
   Mic,
   ArrowRight,
+  Archive,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatRelativeTime } from '@/lib/utils/dates';
@@ -45,6 +46,7 @@ interface ItemCardProps {
   onClick?: () => void;
   onEdit?: (item: Item) => void;
   onProcess?: (item: Item) => void;
+  onArchive?: (item: Item) => void;
   onAISuggest?: (item: Item) => void;
   showAIButton?: boolean;
   compact?: boolean;
@@ -60,6 +62,7 @@ export function ItemCard({
   onClick,
   onEdit,
   onProcess,
+  onArchive,
   onAISuggest,
   showAIButton = false,
   compact = false,
@@ -257,6 +260,12 @@ export function ItemCard({
                 <ArrowRight className="mr-2 h-4 w-4" />
                 Process
               </DropdownMenuItem>
+              {onArchive && (
+                <DropdownMenuItem onClick={() => onArchive(item)}>
+                  <Archive className="mr-2 h-4 w-4" />
+                  Archive
+                </DropdownMenuItem>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => onDelete?.(item.id)}

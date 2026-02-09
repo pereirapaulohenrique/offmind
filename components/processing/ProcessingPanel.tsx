@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Maximize2, Minimize2, Trash2, CheckCircle2, Loader2, Send } from 'lucide-react';
+import { X, Maximize2, Minimize2, Trash2, CheckCircle2, Loader2, Send, Archive } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { softDeleteItem } from '@/lib/utils/soft-delete';
 import { useUIStore } from '@/stores/ui';
 import { useItemsStore } from '@/stores/items';
 import { Button } from '@/components/ui/button';
@@ -401,6 +402,19 @@ export function ProcessingPanel({
       toast.error('Failed to delete item');
     }
   };
+
+  // ---- Archive ----
+  const handleArchive = useCallback(async () => {
+    if (!item) return;
+    const result = await softDeleteItem(item.id);
+    if (result.success) {
+      removeItem(item.id);
+      toast.success('Item archived');
+      closeProcessingPanel();
+    } else {
+      toast.error('Failed to archive item');
+    }
+  }, [item, removeItem, closeProcessingPanel]);
 
   // ---- Mark Done ----
   const handleDone = async () => {
@@ -1137,6 +1151,17 @@ export function ProcessingPanel({
                 >
                   <Trash2 className="h-4 w-4" />
                   {confirmDelete ? 'Confirm Delete' : 'Delete'}
+                </Button>
+
+                {/* Archive */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleArchive}
+                  className="text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                >
+                  <Archive className="mr-1.5 h-4 w-4" />
+                  Archive
                 </Button>
 
                 {/* Right-side buttons */}

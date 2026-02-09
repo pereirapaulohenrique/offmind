@@ -32,7 +32,7 @@ export function ListView({ items, destinations, spaces, projects }: ListViewProp
     });
   };
 
-  const groups = destinations.map((dest) => ({
+  const groups = destinations.filter((dest) => dest.slug !== 'trash').map((dest) => ({
     destination: dest,
     items: items.filter((item) => item.destination_id === dest.id),
   }));

@@ -19,6 +19,7 @@ import { List, LayoutGrid, Rows3 } from 'lucide-react';
 import { ItemEditModal } from '@/components/items/ItemEditModal';
 import type { Item, Destination, Space, Project } from '@/types/database';
 import { toast } from 'sonner';
+import { softDeleteItem } from '@/lib/utils/soft-delete';
 
 interface InboxPageClientProps {
   initialItems: Item[];
@@ -55,10 +56,12 @@ export function InboxPageClient({ initialItems, destinations, spaces, projects, 
           filter: `user_id=eq.${userId}`,
         },
         (payload) => {
-          if (payload.eventType === 'INSERT' && payload.new.layer === 'capture') {
+          if (payload.eventType === 'INSERT' && payload.new.layer === 'capture' && !payload.new.archived_at) {
             addItem(payload.new as Item);
           } else if (payload.eventType === 'UPDATE') {
-            if (payload.new.layer === 'capture') {
+            if (payload.new.archived_at) {
+              removeItem(payload.new.id as string);
+            } else if (payload.new.layer === 'capture') {
               updateItem(payload.new as Item);
             } else {
               // Item moved to another layer
@@ -115,6 +118,20 @@ export function InboxPageClient({ initialItems, destinations, spaces, projects, 
       } catch (error) {
         console.error('Error deleting item:', error);
         toast.error('Failed to delete item');
+      }
+    },
+    [removeItem]
+  );
+
+  // Handle item archive
+  const handleArchiveItem = useCallback(
+    async (item: Item) => {
+      const result = await softDeleteItem(item.id);
+      if (result.success) {
+        removeItem(item.id);
+        toast.success('Item archived');
+      } else {
+        toast.error('Failed to archive item');
       }
     },
     [removeItem]
@@ -283,6 +300,7 @@ export function InboxPageClient({ initialItems, destinations, spaces, projects, 
                     onClick={() => openProcessingPanel(item.id)}
                     onEdit={(item) => setEditingItem(item)}
                     onProcess={(item) => openProcessingPanel(item.id)}
+                    onArchive={handleArchiveItem}
                     onAISuggest={handleAISuggest}
                     showAIButton
                   />

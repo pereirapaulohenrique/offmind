@@ -21,6 +21,7 @@ import {
   Calendar,
   ListTodo,
   Clock,
+  Archive,
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -84,6 +85,7 @@ const destinationNav: NavEntry[] = [
   { href: '/schedule', label: 'Schedule', icon: Calendar, shortcut: '\u2318 3' },
   { href: '/backlog', label: 'Backlog', icon: ListTodo },
   { href: '/waiting-for', label: 'Waiting For', icon: Clock },
+  { href: '/archive', label: 'Archive', icon: Archive },
 ];
 
 // ---------------------------------------------------------------------------
@@ -127,6 +129,13 @@ function getLayerStyle(pathname: string): LayerStyle {
       bg: 'rgba(52,211,153,0.10)',
       text: 'var(--layer-commit, #34d399)',
       pill: 'var(--layer-commit, #34d399)',
+    };
+  }
+  if (pathname.startsWith('/archive')) {
+    return {
+      bg: 'rgba(120,113,108,0.10)',
+      text: 'var(--text-secondary)',
+      pill: 'var(--text-muted)',
     };
   }
   // Default: terracotta

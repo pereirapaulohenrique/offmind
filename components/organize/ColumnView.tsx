@@ -18,7 +18,7 @@ export function ColumnView({ items, destinations, spaces, projects }: ColumnView
   const { openProcessingPanel } = useUIStore();
 
   // Group items by destination
-  const columns = destinations.map((dest) => ({
+  const columns = destinations.filter((dest) => dest.slug !== 'trash').map((dest) => ({
     destination: dest,
     items: items.filter((item) => item.destination_id === dest.id),
   }));

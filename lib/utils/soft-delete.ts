@@ -21,7 +21,7 @@ export async function restoreItem(itemId: string): Promise<{ success: boolean; e
   const supabase = createClient();
   const { error } = await supabase
     .from('items')
-    .update({ archived_at: null } as any)
+    .update({ archived_at: null, layer: 'capture', destination_id: null } as any)
     .eq('id', itemId);
 
   if (error) return { success: false, error: error.message };
