@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 import { useItemsStore } from '@/stores/items';
 import { useAISuggestion } from '@/hooks/useAISuggestion';
+import { useTimeTick } from '@/hooks/useTimeTick';
 import { ItemCard } from '@/components/items/ItemCard';
 import { AISuggestionBadge } from '@/components/items/AISuggestionBadge';
 import { BulkAIActions, type BulkAISuggestion } from '@/components/ai/BulkAIActions';
@@ -31,53 +32,21 @@ interface InboxPageClientProps {
 
 export function InboxPageClient({ initialItems, destinations, spaces, projects, userId }: InboxPageClientProps) {
   const getSupabase = () => createClient();
-  const { items, setItems, addItem, updateItem, removeItem, isLoading } = useItemsStore();
+  const { items, setItems, updateItem, removeItem, isLoading } = useItemsStore();
   const { suggestDestination, suggestion, isLoading: isAILoading, clearSuggestion } = useAISuggestion();
   const { openProcessingPanel, inboxViewType, setInboxViewType } = useUIStore();
   const [aiSuggestItemId, setAiSuggestItemId] = useState<string | null>(null);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
 
-  // Initialize items from server
+  // Re-render every 30s so relative timestamps ("2 min ago") stay accurate
+  useTimeTick();
+
+  // Initialize items from server (supplements RealtimeProvider seeding)
   useEffect(() => {
     setItems(initialItems);
   }, [initialItems, setItems]);
 
-  // Subscribe to realtime changes
-  useEffect(() => {
-    const supabase = getSupabase();
-    const channel = supabase
-      .channel('items-capture')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'items',
-          filter: `user_id=eq.${userId}`,
-        },
-        (payload) => {
-          if (payload.eventType === 'INSERT' && payload.new.layer === 'capture' && !payload.new.archived_at) {
-            addItem(payload.new as Item);
-          } else if (payload.eventType === 'UPDATE') {
-            if (payload.new.archived_at) {
-              removeItem(payload.new.id as string);
-            } else if (payload.new.layer === 'capture') {
-              updateItem(payload.new as Item);
-            } else {
-              // Item moved to another layer
-              removeItem(payload.new.id as string);
-            }
-          } else if (payload.eventType === 'DELETE') {
-            removeItem(payload.old.id as string);
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [userId, addItem, updateItem, removeItem]);
+  // Realtime subscription is handled globally by RealtimeProvider in layout
 
   // Handle item update
   const handleUpdateItem = useCallback(

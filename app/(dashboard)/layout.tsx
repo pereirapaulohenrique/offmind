@@ -9,6 +9,7 @@ import { CommandPalette } from '@/components/layout/CommandPalette';
 import { AIAssistant } from '@/components/ai/AIAssistant';
 import { ProcessingPanel } from '@/components/processing/ProcessingPanel';
 import { CelebrationProvider } from '@/components/shared/Celebrations';
+import { RealtimeProvider } from '@/components/layout/RealtimeProvider';
 
 export default async function DashboardLayout({
   children,
@@ -33,13 +34,16 @@ export default async function DashboardLayout({
     .eq('id', user.id)
     .single();
 
-  // Get inbox count (items in capture layer)
-  const { count: inboxCount } = await supabase
+  // Get inbox items (capture layer) — used to seed Zustand store for reactive count
+  const { data: inboxItems } = await supabase
     .from('items')
-    .select('*', { count: 'exact', head: true })
+    .select('*')
     .eq('user_id', user.id)
     .eq('layer', 'capture')
-    .is('archived_at', null);
+    .is('archived_at', null)
+    .order('created_at', { ascending: false });
+
+  const inboxCount = inboxItems?.length || 0;
 
   // Get spaces with nested projects
   const { data: spaces } = await supabase
@@ -95,54 +99,56 @@ export default async function DashboardLayout({
 
   return (
     <CelebrationProvider>
-      <div className="flex min-h-screen bg-background">
-        {/* Desktop sidebar */}
-        <div className="hidden md:block">
-          <Sidebar {...sidebarProps} />
-        </div>
+      <RealtimeProvider userId={user.id} initialInboxItems={inboxItems || []}>
+        <div className="flex min-h-screen bg-background">
+          {/* Desktop sidebar */}
+          <div className="hidden md:block">
+            <Sidebar {...sidebarProps} />
+          </div>
 
-        {/* Main content area - sidebar-aware margins + capture bar padding */}
-        <ContentArea>
-          {/* Header */}
-          <Header
-            user={
-              profile
-                ? {
-                    email: profile.email,
-                    full_name: profile.full_name,
-                    avatar_url: profile.avatar_url,
-                  }
-                : { email: user.email || '' }
-            }
-            mobileSidebar={
-              <MobileSidebar>
-                <Sidebar {...sidebarProps} />
-              </MobileSidebar>
-            }
+          {/* Main content area - sidebar-aware margins + capture bar padding */}
+          <ContentArea>
+            {/* Header */}
+            <Header
+              user={
+                profile
+                  ? {
+                      email: profile.email,
+                      full_name: profile.full_name,
+                      avatar_url: profile.avatar_url,
+                    }
+                  : { email: user.email || '' }
+              }
+              mobileSidebar={
+                <MobileSidebar>
+                  <Sidebar {...sidebarProps} />
+                </MobileSidebar>
+              }
+            />
+
+            {/* Page content */}
+            <main className="flex-1 overflow-hidden">{children}</main>
+          </ContentArea>
+
+          {/* Processing Panel (global) */}
+          <ProcessingPanel
+            destinations={(destinations || []) as any}
+            spaces={(spaces || []) as any}
+            projects={(projects || []) as any}
+            contacts={(contacts || []) as any}
+            userId={user.id}
           />
 
-          {/* Page content */}
-          <main className="flex-1 overflow-hidden">{children}</main>
-        </ContentArea>
+          {/* Persistent capture bar */}
+          <CaptureBar userId={user.id} />
 
-        {/* Processing Panel (global) */}
-        <ProcessingPanel
-          destinations={(destinations || []) as any}
-          spaces={(spaces || []) as any}
-          projects={(projects || []) as any}
-          contacts={(contacts || []) as any}
-          userId={user.id}
-        />
+          {/* Command Palette (global) */}
+          <CommandPalette />
 
-        {/* Persistent capture bar */}
-        <CaptureBar userId={user.id} />
-
-        {/* Command Palette (global) */}
-        <CommandPalette />
-
-        {/* AI Assistant (global) */}
-        <AIAssistant />
-      </div>
+          {/* AI Assistant (global) */}
+          <AIAssistant />
+        </div>
+      </RealtimeProvider>
     </CelebrationProvider>
   );
 }

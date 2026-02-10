@@ -38,6 +38,7 @@ import {
 } from '@/components/ui/popover';
 import { ICON_MAP, COLOR_PALETTE } from '@/components/icons';
 import { OffMindLogo } from '@/components/brand/OffMindLogo';
+import { useInboxCount } from '@/stores/items';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -467,7 +468,7 @@ function PageTreeItem({ page, pathname }: PageTreeItemProps) {
 // Sidebar (main export)
 // ---------------------------------------------------------------------------
 
-export function Sidebar({ inboxCount = 0, spaces = [] }: SidebarProps) {
+export function Sidebar({ inboxCount: _inboxCountProp = 0, spaces = [] }: SidebarProps) {
   const pathname = usePathname();
   const {
     sidebarCollapsed,
@@ -475,6 +476,10 @@ export function Sidebar({ inboxCount = 0, spaces = [] }: SidebarProps) {
     sidebarExpandedNodes,
     toggleSidebarNode,
   } = useUIStore();
+
+  // Reactive inbox count from Zustand store (updated by RealtimeProvider)
+  const reactiveInboxCount = useInboxCount();
+  const inboxCount = reactiveInboxCount > 0 ? reactiveInboxCount : _inboxCountProp;
 
   // ---- Keyboard shortcuts ------------------------------------------------
 

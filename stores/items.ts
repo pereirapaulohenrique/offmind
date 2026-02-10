@@ -70,3 +70,7 @@ export const selectProcessItems = (state: ItemsState) =>
 
 export const selectCommitItems = (state: ItemsState) =>
   state.items.filter((item) => item.layer === 'commit' && item.scheduled_at);
+
+/** Reactive inbox count — use in Sidebar and anywhere else */
+export const useInboxCount = () =>
+  useItemsStore((state) => state.items.filter((i) => i.layer === 'capture' && !i.archived_at).length);

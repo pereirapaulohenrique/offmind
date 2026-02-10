@@ -2,9 +2,12 @@
 
 import { createBrowserClient } from '@supabase/ssr';
 
-// Note: We're not using strict Database typing here due to compatibility issues
-// with @supabase/ssr. Type safety is maintained through explicit casting in components.
+// Singleton — one Supabase client per browser tab for stable real-time connections
+let client: ReturnType<typeof createBrowserClient> | null = null;
+
 export function createClient() {
+  if (client) return client;
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -12,5 +15,6 @@ export function createClient() {
     throw new Error('Missing Supabase environment variables');
   }
 
-  return createBrowserClient(supabaseUrl, supabaseKey);
+  client = createBrowserClient(supabaseUrl, supabaseKey);
+  return client;
 }
