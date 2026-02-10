@@ -1241,7 +1241,7 @@ export async function POST(request: NextRequest) {
         user_id: user.id,
         source_item_id: wireframesId,
         target_item_id: mockupsId,
-        relation_type: 'related_to',
+        relation_type: 'related',
       });
     }
 
@@ -1253,7 +1253,7 @@ export async function POST(request: NextRequest) {
         user_id: user.id,
         source_item_id: blogId,
         target_item_id: aiNoteId,
-        relation_type: 'related_to',
+        relation_type: 'related',
       });
     }
 
