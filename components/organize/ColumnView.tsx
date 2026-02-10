@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useUIStore } from '@/stores/ui';
+import { useRouter } from 'next/navigation';
 import { ICON_MAP, COLOR_PALETTE } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
@@ -15,7 +15,7 @@ interface ColumnViewProps {
 }
 
 export function ColumnView({ items, destinations, spaces, projects }: ColumnViewProps) {
-  const { openProcessingPanel } = useUIStore();
+  const router = useRouter();
 
   // Group items by destination
   const columns = destinations.filter((dest) => dest.slug !== 'trash').map((dest) => ({
@@ -71,7 +71,7 @@ export function ColumnView({ items, destinations, spaces, projects }: ColumnView
                       initial={{ opacity: 0, y: 4 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.02 }}
-                      onClick={() => openProcessingPanel(item.id)}
+                      onClick={() => router.push(`/items/${item.id}`)}
                       className="w-full text-left rounded-xl p-3 hover:bg-[var(--bg-hover)] transition-colors duration-150 group"
                     >
                       <p className="text-sm text-[var(--text-primary)] leading-snug">

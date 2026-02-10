@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useUIStore } from '@/stores/ui';
+import { useRouter } from 'next/navigation';
 import { ICON_MAP, COLOR_PALETTE } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
@@ -15,7 +15,7 @@ interface GridViewProps {
 }
 
 export function GridView({ items, destinations, spaces, projects }: GridViewProps) {
-  const { openProcessingPanel } = useUIStore();
+  const router = useRouter();
 
   const groups = destinations
     .filter((dest) => dest.slug !== 'trash')
@@ -65,7 +65,7 @@ export function GridView({ items, destinations, spaces, projects }: GridViewProp
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.03 }}
-                    onClick={() => openProcessingPanel(item.id)}
+                    onClick={() => router.push(`/items/${item.id}`)}
                     className="text-left rounded-2xl bg-[var(--bg-surface)] shadow-[var(--shadow-card)] p-4 hover:shadow-lg hover:scale-[1.01] transition-all duration-200"
                   >
                     <p className="text-sm font-medium text-[var(--text-primary)] leading-snug line-clamp-2">

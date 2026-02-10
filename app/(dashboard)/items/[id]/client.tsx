@@ -16,6 +16,7 @@ import {
   Play,
   ImageIcon,
   Volume2,
+  ChevronRight,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { softDeleteItem } from '@/lib/utils/soft-delete';
@@ -29,13 +30,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { ICON_MAP, COLOR_PALETTE } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { SubtasksList } from '@/components/item-detail/SubtasksList';
-import { DestinationContextSection } from '@/components/item-detail/DestinationContextSection';
 import { LinkedPageSection } from '@/components/item-detail/LinkedPageSection';
 import type {
   Item,
@@ -821,7 +826,7 @@ export function ItemDetailClient({
       return (
         <span className="flex items-center gap-1.5 text-xs text-orange-400/80">
           <Loader2 className="h-3 w-3 animate-spin" />
-          Saving...
+          Saving…
         </span>
       );
     }
@@ -837,39 +842,6 @@ export function ItemDetailClient({
       return <span className="text-xs text-red-400/80">Save failed</span>;
     }
     return <span className="text-xs text-neutral-600">Up to date</span>;
-  };
-
-  const renderDestinationButton = (dest: Destination) => {
-    const DestIcon = ICON_MAP[dest.icon] || ICON_MAP['inbox'];
-    const colorOpt = COLOR_PALETTE.find((c) => c.value === dest.color);
-    const isActive = destinationId === dest.id;
-
-    return (
-      <button
-        key={dest.id}
-        type="button"
-        onClick={() => handleDestinationChange(dest.id)}
-        className={cn(
-          'group relative flex flex-col items-center justify-center gap-1.5 rounded-2xl border px-3 py-3 text-xs font-medium transition-all duration-200',
-          'min-w-[80px]',
-          isActive
-            ? 'border-[#c2410c]/60 bg-[#c2410c]/10 text-[#c2410c] shadow-md ring-2 ring-[#c2410c]/30'
-            : 'border-white/[0.06] bg-white/[0.03] text-neutral-400 hover:border-white/[0.12] hover:bg-white/[0.06] hover:text-neutral-200',
-        )}
-      >
-        {DestIcon && (
-          <DestIcon
-            className={cn(
-              'h-4.5 w-4.5 transition-colors',
-              isActive
-                ? 'text-[#c2410c]'
-                : colorOpt?.text ?? 'text-neutral-500',
-            )}
-          />
-        )}
-        <span className="truncate max-w-[72px]">{dest.name}</span>
-      </button>
-    );
   };
 
   const renderBuiltInField = (
@@ -1109,8 +1081,12 @@ export function ItemDetailClient({
   };
 
   // ===================================================================
-  // RENDER
+  // RENDER — Centered single-column layout
   // ===================================================================
+
+  const DestIcon = selectedDestination
+    ? ICON_MAP[selectedDestination.icon] || ICON_MAP['inbox']
+    : null;
 
   return (
     <>
@@ -1120,16 +1096,12 @@ export function ItemDetailClient({
         transition={springTransition}
         className="flex h-full flex-col"
       >
-        {/* ================================================================
-            TWO-COLUMN LAYOUT
-            ================================================================ */}
-        <div className="flex flex-1 flex-col overflow-hidden lg:flex-row">
-          {/* ============================================================
-              LEFT COLUMN (2/3)
-              ============================================================ */}
-          <ScrollArea className="flex-1 lg:w-2/3 overflow-y-auto">
-            <div className="mx-auto max-w-3xl space-y-6 px-6 py-6 lg:px-8 lg:py-8">
-              {/* ---- Back button + breadcrumb ---- */}
+        {/* ── Scrollable content ─────────────────────────────────── */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="mx-auto max-w-3xl space-y-8 px-6 py-8 lg:px-10">
+
+            {/* ── Header: back + save ──────────────────────────────── */}
+            <div className="flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => router.back()}
@@ -1141,547 +1113,487 @@ export function ItemDetailClient({
                   <span className="text-neutral-300">{breadcrumbDestName}</span>
                 </span>
               </button>
+              {renderSaveIndicator()}
+            </div>
 
-              {/* ---- Title (editable) ---- */}
-              <Input
-                value={title}
-                onChange={(e) => handleTitleChange(e.target.value)}
-                placeholder="Item title..."
+            {/* ── Title ────────────────────────────────────────────── */}
+            <Input
+              value={title}
+              onChange={(e) => handleTitleChange(e.target.value)}
+              placeholder="Item title…"
+              className={cn(
+                'h-auto border-none bg-transparent px-0 py-1 text-2xl font-semibold text-neutral-100',
+                'placeholder:text-neutral-600',
+                'focus-visible:ring-0 focus-visible:shadow-none',
+              )}
+            />
+
+            {/* ── Meta line ────────────────────────────────────────── */}
+            <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-500">
+              <span
                 className={cn(
-                  'h-auto border-none bg-transparent px-0 py-1 text-2xl font-semibold text-neutral-100',
-                  'placeholder:text-neutral-600',
-                  'focus-visible:ring-0 focus-visible:shadow-none',
+                  'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-medium',
+                  layerConfig.bg,
+                  layerConfig.color,
                 )}
-              />
+              >
+                {layerConfig.label}
+              </span>
 
-              {/* ---- Meta line ---- */}
-              <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-500">
-                {/* Layer badge */}
-                <span
-                  className={cn(
-                    'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-medium',
-                    layerConfig.bg,
-                    layerConfig.color,
-                  )}
-                >
-                  {layerConfig.label}
-                </span>
+              {item.source && (
+                <>
+                  <span className="text-neutral-700">·</span>
+                  <span className="capitalize">{item.source}</span>
+                </>
+              )}
 
-                {/* Source */}
-                {item.source && (
-                  <>
-                    <span className="text-neutral-600">|</span>
-                    <span className="capitalize">{item.source}</span>
-                  </>
-                )}
+              <span className="text-neutral-700">·</span>
+              <span>
+                Created{' '}
+                {formatDistanceToNow(new Date(item.created_at), {
+                  addSuffix: true,
+                })}
+              </span>
 
-                {/* Created date */}
-                <span className="text-neutral-600">|</span>
-                <span>
-                  Created{' '}
-                  {formatDistanceToNow(new Date(item.created_at), {
-                    addSuffix: true,
-                  })}
-                </span>
-
-                {/* Completed badge */}
-                {item.is_completed && (
-                  <>
-                    <span className="text-neutral-600">|</span>
-                    <span className="flex items-center gap-1 text-emerald-400">
-                      <CheckCircle2 className="h-3 w-3" />
-                      Completed
-                    </span>
-                  </>
-                )}
-              </div>
-
-              {/* ---- Notes textarea ---- */}
-              <div className="space-y-2">
-                <label className="text-xs font-medium text-neutral-400">
-                  Notes
-                </label>
-                <textarea
-                  ref={textareaRef}
-                  value={notes}
-                  onChange={(e) => handleNotesChange(e.target.value)}
-                  placeholder="Add notes..."
-                  rows={3}
-                  className={cn(
-                    'w-full resize-none rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3',
-                    'text-sm leading-relaxed text-neutral-300 placeholder:text-neutral-600',
-                    'outline-none transition-colors',
-                    'focus:border-[#c2410c]/30 focus:bg-white/[0.03]',
-                  )}
-                  style={{ minHeight: '100px' }}
-                />
-              </div>
-
-              {/* ---- Subtasks section ---- */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="h-px flex-1 bg-white/[0.06]" />
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-500">
-                    Subtasks
+              {item.is_completed && (
+                <>
+                  <span className="text-neutral-700">·</span>
+                  <span className="flex items-center gap-1 text-emerald-400">
+                    <CheckCircle2 className="h-3 w-3" />
+                    Completed
                   </span>
-                  <div className="h-px flex-1 bg-white/[0.06]" />
-                </div>
-
-                <SubtasksList
-                  itemId={item.id}
-                  initialSubtasks={initialSubtasks}
-                  userId={userId}
-                />
-              </div>
-
-              {/* ---- Attachments section ---- */}
-              {(imageAttachments.length > 0 ||
-                audioAttachments.length > 0) && (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="h-px flex-1 bg-white/[0.06]" />
-                    <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-500">
-                      Attachments
-                    </span>
-                    <div className="h-px flex-1 bg-white/[0.06]" />
-                  </div>
-
-                  {/* Image thumbnails */}
-                  {imageAttachments.length > 0 && (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-1.5 text-xs text-neutral-500">
-                        <ImageIcon className="h-3.5 w-3.5" />
-                        <span>
-                          {imageAttachments.length} image
-                          {imageAttachments.length !== 1 ? 's' : ''}
-                        </span>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {imageAttachments.map((att) => (
-                          <button
-                            key={att.id}
-                            type="button"
-                            onClick={() => setLightboxSrc(att.url)}
-                            className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.03] transition-all hover:border-white/[0.16] hover:shadow-lg cursor-zoom-in"
-                          >
-                            <img
-                              src={att.url}
-                              alt={att.filename}
-                              className="h-28 w-36 object-cover transition-transform duration-200 group-hover:scale-105"
-                            />
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition-colors">
-                              <Maximize2 className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Audio players */}
-                  {audioAttachments.length > 0 && (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-1.5 text-xs text-neutral-500">
-                        <Volume2 className="h-3.5 w-3.5" />
-                        <span>
-                          {audioAttachments.length} audio recording
-                          {audioAttachments.length !== 1 ? 's' : ''}
-                        </span>
-                      </div>
-                      <div className="space-y-2">
-                        {audioAttachments.map((att) => (
-                          <AudioPlayer
-                            key={att.id}
-                            src={att.url}
-                            duration={att.duration}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                </>
               )}
             </div>
-          </ScrollArea>
 
-          {/* ============================================================
-              RIGHT COLUMN (1/3) - Sticky sidebar
-              ============================================================ */}
-          <div className="border-t border-white/[0.06] lg:border-t-0 lg:border-l lg:w-1/3">
-            <ScrollArea className="h-full overflow-y-auto">
-              <div className="sticky top-0 space-y-5 px-5 py-6 lg:px-6">
-                {/* ---- Save status indicator ---- */}
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-500">
-                    Status
-                  </span>
-                  {renderSaveIndicator()}
-                </div>
+            {/* ── Destination row ──────────────────────────────────── */}
+            <div className="flex items-center gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
+              {selectedDestination && DestIcon ? (
+                <span className="inline-flex items-center gap-2 rounded-full border border-[#c2410c]/30 bg-[#c2410c]/10 px-3 py-1 text-sm font-medium text-[#c2410c]">
+                  <DestIcon className="h-3.5 w-3.5" />
+                  {selectedDestination.name}
+                </span>
+              ) : (
+                <span className="text-sm text-neutral-500">No destination</span>
+              )}
 
-                {/* ---- Destination grid ---- */}
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="h-px flex-1 bg-white/[0.06]" />
-                    <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-500">
-                      Destination
-                    </span>
-                    <div className="h-px flex-1 bg-white/[0.06]" />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
-                    {destinations
-                      .slice()
-                      .sort((a, b) => a.sort_order - b.sort_order)
-                      .map(renderDestinationButton)}
-                  </div>
-                </div>
-
-                {/* ---- Destination-contextual fields ---- */}
-                {(builtInFields.length > 0 ||
-                  customFieldDefs.length > 0 ||
-                  showWaitingSection) && (
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <div className="h-px flex-1 bg-white/[0.06]" />
-                      <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-500">
-                        {selectedDestination?.name ?? 'Destination'}{' '}
-                        Fields
-                      </span>
-                      <div className="h-px flex-1 bg-white/[0.06]" />
-                    </div>
-
-                    <div className="space-y-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
-                      {/* Waiting-specific fields */}
-                      {showWaitingSection && (
-                        <>
-                          <div className="relative space-y-1.5">
-                            <label className="text-xs font-medium text-neutral-400">
-                              Waiting For
-                            </label>
-                            <Input
-                              value={waitingFor}
-                              onChange={(e) => {
-                                handleWaitingForChange(e.target.value);
-                                setShowContactSuggestions(true);
-                              }}
-                              onFocus={() =>
-                                setShowContactSuggestions(true)
-                              }
-                              onBlur={() =>
-                                setTimeout(
-                                  () =>
-                                    setShowContactSuggestions(false),
-                                  200,
-                                )
-                              }
-                              placeholder="Person or thing you're waiting on"
-                              className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]"
-                            />
-                            {showContactSuggestions &&
-                              waitingFor &&
-                              contacts &&
-                              contacts.length > 0 &&
-                              (() => {
-                                const filtered = contacts
-                                  .filter((c) =>
-                                    c.name
-                                      .toLowerCase()
-                                      .includes(
-                                        waitingFor.toLowerCase(),
-                                      ),
-                                  )
-                                  .slice(0, 5);
-                                if (filtered.length === 0)
-                                  return null;
-                                return (
-                                  <div className="absolute top-full left-0 right-0 z-50 mt-1 max-h-36 overflow-y-auto rounded-xl border border-white/[0.08] bg-[#1c1917] shadow-lg">
-                                    {filtered.map((c) => (
-                                      <button
-                                        key={c.id}
-                                        type="button"
-                                        onMouseDown={(e) =>
-                                          e.preventDefault()
-                                        }
-                                        onClick={() => {
-                                          handleWaitingForChange(
-                                            c.name,
-                                          );
-                                          setShowContactSuggestions(
-                                            false,
-                                          );
-                                        }}
-                                        className="w-full text-left px-3 py-2 text-sm text-neutral-300 hover:bg-white/[0.06] transition-colors"
-                                      >
-                                        {c.name}
-                                        {c.email && (
-                                          <span className="ml-2 text-xs text-neutral-500">
-                                            {c.email}
-                                          </span>
-                                        )}
-                                      </button>
-                                    ))}
-                                  </div>
-                                );
-                              })()}
-                          </div>
-                          {item.waiting_since && (
-                            <div className="space-y-1">
-                              <label className="text-xs font-medium text-neutral-400">
-                                Waiting Since
-                              </label>
-                              <p className="text-sm text-neutral-300">
-                                {new Date(
-                                  item.waiting_since,
-                                ).toLocaleDateString(undefined, {
-                                  year: 'numeric',
-                                  month: 'long',
-                                  day: 'numeric',
-                                })}
-                              </p>
-                            </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className="ml-auto flex items-center gap-1.5 text-sm text-neutral-400 hover:text-[#c2410c] transition-colors"
+                  >
+                    {selectedDestination
+                      ? 'Move to another destination'
+                      : 'Choose destination'}
+                    <ChevronRight className="h-3.5 w-3.5" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-52">
+                  {destinations
+                    .slice()
+                    .sort((a, b) => a.sort_order - b.sort_order)
+                    .map((dest) => {
+                      const Icon = ICON_MAP[dest.icon] || ICON_MAP['inbox'];
+                      const isActive = destinationId === dest.id;
+                      return (
+                        <DropdownMenuItem
+                          key={dest.id}
+                          onClick={() => handleDestinationChange(dest.id)}
+                          className={cn(
+                            'gap-2',
+                            isActive && 'text-[#c2410c] font-medium',
                           )}
-                        </>
-                      )}
+                        >
+                          {Icon && <Icon className="h-4 w-4" />}
+                          <span className="flex-1">{dest.name}</span>
+                          {isActive && <CheckCircle2 className="h-3 w-3 ml-auto opacity-60" />}
+                        </DropdownMenuItem>
+                      );
+                    })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
 
-                      {/* Built-in destination fields */}
-                      {builtInFields
-                        .filter(
-                          (f) =>
-                            !(
-                              showWaitingSection &&
-                              f.name === 'waiting_for'
-                            ),
-                        )
-                        .map(renderBuiltInField)}
-
-                      {/* Custom fields from destination.custom_fields */}
-                      {customFieldDefs.map(renderCustomField)}
-                    </div>
-                  </div>
+            {/* ── Notes ────────────────────────────────────────────── */}
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-neutral-400">
+                Notes
+              </label>
+              <textarea
+                ref={textareaRef}
+                value={notes}
+                onChange={(e) => handleNotesChange(e.target.value)}
+                placeholder="Add notes…"
+                rows={3}
+                className={cn(
+                  'w-full resize-none rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3',
+                  'text-sm leading-relaxed text-neutral-300 placeholder:text-neutral-600',
+                  'outline-none transition-colors',
+                  'focus:border-[#c2410c]/30 focus:bg-white/[0.03]',
                 )}
+                style={{ minHeight: '100px' }}
+              />
+            </div>
 
-                {/* ---- Destination Context Section (imported) ---- */}
-                {selectedDestination && (
-                  <DestinationContextSection
-                    item={item}
-                    destinationSlug={destinationSlug}
-                    destinationName={selectedDestination.name}
-                    customValues={customValues}
-                    onCustomValueChange={handleCustomValueChange}
-                    contacts={contacts}
-                    onAction={(action, payload) => {
-                      if (action === 'schedule') {
-                        if (payload?.date) {
-                          handleScheduledAtChange(payload.date);
-                        }
-                      } else if (action === 'complete') {
-                        handleComplete();
-                      }
-                    }}
-                  />
-                )}
+            {/* ── Destination-specific fields ───────────────────────── */}
+            {(builtInFields.length > 0 ||
+              showWaitingSection ||
+              customFieldDefs.length > 0) && (
+              <div className="space-y-3">
+                <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                  {selectedDestination?.name ?? 'Destination'} Details
+                </h3>
 
-                {/* ---- Organize: Space + Project ---- */}
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="h-px flex-1 bg-white/[0.06]" />
-                    <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-500">
-                      Organize
-                    </span>
-                    <div className="h-px flex-1 bg-white/[0.06]" />
-                  </div>
-
-                  <div className="space-y-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
-                    {/* Space */}
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-neutral-400">
-                        Space
-                      </label>
-                      <Select
-                        value={spaceId ?? 'none'}
-                        onValueChange={handleSpaceChange}
-                      >
-                        <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
-                          <SelectValue placeholder="No space" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="none">None</SelectItem>
-                          {spaces.map((space) => {
-                            const SpaceIcon = ICON_MAP[space.icon];
-                            return (
-                              <SelectItem
-                                key={space.id}
-                                value={space.id}
-                              >
-                                <span className="flex items-center gap-2">
-                                  {SpaceIcon && (
-                                    <SpaceIcon className="h-4 w-4" />
-                                  )}
-                                  <span>{space.name}</span>
-                                </span>
-                              </SelectItem>
-                            );
-                          })}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {/* Project */}
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-neutral-400">
-                        Project
-                      </label>
-                      <Select
-                        value={projectId ?? 'none'}
-                        onValueChange={handleProjectChange}
-                      >
-                        <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
-                          <SelectValue placeholder="No project" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="none">None</SelectItem>
-                          {projects
-                            .filter(
-                              (p) =>
-                                !spaceId ||
-                                p.space_id === spaceId ||
-                                p.space_id === null,
-                            )
-                            .map((project) => {
-                              const ProjIcon =
-                                ICON_MAP[project.icon];
-                              return (
-                                <SelectItem
-                                  key={project.id}
-                                  value={project.id}
-                                >
-                                  <span className="flex items-center gap-2">
-                                    {ProjIcon && (
-                                      <ProjIcon className="h-4 w-4" />
-                                    )}
-                                    <span>
-                                      {project.name}
-                                    </span>
-                                  </span>
-                                </SelectItem>
-                              );
-                            })}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </div>
-
-                {/* ---- Schedule section ---- */}
-                {showScheduleSection && (
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <div className="h-px flex-1 bg-white/[0.06]" />
-                      <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-500">
-                        Schedule
-                      </span>
-                      <div className="h-px flex-1 bg-white/[0.06]" />
-                    </div>
-
-                    <div className="space-y-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
-                      <div className="space-y-1.5">
+                <div className="space-y-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
+                  {/* Waiting-specific fields */}
+                  {showWaitingSection && (
+                    <>
+                      <div className="relative space-y-1.5">
                         <label className="text-xs font-medium text-neutral-400">
-                          Scheduled At
+                          Waiting For
                         </label>
                         <Input
-                          type="datetime-local"
-                          value={scheduledAt}
-                          onChange={(e) =>
-                            handleScheduledAtChange(e.target.value)
+                          value={waitingFor}
+                          onChange={(e) => {
+                            handleWaitingForChange(e.target.value);
+                            setShowContactSuggestions(true);
+                          }}
+                          onFocus={() => setShowContactSuggestions(true)}
+                          onBlur={() =>
+                            setTimeout(
+                              () => setShowContactSuggestions(false),
+                              200,
+                            )
                           }
+                          placeholder="Person or thing you're waiting on"
                           className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]"
                         />
+                        {showContactSuggestions &&
+                          waitingFor &&
+                          contacts &&
+                          contacts.length > 0 &&
+                          (() => {
+                            const filtered = contacts
+                              .filter((c) =>
+                                c.name
+                                  .toLowerCase()
+                                  .includes(waitingFor.toLowerCase()),
+                              )
+                              .slice(0, 5);
+                            if (filtered.length === 0) return null;
+                            return (
+                              <div className="absolute top-full left-0 right-0 z-50 mt-1 max-h-36 overflow-y-auto rounded-xl border border-white/[0.08] bg-[#1c1917] shadow-lg">
+                                {filtered.map((c) => (
+                                  <button
+                                    key={c.id}
+                                    type="button"
+                                    onMouseDown={(e) => e.preventDefault()}
+                                    onClick={() => {
+                                      handleWaitingForChange(c.name);
+                                      setShowContactSuggestions(false);
+                                    }}
+                                    className="w-full text-left px-3 py-2 text-sm text-neutral-300 hover:bg-white/[0.06] transition-colors"
+                                  >
+                                    {c.name}
+                                    {c.email && (
+                                      <span className="ml-2 text-xs text-neutral-500">
+                                        {c.email}
+                                      </span>
+                                    )}
+                                  </button>
+                                ))}
+                              </div>
+                            );
+                          })()}
                       </div>
-
-                      <div className="flex items-center gap-4">
-                        <div className="flex-1 space-y-1.5">
+                      {item.waiting_since && (
+                        <div className="space-y-1">
                           <label className="text-xs font-medium text-neutral-400">
-                            Duration (min)
+                            Waiting Since
                           </label>
-                          <Input
-                            type="number"
-                            min={0}
-                            step={5}
-                            value={durationMinutes ?? ''}
-                            onChange={(e) =>
-                              handleDurationChange(e.target.value)
-                            }
-                            placeholder="30"
-                            className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]"
-                          />
-                        </div>
-
-                        <div className="flex items-center gap-2 pt-5">
-                          <button
-                            type="button"
-                            onClick={handleAllDayToggle}
-                            className={cn(
-                              'relative h-5 w-9 shrink-0 rounded-full transition-colors',
-                              isAllDay
-                                ? 'bg-[#c2410c]'
-                                : 'bg-white/[0.1]',
+                          <p className="text-sm text-neutral-300">
+                            {new Date(item.waiting_since).toLocaleDateString(
+                              undefined,
+                              {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                              },
                             )}
-                          >
-                            <span
-                              className={cn(
-                                'absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform',
-                                isAllDay && 'translate-x-4',
-                              )}
-                            />
-                          </button>
-                          <span className="text-xs text-neutral-400">
-                            All day
-                          </span>
+                          </p>
                         </div>
-                      </div>
-
-                      {scheduledAt && (
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleScheduledAtChange('')
-                          }
-                          className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
-                        >
-                          Clear schedule
-                        </button>
                       )}
+                    </>
+                  )}
+
+                  {/* Built-in destination fields */}
+                  {builtInFields
+                    .filter(
+                      (f) =>
+                        !(showWaitingSection && f.name === 'waiting_for'),
+                    )
+                    .map(renderBuiltInField)}
+
+                  {/* Custom fields from destination.custom_fields */}
+                  {customFieldDefs.map(renderCustomField)}
+                </div>
+              </div>
+            )}
+
+            {/* ── Subtasks ─────────────────────────────────────────── */}
+            <div className="space-y-3">
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                Subtasks
+              </h3>
+              <SubtasksList
+                itemId={item.id}
+                initialSubtasks={initialSubtasks}
+                userId={userId}
+              />
+            </div>
+
+            {/* ── Schedule ─────────────────────────────────────────── */}
+            {showScheduleSection && (
+              <div className="space-y-3">
+                <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                  Schedule
+                </h3>
+
+                <div className="space-y-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-neutral-400">
+                      Scheduled At
+                    </label>
+                    <Input
+                      type="datetime-local"
+                      value={scheduledAt}
+                      onChange={(e) =>
+                        handleScheduledAtChange(e.target.value)
+                      }
+                      className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1 space-y-1.5">
+                      <label className="text-xs font-medium text-neutral-400">
+                        Duration (min)
+                      </label>
+                      <Input
+                        type="number"
+                        min={0}
+                        step={5}
+                        value={durationMinutes ?? ''}
+                        onChange={(e) =>
+                          handleDurationChange(e.target.value)
+                        }
+                        placeholder="30"
+                        className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-2 pt-5">
+                      <button
+                        type="button"
+                        onClick={handleAllDayToggle}
+                        className={cn(
+                          'relative h-5 w-9 shrink-0 rounded-full transition-colors',
+                          isAllDay ? 'bg-[#c2410c]' : 'bg-white/[0.1]',
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            'absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform',
+                            isAllDay && 'translate-x-4',
+                          )}
+                        />
+                      </button>
+                      <span className="text-xs text-neutral-400">
+                        All day
+                      </span>
+                    </div>
+                  </div>
+
+                  {scheduledAt && (
+                    <button
+                      type="button"
+                      onClick={() => handleScheduledAtChange('')}
+                      className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
+                    >
+                      Clear schedule
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* ── Organize: Space + Project ─────────────────────────── */}
+            <div className="space-y-3">
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                Organize
+              </h3>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
+                {/* Space */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-neutral-400">
+                    Space
+                  </label>
+                  <Select
+                    value={spaceId ?? 'none'}
+                    onValueChange={handleSpaceChange}
+                  >
+                    <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
+                      <SelectValue placeholder="No space" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">None</SelectItem>
+                      {spaces.map((space) => {
+                        const SpaceIcon = ICON_MAP[space.icon];
+                        return (
+                          <SelectItem key={space.id} value={space.id}>
+                            <span className="flex items-center gap-2">
+                              {SpaceIcon && (
+                                <SpaceIcon className="h-4 w-4" />
+                              )}
+                              <span>{space.name}</span>
+                            </span>
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Project */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-neutral-400">
+                    Project
+                  </label>
+                  <Select
+                    value={projectId ?? 'none'}
+                    onValueChange={handleProjectChange}
+                  >
+                    <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
+                      <SelectValue placeholder="No project" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">None</SelectItem>
+                      {projects
+                        .filter(
+                          (p) =>
+                            !spaceId ||
+                            p.space_id === spaceId ||
+                            p.space_id === null,
+                        )
+                        .map((project) => {
+                          const ProjIcon = ICON_MAP[project.icon];
+                          return (
+                            <SelectItem
+                              key={project.id}
+                              value={project.id}
+                            >
+                              <span className="flex items-center gap-2">
+                                {ProjIcon && (
+                                  <ProjIcon className="h-4 w-4" />
+                                )}
+                                <span>{project.name}</span>
+                              </span>
+                            </SelectItem>
+                          );
+                        })}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+
+            {/* ── Linked Page ──────────────────────────────────────── */}
+            <LinkedPageSection
+              item={item}
+              linkedPage={linkedPage}
+              userId={userId}
+              onPageCreated={(pageId) => {
+                const fetchPage = async () => {
+                  const { data } = await supabase
+                    .from('pages')
+                    .select('*')
+                    .eq('id', pageId)
+                    .single();
+                  if (data) setLinkedPage(data as Page);
+                };
+                fetchPage();
+              }}
+            />
+
+            {/* ── Attachments ──────────────────────────────────────── */}
+            {(imageAttachments.length > 0 ||
+              audioAttachments.length > 0) && (
+              <div className="space-y-4">
+                <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                  Attachments
+                </h3>
+
+                {imageAttachments.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1.5 text-xs text-neutral-500">
+                      <ImageIcon className="h-3.5 w-3.5" />
+                      <span>
+                        {imageAttachments.length} image
+                        {imageAttachments.length !== 1 ? 's' : ''}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {imageAttachments.map((att) => (
+                        <button
+                          key={att.id}
+                          type="button"
+                          onClick={() => setLightboxSrc(att.url)}
+                          className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.03] transition-all hover:border-white/[0.16] hover:shadow-lg cursor-zoom-in"
+                        >
+                          <img
+                            src={att.url}
+                            alt={att.filename}
+                            className="h-28 w-36 object-cover transition-transform duration-200 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition-colors">
+                            <Maximize2 className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </div>
+                        </button>
+                      ))}
                     </div>
                   </div>
                 )}
 
-                {/* ---- Linked Page section ---- */}
-                <LinkedPageSection
-                  item={item}
-                  linkedPage={linkedPage}
-                  userId={userId}
-                  onPageCreated={(pageId) => {
-                    // Refresh linked page state after creation
-                    const fetchPage = async () => {
-                      const { data } = await supabase
-                        .from('pages')
-                        .select('*')
-                        .eq('id', pageId)
-                        .single();
-                      if (data) setLinkedPage(data as Page);
-                    };
-                    fetchPage();
-                  }}
-                />
+                {audioAttachments.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1.5 text-xs text-neutral-500">
+                      <Volume2 className="h-3.5 w-3.5" />
+                      <span>
+                        {audioAttachments.length} audio recording
+                        {audioAttachments.length !== 1 ? 's' : ''}
+                      </span>
+                    </div>
+                    <div className="space-y-2">
+                      {audioAttachments.map((att) => (
+                        <AudioPlayer
+                          key={att.id}
+                          src={att.url}
+                          duration={att.duration}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-            </ScrollArea>
+            )}
+
           </div>
         </div>
 
-        {/* ================================================================
-            FOOTER (full width)
-            ================================================================ */}
-        <div className="flex shrink-0 items-center justify-between border-t border-white/[0.06] px-5 py-3">
+        {/* ── Footer ───────────────────────────────────────────────── */}
+        <div className="flex shrink-0 items-center justify-between border-t border-white/[0.06] px-6 py-3">
           {/* Left: Delete */}
           <Button
             variant="ghost"
@@ -1739,7 +1651,7 @@ export function ItemDetailClient({
         </div>
       </motion.div>
 
-      {/* ---- Image Lightbox ---- */}
+      {/* ── Image Lightbox ───────────────────────────────────────── */}
       <AnimatePresence>
         {lightboxSrc && (
           <ImageLightbox

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import { useUIStore } from '@/stores/ui';
+import { useRouter } from 'next/navigation';
 import { ICON_MAP, COLOR_PALETTE } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
@@ -17,7 +17,7 @@ interface ListViewProps {
 }
 
 export function ListView({ items, destinations, spaces, projects }: ListViewProps) {
-  const { openProcessingPanel } = useUIStore();
+  const router = useRouter();
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
   const toggleGroup = (destId: string) => {
@@ -95,7 +95,7 @@ export function ListView({ items, destinations, spaces, projects }: ListViewProp
                       return (
                         <button
                           key={item.id}
-                          onClick={() => openProcessingPanel(item.id)}
+                          onClick={() => router.push(`/items/${item.id}`)}
                           className="w-full flex items-center gap-3 px-5 py-3 hover:bg-[var(--bg-hover)] transition-colors duration-150 text-left border-b border-[var(--border-subtle)] last:border-b-0"
                         >
                           <div className="h-2 w-2 rounded-full bg-[var(--text-disabled)] flex-shrink-0" />
