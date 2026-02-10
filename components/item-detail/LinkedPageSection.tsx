@@ -10,10 +10,110 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import type { Item, Page } from '@/types/database';
 
+// ---------------------------------------------------------------------------
+// Destination-aware page templates
+// ---------------------------------------------------------------------------
+
+function getDestinationTemplate(destinationSlug: string, title: string, notes: string | null): any {
+  const baseDoc = (content: any[]) => ({
+    type: 'doc',
+    content,
+  });
+
+  const heading = (text: string, level: number = 1) => ({
+    type: 'heading',
+    attrs: { level },
+    content: [{ type: 'text', text }],
+  });
+
+  const paragraph = (text?: string) => text
+    ? { type: 'paragraph', content: [{ type: 'text', text }] }
+    : { type: 'paragraph' };
+
+  const bulletList = (items: string[]) => ({
+    type: 'bulletList',
+    content: items.map(item => ({
+      type: 'listItem',
+      content: [{ type: 'paragraph', content: [{ type: 'text', text: item }] }],
+    })),
+  });
+
+  switch (destinationSlug) {
+    case 'commit':
+      return baseDoc([
+        heading(`Meeting Notes: ${title}`),
+        paragraph(notes || undefined),
+        heading('Attendees', 2),
+        bulletList(['Add attendees...']),
+        heading('Agenda', 2),
+        bulletList(['Topic 1', 'Topic 2']),
+        heading('Notes', 2),
+        paragraph(),
+        heading('Action Items', 2),
+        bulletList(['Action 1']),
+        heading('Decisions', 2),
+        paragraph(),
+      ]);
+
+    case 'backlog':
+      return baseDoc([
+        heading(`Task Brief: ${title}`),
+        paragraph(notes || undefined),
+        heading('Objective', 2),
+        paragraph('What needs to be accomplished?'),
+        heading('Context', 2),
+        paragraph('Why is this important?'),
+        heading('Requirements', 2),
+        bulletList(['Requirement 1', 'Requirement 2']),
+        heading('Acceptance Criteria', 2),
+        bulletList(['Criteria 1']),
+        heading('Notes', 2),
+        paragraph(),
+      ]);
+
+    case 'questions':
+      return baseDoc([
+        heading(`Research: ${title}`),
+        paragraph(notes || undefined),
+        heading('Question', 2),
+        paragraph(title),
+        heading('Hypothesis', 2),
+        paragraph('What do I think the answer might be?'),
+        heading('Research', 2),
+        paragraph(),
+        heading('Sources', 2),
+        bulletList(['Source 1']),
+        heading('Conclusion', 2),
+        paragraph(),
+      ]);
+
+    case 'reference':
+      return baseDoc([
+        heading(title),
+        paragraph(notes || undefined),
+        heading('Summary', 2),
+        paragraph(),
+        heading('Key Points', 2),
+        bulletList(['Point 1']),
+        heading('Related Topics', 2),
+        paragraph(),
+      ]);
+
+    default:
+      // Default: just title + notes
+      return baseDoc([
+        heading(title),
+        ...(notes ? [paragraph(notes)] : []),
+        paragraph(),
+      ]);
+  }
+}
+
 interface LinkedPageSectionProps {
   item: Item;
   linkedPage: Page | null;
   userId: string;
+  destinationSlug?: string;
   onPageCreated?: (pageId: string) => void;
 }
 
@@ -21,6 +121,7 @@ export function LinkedPageSection({
   item,
   linkedPage,
   userId,
+  destinationSlug,
   onPageCreated,
 }: LinkedPageSectionProps) {
   const router = useRouter();
@@ -32,26 +133,8 @@ export function LinkedPageSection({
     try {
       const supabase = createClient();
 
-      // Build initial TipTap document from item data
-      const tiptapDoc = {
-        type: 'doc',
-        content: [
-          {
-            type: 'heading',
-            attrs: { level: 1 },
-            content: [{ type: 'text', text: item.title }],
-          },
-          ...(item.notes
-            ? [
-                {
-                  type: 'paragraph',
-                  content: [{ type: 'text', text: item.notes }],
-                },
-              ]
-            : []),
-          { type: 'paragraph' },
-        ],
-      };
+      // Build initial TipTap document from item data using destination template
+      const tiptapDoc = getDestinationTemplate(destinationSlug || '', item.title, item.notes);
 
       const { data: newPage, error } = await supabase
         .from('pages')

@@ -15,6 +15,7 @@ import {
   Calendar,
   MoreHorizontal,
   Trash2,
+  PanelRight,
 } from 'lucide-react';
 import { BulkAIActions, type BulkAISuggestion } from '@/components/ai/BulkAIActions';
 import { Button } from '@/components/ui/button';
@@ -30,16 +31,19 @@ import { toast } from 'sonner';
 
 interface SchedulePageClientProps {
   initialItems: Item[];
+  unscheduledItems: Item[];
   userId: string;
 }
 
 type ViewMode = 'day' | 'week' | 'agenda';
 
-export function SchedulePageClient({ initialItems, userId }: SchedulePageClientProps) {
+export function SchedulePageClient({ initialItems, unscheduledItems, userId }: SchedulePageClientProps) {
   const getSupabase = () => createClient();
   const { items, setItems, addItem, updateItem, removeItem, isLoading } = useItemsStore();
   const [viewMode, setViewMode] = useState<ViewMode>('agenda');
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [unscheduled, setUnscheduled] = useState<Item[]>(unscheduledItems);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   // Initialize items from server
   useEffect(() => {
@@ -191,6 +195,37 @@ export function SchedulePageClient({ initialItems, userId }: SchedulePageClientP
     []
   );
 
+  // Handle scheduling an item from the unscheduled sidebar
+  const handleScheduleFromSidebar = useCallback(
+    async (itemId: string, date: Date) => {
+      const supabase = getSupabase();
+      try {
+        const scheduledAt = date.toISOString();
+        const { error } = await supabase
+          .from('items')
+          .update({
+            scheduled_at: scheduledAt,
+            layer: 'commit',
+          } as any)
+          .eq('id', itemId);
+
+        if (error) throw error;
+
+        // Move item from unscheduled to scheduled
+        const item = unscheduled.find(i => i.id === itemId);
+        if (item) {
+          const updated = { ...item, scheduled_at: scheduledAt, layer: 'commit' };
+          setUnscheduled(prev => prev.filter(i => i.id !== itemId));
+          // The realtime subscription will handle adding it to the scheduled items
+        }
+        toast.success('Item scheduled');
+      } catch (error) {
+        toast.error('Failed to schedule item');
+      }
+    },
+    [unscheduled]
+  );
+
   // Filter items in commit layer
   const commitItems = items.filter(
     (item) => item.layer === 'commit' && item.scheduled_at
@@ -315,6 +350,25 @@ export function SchedulePageClient({ initialItems, userId }: SchedulePageClientP
               </Button>
             </div>
 
+            {/* Sidebar toggle */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className={cn(
+                'rounded-xl',
+                showSidebar && 'bg-[var(--layer-commit-bg)] text-[var(--layer-commit)]',
+              )}
+              onClick={() => setShowSidebar(!showSidebar)}
+            >
+              <PanelRight className="h-4 w-4 mr-1.5" />
+              Unscheduled
+              {unscheduled.length > 0 && (
+                <span className="ml-1.5 rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-amber-400">
+                  {unscheduled.length}
+                </span>
+              )}
+            </Button>
+
             {/* Item count */}
             {commitItems.length > 0 && (
               <span className="rounded-full bg-[var(--layer-commit-bg)] border border-[var(--layer-commit-border)] px-3 py-1 text-sm font-medium text-[var(--layer-commit)]">
@@ -346,53 +400,90 @@ export function SchedulePageClient({ initialItems, userId }: SchedulePageClientP
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-auto p-6">
-        {isLoading ? (
-          <LoadingState count={5} type="card" />
-        ) : commitItems.length === 0 ? (
-          <EmptyState
-            iconName="calendar"
-            title="Nothing scheduled"
-            description="Schedule items from your backlog to plan your time."
-            action={{
-              label: 'View Backlog',
-              href: '/organize',
-            }}
-          />
-        ) : viewMode === 'agenda' ? (
-          // Agenda view - all upcoming items
-          <div className="mx-auto max-w-3xl">
-            <AgendaView
-              itemsByDate={itemsByDate}
-              onUpdateItem={handleUpdateItem}
-              onDeleteItem={handleDeleteItem}
-              onUnschedule={handleUnschedule}
-              onReschedule={handleReschedule}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Main content */}
+        <div className="flex-1 overflow-auto p-6">
+          {isLoading ? (
+            <LoadingState count={5} type="card" />
+          ) : commitItems.length === 0 ? (
+            <EmptyState
+              iconName="calendar"
+              title="Nothing scheduled"
+              description="Schedule items from your backlog to plan your time."
+              action={{
+                label: 'View Backlog',
+                href: '/organize',
+              }}
             />
-          </div>
-        ) : viewMode === 'day' ? (
-          // Day view
-          <div className="mx-auto max-w-3xl">
-            <DayView
-              date={selectedDate}
-              items={selectedDateItems}
-              onUpdateItem={handleUpdateItem}
-              onDeleteItem={handleDeleteItem}
-              onUnschedule={handleUnschedule}
-              onReschedule={handleReschedule}
-            />
-          </div>
-        ) : (
-          // Week view
-          <div className="mx-auto max-w-6xl">
-            <WeekView
-              dates={weekDates}
-              itemsByDate={itemsByDate}
-              onUpdateItem={handleUpdateItem}
-              onDeleteItem={handleDeleteItem}
-              onUnschedule={handleUnschedule}
-              onReschedule={handleReschedule}
-            />
+          ) : viewMode === 'agenda' ? (
+            // Agenda view - all upcoming items
+            <div className="mx-auto max-w-3xl">
+              <AgendaView
+                itemsByDate={itemsByDate}
+                onUpdateItem={handleUpdateItem}
+                onDeleteItem={handleDeleteItem}
+                onUnschedule={handleUnschedule}
+                onReschedule={handleReschedule}
+              />
+            </div>
+          ) : viewMode === 'day' ? (
+            // Day view
+            <div className="mx-auto max-w-3xl">
+              <DayView
+                date={selectedDate}
+                items={selectedDateItems}
+                onUpdateItem={handleUpdateItem}
+                onDeleteItem={handleDeleteItem}
+                onUnschedule={handleUnschedule}
+                onReschedule={handleReschedule}
+              />
+            </div>
+          ) : (
+            // Week view
+            <div className="mx-auto max-w-6xl">
+              <WeekView
+                dates={weekDates}
+                itemsByDate={itemsByDate}
+                onUpdateItem={handleUpdateItem}
+                onDeleteItem={handleDeleteItem}
+                onUnschedule={handleUnschedule}
+                onReschedule={handleReschedule}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Unscheduled sidebar */}
+        {showSidebar && (
+          <div className="w-80 shrink-0 border-l border-[var(--border-subtle)] bg-[var(--bg-surface)] overflow-auto">
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-semibold text-[var(--text-primary)]">
+                  Unscheduled
+                </h3>
+                <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-400">
+                  {unscheduled.length}
+                </span>
+              </div>
+
+              {unscheduled.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-[var(--border-subtle)] p-6 text-center">
+                  <p className="text-sm text-[var(--text-muted)]">
+                    All backlog items are scheduled!
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {unscheduled.map(item => (
+                    <UnscheduledCard
+                      key={item.id}
+                      item={item}
+                      onSchedule={handleScheduleFromSidebar}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
@@ -745,6 +836,85 @@ function CommitItemCard({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// Unscheduled Card Component
+function UnscheduledCard({
+  item,
+  onSchedule,
+}: {
+  item: Item;
+  onSchedule: (itemId: string, date: Date) => void;
+}) {
+  const router = useRouter();
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const quickSchedule = (daysFromNow: number) => {
+    const date = new Date();
+    date.setDate(date.getDate() + daysFromNow);
+    date.setHours(9, 0, 0, 0);
+    onSchedule(item.id, date);
+  };
+
+  return (
+    <div className="group rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-3 transition-all hover:border-[var(--border-default)]">
+      <p
+        className="text-sm font-medium text-[var(--text-primary)] cursor-pointer hover:text-[#c2410c] transition-colors truncate"
+        onClick={() => router.push(`/items/${item.id}`)}
+      >
+        {item.title}
+      </p>
+      {item.notes && (
+        <p className="mt-0.5 text-xs text-[var(--text-muted)] line-clamp-1">
+          {item.notes}
+        </p>
+      )}
+      <div className="mt-2 flex flex-wrap gap-1">
+        <button
+          onClick={() => quickSchedule(0)}
+          className="rounded-lg bg-[var(--layer-commit-bg)] border border-[var(--layer-commit-border)] px-2 py-0.5 text-[10px] font-medium text-[var(--layer-commit)] transition-colors hover:bg-[var(--layer-commit)]/20"
+        >
+          Today
+        </button>
+        <button
+          onClick={() => quickSchedule(1)}
+          className="rounded-lg bg-[var(--bg-hover)] border border-[var(--border-subtle)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
+        >
+          Tomorrow
+        </button>
+        <button
+          onClick={() => quickSchedule(7)}
+          className="rounded-lg bg-[var(--bg-hover)] border border-[var(--border-subtle)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
+        >
+          Next week
+        </button>
+        {!showDatePicker ? (
+          <button
+            onClick={() => setShowDatePicker(true)}
+            className="rounded-lg bg-[var(--bg-hover)] border border-[var(--border-subtle)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
+          >
+            Pick date
+          </button>
+        ) : (
+          <input
+            type="date"
+            autoFocus
+            onChange={(e) => {
+              if (e.target.value) {
+                const date = new Date(e.target.value);
+                date.setHours(9, 0, 0, 0);
+                onSchedule(item.id, date);
+                setShowDatePicker(false);
+              }
+            }}
+            onBlur={() => setShowDatePicker(false)}
+            className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)] px-2 py-0.5 text-[10px] text-[var(--text-primary)] focus:border-[#c2410c]/40 focus:outline-none"
+            min={new Date().toISOString().split('T')[0]}
+          />
+        )}
       </div>
     </div>
   );

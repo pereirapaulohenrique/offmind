@@ -43,6 +43,7 @@ import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { SubtasksList } from '@/components/item-detail/SubtasksList';
 import { LinkedPageSection } from '@/components/item-detail/LinkedPageSection';
+import { ItemRelationsSection } from '@/components/item-detail/ItemRelationsSection';
 import type {
   Item,
   Subtask,
@@ -382,6 +383,9 @@ export function ItemDetailClient({
   const [waitingFor, setWaitingFor] = useState(serverItem.waiting_for ?? '');
   const [customValues, setCustomValues] = useState<Record<string, unknown>>(
     (serverItem.custom_values as Record<string, unknown>) ?? {},
+  );
+  const [recurrence, setRecurrence] = useState<string>(
+    ((serverItem.custom_values as Record<string, any>)?.recurrence) || ''
   );
 
   // ---- Contact suggestions ----
@@ -738,6 +742,61 @@ export function ItemDetailClient({
       const completed = { ...item, ...updates } as Item;
       updateItem(completed);
       toast.success('Item completed');
+
+      // Handle recurrence — create next occurrence
+      const recurrenceValue = (customValues as Record<string, any>)?.recurrence;
+      if (recurrenceValue && scheduledAt) {
+        const currentDate = new Date(scheduledAt);
+        let nextDate: Date | null = null;
+
+        switch (recurrenceValue) {
+          case 'daily':
+            nextDate = new Date(currentDate);
+            nextDate.setDate(nextDate.getDate() + 1);
+            break;
+          case 'weekdays': {
+            nextDate = new Date(currentDate);
+            do {
+              nextDate.setDate(nextDate.getDate() + 1);
+            } while (nextDate.getDay() === 0 || nextDate.getDay() === 6);
+            break;
+          }
+          case 'weekly':
+            nextDate = new Date(currentDate);
+            nextDate.setDate(nextDate.getDate() + 7);
+            break;
+          case 'biweekly':
+            nextDate = new Date(currentDate);
+            nextDate.setDate(nextDate.getDate() + 14);
+            break;
+          case 'monthly':
+            nextDate = new Date(currentDate);
+            nextDate.setMonth(nextDate.getMonth() + 1);
+            break;
+        }
+
+        if (nextDate) {
+          try {
+            await supabase.from('items').insert({
+              user_id: userId,
+              title: title,
+              notes: notes || null,
+              layer: 'commit',
+              destination_id: destinationId,
+              space_id: spaceId,
+              project_id: projectId,
+              scheduled_at: nextDate.toISOString(),
+              duration_minutes: durationMinutes,
+              is_all_day: isAllDay,
+              custom_values: customValues as any,
+              source: 'recurrence',
+            });
+            toast.success(`Next occurrence scheduled for ${nextDate.toLocaleDateString()}`);
+          } catch {
+            // Silent fail — the current item was completed successfully
+          }
+        }
+      }
 
       // Show post-completion prompt for schedule/backlog, otherwise go back
       if (destinationSlug === 'commit') {
@@ -1245,6 +1304,12 @@ export function ItemDetailClient({
                 {layerConfig.label}
               </span>
 
+              {recurrence && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 text-[10px] font-semibold text-purple-400">
+                  ↻ {recurrence === 'weekdays' ? 'Weekdays' : recurrence.charAt(0).toUpperCase() + recurrence.slice(1)}
+                </span>
+              )}
+
               {item.source && (
                 <>
                   <span className="text-neutral-700">·</span>
@@ -1573,6 +1638,31 @@ export function ItemDetailClient({
                         Clear schedule
                       </button>
                     )}
+
+                    {/* Recurrence */}
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-neutral-500">
+                        Repeat
+                      </label>
+                      <select
+                        value={recurrence}
+                        onChange={(e) => {
+                          setRecurrence(e.target.value);
+                          handleCustomValueChange('recurrence', e.target.value);
+                        }}
+                        className={cn(
+                          'w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm text-neutral-100',
+                          'focus:border-[#c2410c]/40 focus:outline-none focus:ring-1 focus:ring-[#c2410c]/30',
+                        )}
+                      >
+                        <option value="">No repeat</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekdays">Weekdays</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="biweekly">Every 2 weeks</option>
+                        <option value="monthly">Monthly</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               )}
@@ -1664,6 +1754,7 @@ export function ItemDetailClient({
               item={item}
               linkedPage={linkedPage}
               userId={userId}
+              destinationSlug={destinationSlug}
               onPageCreated={(pageId) => {
                 const fetchPage = async () => {
                   const { data } = await supabase
@@ -1676,6 +1767,9 @@ export function ItemDetailClient({
                 fetchPage();
               }}
             />
+
+            {/* ── Item Relations ────────────────────────────────────── */}
+            <ItemRelationsSection itemId={item.id} userId={userId} />
 
             {/* ── Attachments ──────────────────────────────────────── */}
             {(imageAttachments.length > 0 ||

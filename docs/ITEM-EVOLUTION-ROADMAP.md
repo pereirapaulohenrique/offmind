@@ -171,18 +171,18 @@ Includes completion celebration + streak tracking. This is where OffMind becomes
 - [x] TiptapEditor prose rendering fix (custom CSS styles)
 - [x] Multi-column field layout (destination fields + schedule/organize side-by-side)
 
-### Phase 2 — Deeper Contextual Features (MOSTLY DONE)
+### Phase 2 — Deeper Contextual Features (DONE)
 - [x] Multi-column field layout (reduce scrolling)
-- [ ] Recurrence for scheduled items
+- [x] Recurrence for scheduled items (daily, weekdays, weekly, biweekly, monthly + auto-create next occurrence)
 - [x] Post-completion prompts ("Create meeting notes?" / "Create follow-up?")
 - [x] Maturity indicator for Someday/Maybe
 - [ ] Communication log / follow-up thread for Waiting For
 - [x] Overdue indicators on Waiting For dashboard
-- [ ] Destination-aware Page templates
+- [x] Destination-aware Page templates (Meeting Notes, Task Brief, Research, Reference)
 
-### Phase 3 — Growth Path (MOSTLY DONE)
+### Phase 3 — Growth Path (DONE)
 - [x] "Convert to Project" action (item -> project with inherited data)
-- [ ] Item Relations ("Related to", "Blocked by / Blocks")
+- [x] Item Relations ("Related to", "Blocked by / Blocks") — search, add, remove, visual grouping
 - [x] Promote subtasks to standalone items
 - [x] "Born from" breadcrumb on Pages
 - [x] "Promote to Backlog" one-click for Someday/Maybe items
@@ -204,11 +204,11 @@ Includes completion celebration + streak tracking. This is where OffMind becomes
 - [ ] AI identifies item clusters for project creation
 - [ ] Always suggesting, user decides
 
-### Phase 6 — Enhanced Dashboards (PARTIALLY DONE)
+### Phase 6 — Enhanced Dashboards (DONE)
 - [x] Backlog: Board view (Kanban by priority)
 - [x] Backlog: Stats header (total, priority count, triage needed)
-- [ ] Schedule: Unscheduled items sidebar with drag-to-calendar
-- [ ] Schedule: Agenda view
+- [x] Schedule: Unscheduled items sidebar (quick-schedule: today/tomorrow/next week/pick date)
+- [x] Schedule: Agenda view (already existed, sidebar enhancement added)
 - [x] Waiting For: Contact summary cards
 - [x] Waiting For: "Days waiting" indicator
 - [x] Waiting For: Overdue highlighting + follow-up date display

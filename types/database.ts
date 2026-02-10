@@ -463,6 +463,32 @@ export interface Database {
           updated_at?: string;
         };
       };
+      item_relations: {
+        Row: {
+          id: string;
+          user_id: string;
+          source_item_id: string;
+          target_item_id: string;
+          relation_type: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          source_item_id: string;
+          target_item_id: string;
+          relation_type: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          source_item_id?: string;
+          target_item_id?: string;
+          relation_type?: string;
+          created_at?: string;
+        };
+      };
     };
     Views: {
       [_ in never]: never;
@@ -496,6 +522,7 @@ export type AILog = Tables<'ai_logs'>;
 export type TelegramConnection = Tables<'telegram_connections'>;
 export type Contact = Tables<'contacts'>;
 export type Subtask = Tables<'subtasks'>;
+export type ItemRelation = Tables<'item_relations'>;
 
 // Attachment type for items
 export interface Attachment {
