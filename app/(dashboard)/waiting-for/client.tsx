@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, MessageSquare, CheckCircle2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
@@ -31,6 +32,7 @@ export function WaitingForPageClient({
   userId,
 }: WaitingForPageClientProps) {
   const getSupabase = () => createClient();
+  const router = useRouter();
   const openProcessingPanel = useUIStore((s) => s.openProcessingPanel);
 
   // ── Local state ──────────────────────────────────────────────────────────
@@ -188,7 +190,7 @@ export function WaitingForPageClient({
               <button
                 type="button"
                 className="text-left text-sm font-medium text-[var(--text-primary)] transition-colors hover:text-[#c2410c] focus-visible:outline-none focus-visible:text-[#c2410c]"
-                onClick={() => openProcessingPanel(item.id)}
+                onClick={() => router.push(`/items/${item.id}`)}
               >
                 {item.title}
               </button>

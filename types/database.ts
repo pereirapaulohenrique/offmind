@@ -428,6 +428,41 @@ export interface Database {
           updated_at?: string;
         };
       };
+      subtasks: {
+        Row: {
+          id: string;
+          item_id: string;
+          user_id: string;
+          title: string;
+          is_completed: boolean;
+          completed_at: string | null;
+          sort_order: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          item_id: string;
+          user_id: string;
+          title: string;
+          is_completed?: boolean;
+          completed_at?: string | null;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          item_id?: string;
+          user_id?: string;
+          title?: string;
+          is_completed?: boolean;
+          completed_at?: string | null;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
     };
     Views: {
       [_ in never]: never;
@@ -460,6 +495,7 @@ export type Page = Tables<'pages'>;
 export type AILog = Tables<'ai_logs'>;
 export type TelegramConnection = Tables<'telegram_connections'>;
 export type Contact = Tables<'contacts'>;
+export type Subtask = Tables<'subtasks'>;
 
 // Attachment type for items
 export interface Attachment {

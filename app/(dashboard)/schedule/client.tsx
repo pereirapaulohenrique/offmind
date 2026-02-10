@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 import { useItemsStore } from '@/stores/items';
@@ -624,6 +625,7 @@ function CommitItemCard({
   onReschedule,
   showTime = false,
 }: CommitItemCardProps) {
+  const router = useRouter();
   const time = item.scheduled_at
     ? new Date(item.scheduled_at).toLocaleTimeString([], {
         hour: '2-digit',
@@ -662,9 +664,10 @@ function CommitItemCard({
         <div className="flex-1 min-w-0">
           <h3
             className={cn(
-              'text-sm font-medium text-foreground',
+              'text-sm font-medium text-foreground cursor-pointer hover:text-[#c2410c] transition-colors',
               item.is_completed && 'line-through text-muted-foreground'
             )}
+            onClick={() => router.push(`/items/${item.id}`)}
           >
             {item.title}
           </h3>

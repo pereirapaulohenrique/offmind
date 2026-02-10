@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ListTodo, Calendar, CheckCircle2, ArrowUpDown, Filter } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
@@ -41,6 +42,7 @@ export function BacklogPageClient({
   userId,
 }: BacklogPageClientProps) {
   const getSupabase = () => createClient();
+  const router = useRouter();
   const openProcessingPanel = useUIStore((s) => s.openProcessingPanel);
 
   // ── Local state ──────────────────────────────────────────────────────────
@@ -341,7 +343,7 @@ export function BacklogPageClient({
                             <button
                               type="button"
                               className="text-left text-sm font-medium text-[var(--text-primary)] transition-colors hover:text-[#c2410c] focus-visible:outline-none focus-visible:text-[#c2410c]"
-                              onClick={() => openProcessingPanel(item.id)}
+                              onClick={() => router.push(`/items/${item.id}`)}
                             >
                               {item.title}
                             </button>

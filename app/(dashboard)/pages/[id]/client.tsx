@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { TiptapEditor } from '@/components/editor';
 import { Button } from '@/components/ui/button';
@@ -290,9 +291,12 @@ export function PageEditorClient({
               {linkedItem && (
                 <div className="flex items-center gap-2">
                   <span className="text-[var(--text-muted)]">Linked to:</span>
-                  <span className="rounded-full bg-[var(--bg-hover)] px-2 py-0.5">
+                  <Link
+                    href={`/items/${linkedItem.id}`}
+                    className="rounded-full bg-[var(--bg-hover)] px-2 py-0.5 hover:bg-[rgba(194,65,12,0.12)] hover:text-[#c2410c] transition-colors"
+                  >
                     {linkedItem.title}
-                  </span>
+                  </Link>
                 </div>
               )}
             </div>
