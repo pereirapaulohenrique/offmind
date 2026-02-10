@@ -57,7 +57,7 @@ export function WaitingForPageClient({
           table: 'items',
           filter: `user_id=eq.${userId}`,
         },
-        (payload) => {
+        (payload: any) => {
           if (payload.eventType === 'INSERT') {
             const newItem = payload.new as Item;
             if (!newItem.is_completed && newItem.destination_id && !newItem.archived_at) {

@@ -71,7 +71,7 @@ export function BacklogPageClient({
           table: 'items',
           filter: `user_id=eq.${userId}`,
         },
-        (payload) => {
+        (payload: any) => {
           if (payload.eventType === 'INSERT') {
             const newItem = payload.new as Item;
             // Only add if it belongs in backlog (non-completed, same destination, not archived)

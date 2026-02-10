@@ -58,7 +58,7 @@ export function SchedulePageClient({ initialItems, userId }: SchedulePageClientP
           table: 'items',
           filter: `user_id=eq.${userId}`,
         },
-        (payload) => {
+        (payload: any) => {
           if (payload.eventType === 'INSERT' && payload.new.layer === 'commit' && !payload.new.archived_at) {
             addItem(payload.new as Item);
           } else if (payload.eventType === 'UPDATE') {

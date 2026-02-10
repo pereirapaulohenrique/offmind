@@ -51,7 +51,7 @@ export function OrganizePageClient({
           table: 'items',
           filter: `user_id=eq.${userId}`,
         },
-        (payload) => {
+        (payload: any) => {
           if (payload.eventType === 'INSERT') {
             const newItem = payload.new as Item;
             if (newItem.destination_id && !newItem.is_completed && !newItem.archived_at) {
