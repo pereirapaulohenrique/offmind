@@ -18,6 +18,7 @@ import {
   Volume2,
   ChevronRight,
   MoreHorizontal,
+  Sparkles,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { softDeleteItem } from '@/lib/utils/soft-delete';
@@ -396,6 +397,10 @@ export function ItemDetailClient({
 
   // ---- Lightbox for image attachments ----
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+
+  // ---- AI feature loading states ----
+  const [aiSubtasksLoading, setAiSubtasksLoading] = useState(false);
+  const [aiDraftLoading, setAiDraftLoading] = useState(false);
 
   // ---- Post-completion prompt ----
   const [showCompletionPrompt, setShowCompletionPrompt] = useState<'schedule' | 'backlog' | null>(null);
@@ -898,6 +903,147 @@ export function ItemDetailClient({
       router.push(`/projects/${newProject.id}`);
     } catch {
       toast.error('Failed to convert to project');
+    }
+  };
+
+  // ---- AI: Break into subtasks ----
+  const handleAISuggestSubtasks = async () => {
+    setAiSubtasksLoading(true);
+    try {
+      // Fetch current subtasks to pass existing titles
+      const { data: currentSubtasks } = await supabase
+        .from('subtasks')
+        .select('title, sort_order')
+        .eq('item_id', item.id)
+        .order('sort_order');
+
+      const existingSubtaskTitles = (currentSubtasks ?? []).map((s: any) => s.title);
+      const existingCount = currentSubtasks?.length ?? 0;
+
+      const res = await fetch('/api/ai/suggest-subtasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          itemId: item.id,
+          title,
+          notes,
+          existingSubtasks: existingSubtaskTitles,
+        }),
+      });
+
+      if (!res.ok) throw new Error('AI request failed');
+
+      const result = await res.json();
+
+      const newSubtasks = result.subtasks.map((s: any, i: number) => ({
+        item_id: item.id,
+        user_id: userId,
+        title: s.title,
+        sort_order: (existingCount + i) * 10,
+        is_completed: false,
+      }));
+
+      const { data: inserted } = await supabase
+        .from('subtasks')
+        .insert(newSubtasks)
+        .select();
+
+      if (inserted) {
+        toast.success(result.reasoning || `Added ${inserted.length} subtasks`);
+      }
+    } catch (err) {
+      console.error('AI suggest subtasks failed', err);
+      toast.error('Failed to generate subtask suggestions');
+    } finally {
+      setAiSubtasksLoading(false);
+    }
+  };
+
+  // ---- AI: Draft Page ----
+  function textToTiptapDoc(text: string) {
+    const paragraphs = text.split('\n\n').filter(Boolean);
+    return {
+      type: 'doc',
+      content: paragraphs.map(p => {
+        // Check if it's a heading
+        if (p.startsWith('# ')) {
+          return { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: p.replace('# ', '') }] };
+        }
+        if (p.startsWith('## ')) {
+          return { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: p.replace('## ', '') }] };
+        }
+        if (p.startsWith('### ')) {
+          return { type: 'heading', attrs: { level: 3 }, content: [{ type: 'text', text: p.replace('### ', '') }] };
+        }
+        // Check if it's a bullet list
+        if (p.includes('\n- ') || p.startsWith('- ')) {
+          const items = p.split('\n').filter(l => l.startsWith('- ')).map(l => ({
+            type: 'listItem',
+            content: [{ type: 'paragraph', content: [{ type: 'text', text: l.replace('- ', '') }] }],
+          }));
+          return { type: 'bulletList', content: items };
+        }
+        return { type: 'paragraph', content: [{ type: 'text', text: p }] };
+      }),
+    };
+  }
+
+  const handleAIDraftPage = async () => {
+    setAiDraftLoading(true);
+    try {
+      // Fetch current subtask titles for context
+      const { data: currentSubtasks } = await supabase
+        .from('subtasks')
+        .select('title')
+        .eq('item_id', item.id)
+        .order('sort_order');
+
+      const subtaskTitles = (currentSubtasks ?? []).map((s: any) => s.title);
+
+      const res = await fetch('/api/ai/draft-page', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          itemId: item.id,
+          title,
+          notes,
+          subtasks: subtaskTitles,
+          destinationSlug,
+        }),
+      });
+
+      if (!res.ok) throw new Error('AI draft request failed');
+
+      const result = await res.json();
+
+      // Convert AI-generated text to TipTap JSON document
+      const tiptapDoc = textToTiptapDoc(result.content);
+
+      const { data: newPage, error } = await supabase
+        .from('pages')
+        .insert({
+          user_id: userId,
+          title,
+          content: tiptapDoc,
+          item_id: item.id,
+          space_id: spaceId,
+          project_id: projectId,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      if (newPage) {
+        setLinkedPage(newPage as Page);
+        toast.success('AI draft page created');
+        router.push(`/pages/${newPage.id}`);
+      }
+    } catch (err) {
+      console.error('AI draft page failed', err);
+      toast.error('Failed to generate AI draft');
+    } finally {
+      setAiDraftLoading(false);
     }
   };
 
@@ -1531,9 +1677,25 @@ export function ItemDetailClient({
 
             {/* ── Subtasks ─────────────────────────────────────────── */}
             <div className="space-y-3">
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
-                Subtasks
-              </h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                  Subtasks
+                </h3>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={aiSubtasksLoading}
+                  onClick={handleAISuggestSubtasks}
+                  className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[#c2410c] hover:bg-[#c2410c]/10 hover:text-[#c2410c] h-7 text-xs px-2.5"
+                >
+                  {aiSubtasksLoading ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Sparkles className="h-3.5 w-3.5" />
+                  )}
+                  {aiSubtasksLoading ? 'Thinking...' : 'AI Suggest'}
+                </Button>
+              </div>
               <SubtasksList
                 itemId={item.id}
                 initialSubtasks={initialSubtasks}
@@ -1750,23 +1912,43 @@ export function ItemDetailClient({
             </div>
 
             {/* ── Linked Page ──────────────────────────────────────── */}
-            <LinkedPageSection
-              item={item}
-              linkedPage={linkedPage}
-              userId={userId}
-              destinationSlug={destinationSlug}
-              onPageCreated={(pageId) => {
-                const fetchPage = async () => {
-                  const { data } = await supabase
-                    .from('pages')
-                    .select('*')
-                    .eq('id', pageId)
-                    .single();
-                  if (data) setLinkedPage(data as Page);
-                };
-                fetchPage();
-              }}
-            />
+            <div className="space-y-3">
+              <LinkedPageSection
+                item={item}
+                linkedPage={linkedPage}
+                userId={userId}
+                destinationSlug={destinationSlug}
+                onPageCreated={(pageId) => {
+                  const fetchPage = async () => {
+                    const { data } = await supabase
+                      .from('pages')
+                      .select('*')
+                      .eq('id', pageId)
+                      .single();
+                    if (data) setLinkedPage(data as Page);
+                  };
+                  fetchPage();
+                }}
+              />
+              {!linkedPage && (
+                <div className="flex justify-end">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={aiDraftLoading}
+                    onClick={handleAIDraftPage}
+                    className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[#c2410c] hover:bg-[#c2410c]/10 hover:text-[#c2410c] h-7 text-xs px-2.5"
+                  >
+                    {aiDraftLoading ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Sparkles className="h-3.5 w-3.5" />
+                    )}
+                    {aiDraftLoading ? 'Drafting...' : 'AI Draft'}
+                  </Button>
+                </div>
+              )}
+            </div>
 
             {/* ── Item Relations ────────────────────────────────────── */}
             <ItemRelationsSection itemId={item.id} userId={userId} />

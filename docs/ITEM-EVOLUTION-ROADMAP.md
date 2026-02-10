@@ -197,12 +197,14 @@ Includes completion celebration + streak tracking. This is where OffMind becomes
 - [x] Streak tracking + celebration (profile.settings.review_streak, motivational messages)
 - [x] Sidebar "Weekly Review" nav link under new "Tools" section
 
-### Phase 5 — AI Evolution
-- [ ] AI suggests Someday promotions
-- [ ] AI breaks complex tasks into subtasks
-- [ ] AI drafts Pages from accumulated notes
-- [ ] AI identifies item clusters for project creation
-- [ ] Always suggesting, user decides
+### Phase 5 — AI Evolution (DONE)
+- [x] AI suggests Someday promotions (suggest-promotions API + Today page insights)
+- [x] AI breaks complex tasks into subtasks (suggest-subtasks API + Item Detail "AI Suggest" button)
+- [x] AI drafts Pages from accumulated notes (draft-page API + Item Detail "AI Draft" button)
+- [x] AI identifies item clusters for project creation (cluster-items API + Today page insights)
+- [x] AI stale item detection (stale-items API + Today page insights)
+- [x] AI weekly review summary (review-summary API + Review welcome step)
+- [x] Always suggesting, user decides (all AI features are on-demand, never automatic)
 
 ### Phase 6 — Enhanced Dashboards (DONE)
 - [x] Backlog: Board view (Kanban by priority)

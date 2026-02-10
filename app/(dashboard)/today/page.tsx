@@ -106,6 +106,52 @@ export default async function TodayPage() {
     .lt('completed_at', tomorrow.toISOString())
     .order('completed_at', { ascending: false });
 
+  // Fetch someday/incubating items for AI insights
+  const somedayDest = (destinations || []).find((d: Destination) => d.slug === 'someday');
+  const incubatingDest = (destinations || []).find((d: Destination) => d.slug === 'incubating');
+  const somedayIds = [somedayDest?.id, incubatingDest?.id].filter(Boolean) as string[];
+
+  let somedayItems: Item[] = [];
+  if (somedayIds.length > 0) {
+    const { data } = await supabase
+      .from('items')
+      .select('*')
+      .eq('user_id', user.id)
+      .in('destination_id', somedayIds)
+      .eq('is_completed', false)
+      .is('archived_at', null)
+      .order('created_at', { ascending: true })
+      .limit(10);
+    somedayItems = (data || []) as Item[];
+  }
+
+  // Fetch all active items for clustering insight
+  const { data: allActiveItems } = await supabase
+    .from('items')
+    .select('*, destinations!inner(slug, name)')
+    .eq('user_id', user.id)
+    .eq('is_completed', false)
+    .is('archived_at', null)
+    .order('created_at', { ascending: false })
+    .limit(50);
+
+  // Stale backlog items (older than 14 days, not scheduled)
+  const fourteenDaysAgo = new Date();
+  fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+  const { data: staleItems } = backlogDest
+    ? await supabase
+        .from('items')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('destination_id', backlogDest.id)
+        .eq('is_completed', false)
+        .is('scheduled_at', null)
+        .is('archived_at', null)
+        .lt('created_at', fourteenDaysAgo.toISOString())
+        .order('created_at', { ascending: true })
+        .limit(10)
+    : { data: [] };
+
   const showOnboarding = profile?.onboarding_completed === false;
 
   return (
@@ -120,6 +166,9 @@ export default async function TodayPage() {
       overdueItems={(overdueItems || []) as Item[]}
       todayItems={(todayItems || []) as Item[]}
       completedToday={(completedToday || []) as Item[]}
+      somedayItems={(somedayItems || []) as Item[]}
+      allActiveItems={(allActiveItems || []) as Item[]}
+      staleItems={(staleItems || []) as Item[]}
     />
   );
 }

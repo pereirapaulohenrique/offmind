@@ -15,6 +15,14 @@ import {
   Sun,
   Sunrise,
   Moon,
+  Sparkles,
+  ArrowUpRight,
+  Loader2,
+  RefreshCw,
+  Brain,
+  Lightbulb,
+  AlertCircle,
+  TrendingUp,
 } from 'lucide-react';
 import { useUIStore } from '@/stores/ui';
 import { cn } from '@/lib/utils';
@@ -38,6 +46,9 @@ interface TodayPageClientProps {
   overdueItems: Item[];
   todayItems: Item[];
   completedToday: Item[];
+  somedayItems: Item[];
+  allActiveItems: Item[];
+  staleItems: Item[];
 }
 
 // ---------------------------------------------------------------------------
@@ -189,6 +200,385 @@ function ItemRow({
 }
 
 // ---------------------------------------------------------------------------
+// AI Insights Card
+// ---------------------------------------------------------------------------
+
+function AIInsightsCard({
+  somedayItems,
+  allActiveItems,
+  staleItems,
+  onItemClick,
+}: {
+  somedayItems: Item[];
+  allActiveItems: Item[];
+  staleItems: Item[];
+  onItemClick: (id: string) => void;
+}) {
+  const [insights, setInsights] = useState<{
+    promotions: Array<{ item_id: string; confidence: number; reasoning: string }>;
+    clusters: Array<{ theme: string; item_ids: string[]; suggested_project_name: string; reasoning: string }>;
+    stale: Array<{ item_id: string; action: string; confidence: number; reasoning: string }>;
+  } | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [expandedCluster, setExpandedCluster] = useState<number | null>(null);
+
+  const fetchInsights = async () => {
+    setLoading(true);
+    setError(false);
+    try {
+      const [promotionsRes, clustersRes, staleRes] = await Promise.allSettled([
+        somedayItems.length >= 2
+          ? fetch('/api/ai/suggest-promotions', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                somedayItems: somedayItems.map(i => ({
+                  id: i.id,
+                  title: i.title,
+                  notes: i.notes || undefined,
+                  created_at: i.created_at,
+                  maturity: (i.custom_values as any)?.maturity || undefined,
+                })),
+                recentActivity: allActiveItems.slice(0, 10).map(i => i.title),
+              }),
+            }).then(r => r.json())
+          : Promise.resolve({ promotions: [] }),
+        allActiveItems.length >= 5
+          ? fetch('/api/ai/cluster-items', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                items: allActiveItems.map(i => ({
+                  id: i.id,
+                  title: i.title,
+                  notes: i.notes || undefined,
+                  destination: (i as any).destinations?.slug || undefined,
+                })),
+              }),
+            }).then(r => r.json())
+          : Promise.resolve({ clusters: [] }),
+        staleItems.length >= 2
+          ? fetch('/api/ai/stale-items', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                items: staleItems.map(i => ({
+                  id: i.id,
+                  title: i.title,
+                  destination: 'backlog',
+                  age_days: Math.floor((Date.now() - new Date(i.created_at).getTime()) / (1000 * 60 * 60 * 24)),
+                  has_subtasks: false,
+                })),
+              }),
+            }).then(r => r.json())
+          : Promise.resolve({ stale: [] }),
+      ]);
+
+      setInsights({
+        promotions: promotionsRes.status === 'fulfilled' ? (promotionsRes.value.promotions || []) : [],
+        clusters: clustersRes.status === 'fulfilled' ? (clustersRes.value.clusters || []) : [],
+        stale: staleRes.status === 'fulfilled' ? (staleRes.value.stale || []) : [],
+      });
+    } catch {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const hasAnyData = somedayItems.length >= 2 || allActiveItems.length >= 5 || staleItems.length >= 2;
+  if (!hasAnyData) return null;
+
+  const totalInsights = insights
+    ? insights.promotions.length + insights.clusters.length + insights.stale.length
+    : 0;
+
+  // Helper to find item title by id
+  const findItemTitle = (itemId: string): string => {
+    const all = [...somedayItems, ...allActiveItems, ...staleItems];
+    return all.find(i => i.id === itemId)?.title || 'Unknown item';
+  };
+
+  return (
+    <motion.section variants={itemVariants}>
+      <div className="rounded-2xl border border-[rgba(194,65,12,0.2)] bg-[var(--bg-surface)] shadow-[var(--shadow-card)]">
+        {/* Header */}
+        <div className="flex items-center gap-3 px-6 py-4">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[rgba(194,65,12,0.1)]">
+            <Brain className="h-5 w-5 text-[#c2410c]" />
+          </div>
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--text-primary)]">
+            AI Insights
+          </h2>
+          {insights && totalInsights > 0 && (
+            <span className="rounded-full bg-[rgba(194,65,12,0.1)] px-2.5 py-0.5 text-xs font-semibold tabular-nums text-[#c2410c]">
+              {totalInsights}
+            </span>
+          )}
+          <button
+            onClick={fetchInsights}
+            disabled={loading}
+            className={cn(
+              'ml-auto flex items-center gap-2 rounded-xl border px-3 py-1.5 text-xs font-medium',
+              'transition-all duration-200',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+              loading
+                ? 'cursor-not-allowed border-[var(--border-default)] text-[var(--text-disabled)]'
+                : 'border-[rgba(194,65,12,0.3)] text-[#c2410c] hover:bg-[rgba(194,65,12,0.06)]',
+            )}
+          >
+            {loading ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : insights ? (
+              <RefreshCw className="h-3.5 w-3.5" />
+            ) : (
+              <Sparkles className="h-3.5 w-3.5" />
+            )}
+            {loading ? 'Analyzing...' : insights ? 'Refresh' : 'Generate Insights'}
+          </button>
+        </div>
+
+        {/* Loading state */}
+        {loading && (
+          <>
+            <div className="mx-6 h-px bg-[rgba(194,65,12,0.1)]" />
+            <div className="flex flex-col items-center justify-center px-6 py-10 text-center">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+              >
+                <Brain className="h-8 w-8 text-[#c2410c] opacity-40" />
+              </motion.div>
+              <p className="mt-4 text-sm text-[var(--text-muted)]">
+                Analyzing your items...
+              </p>
+            </div>
+          </>
+        )}
+
+        {/* Error state */}
+        {error && !loading && (
+          <>
+            <div className="mx-6 h-px bg-[rgba(194,65,12,0.1)]" />
+            <div className="flex flex-col items-center justify-center px-6 py-8 text-center">
+              <AlertCircle className="h-6 w-6 text-red-400 opacity-60" />
+              <p className="mt-3 text-sm text-[var(--text-muted)]">
+                Something went wrong. Try again.
+              </p>
+            </div>
+          </>
+        )}
+
+        {/* Insights loaded */}
+        {insights && !loading && !error && (
+          <>
+            <div className="mx-6 h-px bg-[rgba(194,65,12,0.1)]" />
+
+            {totalInsights === 0 ? (
+              <div className="flex flex-col items-center justify-center px-6 py-10 text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(52,211,153,0.08)]">
+                  <CheckCircle2 className="h-5 w-5 text-[var(--layer-commit)] opacity-60" />
+                </div>
+                <p className="mt-4 text-sm text-[var(--text-muted)]">
+                  Your system looks healthy, nothing to flag right now.
+                </p>
+              </div>
+            ) : (
+              <div className="p-4 space-y-4">
+                {/* Promotion suggestions */}
+                {insights.promotions.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+                    className="space-y-1"
+                  >
+                    <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                      Ready to Promote
+                    </p>
+                    {insights.promotions.map((promo) => (
+                      <motion.div
+                        key={promo.item_id}
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+                        className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors duration-200 hover:bg-[var(--bg-hover)]"
+                      >
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(251,191,36,0.1)]">
+                          <Lightbulb className="h-3.5 w-3.5 text-amber-500" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <button
+                            onClick={() => onItemClick(promo.item_id)}
+                            className="block truncate text-sm font-medium text-[var(--text-primary)] hover:underline"
+                          >
+                            {findItemTitle(promo.item_id)}
+                          </button>
+                          <p className="truncate text-xs italic text-[var(--text-muted)]">
+                            {promo.reasoning}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => onItemClick(promo.item_id)}
+                          className={cn(
+                            'flex shrink-0 items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium',
+                            'border border-[rgba(52,211,153,0.3)] text-[var(--layer-commit)]',
+                            'transition-colors duration-200 hover:bg-[rgba(52,211,153,0.08)]',
+                          )}
+                        >
+                          Promote
+                          <ArrowUpRight className="h-3 w-3" />
+                        </button>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+
+                {/* Clusters */}
+                {insights.clusters.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ type: 'spring', stiffness: 320, damping: 28, delay: 0.05 }}
+                    className="space-y-1"
+                  >
+                    <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                      Related Items
+                    </p>
+                    {insights.clusters.map((cluster, idx) => (
+                      <motion.div
+                        key={idx}
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+                        className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-base)] transition-colors duration-200"
+                      >
+                        <button
+                          onClick={() => setExpandedCluster(expandedCluster === idx ? null : idx)}
+                          className="flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors duration-200 hover:bg-[var(--bg-hover)] rounded-xl"
+                        >
+                          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(96,165,250,0.1)]">
+                            <TrendingUp className="h-3.5 w-3.5 text-blue-400" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <span className="block truncate text-sm font-medium text-[var(--text-primary)]">
+                              {cluster.theme}
+                            </span>
+                            <span className="text-xs text-[var(--text-muted)]">
+                              {cluster.item_ids.length} items &middot; Suggested project: {cluster.suggested_project_name}
+                            </span>
+                          </div>
+                          <span className="text-[var(--text-muted)]">
+                            {expandedCluster === idx ? (
+                              <ChevronUp className="h-4 w-4" />
+                            ) : (
+                              <ChevronDown className="h-4 w-4" />
+                            )}
+                          </span>
+                        </button>
+                        {expandedCluster === idx && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+                            className="border-t border-[var(--border-subtle)] px-3 py-2"
+                          >
+                            <p className="mb-2 text-xs italic text-[var(--text-muted)]">
+                              {cluster.reasoning}
+                            </p>
+                            <div className="space-y-1">
+                              {cluster.item_ids.map((itemId) => (
+                                <button
+                                  key={itemId}
+                                  onClick={() => onItemClick(itemId)}
+                                  className="block w-full truncate rounded-lg px-2 py-1 text-left text-xs font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--bg-hover)]"
+                                >
+                                  {findItemTitle(itemId)}
+                                </button>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+
+                {/* Stale items */}
+                {insights.stale.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ type: 'spring', stiffness: 320, damping: 28, delay: 0.1 }}
+                    className="space-y-1"
+                  >
+                    <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                      Needs Attention
+                    </p>
+                    {insights.stale.map((staleItem) => (
+                      <motion.div
+                        key={staleItem.item_id}
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+                        className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors duration-200 hover:bg-[var(--bg-hover)]"
+                      >
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(239,68,68,0.1)]">
+                          <AlertCircle className="h-3.5 w-3.5 text-red-400" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <button
+                            onClick={() => onItemClick(staleItem.item_id)}
+                            className="block truncate text-sm font-medium text-[var(--text-primary)] hover:underline"
+                          >
+                            {findItemTitle(staleItem.item_id)}
+                          </button>
+                          <p className="truncate text-xs italic text-[var(--text-muted)]">
+                            {staleItem.reasoning}
+                          </p>
+                        </div>
+                        <span
+                          className={cn(
+                            'shrink-0 rounded-lg px-2.5 py-1 text-xs font-medium',
+                            staleItem.action.toLowerCase().includes('archive')
+                              ? 'bg-[rgba(239,68,68,0.08)] text-red-400'
+                              : staleItem.action.toLowerCase().includes('schedule')
+                                ? 'bg-[rgba(52,211,153,0.08)] text-[var(--layer-commit)]'
+                                : 'bg-[rgba(251,191,36,0.08)] text-amber-500',
+                          )}
+                        >
+                          {staleItem.action}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Initial state (no insights yet, not loading) */}
+        {!insights && !loading && !error && (
+          <>
+            <div className="mx-6 h-px bg-[rgba(194,65,12,0.1)]" />
+            <div className="flex flex-col items-center justify-center px-6 py-8 text-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(194,65,12,0.06)]">
+                <Sparkles className="h-5 w-5 text-[#c2410c] opacity-50" />
+              </div>
+              <p className="mt-4 max-w-xs text-sm text-[var(--text-muted)]">
+                Get AI-powered suggestions to promote ideas, group related items, and clean up stale tasks.
+              </p>
+            </div>
+          </>
+        )}
+      </div>
+    </motion.section>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
 
@@ -199,6 +589,9 @@ export function TodayPageClient({
   overdueItems,
   todayItems,
   completedToday,
+  somedayItems,
+  allActiveItems,
+  staleItems,
 }: TodayPageClientProps) {
   const router = useRouter();
   const openProcessingPanel = useUIStore((s) => s.openProcessingPanel);
@@ -313,6 +706,16 @@ export function TodayPageClient({
               onClick={() => router.push('/waiting-for')}
             />
           </motion.div>
+
+          {/* ---------------------------------------------------------------- */}
+          {/* AI Insights                                                      */}
+          {/* ---------------------------------------------------------------- */}
+          <AIInsightsCard
+            somedayItems={somedayItems}
+            allActiveItems={allActiveItems}
+            staleItems={staleItems}
+            onItemClick={handleItemClick}
+          />
 
           {/* ---------------------------------------------------------------- */}
           {/* Everything-empty state                                           */}

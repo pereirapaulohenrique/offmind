@@ -273,6 +273,16 @@ export function WeeklyReviewClient({
     responsesReceived: 0,
   });
 
+  // ── AI Summary state ────────────────────────────────────────────────
+  const [aiSummary, setAiSummary] = useState<{
+    greeting: string;
+    highlights: string[];
+    concerns: string[];
+    suggestion: string;
+  } | null>(null);
+  const [aiSummaryLoading, setAiSummaryLoading] = useState(false);
+  const [aiSummaryError, setAiSummaryError] = useState(false);
+
   // ── Streak result ──────────────────────────────────────────────────────
   const [finalStreak, setFinalStreak] = useState<number | null>(null);
   const [streakSaved, setStreakSaved] = useState(false);
@@ -563,6 +573,53 @@ export function WeeklyReviewClient({
     [unscheduledBacklog, overdueItems],
   );
 
+  // ── AI Summary fetch ─────────────────────────────────────────────────
+
+  const fetchAISummary = useCallback(async () => {
+    setAiSummaryLoading(true);
+    setAiSummaryError(false);
+    try {
+      const res = await fetch('/api/ai/review-summary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          inboxCount: inboxItems.length,
+          backlogCount: backlogItems.length,
+          somedayCount: somedayItems.length,
+          waitingCount: waitingItems.length,
+          overdueCount: overdueItems.length,
+          completedThisWeek,
+          streakCount: reviewStreak.count,
+          topItems: backlogItems.slice(0, 5).map((i) => ({
+            title: i.title,
+            destination: 'backlog',
+            age_days: Math.floor(
+              (Date.now() - new Date(i.created_at).getTime()) / (1000 * 60 * 60 * 24),
+            ),
+          })),
+        }),
+      });
+      const data = await res.json();
+      if (data.greeting) {
+        setAiSummary(data);
+      } else {
+        setAiSummaryError(true);
+      }
+    } catch {
+      setAiSummaryError(true);
+    } finally {
+      setAiSummaryLoading(false);
+    }
+  }, [
+    inboxItems.length,
+    backlogItems,
+    somedayItems.length,
+    waitingItems.length,
+    overdueItems.length,
+    completedThisWeek,
+    reviewStreak.count,
+  ]);
+
   // ── Computed data ──────────────────────────────────────────────────────
 
   const backlogNeedingPriority = backlogItems.filter((item) => {
@@ -654,6 +711,114 @@ export function WeeklyReviewClient({
             </div>
           </div>
         ))}
+      </motion.div>
+
+      {/* AI Review Summary */}
+      <motion.div variants={fadeInUp} className="mt-6 w-full max-w-md">
+        {!aiSummary && !aiSummaryLoading && (
+          <button
+            onClick={fetchAISummary}
+            className={cn(
+              'inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[rgba(194,65,12,0.15)] bg-[var(--bg-surface)] px-5 py-3.5',
+              'text-sm font-medium text-[var(--text-secondary)]',
+              'transition-all duration-200 hover:border-[rgba(194,65,12,0.3)] hover:bg-[rgba(194,65,12,0.04)]',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+            )}
+          >
+            <Sparkles className="h-4 w-4 text-[#c2410c]" />
+            {aiSummaryError ? 'Retry AI Summary' : 'Get AI Summary'}
+          </button>
+        )}
+
+        {aiSummaryLoading && (
+          <div className="rounded-2xl border border-[rgba(194,65,12,0.15)] bg-[var(--bg-surface)] p-5 space-y-4">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-[#c2410c]" />
+              <span className="text-sm font-medium text-[var(--text-secondary)]">
+                AI Review Summary
+              </span>
+            </div>
+            <div className="space-y-3 animate-pulse">
+              <div className="h-4 w-3/4 rounded-lg bg-[var(--bg-hover)]" />
+              <div className="h-4 w-full rounded-lg bg-[var(--bg-hover)]" />
+              <div className="h-3 w-5/6 rounded-lg bg-[var(--bg-hover)]" />
+              <div className="h-3 w-2/3 rounded-lg bg-[var(--bg-hover)]" />
+              <div className="h-3 w-4/5 rounded-lg bg-[var(--bg-hover)]" />
+            </div>
+          </div>
+        )}
+
+        {aiSummary && !aiSummaryLoading && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+            className="rounded-2xl border border-[rgba(194,65,12,0.15)] bg-[var(--bg-surface)] p-5 text-left space-y-4"
+          >
+            {/* Header */}
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-[#c2410c]" />
+              <span className="text-sm font-medium text-[var(--text-secondary)]">
+                AI Review Summary
+              </span>
+            </div>
+
+            {/* Greeting */}
+            <p className="text-base font-medium text-[var(--text-primary)]">
+              {aiSummary.greeting}
+            </p>
+
+            {/* Highlights */}
+            {aiSummary.highlights.length > 0 && (
+              <div className="space-y-1.5">
+                <p className="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+                  Highlights
+                </p>
+                <ul className="space-y-1">
+                  {aiSummary.highlights.map((highlight, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                      <span className="text-sm text-[var(--text-secondary)]">
+                        {highlight}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Concerns */}
+            {aiSummary.concerns.length > 0 && (
+              <div className="space-y-1.5">
+                <p className="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+                  Watch out for
+                </p>
+                <ul className="space-y-1">
+                  {aiSummary.concerns.map((concern, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-400" />
+                      <span className="text-sm text-[var(--text-secondary)]">
+                        {concern}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Suggestion */}
+            {aiSummary.suggestion && (
+              <div className="rounded-xl bg-[rgba(194,65,12,0.04)] border border-[rgba(194,65,12,0.08)] px-4 py-3">
+                <div className="flex items-start gap-2">
+                  <Lightbulb className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#c2410c]" />
+                  <p className="text-sm italic text-[var(--text-secondary)]">
+                    {aiSummary.suggestion}
+                  </p>
+                </div>
+              </div>
+            )}
+          </motion.div>
+        )}
       </motion.div>
 
       {/* Time estimate */}

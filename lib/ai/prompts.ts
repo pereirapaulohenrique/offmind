@@ -137,3 +137,170 @@ ${content}
 
 Provide only the result, no explanation or meta-commentary.`;
 };
+
+export const SUGGEST_SUBTASKS_PROMPT = (
+  title: string,
+  notes?: string,
+  existingSubtasks?: string[]
+) => `You are a productivity assistant helping break down complex tasks into actionable subtasks.
+
+TASK:
+Title: ${title}
+${notes ? `Notes: ${notes}` : ''}
+${existingSubtasks && existingSubtasks.length > 0 ? `\nExisting subtasks (suggest NEW ones that complement these):\n${existingSubtasks.map((s, i) => `- ${s}`).join('\n')}` : ''}
+
+Break this task into 3-8 specific, actionable subtasks. Each subtask should be a concrete next action, not vague or abstract.
+
+Respond with JSON only:
+{
+  "subtasks": [
+    { "title": "specific action", "sort_order": 1 },
+    ...
+  ],
+  "reasoning": "brief explanation of how you broke this down"
+}`;
+
+export const REVIEW_SUMMARY_PROMPT = (data: {
+  inboxCount: number;
+  backlogCount: number;
+  somedayCount: number;
+  waitingCount: number;
+  overdueCount: number;
+  completedThisWeek: number;
+  streakCount: number;
+  topItems: { title: string; destination: string; age_days: number }[];
+}) => `You are a supportive productivity coach generating a personalized weekly review summary.
+
+CURRENT STATE:
+- Inbox: ${data.inboxCount} items waiting to be processed
+- Backlog: ${data.backlogCount} actionable items
+- Someday/Maybe: ${data.somedayCount} items
+- Waiting For: ${data.waitingCount} items
+- Overdue: ${data.overdueCount} items
+- Completed this week: ${data.completedThisWeek} items
+- Current streak: ${data.streakCount} days
+
+TOP ITEMS BY AGE:
+${data.topItems.map(item => `- "${item.title}" (${item.destination}, ${item.age_days} days old)`).join('\n')}
+
+Today is ${format(new Date(), 'EEEE, MMMM d, yyyy')}.
+
+Generate a personalized, encouraging weekly review summary. Reference the actual numbers. Be concise but personal.
+
+Respond with JSON only:
+{
+  "greeting": "personalized greeting acknowledging their week",
+  "highlights": ["positive observation 1", "positive observation 2", ...],
+  "concerns": ["concern or area to address 1", ...],
+  "suggestion": "one specific actionable suggestion for next week"
+}`;
+
+export const CLUSTER_ITEMS_PROMPT = (
+  items: { id: string; title: string; notes?: string; destination?: string }[]
+) => `You are a productivity assistant. Analyze these items and identify thematic clusters that could become projects.
+
+ITEMS:
+${items.map((item, i) => `${i + 1}. [ID: ${item.id}] "${item.title}"${item.notes ? ` - ${item.notes}` : ''}${item.destination ? ` (${item.destination})` : ''}`).join('\n')}
+
+Identify groups of 3 or more related items that share a common theme and could be organized into a project. Only include high-confidence groupings.
+
+Respond with JSON only:
+{
+  "clusters": [
+    {
+      "theme": "description of the common theme",
+      "item_ids": ["id1", "id2", "id3"],
+      "suggested_project_name": "concise project name",
+      "reasoning": "why these items belong together"
+    },
+    ...
+  ]
+}
+
+Return an empty clusters array if no meaningful groupings are found.`;
+
+export const SUGGEST_PROMOTIONS_PROMPT = (
+  somedayItems: { id: string; title: string; notes?: string; created_at: string; maturity?: string }[],
+  recentActivity: string[]
+) => `You are a productivity assistant. Review these someday/incubating items and suggest which ones are ready to be promoted to the backlog for active work.
+
+SOMEDAY/INCUBATING ITEMS:
+${somedayItems.map((item, i) => `${i + 1}. [ID: ${item.id}] "${item.title}"${item.notes ? ` - ${item.notes}` : ''} (created: ${item.created_at}${item.maturity ? `, maturity: ${item.maturity}` : ''})`).join('\n')}
+
+RECENT ACTIVITY (for context on what the user is currently focused on):
+${recentActivity.length > 0 ? recentActivity.map(a => `- ${a}`).join('\n') : '- No recent activity available'}
+
+Today is ${format(new Date(), 'yyyy-MM-dd')}.
+
+Consider:
+- How long the item has been incubating
+- Its maturity level
+- Whether it relates to recent activity and current focus
+- Whether it seems actionable now
+
+Respond with JSON only:
+{
+  "promotions": [
+    {
+      "item_id": "id",
+      "confidence": 0.0-1.0,
+      "reasoning": "why this item is ready for promotion"
+    },
+    ...
+  ]
+}
+
+Only include items you are reasonably confident should be promoted. Empty array if none are ready.`;
+
+export const DRAFT_PAGE_PROMPT = (
+  title: string,
+  notes?: string,
+  subtasks?: string[],
+  destinationSlug?: string
+) => `You are a writing assistant helping create a well-structured document page for a productivity app.
+
+ITEM DETAILS:
+Title: ${title}
+${notes ? `Notes: ${notes}` : ''}
+${subtasks && subtasks.length > 0 ? `\nSubtasks:\n${subtasks.map(s => `- ${s}`).join('\n')}` : ''}
+${destinationSlug ? `Context: This item is in the "${destinationSlug}" destination.` : ''}
+
+Draft a comprehensive, well-structured page based on this information. The document should:
+- Start with a clear overview/purpose section
+- Include relevant headings and subheadings
+- Use bullet points for lists and action items
+- Have an "Action Items" or "Next Steps" section
+- Be practical and actionable
+- Be between 800-1500 words
+
+Write the document in plain text with markdown formatting (headings with #, bullets with -, bold with **). Do not include any meta-commentary or explanation — just the document content.`;
+
+export const STALE_ITEMS_PROMPT = (
+  items: { id: string; title: string; destination: string; age_days: number; has_subtasks: boolean }[]
+) => `You are a productivity assistant. Review these items and identify which ones have gone stale and need attention.
+
+ITEMS:
+${items.map((item, i) => `${i + 1}. [ID: ${item.id}] "${item.title}" (${item.destination}, ${item.age_days} days old, ${item.has_subtasks ? 'has subtasks' : 'no subtasks'})`).join('\n')}
+
+Today is ${format(new Date(), 'yyyy-MM-dd')}.
+
+For each stale item, suggest an action:
+- "archive": Item is no longer relevant, archive it
+- "schedule": Item is still valid, needs a specific date to get done
+- "promote": Item should be moved to a more active destination
+- "complete": Item is likely already done, mark it complete
+
+Respond with JSON only:
+{
+  "stale": [
+    {
+      "item_id": "id",
+      "action": "archive" | "schedule" | "promote" | "complete",
+      "confidence": 0.0-1.0,
+      "reasoning": "why this action is recommended"
+    },
+    ...
+  ]
+}
+
+Only include items that genuinely seem stale. Empty array if all items seem fine.`;
