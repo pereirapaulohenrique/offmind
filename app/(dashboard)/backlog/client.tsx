@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ListTodo, Calendar, CheckCircle2, ArrowUpDown, Filter } from 'lucide-react';
+import { ListTodo, Calendar, CheckCircle2, ArrowUpDown, Filter, LayoutGrid, List } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useUIStore } from '@/stores/ui';
 import { Button } from '@/components/ui/button';
@@ -16,7 +16,7 @@ import type { Item, Space, Project } from '@/types/database';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-type SortOption = 'newest' | 'oldest' | 'alphabetical';
+type SortOption = 'newest' | 'oldest' | 'alphabetical' | 'priority';
 
 interface BacklogPageClientProps {
   initialItems: Item[];
@@ -24,6 +24,29 @@ interface BacklogPageClientProps {
   projects: Project[];
   userId: string;
 }
+
+// ─── Priority helpers ────────────────────────────────────────────────────────
+
+const PRIORITY_ORDER: Record<string, number> = {
+  Urgent: 0,
+  High: 1,
+  Medium: 2,
+  Low: 3,
+  Unset: 4,
+};
+
+const PRIORITY_COLUMNS = [
+  { key: 'Urgent', label: 'Urgent', dotClass: 'bg-red-500', bgClass: 'bg-red-500/10' },
+  { key: 'High', label: 'High', dotClass: 'bg-orange-500', bgClass: 'bg-orange-500/10' },
+  { key: 'Medium', label: 'Medium', dotClass: 'bg-amber-500', bgClass: 'bg-amber-500/10' },
+  { key: 'Low', label: 'Low', dotClass: 'bg-blue-500', bgClass: 'bg-blue-500/10' },
+  { key: 'Unset', label: 'Unset', dotClass: 'bg-[var(--text-disabled)]', bgClass: 'bg-[var(--bg-hover)]' },
+] as const;
+
+const getItemPriority = (item: Item): string => {
+  const cv = (item.custom_values as Record<string, any>) ?? {};
+  return cv.priority || 'Unset';
+};
 
 // ─── Quick-schedule presets ──────────────────────────────────────────────────
 
@@ -52,6 +75,7 @@ export function BacklogPageClient({
   const [filterSpaceId, setFilterSpaceId] = useState<string>('all');
   const [filterProjectId, setFilterProjectId] = useState<string>('all');
   const [schedulingItemId, setSchedulingItemId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'list' | 'board'>('list');
 
   // Sync when server data changes (e.g. navigation)
   useEffect(() => {
@@ -123,10 +147,30 @@ export function BacklogPageClient({
         return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
       case 'alphabetical':
         return a.title.localeCompare(b.title);
+      case 'priority': {
+        const pa = PRIORITY_ORDER[getItemPriority(a)] ?? 4;
+        const pb = PRIORITY_ORDER[getItemPriority(b)] ?? 4;
+        return pa - pb;
+      }
       default:
         return 0;
     }
   });
+
+  // ── Stats ─────────────────────────────────────────────────────────────────
+
+  const totalCount = filteredItems.length;
+  const withPriorityCount = filteredItems.filter(
+    (item) => getItemPriority(item) !== 'Unset',
+  ).length;
+  const inSpaceCount = filteredItems.filter((item) => item.space_id).length;
+
+  // ── Board columns ─────────────────────────────────────────────────────────
+
+  const boardColumns = PRIORITY_COLUMNS.map((col) => ({
+    ...col,
+    items: sortedItems.filter((item) => getItemPriority(item) === col.key),
+  }));
 
   // ── Helpers ──────────────────────────────────────────────────────────────
 
@@ -244,6 +288,7 @@ export function BacklogPageClient({
                 <SelectItem value="newest">Newest first</SelectItem>
                 <SelectItem value="oldest">Oldest first</SelectItem>
                 <SelectItem value="alphabetical">Alphabetical</SelectItem>
+                <SelectItem value="priority">Priority</SelectItem>
               </SelectContent>
             </Select>
 
@@ -294,11 +339,70 @@ export function BacklogPageClient({
                 </SelectContent>
               </Select>
             )}
+
+            {/* View toggle */}
+            <div className="flex items-center rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)] p-0.5">
+              <button
+                type="button"
+                className={cn(
+                  'flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium transition-colors',
+                  viewMode === 'list'
+                    ? 'bg-[var(--bg-elevated)] text-[var(--text-primary)] shadow-sm'
+                    : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]',
+                )}
+                onClick={() => setViewMode('list')}
+              >
+                <List className="h-3.5 w-3.5" />
+                List
+              </button>
+              <button
+                type="button"
+                className={cn(
+                  'flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium transition-colors',
+                  viewMode === 'board'
+                    ? 'bg-[var(--bg-elevated)] text-[var(--text-primary)] shadow-sm'
+                    : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]',
+                )}
+                onClick={() => setViewMode('board')}
+              >
+                <LayoutGrid className="h-3.5 w-3.5" />
+                Board
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ── Items list ──────────────────────────────────────────────────── */}
+      {/* ── Stats header ────────────────────────────────────────────────── */}
+      {totalCount > 0 && (
+        <div className="px-6 pt-4 sm:px-8">
+          <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--bg-surface)] p-3 flex items-center justify-center gap-1">
+            <div className="flex flex-col items-center px-4">
+              <span className="text-lg font-semibold text-[var(--text-primary)]">{totalCount}</span>
+              <span className="text-xs text-[var(--text-muted)]">Total items</span>
+            </div>
+            <div className="h-8 w-px bg-[var(--border-subtle)]" />
+            <div className="flex flex-col items-center px-4">
+              <span className="text-lg font-semibold text-[var(--text-primary)]">{withPriorityCount}</span>
+              <span className="text-xs text-[var(--text-muted)]">With priority</span>
+            </div>
+            <div className="h-8 w-px bg-[var(--border-subtle)]" />
+            <div className="flex flex-col items-center px-4">
+              <span className="text-lg font-semibold text-[var(--text-primary)]">{inSpaceCount}</span>
+              <span className="text-xs text-[var(--text-muted)]">In a space</span>
+            </div>
+            <div className="h-8 w-px bg-[var(--border-subtle)]" />
+            <div className="flex flex-col items-center px-4">
+              <span className="text-lg font-semibold text-[var(--text-primary)]">
+                {totalCount - withPriorityCount}
+              </span>
+              <span className="text-xs text-[var(--text-muted)]">Needs triage</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Items list / Board ───────────────────────────────────────────── */}
       <div className="flex-1 overflow-auto p-6">
         {sortedItems.length === 0 ? (
           <EmptyState
@@ -306,7 +410,77 @@ export function BacklogPageClient({
             title="Backlog clear!"
             description="All tasks are scheduled or complete."
           />
+        ) : viewMode === 'board' ? (
+          /* ── Board (Kanban) view ─────────────────────────────────────────── */
+          <div className="flex gap-4 overflow-x-auto pb-4">
+            {boardColumns.map((col) => (
+              <div
+                key={col.key}
+                className="flex flex-col min-w-[260px] max-w-[300px] rounded-2xl border border-[var(--border-default)] bg-[var(--bg-surface)] shadow-[var(--shadow-card)]"
+              >
+                {/* Column header */}
+                <div className={cn('px-4 py-3 border-b border-[var(--border-subtle)] flex items-center justify-between rounded-t-2xl', col.bgClass)}>
+                  <span className="text-sm font-medium">
+                    {col.label}{' '}
+                    <span className="text-xs text-[var(--text-muted)]">
+                      ({col.items.length})
+                    </span>
+                  </span>
+                  <div className={cn('h-2 w-2 rounded-full', col.dotClass)} />
+                </div>
+
+                {/* Column items */}
+                <div className="flex-1 overflow-y-auto p-2 space-y-2 max-h-[calc(100vh-280px)]">
+                  <AnimatePresence mode="popLayout">
+                    {col.items.map((item, index) => {
+                      const breadcrumb = buildBreadcrumb(item);
+                      return (
+                        <motion.div
+                          key={item.id}
+                          layout
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.12 } }}
+                          transition={{
+                            duration: 0.2,
+                            delay: Math.min(index * 0.02, 0.2),
+                          }}
+                        >
+                          <div
+                            className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-3 hover:border-[var(--accent-border)] transition-colors cursor-pointer"
+                            onClick={() => router.push(`/items/${item.id}`)}
+                          >
+                            <p className="text-sm text-[var(--text-primary)] line-clamp-2">
+                              {item.title}
+                            </p>
+                            {breadcrumb && (
+                              <p className="mt-1 text-xs text-[var(--text-muted)]">
+                                {breadcrumb}
+                              </p>
+                            )}
+                            <p className="mt-1 text-xs text-[var(--text-disabled)]">
+                              Created{' '}
+                              {formatDistanceToNow(new Date(item.created_at), {
+                                addSuffix: true,
+                              })}
+                            </p>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </AnimatePresence>
+
+                  {col.items.length === 0 && (
+                    <p className="py-6 text-center text-xs text-[var(--text-disabled)]">
+                      No items
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         ) : (
+          /* ── List view (original) ────────────────────────────────────────── */
           <div className="mx-auto max-w-3xl space-y-3">
             <AnimatePresence mode="popLayout">
               {sortedItems.map((item, index) => {

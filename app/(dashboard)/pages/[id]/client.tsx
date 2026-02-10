@@ -287,14 +287,15 @@ export function PageEditorClient({
                 </Select>
               </div>
 
-              {/* Linked item */}
+              {/* Born from item */}
               {linkedItem && (
                 <div className="flex items-center gap-2">
-                  <span className="text-[var(--text-muted)]">Linked to:</span>
+                  <span className="text-[var(--text-muted)]">Born from:</span>
                   <Link
                     href={`/items/${linkedItem.id}`}
-                    className="rounded-full bg-[var(--bg-hover)] px-2 py-0.5 hover:bg-[rgba(194,65,12,0.12)] hover:text-[#c2410c] transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-[var(--bg-hover)] px-2.5 py-0.5 text-sm hover:bg-[rgba(194,65,12,0.12)] hover:text-[#c2410c] transition-colors"
                   >
+                    <span className="text-[10px]">🌱</span>
                     {linkedItem.title}
                   </Link>
                 </div>

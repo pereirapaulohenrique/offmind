@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, MessageSquare, CheckCircle2 } from 'lucide-react';
@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, differenceInDays, isPast, format } from 'date-fns';
 import type { Item } from '@/types/database';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -38,11 +38,19 @@ export function WaitingForPageClient({
   // ── Local state ──────────────────────────────────────────────────────────
 
   const [items, setItems] = useState<Item[]>(initialItems);
+  const groupRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // Sync when server data changes (e.g. navigation)
   useEffect(() => {
     setItems(initialItems);
   }, [initialItems]);
+
+  const scrollToGroup = useCallback((contact: string) => {
+    const el = groupRefs.current[contact];
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, []);
 
   // ── Real-time subscription ───────────────────────────────────────────────
 
@@ -162,6 +170,10 @@ export function WaitingForPageClient({
 
   const renderItem = (item: Item, index: number) => {
     const waitingSince = item.waiting_since || item.created_at;
+    const daysWaiting = differenceInDays(new Date(), new Date(waitingSince));
+    const cv = item.custom_values as Record<string, any> ?? {};
+    const followUpDate = cv?.follow_up_date ? new Date(cv.follow_up_date) : null;
+    const isOverdue = followUpDate ? isPast(followUpDate) : false;
 
     return (
       <motion.div
@@ -195,18 +207,37 @@ export function WaitingForPageClient({
                 {item.title}
               </button>
 
-              {/* Relative time */}
-              <span className="shrink-0 text-xs text-[var(--text-muted)]">
-                {formatDistanceToNow(new Date(waitingSince), {
-                  addSuffix: true,
-                })}
-              </span>
+              {/* Time indicators */}
+              <div className="flex shrink-0 items-center gap-1.5">
+                {isOverdue && (
+                  <span className="inline-flex items-center rounded-full bg-red-500/10 border border-red-500/20 px-2 py-0.5 text-[10px] font-semibold text-red-400">
+                    Overdue
+                  </span>
+                )}
+                {daysWaiting > 0 && (
+                  <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-medium text-amber-400">
+                    {daysWaiting}d waiting
+                  </span>
+                )}
+                <span className="text-xs text-[var(--text-muted)]">
+                  {formatDistanceToNow(new Date(waitingSince), {
+                    addSuffix: true,
+                  })}
+                </span>
+              </div>
             </div>
 
             {/* Notes preview */}
             {item.notes && (
               <p className="mt-1 text-xs text-[var(--text-muted)] line-clamp-1">
                 {item.notes}
+              </p>
+            )}
+
+            {/* Follow-up date */}
+            {followUpDate && (
+              <p className="mt-1 text-[11px] text-[var(--text-muted)]">
+                Follow up: {format(followUpDate, 'MMM d')}
               </p>
             )}
           </div>
@@ -241,6 +272,7 @@ export function WaitingForPageClient({
   const renderGroup = (group: GroupedItems, groupIndex: number) => (
     <motion.div
       key={group.contact}
+      ref={(el) => { groupRefs.current[group.contact] = el; }}
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
@@ -303,6 +335,30 @@ export function WaitingForPageClient({
           />
         ) : (
           <div className="mx-auto max-w-3xl space-y-5">
+            {/* Contact summary cards */}
+            {groups.length > 1 && (
+              <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin">
+                {groups.map((group) => (
+                  <button
+                    key={group.contact}
+                    type="button"
+                    onClick={() => scrollToGroup(group.contact)}
+                    className={cn(
+                      'flex shrink-0 items-center gap-2 rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)] px-3.5 py-2 text-left transition-colors',
+                      'hover:border-[var(--accent-base,#c2410c)] hover:bg-[var(--bg-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base,#c2410c)]/40',
+                    )}
+                  >
+                    <span className="text-sm font-medium text-[var(--text-primary)]">
+                      {group.contact}
+                    </span>
+                    <span className="rounded-full bg-[var(--bg-hover)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--text-muted)]">
+                      {group.items.length}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+
             {/* Named contact groups */}
             {groups.map((group, index) => renderGroup(group, index))}
 

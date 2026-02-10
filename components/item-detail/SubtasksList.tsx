@@ -18,6 +18,7 @@ interface SubtasksListProps {
   itemId: string;
   userId: string;
   initialSubtasks: Subtask[];
+  onPromoteSubtask?: (subtaskTitle: string) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -33,7 +34,7 @@ function tempId(): string {
 // Component
 // ---------------------------------------------------------------------------
 
-export function SubtasksList({ itemId, userId, initialSubtasks }: SubtasksListProps) {
+export function SubtasksList({ itemId, userId, initialSubtasks, onPromoteSubtask }: SubtasksListProps) {
   // ---- Local state ----
   const [subtasks, setSubtasks] = useState<Subtask[]>(
     () => [...initialSubtasks].sort((a, b) => a.sort_order - b.sort_order),
@@ -288,6 +289,36 @@ export function SubtasksList({ itemId, userId, initialSubtasks }: SubtasksListPr
     [subtasks, supabase],
   );
 
+  // ---- Promote to item ----
+  const handlePromote = useCallback(
+    async (id: string) => {
+      const target = subtasks.find((s) => s.id === id);
+      if (!target || !onPromoteSubtask) return;
+
+      // Call the parent's promote handler with the subtask title
+      onPromoteSubtask(target.title);
+
+      // Remove the subtask after promotion
+      setSubtasks((prev) => prev.filter((s) => s.id !== id));
+
+      if (!id.startsWith('temp-')) {
+        try {
+          const { error } = await supabase
+            .from('subtasks')
+            .delete()
+            .eq('id', id);
+          if (error) throw error;
+        } catch (err) {
+          console.error('SubtasksList: promote delete failed', err);
+          setSubtasks((prev) =>
+            [...prev, target].sort((a, b) => a.sort_order - b.sort_order),
+          );
+        }
+      }
+    },
+    [subtasks, supabase, onPromoteSubtask],
+  );
+
   // ---- Input key handler ----
   const handleInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -374,6 +405,7 @@ export function SubtasksList({ itemId, userId, initialSubtasks }: SubtasksListPr
               onToggle={handleToggle}
               onUpdate={handleUpdate}
               onDelete={handleDelete}
+              onPromote={onPromoteSubtask ? handlePromote : undefined}
             />
           ))}
         </AnimatePresence>

@@ -232,24 +232,28 @@ export function SpaceDetailClient({
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="flex items-center gap-3 rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-3 hover:border-[var(--accent-border)] transition-colors"
                       >
-                        <div className={cn(
-                          'h-2 w-2 rounded-full',
-                          item.is_completed ? 'bg-green-500' : 'bg-[var(--text-muted)]'
-                        )} />
-                        <span className={cn(
-                          'flex-1',
-                          item.is_completed && 'line-through text-[var(--text-muted)]'
-                        )}>
-                          {item.title}
-                        </span>
-                        {dest && DestIcon && (
-                          <span className="flex items-center gap-1 text-xs text-[var(--text-muted)]">
-                            <DestIcon className="h-3 w-3" />
-                            {dest.name}
+                        <Link
+                          href={`/items/${item.id}`}
+                          className="flex items-center gap-3 rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-3 hover:border-[var(--accent-border)] transition-colors"
+                        >
+                          <div className={cn(
+                            'h-2 w-2 rounded-full',
+                            item.is_completed ? 'bg-green-500' : 'bg-[var(--text-muted)]'
+                          )} />
+                          <span className={cn(
+                            'flex-1',
+                            item.is_completed && 'line-through text-[var(--text-muted)]'
+                          )}>
+                            {item.title}
                           </span>
-                        )}
+                          {dest && DestIcon && (
+                            <span className="flex items-center gap-1 text-xs text-[var(--text-muted)]">
+                              <DestIcon className="h-3 w-3" />
+                              {dest.name}
+                            </span>
+                          )}
+                        </Link>
                       </motion.div>
                     );
                   })}

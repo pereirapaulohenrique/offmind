@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Subtask } from '@/types/database';
 
@@ -15,6 +15,7 @@ interface SubtaskItemProps {
   onToggle: (id: string) => void;
   onUpdate: (id: string, title: string) => void;
   onDelete: (id: string) => void;
+  onPromote?: (id: string) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -32,7 +33,7 @@ const checkSpring = {
 // Component
 // ---------------------------------------------------------------------------
 
-export function SubtaskItem({ subtask, onToggle, onUpdate, onDelete }: SubtaskItemProps) {
+export function SubtaskItem({ subtask, onToggle, onUpdate, onDelete, onPromote }: SubtaskItemProps) {
   const [title, setTitle] = useState(subtask.title);
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -145,20 +146,36 @@ export function SubtaskItem({ subtask, onToggle, onUpdate, onDelete }: SubtaskIt
         placeholder="Subtask title..."
       />
 
-      {/* ---- Delete Button (hover reveal) ---- */}
-      <button
-        type="button"
-        onClick={() => onDelete(subtask.id)}
-        className={cn(
-          'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg',
-          'text-neutral-600 transition-all duration-150',
-          'opacity-0 group-hover:opacity-100',
-          'hover:bg-white/[0.06] hover:text-neutral-300',
+      {/* ---- Action Buttons (hover reveal) ---- */}
+      <div className="flex shrink-0 items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+        {onPromote && !isCompleted && (
+          <button
+            type="button"
+            onClick={() => onPromote(subtask.id)}
+            className={cn(
+              'flex h-6 w-6 items-center justify-center rounded-lg',
+              'text-neutral-600 transition-all duration-150',
+              'hover:bg-[#c2410c]/10 hover:text-[#c2410c]',
+            )}
+            aria-label="Promote to item"
+            title="Promote to item"
+          >
+            <ArrowUpRight className="h-3.5 w-3.5" />
+          </button>
         )}
-        aria-label="Delete subtask"
-      >
-        <X className="h-3.5 w-3.5" />
-      </button>
+        <button
+          type="button"
+          onClick={() => onDelete(subtask.id)}
+          className={cn(
+            'flex h-6 w-6 items-center justify-center rounded-lg',
+            'text-neutral-600 transition-all duration-150',
+            'hover:bg-white/[0.06] hover:text-neutral-300',
+          )}
+          aria-label="Delete subtask"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
+      </div>
     </motion.div>
   );
 }

@@ -80,12 +80,7 @@ export function TiptapEditor({
     editorProps: {
       attributes: {
         class: cn(
-          'prose prose-sm dark:prose-invert max-w-none focus:outline-none min-h-[200px]',
-          'prose-headings:font-semibold prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg',
-          'prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0',
-          'prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:rounded',
-          'prose-pre:bg-muted prose-pre:p-4 prose-pre:rounded-lg',
-          'prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic',
+          'tiptap-content max-w-none focus:outline-none min-h-[200px]',
           className
         ),
       },

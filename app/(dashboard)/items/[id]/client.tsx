@@ -17,6 +17,7 @@ import {
   ImageIcon,
   Volume2,
   ChevronRight,
+  MoreHorizontal,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { softDeleteItem } from '@/lib/utils/soft-delete';
@@ -110,7 +111,10 @@ const DESTINATION_FIELDS: Record<
       options: ['Seed', 'Exploring', 'Developing', 'Ready to Act'],
     },
   ],
-  someday: [{ name: 'revisit_date', label: 'Revisit On', type: 'date' }],
+  someday: [
+    { name: 'revisit_date', label: 'Revisit On', type: 'date' },
+    { name: 'maturity', label: 'Maturity', type: 'select', options: ['Raw Idea', 'Developing', 'Ready to Act'] },
+  ],
   questions: [
     {
       name: 'possible_answer',
@@ -388,6 +392,9 @@ export function ItemDetailClient({
 
   // ---- Lightbox for image attachments ----
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+
+  // ---- Post-completion prompt ----
+  const [showCompletionPrompt, setShowCompletionPrompt] = useState<'schedule' | 'backlog' | null>(null);
 
   // ---- Refs ----
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -731,9 +738,107 @@ export function ItemDetailClient({
       const completed = { ...item, ...updates } as Item;
       updateItem(completed);
       toast.success('Item completed');
-      router.back();
+
+      // Show post-completion prompt for schedule/backlog, otherwise go back
+      if (destinationSlug === 'commit') {
+        setShowCompletionPrompt('schedule');
+      } else if (destinationSlug === 'backlog') {
+        setShowCompletionPrompt('backlog');
+      } else {
+        router.back();
+      }
     } catch {
       toast.error('Failed to complete item');
+    }
+  };
+
+  // ---- Post-completion: create page for schedule prompt ----
+  const handleCreateMeetingPage = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('pages')
+        .insert({
+          user_id: userId,
+          title: `Meeting notes: ${title}`,
+          item_id: item.id,
+          space_id: spaceId,
+          project_id: projectId,
+        })
+        .select('id')
+        .single();
+
+      if (error) throw error;
+      if (data) {
+        router.push(`/pages/${data.id}`);
+      }
+    } catch {
+      toast.error('Failed to create page');
+      router.back();
+    }
+  };
+
+  // ---- Post-completion: create follow-up item for backlog prompt ----
+  const handleCreateFollowUp = async () => {
+    try {
+      const backlogDest = destinations.find((d) => d.slug === 'backlog');
+      const { data, error } = await supabase
+        .from('items')
+        .insert({
+          user_id: userId,
+          title: `Follow-up: ${title}`,
+          destination_id: backlogDest?.id ?? null,
+          space_id: spaceId,
+          project_id: projectId,
+          layer: backlogDest ? 'process' : 'capture',
+        })
+        .select('id')
+        .single();
+
+      if (error) throw error;
+      toast.success('Follow-up created');
+      if (data) {
+        router.push(`/items/${data.id}`);
+      }
+    } catch {
+      toast.error('Failed to create follow-up');
+      router.back();
+    }
+  };
+
+  // ---- Convert to Project ----
+  const handleConvertToProject = async () => {
+    try {
+      const { data: newProject, error: projectError } = await supabase
+        .from('projects')
+        .insert({
+          user_id: userId,
+          name: title,
+          space_id: spaceId,
+          icon: 'folder-open',
+          color: 'blue',
+        })
+        .select('id')
+        .single();
+
+      if (projectError) throw projectError;
+      if (!newProject) throw new Error('No project returned');
+
+      const { error: updateError } = await supabase
+        .from('items')
+        .update({ project_id: newProject.id })
+        .eq('id', item.id);
+
+      if (updateError) throw updateError;
+
+      setProjectId(newProject.id);
+      const refreshed = { ...item, project_id: newProject.id } as Item;
+      setItem(refreshed);
+      updateItem(refreshed);
+
+      toast.success('Converted to project!');
+      router.push(`/projects/${newProject.id}`);
+    } catch {
+      toast.error('Failed to convert to project');
     }
   };
 
@@ -1245,10 +1350,10 @@ export function ItemDetailClient({
                   {selectedDestination?.name ?? 'Destination'} Details
                 </h3>
 
-                <div className="space-y-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
+                <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
                   {/* Waiting-specific fields */}
                   {showWaitingSection && (
-                    <>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                       <div className="relative space-y-1.5">
                         <label className="text-xs font-medium text-neutral-400">
                           Waiting For
@@ -1324,22 +1429,40 @@ export function ItemDetailClient({
                           </p>
                         </div>
                       )}
-                    </>
+                    </div>
                   )}
 
-                  {/* Built-in destination fields */}
-                  {builtInFields
-                    .filter(
-                      (f) =>
-                        !(showWaitingSection && f.name === 'waiting_for'),
-                    )
-                    .map(renderBuiltInField)}
-
-                  {/* Custom fields from destination.custom_fields */}
-                  {customFieldDefs.map(renderCustomField)}
+                  {/* Built-in destination fields + custom fields in grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {builtInFields
+                      .filter(
+                        (f) =>
+                          !(showWaitingSection && f.name === 'waiting_for'),
+                      )
+                      .map(renderBuiltInField)}
+                    {customFieldDefs.map(renderCustomField)}
+                  </div>
                 </div>
               </div>
             )}
+
+            {/* ── Promote to Backlog (Someday/Maybe only) ──────────── */}
+            {destinationSlug === 'someday' && (() => {
+              const backlogDest = destinations.find((d) => d.slug === 'backlog');
+              if (!backlogDest) return null;
+              return (
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleDestinationChange(backlogDest.id);
+                    toast.success('Promoted to Backlog!');
+                  }}
+                  className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-400 hover:bg-emerald-500/15 transition-colors"
+                >
+                  Promote to Backlog
+                </button>
+              );
+            })()}
 
             {/* ── Subtasks ─────────────────────────────────────────── */}
             <div className="space-y-3">
@@ -1350,161 +1473,188 @@ export function ItemDetailClient({
                 itemId={item.id}
                 initialSubtasks={initialSubtasks}
                 userId={userId}
+                onPromoteSubtask={async (subtaskTitle) => {
+                  try {
+                    const { data, error } = await supabase
+                      .from('items')
+                      .insert({
+                        user_id: userId,
+                        title: subtaskTitle,
+                        destination_id: destinationId,
+                        space_id: spaceId,
+                        project_id: projectId,
+                        layer: destinationId ? 'process' : 'capture',
+                      })
+                      .select('id')
+                      .single();
+
+                    if (error) throw error;
+                    toast.success(`"${subtaskTitle}" promoted to item`);
+                    if (data) {
+                      router.push(`/items/${data.id}`);
+                    }
+                  } catch {
+                    toast.error('Failed to promote subtask');
+                  }
+                }}
               />
             </div>
 
-            {/* ── Schedule ─────────────────────────────────────────── */}
-            {showScheduleSection && (
-              <div className="space-y-3">
-                <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
-                  Schedule
-                </h3>
+            {/* ── Schedule + Organize (side-by-side) ─────────────── */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Schedule */}
+              {showScheduleSection && (
+                <div className="space-y-3">
+                  <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                    Schedule
+                  </h3>
 
-                <div className="space-y-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-neutral-400">
-                      Scheduled At
-                    </label>
-                    <Input
-                      type="datetime-local"
-                      value={scheduledAt}
-                      onChange={(e) =>
-                        handleScheduledAtChange(e.target.value)
-                      }
-                      className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]"
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <div className="flex-1 space-y-1.5">
+                  <div className="space-y-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
+                    <div className="space-y-1.5">
                       <label className="text-xs font-medium text-neutral-400">
-                        Duration (min)
+                        Scheduled At
                       </label>
                       <Input
-                        type="number"
-                        min={0}
-                        step={5}
-                        value={durationMinutes ?? ''}
+                        type="datetime-local"
+                        value={scheduledAt}
                         onChange={(e) =>
-                          handleDurationChange(e.target.value)
+                          handleScheduledAtChange(e.target.value)
                         }
-                        placeholder="30"
                         className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]"
                       />
                     </div>
 
-                    <div className="flex items-center gap-2 pt-5">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-neutral-400">
+                          Duration (min)
+                        </label>
+                        <Input
+                          type="number"
+                          min={0}
+                          step={5}
+                          value={durationMinutes ?? ''}
+                          onChange={(e) =>
+                            handleDurationChange(e.target.value)
+                          }
+                          placeholder="30"
+                          className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]"
+                        />
+                      </div>
+
+                      <div className="flex items-center gap-2 pt-5">
+                        <button
+                          type="button"
+                          onClick={handleAllDayToggle}
+                          className={cn(
+                            'relative h-5 w-9 shrink-0 rounded-full transition-colors',
+                            isAllDay ? 'bg-[#c2410c]' : 'bg-white/[0.1]',
+                          )}
+                        >
+                          <span
+                            className={cn(
+                              'absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform',
+                              isAllDay && 'translate-x-4',
+                            )}
+                          />
+                        </button>
+                        <span className="text-xs text-neutral-400">
+                          All day
+                        </span>
+                      </div>
+                    </div>
+
+                    {scheduledAt && (
                       <button
                         type="button"
-                        onClick={handleAllDayToggle}
-                        className={cn(
-                          'relative h-5 w-9 shrink-0 rounded-full transition-colors',
-                          isAllDay ? 'bg-[#c2410c]' : 'bg-white/[0.1]',
-                        )}
+                        onClick={() => handleScheduledAtChange('')}
+                        className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
                       >
-                        <span
-                          className={cn(
-                            'absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform',
-                            isAllDay && 'translate-x-4',
-                          )}
-                        />
+                        Clear schedule
                       </button>
-                      <span className="text-xs text-neutral-400">
-                        All day
-                      </span>
-                    </div>
+                    )}
                   </div>
+                </div>
+              )}
 
-                  {scheduledAt && (
-                    <button
-                      type="button"
-                      onClick={() => handleScheduledAtChange('')}
-                      className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
+              {/* Organize: Space + Project */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                  Organize
+                </h3>
+
+                <div className="space-y-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
+                  {/* Space */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-neutral-400">
+                      Space
+                    </label>
+                    <Select
+                      value={spaceId ?? 'none'}
+                      onValueChange={handleSpaceChange}
                     >
-                      Clear schedule
-                    </button>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* ── Organize: Space + Project ─────────────────────────── */}
-            <div className="space-y-3">
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
-                Organize
-              </h3>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
-                {/* Space */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-neutral-400">
-                    Space
-                  </label>
-                  <Select
-                    value={spaceId ?? 'none'}
-                    onValueChange={handleSpaceChange}
-                  >
-                    <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
-                      <SelectValue placeholder="No space" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">None</SelectItem>
-                      {spaces.map((space) => {
-                        const SpaceIcon = ICON_MAP[space.icon];
-                        return (
-                          <SelectItem key={space.id} value={space.id}>
-                            <span className="flex items-center gap-2">
-                              {SpaceIcon && (
-                                <SpaceIcon className="h-4 w-4" />
-                              )}
-                              <span>{space.name}</span>
-                            </span>
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Project */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-neutral-400">
-                    Project
-                  </label>
-                  <Select
-                    value={projectId ?? 'none'}
-                    onValueChange={handleProjectChange}
-                  >
-                    <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
-                      <SelectValue placeholder="No project" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">None</SelectItem>
-                      {projects
-                        .filter(
-                          (p) =>
-                            !spaceId ||
-                            p.space_id === spaceId ||
-                            p.space_id === null,
-                        )
-                        .map((project) => {
-                          const ProjIcon = ICON_MAP[project.icon];
+                      <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
+                        <SelectValue placeholder="No space" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">None</SelectItem>
+                        {spaces.map((space) => {
+                          const SpaceIcon = ICON_MAP[space.icon];
                           return (
-                            <SelectItem
-                              key={project.id}
-                              value={project.id}
-                            >
+                            <SelectItem key={space.id} value={space.id}>
                               <span className="flex items-center gap-2">
-                                {ProjIcon && (
-                                  <ProjIcon className="h-4 w-4" />
+                                {SpaceIcon && (
+                                  <SpaceIcon className="h-4 w-4" />
                                 )}
-                                <span>{project.name}</span>
+                                <span>{space.name}</span>
                               </span>
                             </SelectItem>
                           );
                         })}
-                    </SelectContent>
-                  </Select>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Project */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-neutral-400">
+                      Project
+                    </label>
+                    <Select
+                      value={projectId ?? 'none'}
+                      onValueChange={handleProjectChange}
+                    >
+                      <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
+                        <SelectValue placeholder="No project" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">None</SelectItem>
+                        {projects
+                          .filter(
+                            (p) =>
+                              !spaceId ||
+                              p.space_id === spaceId ||
+                              p.space_id === null,
+                          )
+                          .map((project) => {
+                            const ProjIcon = ICON_MAP[project.icon];
+                            return (
+                              <SelectItem
+                                key={project.id}
+                                value={project.id}
+                              >
+                                <span className="flex items-center gap-2">
+                                  {ProjIcon && (
+                                    <ProjIcon className="h-4 w-4" />
+                                  )}
+                                  <span>{project.name}</span>
+                                </span>
+                              </SelectItem>
+                            );
+                          })}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1610,16 +1760,35 @@ export function ItemDetailClient({
             {confirmDelete ? 'Confirm Delete' : 'Delete'}
           </Button>
 
-          {/* Center: Archive */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleArchive}
-            className="gap-2 rounded-xl text-neutral-500 hover:text-neutral-200"
-          >
-            <Archive className="h-4 w-4" />
-            Archive
-          </Button>
+          {/* Center: Archive + More Actions */}
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleArchive}
+              className="gap-2 rounded-xl text-neutral-500 hover:text-neutral-200"
+            >
+              <Archive className="h-4 w-4" />
+              Archive
+            </Button>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="rounded-xl text-neutral-500 hover:text-neutral-200"
+                >
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center">
+                <DropdownMenuItem onClick={handleConvertToProject}>
+                  Convert to Project
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
 
           {/* Right: Save & Route + Complete */}
           <div className="flex items-center gap-2">
@@ -1659,6 +1828,95 @@ export function ItemDetailClient({
             alt="Attachment"
             onClose={() => setLightboxSrc(null)}
           />
+        )}
+      </AnimatePresence>
+
+      {/* ── Post-Completion Prompt ────────────────────────────────── */}
+      <AnimatePresence>
+        {showCompletionPrompt && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+            onClick={() => {
+              setShowCompletionPrompt(null);
+              router.back();
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="rounded-2xl border border-white/[0.08] bg-[#252220] p-6 shadow-xl max-w-sm w-full mx-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {showCompletionPrompt === 'schedule' ? (
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <h3 className="text-lg font-semibold text-neutral-100">
+                      Create meeting notes?
+                    </h3>
+                    <p className="text-sm text-neutral-400">
+                      Start a page linked to this item for your meeting notes.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Button
+                      size="sm"
+                      onClick={handleCreateMeetingPage}
+                      className="flex-1 gap-2 rounded-xl bg-[#c2410c] text-white hover:bg-[#c2410c]/90"
+                    >
+                      Start a Page
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setShowCompletionPrompt(null);
+                        router.back();
+                      }}
+                      className="flex-1 rounded-xl text-neutral-400 hover:text-neutral-200"
+                    >
+                      Skip
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <h3 className="text-lg font-semibold text-neutral-100">
+                      Create a follow-up?
+                    </h3>
+                    <p className="text-sm text-neutral-400">
+                      Create a new item to follow up on &ldquo;{title}&rdquo;.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Button
+                      size="sm"
+                      onClick={handleCreateFollowUp}
+                      className="flex-1 gap-2 rounded-xl bg-[#c2410c] text-white hover:bg-[#c2410c]/90"
+                    >
+                      New Item
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setShowCompletionPrompt(null);
+                        router.back();
+                      }}
+                      className="flex-1 rounded-xl text-neutral-400 hover:text-neutral-200"
+                    >
+                      Skip
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
     </>
