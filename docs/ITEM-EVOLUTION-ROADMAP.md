@@ -187,14 +187,15 @@ Includes completion celebration + streak tracking. This is where OffMind becomes
 - [x] "Born from" breadcrumb on Pages
 - [x] "Promote to Backlog" one-click for Someday/Maybe items
 
-### Phase 4 — Weekly Review
-- [ ] Guided review flow UI
-- [ ] Inbox zero check
-- [ ] Backlog priority review
-- [ ] Someday/Maybe reconsider
-- [ ] Waiting For follow-ups audit
-- [ ] Schedule next week planning
-- [ ] Streak tracking + celebration
+### Phase 4 — Weekly Review (DONE)
+- [x] Guided review flow UI (7-step wizard with step indicator)
+- [x] Inbox zero check
+- [x] Backlog priority review (inline priority picker + stale item archival)
+- [x] Someday/Maybe reconsider (promote to backlog, keep, archive)
+- [x] Waiting For follow-ups audit (follow-up sent, response received, extend +7d)
+- [x] Schedule next week planning (overdue items, grouped schedule, inline date picker)
+- [x] Streak tracking + celebration (profile.settings.review_streak, motivational messages)
+- [x] Sidebar "Weekly Review" nav link under new "Tools" section
 
 ### Phase 5 — AI Evolution
 - [ ] AI suggests Someday promotions

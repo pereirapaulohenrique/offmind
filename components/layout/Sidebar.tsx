@@ -22,6 +22,7 @@ import {
   ListTodo,
   Clock,
   Archive,
+  RotateCcw,
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -89,6 +90,10 @@ const destinationNav: NavEntry[] = [
   { href: '/archive', label: 'Archive', icon: Archive },
 ];
 
+const toolsNav: NavEntry[] = [
+  { href: '/review', label: 'Weekly Review', icon: RotateCcw },
+];
+
 // ---------------------------------------------------------------------------
 // Spring presets
 // ---------------------------------------------------------------------------
@@ -130,6 +135,13 @@ function getLayerStyle(pathname: string): LayerStyle {
       bg: 'rgba(52,211,153,0.10)',
       text: 'var(--layer-commit, #34d399)',
       pill: 'var(--layer-commit, #34d399)',
+    };
+  }
+  if (pathname.startsWith('/review')) {
+    return {
+      bg: 'rgba(194,65,12,0.10)',
+      text: '#c2410c',
+      pill: '#c2410c',
     };
   }
   if (pathname.startsWith('/archive')) {
@@ -596,6 +608,29 @@ export function Sidebar({ inboxCount: _inboxCountProp = 0, spaces = [] }: Sideba
 
           <nav className="space-y-0.5 py-1" aria-label="Destination navigation">
             {destinationNav.map((item) => {
+              const active = isRouteActive(item.href);
+              return (
+                <NavItem
+                  key={item.href}
+                  href={item.href}
+                  label={item.label}
+                  icon={item.icon}
+                  isActive={active}
+                  isCollapsed={sidebarCollapsed}
+                  shortcut={item.shortcut}
+                  layerStyle={active ? getLayerStyle(item.href) : currentLayerStyle}
+                />
+              );
+            })}
+          </nav>
+
+          <WarmSeparator className="my-1" />
+
+          {/* -- Tools section ------------------------------------------------ */}
+          {!sidebarCollapsed && <SectionHeader title="Tools" />}
+
+          <nav className="space-y-0.5 py-1" aria-label="Tools navigation">
+            {toolsNav.map((item) => {
               const active = isRouteActive(item.href);
               return (
                 <NavItem
