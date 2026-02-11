@@ -13,6 +13,7 @@ import {
   FolderOpen,
   ListTodo,
   CheckCircle2,
+  Plus,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -88,6 +89,7 @@ export function ProjectDetailClient({
     space_id: project.space_id || '',
   });
   const [isSaving, setIsSaving] = useState(false);
+  const [isCreatingPage, setIsCreatingPage] = useState(false);
 
   const ProjectIcon = ICON_MAP[project.icon] || FolderOpen;
   const colorOption = COLOR_PALETTE.find(c => c.value === project.color);
@@ -97,6 +99,9 @@ export function ProjectDetailClient({
   const completedItems = items.filter(i => i.is_completed).length;
   const progressPercent = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
   const totalPages = pages.length;
+
+  // Parent space info
+  const parentSpace = project.spaces || spaces.find(s => s.id === project.space_id);
 
   // Update project
   const handleUpdate = useCallback(async () => {
@@ -145,16 +150,38 @@ export function ProjectDetailClient({
       if (error) throw error;
 
       toast.success('Project deleted');
-      router.push('/projects');
+      router.push(parentSpace ? `/spaces/${parentSpace.id}` : '/spaces');
     } catch (error) {
       toast.error('Failed to delete project');
     } finally {
       setIsSaving(false);
     }
-  }, [project, router]);
+  }, [project, router, parentSpace]);
 
-  // Parent space info
-  const parentSpace = project.spaces || spaces.find(s => s.id === project.space_id);
+  // Create page
+  const handleCreatePage = useCallback(async () => {
+    setIsCreatingPage(true);
+    const supabase = getSupabase();
+    try {
+      const { data, error } = await supabase
+        .from('pages')
+        .insert({
+          user_id: userId,
+          title: 'Untitled',
+          content: {},
+          space_id: project.space_id,
+          project_id: project.id,
+        })
+        .select()
+        .single();
+      if (error) throw error;
+      router.push(`/pages/${data.id}`);
+    } catch {
+      toast.error('Failed to create page');
+    } finally {
+      setIsCreatingPage(false);
+    }
+  }, [userId, project.id, project.space_id, router]);
 
   return (
     <div className="flex-1 flex flex-col h-full">
@@ -162,7 +189,7 @@ export function ProjectDetailClient({
       <div className="px-6 py-5 sm:px-8 warm-glass" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
-            <Link href="/projects">
+            <Link href={parentSpace ? `/spaces/${parentSpace.id}` : '/spaces'}>
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>
@@ -292,6 +319,12 @@ export function ProjectDetailClient({
 
           {/* Pages Tab */}
           <TabsContent value="pages" className="space-y-4">
+            <div className="flex items-center justify-end">
+              <Button size="sm" onClick={handleCreatePage} disabled={isCreatingPage} className="gap-2">
+                <Plus className="h-4 w-4" />
+                {isCreatingPage ? 'Creating...' : 'New Page'}
+              </Button>
+            </div>
             {pages.length === 0 ? (
               <EmptyState
                 iconName="file-text"
@@ -299,7 +332,7 @@ export function ProjectDetailClient({
                 description="Create pages to document your project"
                 action={{
                   label: 'Create Page',
-                  href: '/pages',
+                  onClick: handleCreatePage,
                 }}
               />
             ) : (
@@ -349,13 +382,12 @@ export function ProjectDetailClient({
               <label className="text-sm font-medium">Space</label>
               <Select
                 value={editForm.space_id || 'none'}
-                onValueChange={(value) => setEditForm({ ...editForm, space_id: value === 'none' ? '' : value })}
+                onValueChange={(value) => setEditForm({ ...editForm, space_id: value })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a space" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">No space</SelectItem>
                   {spaces.map((space) => {
                     const SpaceIcon = ICON_MAP[space.icon] || FolderOpen;
                     return (

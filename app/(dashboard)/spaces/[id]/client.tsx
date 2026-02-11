@@ -80,6 +80,15 @@ export function SpaceDetailClient({
     color: space.color,
   });
   const [isSaving, setIsSaving] = useState(false);
+  const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
+  const [projectForm, setProjectForm] = useState({
+    name: '',
+    description: '',
+    icon: 'folder-open',
+    color: COLOR_PALETTE[projects.length % COLOR_PALETTE.length]?.value || '#c2410c',
+  });
+  const [isCreatingProject, setIsCreatingProject] = useState(false);
+  const [isCreatingPage, setIsCreatingPage] = useState(false);
 
   const SpaceIcon = ICON_MAP[space.icon] || FolderOpen;
   const colorOption = COLOR_PALETTE.find(c => c.value === space.color);
@@ -137,6 +146,71 @@ export function SpaceDetailClient({
       setIsSaving(false);
     }
   }, [space, router]);
+
+  // Create project
+  const handleCreateProject = useCallback(async () => {
+    if (!projectForm.name.trim()) {
+      toast.error('Name is required');
+      return;
+    }
+    setIsCreatingProject(true);
+    const supabase = getSupabase();
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .insert({
+          user_id: userId,
+          name: projectForm.name.trim(),
+          description: projectForm.description.trim() || null,
+          icon: projectForm.icon,
+          color: projectForm.color,
+          space_id: space.id,
+          sort_order: projects.length,
+        })
+        .select()
+        .single();
+      if (error) throw error;
+      setProjects(prev => [...prev, data as Project]);
+      setIsCreateProjectOpen(false);
+      setProjectForm({
+        name: '',
+        description: '',
+        icon: 'folder-open',
+        color: COLOR_PALETTE[(projects.length + 1) % COLOR_PALETTE.length]?.value || '#c2410c',
+      });
+      toast.success('Project created');
+      router.refresh();
+    } catch {
+      toast.error('Failed to create project');
+    } finally {
+      setIsCreatingProject(false);
+    }
+  }, [projectForm, projects, userId, space.id, router]);
+
+  // Create page
+  const handleCreatePage = useCallback(async () => {
+    setIsCreatingPage(true);
+    const supabase = getSupabase();
+    try {
+      const { data, error } = await supabase
+        .from('pages')
+        .insert({
+          user_id: userId,
+          title: 'Untitled',
+          content: {},
+          space_id: space.id,
+          project_id: null,
+        })
+        .select()
+        .single();
+      if (error) throw error;
+      router.push(`/pages/${data.id}`);
+    } catch {
+      toast.error('Failed to create page');
+    } finally {
+      setIsCreatingPage(false);
+    }
+  }, [userId, space.id, router]);
 
   // Stats
   const totalItems = items.length;
@@ -264,6 +338,12 @@ export function SpaceDetailClient({
 
           {/* Projects Tab */}
           <TabsContent value="projects" className="space-y-4">
+            <div className="flex items-center justify-end">
+              <Button size="sm" onClick={() => setIsCreateProjectOpen(true)} className="gap-2">
+                <Plus className="h-4 w-4" />
+                New Project
+              </Button>
+            </div>
             {projects.length === 0 ? (
               <EmptyState
                 iconName="folder-open"
@@ -271,7 +351,7 @@ export function SpaceDetailClient({
                 description="Create projects to organize your work"
                 action={{
                   label: 'Create Project',
-                  href: '/projects',
+                  onClick: () => setIsCreateProjectOpen(true),
                 }}
               />
             ) : (
@@ -304,6 +384,12 @@ export function SpaceDetailClient({
 
           {/* Pages Tab */}
           <TabsContent value="pages" className="space-y-4">
+            <div className="flex items-center justify-end">
+              <Button size="sm" onClick={handleCreatePage} disabled={isCreatingPage} className="gap-2">
+                <Plus className="h-4 w-4" />
+                {isCreatingPage ? 'Creating...' : 'New Page'}
+              </Button>
+            </div>
             {pages.length === 0 ? (
               <EmptyState
                 iconName="file-text"
@@ -311,7 +397,7 @@ export function SpaceDetailClient({
                 description="Create pages to document your work"
                 action={{
                   label: 'Create Page',
-                  href: '/pages',
+                  onClick: handleCreatePage,
                 }}
               />
             ) : (
@@ -400,6 +486,67 @@ export function SpaceDetailClient({
             </Button>
             <Button variant="destructive" onClick={handleDelete} disabled={isSaving}>
               {isSaving ? 'Deleting...' : 'Delete Space'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Create Project Dialog */}
+      <Dialog open={isCreateProjectOpen} onOpenChange={setIsCreateProjectOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create Project</DialogTitle>
+            <DialogDescription>
+              Create a new project in {space.name}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="flex items-center gap-2 rounded-lg border border-[var(--border-default)] bg-[var(--bg-hover)] px-3 py-2">
+              <SpaceIcon className={cn('h-4 w-4', colorOption?.text)} />
+              <span className="text-sm font-medium">{space.name}</span>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Name</label>
+              <Input
+                value={projectForm.name}
+                onChange={(e) => setProjectForm({ ...projectForm, name: e.target.value })}
+                placeholder="e.g., Website Redesign"
+                autoFocus
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Description (optional)</label>
+              <textarea
+                value={projectForm.description}
+                onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })}
+                placeholder="Brief description of this project"
+                rows={2}
+                className="w-full rounded-md border border-[var(--border-default)] bg-transparent px-3 py-2 text-sm placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-1 focus:ring-[var(--accent-default)]"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Icon</label>
+                <IconPicker
+                  value={projectForm.icon}
+                  onChange={(icon) => setProjectForm({ ...projectForm, icon })}
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Color</label>
+                <ColorPicker
+                  value={projectForm.color}
+                  onChange={(color) => setProjectForm({ ...projectForm, color })}
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsCreateProjectOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleCreateProject} disabled={isCreatingProject}>
+              {isCreatingProject ? 'Creating...' : 'Create Project'}
             </Button>
           </DialogFooter>
         </DialogContent>

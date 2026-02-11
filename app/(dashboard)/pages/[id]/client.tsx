@@ -48,6 +48,18 @@ export function PageEditorClient({
   const [lastSaved, setLastSaved] = useState<Date>(new Date(page.updated_at));
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Smart back navigation based on page context
+  const backHref = page.project_id
+    ? `/projects/${page.project_id}`
+    : page.space_id
+      ? `/spaces/${page.space_id}`
+      : '/pages';
+  const backLabel = page.project_id
+    ? (projects.find(p => p.id === page.project_id)?.name || 'Project')
+    : page.space_id
+      ? (spaces.find(s => s.id === page.space_id)?.name || 'Space')
+      : 'Pages';
+
   // Auto-save function
   const saveChanges = useCallback(async (updates: Partial<Page>) => {
     const supabase = getSupabase();
@@ -140,7 +152,7 @@ export function PageEditorClient({
       if (error) throw error;
 
       toast.success('Page deleted');
-      router.push('/pages');
+      router.push(backHref);
     } catch (error) {
       toast.error('Failed to delete page');
     }
@@ -161,8 +173,8 @@ export function PageEditorClient({
       <div className="px-6 py-3 sm:px-8 warm-glass" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={() => router.push('/pages')}>
-              ← Pages
+            <Button variant="ghost" size="sm" onClick={() => router.push(backHref)}>
+              ← {backLabel}
             </Button>
             <span className="text-[var(--text-muted)]">/</span>
             <span className="text-sm text-[var(--text-muted)] truncate max-w-[200px]">

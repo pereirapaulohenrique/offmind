@@ -94,6 +94,10 @@ const toolsNav: NavEntry[] = [
   { href: '/review', label: 'Weekly Review', icon: RotateCcw },
 ];
 
+const libraryNav: NavEntry[] = [
+  { href: '/pages', label: 'Pages', icon: FileText },
+];
+
 // ---------------------------------------------------------------------------
 // Spring presets
 // ---------------------------------------------------------------------------
@@ -149,6 +153,13 @@ function getLayerStyle(pathname: string): LayerStyle {
       bg: 'rgba(120,113,108,0.10)',
       text: 'var(--text-secondary)',
       pill: 'var(--text-muted)',
+    };
+  }
+  if (pathname.startsWith('/pages') || pathname.startsWith('/spaces') || pathname.startsWith('/projects')) {
+    return {
+      bg: 'rgba(168,85,247,0.10)',
+      text: '#a855f7',
+      pill: '#a855f7',
     };
   }
   // Default: terracotta
@@ -631,6 +642,29 @@ export function Sidebar({ inboxCount: _inboxCountProp = 0, spaces = [] }: Sideba
 
           <nav className="space-y-0.5 py-1" aria-label="Tools navigation">
             {toolsNav.map((item) => {
+              const active = isRouteActive(item.href);
+              return (
+                <NavItem
+                  key={item.href}
+                  href={item.href}
+                  label={item.label}
+                  icon={item.icon}
+                  isActive={active}
+                  isCollapsed={sidebarCollapsed}
+                  shortcut={item.shortcut}
+                  layerStyle={active ? getLayerStyle(item.href) : currentLayerStyle}
+                />
+              );
+            })}
+          </nav>
+
+          <WarmSeparator className="my-1" />
+
+          {/* -- Library section --------------------------------------------- */}
+          {!sidebarCollapsed && <SectionHeader title="Library" />}
+
+          <nav className="space-y-0.5 py-1" aria-label="Library navigation">
+            {libraryNav.map((item) => {
               const active = isRouteActive(item.href);
               return (
                 <NavItem
