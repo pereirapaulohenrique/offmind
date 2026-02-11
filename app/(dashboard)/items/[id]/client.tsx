@@ -1408,7 +1408,7 @@ export function ItemDetailClient({
       >
         {/* ── Scrollable content ─────────────────────────────────── */}
         <div className="flex-1 overflow-y-auto">
-          <div className="mx-auto max-w-7xl px-6 py-8 lg:px-10">
+          <div className="mx-auto max-w-5xl px-6 py-8 lg:px-10">
 
             {/* ── Header: back + save ──────────────────────────────── */}
             <div className="flex items-center justify-between mb-8">
@@ -1487,206 +1487,83 @@ export function ItemDetailClient({
                 </div>
               </div>
 
-              {/* ── 3-Column Grid ─────────────────────────────────── */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-                {/* ════════ Column 1 — Content ════════════════════════ */}
-                <div className="space-y-6">
-
-                  {/* ── Notes ────────────────────────────────────────── */}
-                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-neutral-400">
-                      Notes
-                    </label>
-                    <textarea
-                      ref={textareaRef}
-                      value={notes}
-                      onChange={(e) => handleNotesChange(e.target.value)}
-                      placeholder="Add notes…"
-                      rows={3}
-                      className={cn(
-                        'w-full resize-none rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3',
-                        'text-sm leading-relaxed text-neutral-300 placeholder:text-neutral-600',
-                        'outline-none transition-colors',
-                        'focus:border-[#c2410c]/30 focus:bg-white/[0.03]',
-                      )}
-                      style={{ minHeight: '120px' }}
-                    />
-                  </div>
-
-                  {/* ── Subtasks ─────────────────────────────────────── */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
-                        Subtasks
-                      </h3>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={aiSubtasksLoading}
-                        onClick={handleAISuggestSubtasks}
-                        className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[#c2410c] hover:bg-[#c2410c]/10 hover:text-[#c2410c] h-7 text-xs px-2.5"
-                      >
-                        {aiSubtasksLoading ? (
-                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                        ) : (
-                          <Sparkles className="h-3.5 w-3.5" />
-                        )}
-                        {aiSubtasksLoading ? 'Thinking...' : 'AI Suggest'}
-                      </Button>
-                    </div>
-                    <SubtasksList
-                      itemId={item.id}
-                      initialSubtasks={initialSubtasks}
-                      userId={userId}
-                      onPromoteSubtask={async (subtaskTitle) => {
-                        try {
-                          const { data, error } = await supabase
-                            .from('items')
-                            .insert({
-                              user_id: userId,
-                              title: subtaskTitle,
-                              destination_id: destinationId,
-                              space_id: spaceId,
-                              project_id: projectId,
-                              layer: destinationId ? 'process' : 'capture',
-                            })
-                            .select('id')
-                            .single();
-
-                          if (error) throw error;
-                          toast.success(`"${subtaskTitle}" promoted to item`);
-                          if (data) {
-                            router.push(`/items/${data.id}`);
-                          }
-                        } catch {
-                          toast.error('Failed to promote subtask');
-                        }
-                      }}
-                    />
-                  </div>
-
-                  {/* ── Attachments ──────────────────────────────────── */}
-                  {(imageAttachments.length > 0 ||
-                    audioAttachments.length > 0) && (
-                    <div className="space-y-4">
-                      <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
-                        Attachments
-                      </h3>
-
-                      {imageAttachments.length > 0 && (
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-1.5 text-xs text-neutral-500">
-                            <ImageIcon className="h-3.5 w-3.5" />
-                            <span>
-                              {imageAttachments.length} image
-                              {imageAttachments.length !== 1 ? 's' : ''}
-                            </span>
-                          </div>
-                          <div className="flex flex-wrap gap-2">
-                            {imageAttachments.map((att) => (
-                              <button
-                                key={att.id}
-                                type="button"
-                                onClick={() => setLightboxSrc(att.url)}
-                                className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.03] transition-all hover:border-white/[0.16] hover:shadow-lg cursor-zoom-in"
-                              >
-                                <img
-                                  src={att.url}
-                                  alt={att.filename}
-                                  className="h-28 w-36 object-cover transition-transform duration-200 group-hover:scale-105"
-                                />
-                                <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition-colors">
-                                  <Maximize2 className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                                </div>
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {audioAttachments.length > 0 && (
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-1.5 text-xs text-neutral-500">
-                            <Volume2 className="h-3.5 w-3.5" />
-                            <span>
-                              {audioAttachments.length} audio recording
-                              {audioAttachments.length !== 1 ? 's' : ''}
-                            </span>
-                          </div>
-                          <div className="space-y-2">
-                            {audioAttachments.map((att) => (
-                              <AudioPlayer
-                                key={att.id}
-                                src={att.url}
-                                duration={att.duration}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
+              {/* ── Notes (full width) ────────────────────────────── */}
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-neutral-400">
+                  Notes
+                </label>
+                <textarea
+                  ref={textareaRef}
+                  value={notes}
+                  onChange={(e) => handleNotesChange(e.target.value)}
+                  placeholder="Add notes…"
+                  rows={3}
+                  className={cn(
+                    'w-full resize-none rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3',
+                    'text-sm leading-relaxed text-neutral-300 placeholder:text-neutral-600',
+                    'outline-none transition-colors',
+                    'focus:border-[#c2410c]/30 focus:bg-white/[0.03]',
                   )}
-                </div>{/* end Column 1 — Content */}
+                  style={{ minHeight: '80px' }}
+                />
+              </div>
 
-                {/* ════════ Column 2 — Organization ═══════════════════ */}
-                <div className="space-y-6">
+              {/* ── Metadata Grid (2 columns on lg) ──────────────── */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-5">
 
-                  {/* ── Destination ──────────────────────────────────── */}
-                  <div className="space-y-3">
-                    <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
-                      Destination
-                    </h3>
-                    <div className="flex items-center gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
-                      {selectedDestination && DestIcon ? (
-                        <span className="inline-flex items-center gap-2 rounded-full border border-[#c2410c]/30 bg-[#c2410c]/10 px-3 py-1 text-sm font-medium text-[#c2410c]">
-                          <DestIcon className="h-3.5 w-3.5" />
-                          {selectedDestination.name}
-                        </span>
-                      ) : (
-                        <span className="text-sm text-neutral-500">No destination</span>
-                      )}
+                {/* ── Left: Destination + Details ─────────────────── */}
+                <div className="space-y-5">
 
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <button
-                            type="button"
-                            className="ml-auto flex items-center gap-1.5 text-sm text-neutral-400 hover:text-[#c2410c] transition-colors"
-                          >
-                            {selectedDestination
-                              ? 'Move'
-                              : 'Choose'}
-                            <ChevronRight className="h-3.5 w-3.5" />
-                          </button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-52">
-                          {destinations
-                            .slice()
-                            .sort((a, b) => a.sort_order - b.sort_order)
-                            .map((dest) => {
-                              const Icon = ICON_MAP[dest.icon] || ICON_MAP['inbox'];
-                              const isActive = destinationId === dest.id;
-                              return (
-                                <DropdownMenuItem
-                                  key={dest.id}
-                                  onClick={() => handleDestinationChange(dest.id)}
-                                  className={cn(
-                                    'gap-2',
-                                    isActive && 'text-[#c2410c] font-medium',
-                                  )}
-                                >
-                                  {Icon && <Icon className="h-4 w-4" />}
-                                  <span className="flex-1">{dest.name}</span>
-                                  {isActive && <CheckCircle2 className="h-3 w-3 ml-auto opacity-60" />}
-                                </DropdownMenuItem>
-                              );
-                            })}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
+                  {/* Destination row */}
+                  <div className="flex items-center gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
+                    {selectedDestination && DestIcon ? (
+                      <span className="inline-flex items-center gap-2 rounded-full border border-[#c2410c]/30 bg-[#c2410c]/10 px-3 py-1 text-sm font-medium text-[#c2410c]">
+                        <DestIcon className="h-3.5 w-3.5" />
+                        {selectedDestination.name}
+                      </span>
+                    ) : (
+                      <span className="text-sm text-neutral-500">No destination</span>
+                    )}
+
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button
+                          type="button"
+                          className="ml-auto flex items-center gap-1.5 text-sm text-neutral-400 hover:text-[#c2410c] transition-colors"
+                        >
+                          {selectedDestination
+                            ? 'Move'
+                            : 'Choose'}
+                          <ChevronRight className="h-3.5 w-3.5" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-52">
+                        {destinations
+                          .slice()
+                          .sort((a, b) => a.sort_order - b.sort_order)
+                          .map((dest) => {
+                            const Icon = ICON_MAP[dest.icon] || ICON_MAP['inbox'];
+                            const isActive = destinationId === dest.id;
+                            return (
+                              <DropdownMenuItem
+                                key={dest.id}
+                                onClick={() => handleDestinationChange(dest.id)}
+                                className={cn(
+                                  'gap-2',
+                                  isActive && 'text-[#c2410c] font-medium',
+                                )}
+                              >
+                                {Icon && <Icon className="h-4 w-4" />}
+                                <span className="flex-1">{dest.name}</span>
+                                {isActive && <CheckCircle2 className="h-3 w-3 ml-auto opacity-60" />}
+                              </DropdownMenuItem>
+                            );
+                          })}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
 
-                  {/* ── Destination-specific fields ──────────────────── */}
+                  {/* Destination-specific fields */}
                   {(builtInFields.length > 0 ||
                     showWaitingSection ||
                     customFieldDefs.length > 0) && (
@@ -1791,7 +1668,7 @@ export function ItemDetailClient({
                     </div>
                   )}
 
-                  {/* ── Promote to Backlog (Someday/Maybe only) ─────── */}
+                  {/* Promote to Backlog (Someday/Maybe only) */}
                   {destinationSlug === 'someday' && (() => {
                     const backlogDest = destinations.find((d) => d.slug === 'backlog');
                     if (!backlogDest) return null;
@@ -1809,92 +1686,50 @@ export function ItemDetailClient({
                     );
                   })()}
 
-                  {/* ── Organize: Space + Project ────────────────────── */}
+                  {/* Linked Page + AI Draft */}
                   <div className="space-y-3">
-                    <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
-                      Organize
-                    </h3>
-
-                    <div className="space-y-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
-                      {/* Space */}
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-neutral-400">
-                          Space
-                        </label>
-                        <Select
-                          value={spaceId ?? 'none'}
-                          onValueChange={handleSpaceChange}
+                    <LinkedPageSection
+                      item={item}
+                      linkedPage={linkedPage}
+                      userId={userId}
+                      destinationSlug={destinationSlug}
+                      onPageCreated={(pageId) => {
+                        const fetchPage = async () => {
+                          const { data } = await supabase
+                            .from('pages')
+                            .select('*')
+                            .eq('id', pageId)
+                            .single();
+                          if (data) setLinkedPage(data as Page);
+                        };
+                        fetchPage();
+                      }}
+                    />
+                    {!linkedPage && (
+                      <div className="flex justify-end">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={aiDraftLoading}
+                          onClick={handleAIDraftPage}
+                          className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[#c2410c] hover:bg-[#c2410c]/10 hover:text-[#c2410c] h-7 text-xs px-2.5"
                         >
-                          <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
-                            <SelectValue placeholder="No space" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="none">None</SelectItem>
-                            {spaces.map((space) => {
-                              const SpaceIcon = ICON_MAP[space.icon];
-                              return (
-                                <SelectItem key={space.id} value={space.id}>
-                                  <span className="flex items-center gap-2">
-                                    {SpaceIcon && (
-                                      <SpaceIcon className="h-4 w-4" />
-                                    )}
-                                    <span>{space.name}</span>
-                                  </span>
-                                </SelectItem>
-                              );
-                            })}
-                          </SelectContent>
-                        </Select>
+                          {aiDraftLoading ? (
+                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                          ) : (
+                            <Sparkles className="h-3.5 w-3.5" />
+                          )}
+                          {aiDraftLoading ? 'Drafting...' : 'AI Draft'}
+                        </Button>
                       </div>
-
-                      {/* Project */}
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-neutral-400">
-                          Project
-                        </label>
-                        <Select
-                          value={projectId ?? 'none'}
-                          onValueChange={handleProjectChange}
-                        >
-                          <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
-                            <SelectValue placeholder="No project" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="none">None</SelectItem>
-                            {projects
-                              .filter(
-                                (p) =>
-                                  !spaceId ||
-                                  p.space_id === spaceId ||
-                                  p.space_id === null,
-                              )
-                              .map((project) => {
-                                const ProjIcon = ICON_MAP[project.icon];
-                                return (
-                                  <SelectItem
-                                    key={project.id}
-                                    value={project.id}
-                                  >
-                                    <span className="flex items-center gap-2">
-                                      {ProjIcon && (
-                                        <ProjIcon className="h-4 w-4" />
-                                      )}
-                                      <span>{project.name}</span>
-                                    </span>
-                                  </SelectItem>
-                                );
-                              })}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
+                    )}
                   </div>
-                </div>{/* end Column 2 — Organization */}
+                </div>{/* end Left column */}
 
-                {/* ════════ Column 3 — Timing & Context ═══════════════ */}
-                <div className="space-y-6">
+                {/* ── Right: Schedule + Organize + Relations ──────── */}
+                <div className="space-y-5">
 
-                  {/* ── Schedule ─────────────────────────────────────── */}
+                  {/* Schedule */}
                   {showScheduleSection && (
                     <div className="space-y-3">
                       <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
@@ -1994,50 +1829,206 @@ export function ItemDetailClient({
                     </div>
                   )}
 
-                  {/* ── Linked Page ──────────────────────────────────── */}
+                  {/* Organize: Space + Project */}
                   <div className="space-y-3">
-                    <LinkedPageSection
-                      item={item}
-                      linkedPage={linkedPage}
-                      userId={userId}
-                      destinationSlug={destinationSlug}
-                      onPageCreated={(pageId) => {
-                        const fetchPage = async () => {
-                          const { data } = await supabase
-                            .from('pages')
-                            .select('*')
-                            .eq('id', pageId)
-                            .single();
-                          if (data) setLinkedPage(data as Page);
-                        };
-                        fetchPage();
-                      }}
-                    />
-                    {!linkedPage && (
-                      <div className="flex justify-end">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          disabled={aiDraftLoading}
-                          onClick={handleAIDraftPage}
-                          className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[#c2410c] hover:bg-[#c2410c]/10 hover:text-[#c2410c] h-7 text-xs px-2.5"
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                      Organize
+                    </h3>
+
+                    <div className="grid grid-cols-2 gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
+                      {/* Space */}
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-neutral-400">
+                          Space
+                        </label>
+                        <Select
+                          value={spaceId ?? 'none'}
+                          onValueChange={handleSpaceChange}
                         >
-                          {aiDraftLoading ? (
-                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                          ) : (
-                            <Sparkles className="h-3.5 w-3.5" />
-                          )}
-                          {aiDraftLoading ? 'Drafting...' : 'AI Draft'}
-                        </Button>
+                          <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
+                            <SelectValue placeholder="No space" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="none">None</SelectItem>
+                            {spaces.map((space) => {
+                              const SpaceIcon = ICON_MAP[space.icon];
+                              return (
+                                <SelectItem key={space.id} value={space.id}>
+                                  <span className="flex items-center gap-2">
+                                    {SpaceIcon && (
+                                      <SpaceIcon className="h-4 w-4" />
+                                    )}
+                                    <span>{space.name}</span>
+                                  </span>
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectContent>
+                        </Select>
                       </div>
-                    )}
+
+                      {/* Project */}
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-neutral-400">
+                          Project
+                        </label>
+                        <Select
+                          value={projectId ?? 'none'}
+                          onValueChange={handleProjectChange}
+                        >
+                          <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
+                            <SelectValue placeholder="No project" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="none">None</SelectItem>
+                            {projects
+                              .filter(
+                                (p) =>
+                                  !spaceId ||
+                                  p.space_id === spaceId ||
+                                  p.space_id === null,
+                              )
+                              .map((project) => {
+                                const ProjIcon = ICON_MAP[project.icon];
+                                return (
+                                  <SelectItem
+                                    key={project.id}
+                                    value={project.id}
+                                  >
+                                    <span className="flex items-center gap-2">
+                                      {ProjIcon && (
+                                        <ProjIcon className="h-4 w-4" />
+                                      )}
+                                      <span>{project.name}</span>
+                                    </span>
+                                  </SelectItem>
+                                );
+                              })}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
                   </div>
 
-                  {/* ── Relations ────────────────────────────────────── */}
+                  {/* Relations */}
                   <ItemRelationsSection itemId={item.id} userId={userId} />
-                </div>{/* end Column 3 — Timing & Context */}
+                </div>{/* end Right column */}
 
-              </div>{/* end 3-Column Grid */}
+              </div>{/* end Metadata Grid */}
+
+              {/* ── Subtasks (full width) ─────────────────────────── */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                    Subtasks
+                  </h3>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={aiSubtasksLoading}
+                    onClick={handleAISuggestSubtasks}
+                    className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[#c2410c] hover:bg-[#c2410c]/10 hover:text-[#c2410c] h-7 text-xs px-2.5"
+                  >
+                    {aiSubtasksLoading ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Sparkles className="h-3.5 w-3.5" />
+                    )}
+                    {aiSubtasksLoading ? 'Thinking...' : 'AI Suggest'}
+                  </Button>
+                </div>
+                <SubtasksList
+                  itemId={item.id}
+                  initialSubtasks={initialSubtasks}
+                  userId={userId}
+                  onPromoteSubtask={async (subtaskTitle) => {
+                    try {
+                      const { data, error } = await supabase
+                        .from('items')
+                        .insert({
+                          user_id: userId,
+                          title: subtaskTitle,
+                          destination_id: destinationId,
+                          space_id: spaceId,
+                          project_id: projectId,
+                          layer: destinationId ? 'process' : 'capture',
+                        })
+                        .select('id')
+                        .single();
+
+                      if (error) throw error;
+                      toast.success(`"${subtaskTitle}" promoted to item`);
+                      if (data) {
+                        router.push(`/items/${data.id}`);
+                      }
+                    } catch {
+                      toast.error('Failed to promote subtask');
+                    }
+                  }}
+                />
+              </div>
+
+              {/* ── Attachments (full width) ──────────────────────── */}
+              {(imageAttachments.length > 0 ||
+                audioAttachments.length > 0) && (
+                <div className="space-y-4">
+                  <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                    Attachments
+                  </h3>
+
+                  {imageAttachments.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-1.5 text-xs text-neutral-500">
+                        <ImageIcon className="h-3.5 w-3.5" />
+                        <span>
+                          {imageAttachments.length} image
+                          {imageAttachments.length !== 1 ? 's' : ''}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {imageAttachments.map((att) => (
+                          <button
+                            key={att.id}
+                            type="button"
+                            onClick={() => setLightboxSrc(att.url)}
+                            className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.03] transition-all hover:border-white/[0.16] hover:shadow-lg cursor-zoom-in"
+                          >
+                            <img
+                              src={att.url}
+                              alt={att.filename}
+                              className="h-28 w-36 object-cover transition-transform duration-200 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition-colors">
+                              <Maximize2 className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {audioAttachments.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-1.5 text-xs text-neutral-500">
+                        <Volume2 className="h-3.5 w-3.5" />
+                        <span>
+                          {audioAttachments.length} audio recording
+                          {audioAttachments.length !== 1 ? 's' : ''}
+                        </span>
+                      </div>
+                      <div className="space-y-2">
+                        {audioAttachments.map((att) => (
+                          <AudioPlayer
+                            key={att.id}
+                            src={att.url}
+                            duration={att.duration}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
             </div>{/* end Content */}
 
