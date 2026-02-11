@@ -62,10 +62,10 @@ export function PageEditorClient({
       ? (spaces.find(s => s.id === page.space_id)?.name || 'Space')
       : 'Pages';
 
-  // Auto-save function
-  const saveChanges = useCallback(async (updates: Partial<Page>) => {
+  // Auto-save function (silent mode skips isSaving state to avoid re-render hiccups)
+  const saveChanges = useCallback(async (updates: Partial<Page>, silent = false) => {
     const supabase = getSupabase();
-    setIsSaving(true);
+    if (!silent) setIsSaving(true);
 
     try {
       const { error } = await supabase
@@ -76,23 +76,22 @@ export function PageEditorClient({
       if (error) throw error;
 
       setLastSaved(new Date());
-      setPage((prev) => ({ ...prev, ...updates }));
     } catch (error) {
       toast.error('Failed to save');
     } finally {
-      setIsSaving(false);
+      if (!silent) setIsSaving(false);
     }
   }, [page.id]);
 
-  // Debounced save for content
+  // Debounced save for content — longer delay + silent to avoid typing hiccups
   const debouncedSave = useCallback((content: any) => {
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current);
     }
 
     saveTimeoutRef.current = setTimeout(() => {
-      saveChanges({ content });
-    }, 1000);
+      saveChanges({ content }, true);
+    }, 3000);
   }, [saveChanges]);
 
   // Handle title change
@@ -106,9 +105,9 @@ export function PageEditorClient({
     }, 2000);
   }, [saveChanges]);
 
-  // Handle content change
+  // Handle content change — don't update React state on every keystroke,
+  // TipTap manages its own DOM. Just debounce-save to DB.
   const handleContentChange = useCallback((content: any) => {
-    setPage((prev) => ({ ...prev, content }));
     debouncedSave(content);
   }, [debouncedSave]);
 
