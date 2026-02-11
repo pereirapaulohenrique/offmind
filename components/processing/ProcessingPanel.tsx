@@ -1096,7 +1096,7 @@ export function ProcessingPanel({
                   </div>
 
                   {/* ---- Divider: DESTINATION FIELDS ---- */}
-                  {(builtInFields.length > 0 || customFieldDefs.length > 0 || showWaitingSection || showScheduleSection) && (
+                  {(builtInFields.length > 0 || customFieldDefs.length > 0 || showWaitingSection) && (
                     <>
                       <div className="flex items-center gap-3">
                         <div className="h-px flex-1 bg-white/[0.06]" />
@@ -1109,7 +1109,7 @@ export function ProcessingPanel({
                       <div className="space-y-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
                         {/* Waiting-specific fields */}
                         {showWaitingSection && (
-                          <>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div className="relative space-y-1.5">
                               <label className="text-xs font-medium text-neutral-400">Waiting For</label>
                               <Input
@@ -1149,8 +1149,20 @@ export function ProcessingPanel({
                                 );
                               })()}
                             </div>
+                            {/* Follow Up Date (from built-in fields, rendered inline) */}
+                            {builtInFields.find((f) => f.name === 'follow_up_date') && (
+                              <div className="space-y-1.5">
+                                <label className="text-xs font-medium text-neutral-400">Follow Up Date</label>
+                                <Input
+                                  type="date"
+                                  value={(customValues['follow_up_date'] as string) ?? ''}
+                                  onChange={(e) => handleCustomValueChange('follow_up_date', e.target.value)}
+                                  className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]"
+                                />
+                              </div>
+                            )}
                             {item.waiting_since && (
-                              <div className="space-y-1">
+                              <div className="space-y-1 sm:col-span-2">
                                 <label className="text-xs font-medium text-neutral-400">Waiting Since</label>
                                 <p className="text-sm text-neutral-300">
                                   {new Date(item.waiting_since).toLocaleDateString(undefined, {
@@ -1161,144 +1173,176 @@ export function ProcessingPanel({
                                 </p>
                               </div>
                             )}
-                          </>
+                          </div>
                         )}
 
-                        {/* Schedule fields */}
-                        {showScheduleSection && (
-                          <>
-                            <div className="space-y-1.5">
-                              <label className="text-xs font-medium text-neutral-400">Scheduled At</label>
-                              <Input
-                                type="datetime-local"
-                                value={scheduledAt}
-                                onChange={(e) => handleScheduledAtChange(e.target.value)}
-                                className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]"
-                              />
+                        {/* Built-in destination fields (2-column grid) */}
+                        {(() => {
+                          const filteredFields = builtInFields.filter(
+                            (f) => !(showWaitingSection && (f.name === 'waiting_for' || f.name === 'follow_up_date'))
+                          );
+                          if (filteredFields.length === 0) return null;
+                          return (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              {filteredFields.map((field) => {
+                                const isFullWidth = field.type === 'url';
+                                return (
+                                  <div key={field.name} className={isFullWidth ? 'sm:col-span-2' : ''}>
+                                    {renderBuiltInField(field)}
+                                  </div>
+                                );
+                              })}
                             </div>
+                          );
+                        })()}
 
-                            <div className="flex items-center gap-4">
-                              <div className="flex-1 space-y-1.5">
-                                <label className="text-xs font-medium text-neutral-400">Duration (min)</label>
-                                <Input
-                                  type="number"
-                                  min={0}
-                                  step={5}
-                                  value={durationMinutes ?? ''}
-                                  onChange={(e) => handleDurationChange(e.target.value)}
-                                  placeholder="30"
-                                  className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]"
-                                />
-                              </div>
-
-                              <div className="flex items-center gap-2 pt-5">
-                                <button
-                                  type="button"
-                                  onClick={handleAllDayToggle}
-                                  className={cn(
-                                    'relative h-5 w-9 shrink-0 rounded-full transition-colors',
-                                    isAllDay ? 'bg-[#c2410c]' : 'bg-white/[0.1]',
-                                  )}
-                                >
-                                  <span
-                                    className={cn(
-                                      'absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform',
-                                      isAllDay && 'translate-x-4',
-                                    )}
-                                  />
-                                </button>
-                                <span className="text-xs text-neutral-400">All day</span>
-                              </div>
-                            </div>
-
-                            {scheduledAt && (
-                              <button
-                                type="button"
-                                onClick={() => handleScheduledAtChange('')}
-                                className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
-                              >
-                                Clear schedule
-                              </button>
-                            )}
-                          </>
+                        {/* Custom fields from destination.custom_fields (2-column grid) */}
+                        {customFieldDefs.length > 0 && (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {customFieldDefs.map((field) => {
+                              const isFullWidth = field.type === 'longtext';
+                              return (
+                                <div key={field.id} className={isFullWidth ? 'sm:col-span-2' : ''}>
+                                  {renderCustomField(field)}
+                                </div>
+                              );
+                            })}
+                          </div>
                         )}
-
-                        {/* Built-in destination fields */}
-                        {builtInFields
-                          .filter((f) => !(showWaitingSection && f.name === 'waiting_for'))
-                          .map(renderBuiltInField)}
-
-                        {/* Custom fields from destination.custom_fields */}
-                        {customFieldDefs.map(renderCustomField)}
                       </div>
                     </>
                   )}
 
-                  {/* ---- Divider: ORGANIZE ---- */}
+                  {/* ---- Divider: SCHEDULE & ORGANIZE ---- */}
                   <div className="flex items-center gap-3">
                     <div className="h-px flex-1 bg-white/[0.06]" />
                     <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-500">
-                      Organize
+                      {showScheduleSection ? 'Schedule & Organize' : 'Organize'}
                     </span>
                     <div className="h-px flex-1 bg-white/[0.06]" />
                   </div>
 
-                  {/* ---- Space / Project ---- */}
-                  <div className="space-y-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
-                    {/* Space */}
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-neutral-400">Space</label>
-                      <Select
-                        value={spaceId ?? 'none'}
-                        onValueChange={handleSpaceChange}
-                      >
-                        <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
-                          <SelectValue placeholder="No space" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="none">None</SelectItem>
-                          {spaces.map((space) => {
-                            const SpaceIcon = ICON_MAP[space.icon];
-                            return (
-                              <SelectItem key={space.id} value={space.id}>
-                                <span className="flex items-center gap-2">
-                                  {SpaceIcon && <SpaceIcon className="h-4 w-4" />}
-                                  <span>{space.name}</span>
-                                </span>
-                              </SelectItem>
-                            );
-                          })}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                  {/* ---- Schedule + Organize (responsive 2-column grid) ---- */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Schedule section */}
+                    {showScheduleSection && (
+                      <div className="space-y-3 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
+                        <div className="space-y-1.5">
+                          <label className="text-xs font-medium text-neutral-400">Scheduled At</label>
+                          <Input
+                            type="datetime-local"
+                            value={scheduledAt}
+                            onChange={(e) => handleScheduledAtChange(e.target.value)}
+                            className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]"
+                          />
+                        </div>
 
-                    {/* Project */}
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-neutral-400">Project</label>
-                      <Select
-                        value={projectId ?? 'none'}
-                        onValueChange={handleProjectChange}
-                      >
-                        <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
-                          <SelectValue placeholder="No project" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="none">None</SelectItem>
-                          {projects
-                            .filter((p) => !spaceId || p.space_id === spaceId || p.space_id === null)
-                            .map((project) => {
-                              const ProjIcon = ICON_MAP[project.icon];
+                        <div className="flex items-center gap-4">
+                          <div className="flex-1 space-y-1.5">
+                            <label className="text-xs font-medium text-neutral-400">Duration (min)</label>
+                            <Input
+                              type="number"
+                              min={0}
+                              step={5}
+                              value={durationMinutes ?? ''}
+                              onChange={(e) => handleDurationChange(e.target.value)}
+                              placeholder="30"
+                              className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]"
+                            />
+                          </div>
+
+                          <div className="flex items-center gap-2 pt-5">
+                            <button
+                              type="button"
+                              onClick={handleAllDayToggle}
+                              className={cn(
+                                'relative h-5 w-9 shrink-0 rounded-full transition-colors',
+                                isAllDay ? 'bg-[#c2410c]' : 'bg-white/[0.1]',
+                              )}
+                            >
+                              <span
+                                className={cn(
+                                  'absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform',
+                                  isAllDay && 'translate-x-4',
+                                )}
+                              />
+                            </button>
+                            <span className="text-xs text-neutral-400">All day</span>
+                          </div>
+                        </div>
+
+                        {scheduledAt && (
+                          <button
+                            type="button"
+                            onClick={() => handleScheduledAtChange('')}
+                            className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
+                          >
+                            Clear schedule
+                          </button>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Organize section */}
+                    <div className={cn(
+                      'space-y-3 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4',
+                      !showScheduleSection && 'sm:col-span-2',
+                    )}>
+                      {/* Space */}
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-neutral-400">Space</label>
+                        <Select
+                          value={spaceId ?? 'none'}
+                          onValueChange={handleSpaceChange}
+                        >
+                          <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
+                            <SelectValue placeholder="No space" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="none">None</SelectItem>
+                            {spaces.map((space) => {
+                              const SpaceIcon = ICON_MAP[space.icon];
                               return (
-                                <SelectItem key={project.id} value={project.id}>
+                                <SelectItem key={space.id} value={space.id}>
                                   <span className="flex items-center gap-2">
-                                    {ProjIcon && <ProjIcon className="h-4 w-4" />}
-                                    <span>{project.name}</span>
+                                    {SpaceIcon && <SpaceIcon className="h-4 w-4" />}
+                                    <span>{space.name}</span>
                                   </span>
                                 </SelectItem>
                               );
                             })}
-                        </SelectContent>
-                      </Select>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* Project */}
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-neutral-400">Project</label>
+                        <Select
+                          value={projectId ?? 'none'}
+                          onValueChange={handleProjectChange}
+                        >
+                          <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
+                            <SelectValue placeholder="No project" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="none">None</SelectItem>
+                            {projects
+                              .filter((p) => !spaceId || p.space_id === spaceId || p.space_id === null)
+                              .map((project) => {
+                                const ProjIcon = ICON_MAP[project.icon];
+                                return (
+                                  <SelectItem key={project.id} value={project.id}>
+                                    <span className="flex items-center gap-2">
+                                      {ProjIcon && <ProjIcon className="h-4 w-4" />}
+                                      <span>{project.name}</span>
+                                    </span>
+                                  </SelectItem>
+                                );
+                              })}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
                   </div>
                 </div>

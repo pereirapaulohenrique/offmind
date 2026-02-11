@@ -39,43 +39,45 @@ function BacklogSection({
 }: Pick<DestinationContextSectionProps, 'customValues' | 'onCustomValueChange' | 'onAction'>) {
   return (
     <div className="space-y-4">
-      {/* Priority selector */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-white/60">Priority</label>
-        <Select
-          value={(customValues.priority as string) ?? ''}
-          onValueChange={(v) => onCustomValueChange('priority', v)}
-        >
-          <SelectTrigger className={cn('w-full', fieldClasses)}>
-            <SelectValue placeholder="Set priority" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="urgent">Urgent</SelectItem>
-            <SelectItem value="high">High</SelectItem>
-            <SelectItem value="medium">Medium</SelectItem>
-            <SelectItem value="low">Low</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <div className="grid grid-cols-2 gap-3">
+        {/* Priority selector */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-white/60">Priority</label>
+          <Select
+            value={(customValues.priority as string) ?? ''}
+            onValueChange={(v) => onCustomValueChange('priority', v)}
+          >
+            <SelectTrigger className={cn('w-full', fieldClasses)}>
+              <SelectValue placeholder="Set priority" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="urgent">Urgent</SelectItem>
+              <SelectItem value="high">High</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="low">Low</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-      {/* Effort selector */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-white/60">Effort</label>
-        <Select
-          value={(customValues.effort as string) ?? ''}
-          onValueChange={(v) => onCustomValueChange('effort', v)}
-        >
-          <SelectTrigger className={cn('w-full', fieldClasses)}>
-            <SelectValue placeholder="Estimate effort" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="trivial">Trivial (&lt; 15 min)</SelectItem>
-            <SelectItem value="small">Small (&lt; 1 hr)</SelectItem>
-            <SelectItem value="medium">Medium (1-4 hrs)</SelectItem>
-            <SelectItem value="large">Large (half day+)</SelectItem>
-            <SelectItem value="epic">Epic (multi-day)</SelectItem>
-          </SelectContent>
-        </Select>
+        {/* Effort selector */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-white/60">Effort</label>
+          <Select
+            value={(customValues.effort as string) ?? ''}
+            onValueChange={(v) => onCustomValueChange('effort', v)}
+          >
+            <SelectTrigger className={cn('w-full', fieldClasses)}>
+              <SelectValue placeholder="Estimate effort" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="trivial">Trivial (&lt; 15 min)</SelectItem>
+              <SelectItem value="small">Small (&lt; 1 hr)</SelectItem>
+              <SelectItem value="medium">Medium (1-4 hrs)</SelectItem>
+              <SelectItem value="large">Large (half day+)</SelectItem>
+              <SelectItem value="epic">Epic (multi-day)</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Quick actions */}
@@ -143,57 +145,59 @@ function WaitingSection({
 
   return (
     <div className="space-y-4">
-      {/* Contact input with autocomplete */}
-      <div className="space-y-1.5" ref={wrapperRef}>
-        <label className="text-xs font-medium text-white/60">Waiting For</label>
-        <div className="relative">
+      <div className="grid grid-cols-2 gap-3">
+        {/* Contact input with autocomplete */}
+        <div className="space-y-1.5" ref={wrapperRef}>
+          <label className="text-xs font-medium text-white/60">Waiting For</label>
+          <div className="relative">
+            <Input
+              placeholder="Contact name..."
+              value={contactQuery}
+              onChange={(e) => {
+                setContactQuery(e.target.value);
+                onCustomValueChange('waiting_contact', e.target.value);
+                setShowDropdown(true);
+              }}
+              onFocus={() => setShowDropdown(true)}
+              className={fieldClasses}
+            />
+            {showDropdown && filteredContacts.length > 0 && (
+              <div className="absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-white/[0.08] bg-[#1a1614] shadow-lg">
+                <div className="max-h-48 overflow-y-auto py-1">
+                  {filteredContacts.map((contact) => (
+                    <button
+                      key={contact.id}
+                      type="button"
+                      className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-white/80 transition-colors hover:bg-white/[0.06]"
+                      onClick={() => selectContact(contact.name)}
+                    >
+                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/[0.08] text-xs font-medium text-white/60">
+                        {contact.name.charAt(0).toUpperCase()}
+                      </span>
+                      <span className="truncate">{contact.name}</span>
+                      {contact.email && (
+                        <span className="ml-auto truncate text-xs text-white/30">
+                          {contact.email}
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Follow up date */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-white/60">Follow Up Date</label>
           <Input
-            placeholder="Contact name..."
-            value={contactQuery}
-            onChange={(e) => {
-              setContactQuery(e.target.value);
-              onCustomValueChange('waiting_contact', e.target.value);
-              setShowDropdown(true);
-            }}
-            onFocus={() => setShowDropdown(true)}
+            type="date"
+            value={(customValues.follow_up_date as string) ?? ''}
+            onChange={(e) => onCustomValueChange('follow_up_date', e.target.value)}
             className={fieldClasses}
           />
-          {showDropdown && filteredContacts.length > 0 && (
-            <div className="absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-white/[0.08] bg-[#1a1614] shadow-lg">
-              <div className="max-h-48 overflow-y-auto py-1">
-                {filteredContacts.map((contact) => (
-                  <button
-                    key={contact.id}
-                    type="button"
-                    className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-white/80 transition-colors hover:bg-white/[0.06]"
-                    onClick={() => selectContact(contact.name)}
-                  >
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/[0.08] text-xs font-medium text-white/60">
-                      {contact.name.charAt(0).toUpperCase()}
-                    </span>
-                    <span className="truncate">{contact.name}</span>
-                    {contact.email && (
-                      <span className="ml-auto truncate text-xs text-white/30">
-                        {contact.email}
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
-      </div>
-
-      {/* Follow up date */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-white/60">Follow Up Date</label>
-        <Input
-          type="date"
-          value={(customValues.follow_up_date as string) ?? ''}
-          onChange={(e) => onCustomValueChange('follow_up_date', e.target.value)}
-          className={fieldClasses}
-        />
       </div>
 
       {/* Response Received */}
@@ -234,33 +238,35 @@ function SomedaySection({
 
   return (
     <div className="space-y-4">
-      {/* Revisit date */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-white/60">Revisit Date</label>
-        <Input
-          type="date"
-          value={(customValues.revisit_date as string) ?? ''}
-          onChange={(e) => onCustomValueChange('revisit_date', e.target.value)}
-          className={fieldClasses}
-        />
-      </div>
+      <div className="grid grid-cols-2 gap-3">
+        {/* Revisit date */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-white/60">Revisit Date</label>
+          <Input
+            type="date"
+            value={(customValues.revisit_date as string) ?? ''}
+            onChange={(e) => onCustomValueChange('revisit_date', e.target.value)}
+            className={fieldClasses}
+          />
+        </div>
 
-      {/* Maturity indicator */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-white/60">Maturity</label>
-        <div className="flex items-center gap-2">
-          <span
-            className={cn(
-              'inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium',
-              maturity.color
-            )}
-          >
-            <Lightbulb className="h-3 w-3" />
-            {maturity.label}
-          </span>
-          <span className="text-xs text-white/30">
-            created {formatDistanceToNow(new Date(item.created_at), { addSuffix: true })}
-          </span>
+        {/* Maturity indicator */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-white/60">Maturity</label>
+          <div className="flex items-center gap-2">
+            <span
+              className={cn(
+                'inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium',
+                maturity.color
+              )}
+            >
+              <Lightbulb className="h-3 w-3" />
+              {maturity.label}
+            </span>
+            <span className="text-xs text-white/30">
+              created {formatDistanceToNow(new Date(item.created_at), { addSuffix: true })}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -290,27 +296,29 @@ function ReferenceSection({
 }: Pick<DestinationContextSectionProps, 'customValues' | 'onCustomValueChange' | 'onAction'>) {
   return (
     <div className="space-y-4">
-      {/* Source URL */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-white/60">Source URL</label>
-        <Input
-          type="url"
-          placeholder="https://..."
-          value={(customValues.source_url as string) ?? ''}
-          onChange={(e) => onCustomValueChange('source_url', e.target.value)}
-          className={fieldClasses}
-        />
-      </div>
+      <div className="grid grid-cols-2 gap-3">
+        {/* Source URL */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-white/60">Source URL</label>
+          <Input
+            type="url"
+            placeholder="https://..."
+            value={(customValues.source_url as string) ?? ''}
+            onChange={(e) => onCustomValueChange('source_url', e.target.value)}
+            className={fieldClasses}
+          />
+        </div>
 
-      {/* Category */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-white/60">Category</label>
-        <Input
-          placeholder="e.g. Article, Video, Tool..."
-          value={(customValues.category as string) ?? ''}
-          onChange={(e) => onCustomValueChange('category', e.target.value)}
-          className={fieldClasses}
-        />
+        {/* Category */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-white/60">Category</label>
+          <Input
+            placeholder="e.g. Article, Video, Tool..."
+            value={(customValues.category as string) ?? ''}
+            onChange={(e) => onCustomValueChange('category', e.target.value)}
+            className={fieldClasses}
+          />
+        </div>
       </div>
 
       {/* Expand to Page */}
