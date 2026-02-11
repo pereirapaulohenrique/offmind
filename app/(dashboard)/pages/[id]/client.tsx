@@ -23,6 +23,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
+import { ICON_MAP } from '@/components/icons';
+import { FolderOpen } from 'lucide-react';
 import type { Page, Space, Project, Item } from '@/types/database';
 
 interface PageEditorClientProps {
@@ -101,7 +103,7 @@ export function PageEditorClient({
     }
     saveTimeoutRef.current = setTimeout(() => {
       saveChanges({ title });
-    }, 500);
+    }, 2000);
   }, [saveChanges]);
 
   // Handle content change
@@ -221,7 +223,7 @@ export function PageEditorClient({
 
       {/* Editor area */}
       <div className="flex-1 overflow-auto">
-        <div className="mx-auto max-w-4xl px-6 py-8">
+        <div className="mx-auto max-w-6xl px-6 py-8">
           {/* Page icon and title */}
           <div className="mb-6">
             <div className="flex items-start gap-4">
@@ -269,11 +271,17 @@ export function PageEditorClient({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">None</SelectItem>
-                    {spaces.map((space) => (
-                      <SelectItem key={space.id} value={space.id}>
-                        {space.icon} {space.name}
-                      </SelectItem>
-                    ))}
+                    {spaces.map((space) => {
+                      const SpIcon = ICON_MAP[space.icon] || FolderOpen;
+                      return (
+                        <SelectItem key={space.id} value={space.id}>
+                          <span className="flex items-center gap-2">
+                            <SpIcon className="h-4 w-4" />
+                            {space.name}
+                          </span>
+                        </SelectItem>
+                      );
+                    })}
                   </SelectContent>
                 </Select>
               </div>
@@ -290,11 +298,17 @@ export function PageEditorClient({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">None</SelectItem>
-                    {projects.map((project) => (
-                      <SelectItem key={project.id} value={project.id}>
-                        {project.icon} {project.name}
-                      </SelectItem>
-                    ))}
+                    {projects.map((project) => {
+                      const PrIcon = ICON_MAP[project.icon] || FolderOpen;
+                      return (
+                        <SelectItem key={project.id} value={project.id}>
+                          <span className="flex items-center gap-2">
+                            <PrIcon className="h-4 w-4" />
+                            {project.name}
+                          </span>
+                        </SelectItem>
+                      );
+                    })}
                   </SelectContent>
                 </Select>
               </div>
