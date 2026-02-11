@@ -1426,11 +1426,11 @@ export function ItemDetailClient({
               {renderSaveIndicator()}
             </div>
 
-            {/* ── Two-column grid ──────────────────────────────────── */}
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-8 gap-y-6">
+            {/* ── Content ─────────────────────────────────────────── */}
+            <div className="space-y-6">
 
-              {/* ── Title — full width ──────────────────────────────── */}
-              <div className="lg:col-span-5">
+              {/* ── Title ─────────────────────────────────────────── */}
+              <div>
                 <Input
                   value={title}
                   onChange={(e) => handleTitleChange(e.target.value)}
@@ -1487,8 +1487,8 @@ export function ItemDetailClient({
                 </div>
               </div>
 
-              {/* ── Left column: content ────────────────────────────── */}
-              <div className="lg:col-span-3 space-y-6">
+              {/* ── Row 1: Notes + Destination/Details ──────────────── */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
                 {/* ── Notes ──────────────────────────────────────────── */}
                 <div className="space-y-2">
@@ -1511,124 +1511,8 @@ export function ItemDetailClient({
                   />
                 </div>
 
-                {/* ── Subtasks ───────────────────────────────────────── */}
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
-                      Subtasks
-                    </h3>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={aiSubtasksLoading}
-                      onClick={handleAISuggestSubtasks}
-                      className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[#c2410c] hover:bg-[#c2410c]/10 hover:text-[#c2410c] h-7 text-xs px-2.5"
-                    >
-                      {aiSubtasksLoading ? (
-                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                      ) : (
-                        <Sparkles className="h-3.5 w-3.5" />
-                      )}
-                      {aiSubtasksLoading ? 'Thinking...' : 'AI Suggest'}
-                    </Button>
-                  </div>
-                  <SubtasksList
-                    itemId={item.id}
-                    initialSubtasks={initialSubtasks}
-                    userId={userId}
-                    onPromoteSubtask={async (subtaskTitle) => {
-                      try {
-                        const { data, error } = await supabase
-                          .from('items')
-                          .insert({
-                            user_id: userId,
-                            title: subtaskTitle,
-                            destination_id: destinationId,
-                            space_id: spaceId,
-                            project_id: projectId,
-                            layer: destinationId ? 'process' : 'capture',
-                          })
-                          .select('id')
-                          .single();
-
-                        if (error) throw error;
-                        toast.success(`"${subtaskTitle}" promoted to item`);
-                        if (data) {
-                          router.push(`/items/${data.id}`);
-                        }
-                      } catch {
-                        toast.error('Failed to promote subtask');
-                      }
-                    }}
-                  />
-                </div>
-
-                {/* ── Attachments ────────────────────────────────────── */}
-                {(imageAttachments.length > 0 ||
-                  audioAttachments.length > 0) && (
-                  <div className="space-y-4">
-                    <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
-                      Attachments
-                    </h3>
-
-                    {imageAttachments.length > 0 && (
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-1.5 text-xs text-neutral-500">
-                          <ImageIcon className="h-3.5 w-3.5" />
-                          <span>
-                            {imageAttachments.length} image
-                            {imageAttachments.length !== 1 ? 's' : ''}
-                          </span>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {imageAttachments.map((att) => (
-                            <button
-                              key={att.id}
-                              type="button"
-                              onClick={() => setLightboxSrc(att.url)}
-                              className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.03] transition-all hover:border-white/[0.16] hover:shadow-lg cursor-zoom-in"
-                            >
-                              <img
-                                src={att.url}
-                                alt={att.filename}
-                                className="h-28 w-36 object-cover transition-transform duration-200 group-hover:scale-105"
-                              />
-                              <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition-colors">
-                                <Maximize2 className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                              </div>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {audioAttachments.length > 0 && (
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-1.5 text-xs text-neutral-500">
-                          <Volume2 className="h-3.5 w-3.5" />
-                          <span>
-                            {audioAttachments.length} audio recording
-                            {audioAttachments.length !== 1 ? 's' : ''}
-                          </span>
-                        </div>
-                        <div className="space-y-2">
-                          {audioAttachments.map((att) => (
-                            <AudioPlayer
-                              key={att.id}
-                              src={att.url}
-                              duration={att.duration}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-              </div>
-
-              {/* ── Right column: metadata ──────────────────────────── */}
-              <div className="lg:col-span-2 space-y-5">
+                {/* ── Destination + Details (right side of row 1) ───── */}
+                <div className="space-y-4">
 
                 {/* ── Destination row ────────────────────────────────── */}
                 <div className="flex items-center gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
@@ -1801,6 +1685,66 @@ export function ItemDetailClient({
                     </button>
                   );
                 })()}
+                </div>{/* end Destination + Details */}
+              </div>{/* end Row 1: Notes + Destination */}
+
+              {/* ── Row 2: Subtasks + Schedule/Organize ──────────────── */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                {/* ── Subtasks ───────────────────────────────────────── */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                      Subtasks
+                    </h3>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={aiSubtasksLoading}
+                      onClick={handleAISuggestSubtasks}
+                      className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[#c2410c] hover:bg-[#c2410c]/10 hover:text-[#c2410c] h-7 text-xs px-2.5"
+                    >
+                      {aiSubtasksLoading ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <Sparkles className="h-3.5 w-3.5" />
+                      )}
+                      {aiSubtasksLoading ? 'Thinking...' : 'AI Suggest'}
+                    </Button>
+                  </div>
+                  <SubtasksList
+                    itemId={item.id}
+                    initialSubtasks={initialSubtasks}
+                    userId={userId}
+                    onPromoteSubtask={async (subtaskTitle) => {
+                      try {
+                        const { data, error } = await supabase
+                          .from('items')
+                          .insert({
+                            user_id: userId,
+                            title: subtaskTitle,
+                            destination_id: destinationId,
+                            space_id: spaceId,
+                            project_id: projectId,
+                            layer: destinationId ? 'process' : 'capture',
+                          })
+                          .select('id')
+                          .single();
+
+                        if (error) throw error;
+                        toast.success(`"${subtaskTitle}" promoted to item`);
+                        if (data) {
+                          router.push(`/items/${data.id}`);
+                        }
+                      } catch {
+                        toast.error('Failed to promote subtask');
+                      }
+                    }}
+                  />
+                </div>
+
+                {/* ── Schedule + Organize ───────────────────────────── */}
+                <div className="space-y-5">
 
                 {/* ── Schedule ───────────────────────────────────────── */}
                 {showScheduleSection && (
@@ -1983,51 +1927,121 @@ export function ItemDetailClient({
                   </div>
                 </div>
 
-                {/* ── Linked Page ────────────────────────────────────── */}
-                <div className="space-y-3">
-                  <LinkedPageSection
-                    item={item}
-                    linkedPage={linkedPage}
-                    userId={userId}
-                    destinationSlug={destinationSlug}
-                    onPageCreated={(pageId) => {
-                      const fetchPage = async () => {
-                        const { data } = await supabase
-                          .from('pages')
-                          .select('*')
-                          .eq('id', pageId)
-                          .single();
-                        if (data) setLinkedPage(data as Page);
-                      };
-                      fetchPage();
-                    }}
-                  />
-                  {!linkedPage && (
-                    <div className="flex justify-end">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={aiDraftLoading}
-                        onClick={handleAIDraftPage}
-                        className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[#c2410c] hover:bg-[#c2410c]/10 hover:text-[#c2410c] h-7 text-xs px-2.5"
-                      >
-                        {aiDraftLoading ? (
-                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                        ) : (
-                          <Sparkles className="h-3.5 w-3.5" />
-                        )}
-                        {aiDraftLoading ? 'Drafting...' : 'AI Draft'}
-                      </Button>
+                </div>{/* end Schedule + Organize */}
+              </div>{/* end Row 2: Subtasks + Schedule/Organize */}
+
+              {/* ── Row 3: Linked Page + Attachments ──────────────────── */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                {/* ── Linked Page + Relations ──────────────────────────── */}
+                <div className="space-y-4">
+                  <div className="space-y-3">
+                    <LinkedPageSection
+                      item={item}
+                      linkedPage={linkedPage}
+                      userId={userId}
+                      destinationSlug={destinationSlug}
+                      onPageCreated={(pageId) => {
+                        const fetchPage = async () => {
+                          const { data } = await supabase
+                            .from('pages')
+                            .select('*')
+                            .eq('id', pageId)
+                            .single();
+                          if (data) setLinkedPage(data as Page);
+                        };
+                        fetchPage();
+                      }}
+                    />
+                    {!linkedPage && (
+                      <div className="flex justify-end">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={aiDraftLoading}
+                          onClick={handleAIDraftPage}
+                          className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[#c2410c] hover:bg-[#c2410c]/10 hover:text-[#c2410c] h-7 text-xs px-2.5"
+                        >
+                          {aiDraftLoading ? (
+                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                          ) : (
+                            <Sparkles className="h-3.5 w-3.5" />
+                          )}
+                          {aiDraftLoading ? 'Drafting...' : 'AI Draft'}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                  <ItemRelationsSection itemId={item.id} userId={userId} />
+                </div>
+
+                {/* ── Attachments ────────────────────────────────────── */}
+                <div>
+                  {(imageAttachments.length > 0 ||
+                    audioAttachments.length > 0) && (
+                    <div className="space-y-4">
+                      <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                        Attachments
+                      </h3>
+
+                      {imageAttachments.length > 0 && (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-1.5 text-xs text-neutral-500">
+                            <ImageIcon className="h-3.5 w-3.5" />
+                            <span>
+                              {imageAttachments.length} image
+                              {imageAttachments.length !== 1 ? 's' : ''}
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {imageAttachments.map((att) => (
+                              <button
+                                key={att.id}
+                                type="button"
+                                onClick={() => setLightboxSrc(att.url)}
+                                className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.03] transition-all hover:border-white/[0.16] hover:shadow-lg cursor-zoom-in"
+                              >
+                                <img
+                                  src={att.url}
+                                  alt={att.filename}
+                                  className="h-28 w-36 object-cover transition-transform duration-200 group-hover:scale-105"
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition-colors">
+                                  <Maximize2 className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {audioAttachments.length > 0 && (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-1.5 text-xs text-neutral-500">
+                            <Volume2 className="h-3.5 w-3.5" />
+                            <span>
+                              {audioAttachments.length} audio recording
+                              {audioAttachments.length !== 1 ? 's' : ''}
+                            </span>
+                          </div>
+                          <div className="space-y-2">
+                            {audioAttachments.map((att) => (
+                              <AudioPlayer
+                                key={att.id}
+                                src={att.url}
+                                duration={att.duration}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
 
-                {/* ── Item Relations ─────────────────────────────────── */}
-                <ItemRelationsSection itemId={item.id} userId={userId} />
+              </div>{/* end Row 3 */}
 
-              </div>
-
-            </div>
+            </div>{/* end Content */}
 
           </div>
         </div>
