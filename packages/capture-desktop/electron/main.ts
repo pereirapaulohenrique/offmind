@@ -182,7 +182,7 @@ async function signInWithCredentials(email: string, password: string): Promise<{
 async function signInWithMagicLink(email: string): Promise<{ success: boolean; error?: string }> {
   const supabaseUrl = store.get('supabaseUrl', 'https://xxipgnrcxyagxsfnulwo.supabase.co') as string;
   const supabaseAnonKey = store.get('supabaseAnonKey', '') as string;
-  const apiUrl = store.get('apiUrl', 'https://mindbase.vercel.app') as string;
+  const apiUrl = store.get('apiUrl', 'https://offmind.vercel.app') as string;
 
   try {
     const response = await fetch(`${supabaseUrl}/auth/v1/magiclink`, {

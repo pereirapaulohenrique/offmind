@@ -38,7 +38,7 @@ Everything flows through three layers:
 ## Repository Structure
 
 ```
-mindbase/
+offmind/
 ├── app/
 │   ├── (auth)/             # Login, signup pages
 │   ├── (dashboard)/        # Protected app pages
