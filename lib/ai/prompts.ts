@@ -275,6 +275,11 @@ Draft a comprehensive, well-structured page based on this information. The docum
 
 Write the document in plain text with markdown formatting (headings with #, bullets with -, bold with **). Do not include any meta-commentary or explanation — just the document content.`;
 
+export const GENERATE_TITLE_PROMPT = (text: string) =>
+  `Generate a concise title (max 8 words) for this captured thought. Return ONLY the title text, nothing else.
+
+Text: "${text}"`;
+
 export const STALE_ITEMS_PROMPT = (
   items: { id: string; title: string; destination: string; age_days: number; has_subtasks: boolean }[]
 ) => `You are a productivity assistant. Review these items and identify which ones have gone stale and need attention.

@@ -22,6 +22,8 @@ import {
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { softDeleteItem } from '@/lib/utils/soft-delete';
+import { RoutingNoteModal } from '@/components/shared/RoutingNoteModal';
+import { logActivity } from '@/lib/activity-log';
 import { useItemsStore } from '@/stores/items';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -45,6 +47,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { SubtasksList } from '@/components/item-detail/SubtasksList';
 import { LinkedPageSection } from '@/components/item-detail/LinkedPageSection';
 import { ItemRelationsSection } from '@/components/item-detail/ItemRelationsSection';
+import { ItemActivityTimeline } from '@/components/item-detail/ItemActivityTimeline';
 import type {
   Item,
   Subtask,
@@ -405,6 +408,11 @@ export function ItemDetailClient({
   // ---- Post-completion prompt ----
   const [showCompletionPrompt, setShowCompletionPrompt] = useState<'schedule' | 'backlog' | null>(null);
 
+  // ---- Routing note modal ----
+  const [showRoutingModal, setShowRoutingModal] = useState(false);
+  const [pendingDestinationId, setPendingDestinationId] = useState<string | null>(null);
+  const originalDestinationIdRef = useRef<string | null>(serverItem.destination_id);
+
   // ---- Refs ----
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -619,26 +627,80 @@ export function ItemDetailClient({
   };
 
   const handleDestinationChange = (destId: string) => {
+    // If destination is actually changing, show routing note modal
+    if (destId !== destinationId) {
+      setPendingDestinationId(destId);
+      setShowRoutingModal(true);
+      return;
+    }
+  };
+
+  const handleRoutingConfirm = async (note: string | null) => {
+    const destId = pendingDestinationId;
+    if (!destId) return;
+
+    // Look up names for logging
+    const fromDest = destinations.find((d) => d.id === destinationId);
+    const toDest = destinations.find((d) => d.id === destId);
+
     setDestinationId(destId);
-    const dest = destinations.find((d) => d.id === destId);
 
     // Clear waiting fields if leaving waiting
-    if (dest?.slug !== 'waiting' && waitingFor) {
+    if (toDest?.slug !== 'waiting' && waitingFor) {
       setWaitingFor('');
     }
 
     // Immediate save for destination change
-    persistSave({ destination_id: destId });
+    await persistSave({ destination_id: destId });
+
+    // Log the routing activity (fire-and-forget)
+    logActivity({
+      itemId: item.id,
+      userId,
+      action: 'routed',
+      note: note ?? undefined,
+      metadata: {
+        from_destination: fromDest?.name ?? 'Inbox',
+        to_destination: toDest?.name ?? 'Unknown',
+      },
+    });
+
+    // Update the original ref so subsequent changes are tracked correctly
+    originalDestinationIdRef.current = destId;
+
+    // Close the modal
+    setShowRoutingModal(false);
+    setPendingDestinationId(null);
   };
 
   const handleSpaceChange = (value: string) => {
     const resolved = value === 'none' ? null : value;
+    if (resolved !== spaceId) {
+      const oldSpace = spaces.find(s => s.id === spaceId);
+      const newSpace = spaces.find(s => s.id === resolved);
+      logActivity({
+        itemId: item.id,
+        userId,
+        action: 'field_changed',
+        metadata: { field: 'space', old_value: oldSpace?.name || null, new_value: newSpace?.name || null },
+      });
+    }
     setSpaceId(resolved);
     persistSave({ space_id: resolved });
   };
 
   const handleProjectChange = (value: string) => {
     const resolved = value === 'none' ? null : value;
+    if (resolved !== projectId) {
+      const oldProject = projects.find(p => p.id === projectId);
+      const newProject = projects.find(p => p.id === resolved);
+      logActivity({
+        itemId: item.id,
+        userId,
+        action: 'field_changed',
+        metadata: { field: 'project', old_value: oldProject?.name || null, new_value: newProject?.name || null },
+      });
+    }
     setProjectId(resolved);
     persistSave({ project_id: resolved });
   };
@@ -704,11 +766,13 @@ export function ItemDetailClient({
     if (result.success) {
       removeItem(item.id);
       toast.success('Item archived');
+      // Log archived activity (fire-and-forget)
+      logActivity({ itemId: item.id, userId, action: 'archived' });
       router.back();
     } else {
       toast.error('Failed to archive item');
     }
-  }, [item.id, removeItem, router]);
+  }, [item.id, userId, removeItem, router]);
 
   // ---- Mark Complete ----
   const handleComplete = async () => {
@@ -747,6 +811,9 @@ export function ItemDetailClient({
       const completed = { ...item, ...updates } as Item;
       updateItem(completed);
       toast.success('Item completed');
+
+      // Log completed activity (fire-and-forget)
+      logActivity({ itemId: item.id, userId, action: 'completed' });
 
       // Handle recurrence — create next occurrence
       const recurrenceValue = (customValues as Record<string, any>)?.recurrence;
@@ -2030,6 +2097,9 @@ export function ItemDetailClient({
                 </div>
               )}
 
+              {/* ── Activity Timeline (full width) ──────────────── */}
+              <ItemActivityTimeline itemId={item.id} />
+
             </div>{/* end Content */}
 
           </div>
@@ -2212,6 +2282,22 @@ export function ItemDetailClient({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* ── Routing Note Modal ─────────────────────────────────── */}
+      <RoutingNoteModal
+        open={showRoutingModal}
+        onClose={() => {
+          setShowRoutingModal(false);
+          setPendingDestinationId(null);
+        }}
+        onConfirm={handleRoutingConfirm}
+        destinationName={
+          destinations.find((d) => d.id === pendingDestinationId)?.name ?? 'Unknown'
+        }
+        fromDestinationName={
+          destinations.find((d) => d.id === destinationId)?.name ?? 'Inbox'
+        }
+      />
     </>
   );
 }

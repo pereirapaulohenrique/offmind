@@ -16,6 +16,8 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import type { Item, Destination, Space, Project, Contact, Json, Attachment } from '@/types/database';
 import type { CustomFieldDefinition } from '@/types';
+import { RoutingNoteModal } from '@/components/shared/RoutingNoteModal';
+import { logActivity } from '@/lib/activity-log';
 
 // ---------------------------------------------------------------------------
 // Lightbox (fullscreen image viewer)
@@ -260,6 +262,10 @@ export function ProcessingPanel({
   // Lightbox for image attachments
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
 
+  // Routing note modal
+  const [showRoutingModal, setShowRoutingModal] = useState(false);
+  const [pendingRouteData, setPendingRouteData] = useState<Partial<Item> | null>(null);
+
   // Refs
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -477,12 +483,32 @@ export function ProcessingPanel({
 
   const handleSpaceChange = (value: string) => {
     const resolved = value === 'none' ? null : value;
+    const oldSpace = spaces.find(s => s.id === spaceId);
+    const newSpace = spaces.find(s => s.id === resolved);
     setSpaceId(resolved);
+    if (resolved !== spaceId && item) {
+      logActivity({
+        itemId: item.id,
+        userId: item.user_id,
+        action: 'field_changed',
+        metadata: { field: 'space', old_value: oldSpace?.name || null, new_value: newSpace?.name || null },
+      });
+    }
   };
 
   const handleProjectChange = (value: string) => {
     const resolved = value === 'none' ? null : value;
+    const oldProject = projects.find(p => p.id === projectId);
+    const newProject = projects.find(p => p.id === resolved);
     setProjectId(resolved);
+    if (resolved !== projectId && item) {
+      logActivity({
+        itemId: item.id,
+        userId: item.user_id,
+        action: 'field_changed',
+        metadata: { field: 'project', old_value: oldProject?.name || null, new_value: newProject?.name || null },
+      });
+    }
   };
 
   const handleScheduledAtChange = (value: string) => {
@@ -535,12 +561,13 @@ export function ProcessingPanel({
     const result = await softDeleteItem(item.id);
     if (result.success) {
       removeItem(item.id);
+      logActivity({ itemId: item.id, userId, action: 'archived' });
       toast.success('Item archived');
       closeProcessingPanel();
     } else {
       toast.error('Failed to archive item');
     }
-  }, [item, removeItem, closeProcessingPanel]);
+  }, [item, userId, removeItem, closeProcessingPanel]);
 
   // ---- Mark Done ----
   const handleDone = async () => {
@@ -576,6 +603,7 @@ export function ProcessingPanel({
 
       const completed = { ...item, ...updates } as Item;
       updateItem(completed);
+      logActivity({ itemId: item.id, userId, action: 'completed' });
       toast.success('Item completed');
       closeProcessingPanel();
     } catch {
@@ -584,30 +612,25 @@ export function ProcessingPanel({
   };
 
   // ---- Save & Route ----
-  const handleSaveAndRoute = async () => {
-    if (!item) return;
-
-    // Clear any pending debounce timer
-    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
-
+  const buildRouteUpdates = (): Partial<Item> => {
     const now = new Date().toISOString();
 
     // Determine layer
-    let layer = item.layer;
+    let layer = item!.layer;
     if (scheduledAt) {
       layer = 'commit';
-    } else if (destinationId && item.layer === 'capture') {
+    } else if (destinationId && item!.layer === 'capture') {
       layer = 'process';
     }
 
     // Determine waiting_since
     const dest = destinations.find((d) => d.id === destinationId);
-    let waitingSince = item.waiting_since;
-    if (dest?.slug === 'waiting' && waitingFor && !item.waiting_since) {
+    let waitingSince = item!.waiting_since;
+    if (dest?.slug === 'waiting' && waitingFor && !item!.waiting_since) {
       waitingSince = now;
     }
 
-    const updates: Partial<Item> = {
+    return {
       title,
       notes: notes || null,
       destination_id: destinationId,
@@ -622,23 +645,85 @@ export function ProcessingPanel({
       layer,
       updated_at: now,
     };
+  };
 
+  const performRouteAndSave = async (updates: Partial<Item>, routingNote?: string | null) => {
     try {
       const supabaseClient = createClient();
       const { error } = await supabaseClient
         .from('items')
         .update(updates as Record<string, unknown>)
-        .eq('id', item.id);
+        .eq('id', item!.id);
 
       if (error) throw error;
 
-      const routed = { ...item, ...updates } as Item;
+      const routed = { ...item!, ...updates } as Item;
       updateItem(routed);
+
+      // Log scheduled activity if scheduled_at is being set for the first time
+      if (updates.scheduled_at && !item!.scheduled_at) {
+        logActivity({
+          itemId: item!.id,
+          userId,
+          action: 'scheduled',
+          metadata: {
+            scheduled_at: updates.scheduled_at,
+            duration_minutes: updates.duration_minutes,
+          },
+        });
+      }
+
+      // Log routing activity if destination changed
+      if (updates.destination_id && updates.destination_id !== item!.destination_id) {
+        const fromDest = destinations.find((d) => d.id === item!.destination_id);
+        const toDest = destinations.find((d) => d.id === updates.destination_id);
+        logActivity({
+          itemId: item!.id,
+          userId,
+          action: 'routed',
+          note: routingNote ?? undefined,
+          metadata: {
+            from_destination: fromDest?.slug ?? fromDest?.name ?? null,
+            to_destination: toDest?.slug ?? toDest?.name ?? null,
+          },
+        });
+      }
+
       toast.success('Item saved and routed');
       closeProcessingPanel();
     } catch {
       toast.error('Failed to save');
     }
+  };
+
+  const handleSaveAndRoute = async () => {
+    if (!item) return;
+
+    // Clear any pending debounce timer
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+
+    const updates = buildRouteUpdates();
+
+    // If destination changed, show routing note modal
+    if (destinationId !== item.destination_id) {
+      setPendingRouteData(updates);
+      setShowRoutingModal(true);
+      return;
+    }
+
+    // Destination didn't change — save directly
+    await performRouteAndSave(updates);
+  };
+
+  // ---- Routing modal confirm ----
+  const handleRoutingConfirm = async (note: string | null) => {
+    setShowRoutingModal(false);
+    if (!pendingRouteData || !item) {
+      setPendingRouteData(null);
+      return;
+    }
+    await performRouteAndSave(pendingRouteData, note);
+    setPendingRouteData(null);
   };
 
   // ---- Keyboard shortcuts ----
@@ -1420,6 +1505,24 @@ export function ProcessingPanel({
         </>
       )}
     </AnimatePresence>
+
+    {/* ---- Routing Note Modal ---- */}
+    <RoutingNoteModal
+      open={showRoutingModal}
+      onClose={() => {
+        setShowRoutingModal(false);
+        setPendingRouteData(null);
+      }}
+      onConfirm={handleRoutingConfirm}
+      destinationName={
+        destinations.find((d) => d.id === destinationId)?.name ?? 'Unknown'
+      }
+      fromDestinationName={
+        item
+          ? destinations.find((d) => d.id === item.destination_id)?.name
+          : undefined
+      }
+    />
 
     {/* ---- Image Lightbox ---- */}
     <AnimatePresence>

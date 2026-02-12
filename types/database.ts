@@ -489,6 +489,35 @@ export interface Database {
           created_at?: string;
         };
       };
+      item_activities: {
+        Row: {
+          id: string;
+          user_id: string;
+          item_id: string;
+          action: string;
+          note: string | null;
+          metadata: Json | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          item_id: string;
+          action: string;
+          note?: string | null;
+          metadata?: Json | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          item_id?: string;
+          action?: string;
+          note?: string | null;
+          metadata?: Json | null;
+          created_at?: string;
+        };
+      };
     };
     Views: {
       [_ in never]: never;
@@ -523,6 +552,7 @@ export type TelegramConnection = Tables<'telegram_connections'>;
 export type Contact = Tables<'contacts'>;
 export type Subtask = Tables<'subtasks'>;
 export type ItemRelation = Tables<'item_relations'>;
+export type ItemActivity = Tables<'item_activities'>;
 
 // Attachment type for items
 export interface Attachment {

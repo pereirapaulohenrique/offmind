@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { uploadAttachment } from '@/lib/supabase/storage';
 import { useAudioRecorder } from '@/hooks/useAudioRecorder';
+import { logActivity } from '@/lib/activity-log';
 import type { Attachment } from '@/types/database';
 
 interface CaptureBarProps {
@@ -150,12 +151,20 @@ export function CaptureBar({ userId }: CaptureBarProps) {
         attachments.push(att);
       }
 
+      // Generate temporary title from first ~8 words, full text goes to notes
+      const words = trimmedValue ? trimmedValue.split(/\s+/) : [];
+      const isLongCapture = words.length > 8;
+      const tempTitle = trimmedValue
+        ? (isLongCapture ? words.slice(0, 8).join(' ') + '...' : trimmedValue)
+        : (attachments.length > 0 ? `Capture with ${attachments.map(a => a.type).join(' & ')}` : 'Untitled');
+
       const supabase = createClient();
       const { data, error } = await supabase
         .from('items')
         .insert({
           user_id: userId,
-          title: trimmedValue || (attachments.length > 0 ? `Capture with ${attachments.map(a => a.type).join(' & ')}` : 'Untitled'),
+          title: tempTitle,
+          notes: trimmedValue || null,
           layer: 'capture',
           source: 'web',
           ...(attachments.length > 0 ? { attachments } : {}),
@@ -165,7 +174,29 @@ export function CaptureBar({ userId }: CaptureBarProps) {
 
       if (error) throw error;
 
-      if (data) addItem(data as any);
+      if (data) {
+        addItem(data as any);
+
+        // Log activity (fire-and-forget)
+        logActivity({
+          itemId: (data as any).id,
+          userId,
+          action: 'created',
+          metadata: { source: 'web' },
+        });
+
+        // For long captures, request AI-generated title in the background
+        if (isLongCapture && trimmedValue) {
+          fetch('/api/ai/generate-title', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ itemId: (data as any).id, text: trimmedValue }),
+          }).catch(() => {
+            // AI title generation is best-effort
+          });
+        }
+      }
+
       setValue('');
       removeImage();
       clearRecording();
