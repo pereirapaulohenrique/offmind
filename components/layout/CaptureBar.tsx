@@ -27,7 +27,7 @@ export function CaptureBar({ userId }: CaptureBarProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { sidebarCollapsed, setCaptureBarFocused } = useUIStore();
   const { addItem } = useItemsStore();
@@ -75,7 +75,7 @@ export function CaptureBar({ userId }: CaptureBarProps) {
   };
 
   const handlePaste = useCallback(
-    (e: React.ClipboardEvent<HTMLInputElement>) => {
+    (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
       const items = e.clipboardData?.items;
       if (!items) return;
 
@@ -169,6 +169,7 @@ export function CaptureBar({ userId }: CaptureBarProps) {
       setValue('');
       removeImage();
       clearRecording();
+      if (inputRef.current) inputRef.current.style.height = '20px';
       toast.success('Captured', {
         description: trimmedValue
           ? (trimmedValue.length > 50 ? trimmedValue.slice(0, 50) + '...' : trimmedValue)
@@ -183,18 +184,30 @@ export function CaptureBar({ userId }: CaptureBarProps) {
     }
   }, [value, isLoading, userId, addItem, imageFile, audioBlob, duration, clearRecording]);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
     }
+    // Shift+Enter inserts newline (default textarea behavior, no preventDefault needed)
     if (e.key === 'Escape') {
       setValue('');
       removeImage();
       clearRecording();
+      if (inputRef.current) inputRef.current.style.height = '20px';
       inputRef.current?.blur();
     }
   };
+
+  // Auto-resize textarea up to 5 lines
+  const autoResize = useCallback(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    const lineHeight = 20; // ~text-sm line height
+    const maxHeight = lineHeight * 5;
+    el.style.height = `${Math.min(el.scrollHeight, maxHeight)}px`;
+  }, []);
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -257,7 +270,7 @@ export function CaptureBar({ userId }: CaptureBarProps) {
         )}
 
         <div
-          className={`capture-input relative flex items-center gap-2 rounded-2xl border px-4 py-3 transition-all duration-300 ${
+          className={`capture-input relative flex items-end gap-2 rounded-2xl border px-4 py-3 transition-all duration-300 ${
             isRecording
               ? 'border-red-500/40 bg-[var(--bg-surface)]/95 shadow-[0_0_0_3px_rgba(239,68,68,0.12)]'
               : isFocused
@@ -271,17 +284,21 @@ export function CaptureBar({ userId }: CaptureBarProps) {
             }`}
           />
 
-          <input
+          <textarea
             ref={inputRef}
-            type="text"
             value={value}
-            onChange={(e) => setValue(e.target.value)}
+            onChange={(e) => {
+              setValue(e.target.value);
+              autoResize();
+            }}
             onKeyDown={handleKeyDown}
             onPaste={handlePaste}
             onFocus={handleFocus}
             onBlur={handleBlur}
             placeholder={isRecording ? `Recording... ${formatDuration(duration)}` : 'Capture a thought, task, idea, link...'}
-            className="flex-1 bg-transparent text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none"
+            className="flex-1 resize-none bg-transparent text-sm leading-5 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none"
+            style={{ height: '20px', maxHeight: '100px' }}
+            rows={1}
             disabled={isLoading || isRecording}
             data-quick-capture
           />
