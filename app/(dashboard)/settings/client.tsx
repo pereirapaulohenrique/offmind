@@ -14,6 +14,8 @@ import {
   X,
   Users,
   UserPlus,
+  Loader2,
+  Sparkles,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -92,6 +94,10 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
   const [editingContact, setEditingContact] = useState<Contact | null>(null);
   const [contactForm, setContactForm] = useState({ name: '', email: '', phone: '', notes: '' });
   const [isContactSaving, setIsContactSaving] = useState(false);
+
+  // Migration state
+  const [isMigrating, setIsMigrating] = useState(false);
+  const [migrationResult, setMigrationResult] = useState<{ migrated: number; total: number } | null>(null);
 
   // Handle checkout result
   useEffect(() => {
@@ -399,6 +405,25 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
       toast.success('Contact deleted');
     } catch {
       toast.error('Failed to delete contact');
+    }
+  };
+
+  const handleMigrateTitles = async () => {
+    if (!confirm('This will move existing title content to notes and generate new AI titles. Only items without notes will be affected. Continue?')) return;
+
+    setIsMigrating(true);
+    setMigrationResult(null);
+    try {
+      const res = await fetch('/api/ai/migrate-titles', { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Migration failed');
+      setMigrationResult({ migrated: data.migrated, total: data.total });
+      toast.success(`Migrated ${data.migrated} items`);
+    } catch (error) {
+      console.error('Migration failed:', error);
+      toast.error('Migration failed. Check console for details.');
+    } finally {
+      setIsMigrating(false);
     }
   };
 
@@ -727,6 +752,42 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
                   })}
                 </div>
               )}
+            </div>
+          </section>
+
+          {/* Data Migration */}
+          <section>
+            <h2 className="mb-4 text-lg font-semibold">Data Migration</h2>
+            <div className="rounded-2xl bg-[var(--bg-surface)] shadow-[var(--shadow-card)] p-6 space-y-3">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-amber-400" />
+                <h3 className="font-medium text-[var(--text-primary)]">Migrate Titles to Notes</h3>
+              </div>
+              <p className="text-sm text-[var(--text-muted)]">
+                Move captured content from titles to notes and generate new AI-powered titles.
+                Only affects items that don&apos;t already have notes.
+              </p>
+              <div className="flex items-center gap-3">
+                <Button
+                  onClick={handleMigrateTitles}
+                  disabled={isMigrating}
+                  className="gap-2"
+                >
+                  {isMigrating ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Migrating...
+                    </>
+                  ) : (
+                    'Migrate Titles → Notes'
+                  )}
+                </Button>
+                {migrationResult && (
+                  <p className="text-sm text-emerald-400">
+                    {migrationResult.migrated} of {migrationResult.total} items migrated
+                  </p>
+                )}
+              </div>
             </div>
           </section>
 

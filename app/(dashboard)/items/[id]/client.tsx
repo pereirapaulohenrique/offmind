@@ -1430,7 +1430,7 @@ export function ItemDetailClient({
 
         {/* ── Scrollable content ─────────────────────────────────── */}
         <div className="flex-1 overflow-y-auto">
-          <div className="flex justify-center px-6 py-8 lg:ml-[44px]">
+          <div className="flex justify-center px-6 py-8 lg:mr-[44px]">
             <div className="w-full max-w-[680px]">
 
             {/* ── Header: back + layer badge + save ─────────────────── */}
