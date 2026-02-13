@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option D: Guided Flow + Activity Rail — OffMind Item Detail</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-base: #1a1614;
+    --bg-card: #1e1b18;
+    --bg-elevated: #252220;
+    --bg-hover: rgba(255,255,255,0.05);
+    --border: rgba(255,255,255,0.06);
+    --border-hover: rgba(255,255,255,0.12);
+    --accent: #c2410c;
+    --accent-dim: rgba(194,65,12,0.15);
+    --accent-border: rgba(194,65,12,0.3);
+    --text-primary: #f5f5f5;
+    --text-secondary: #a3a3a3;
+    --text-muted: #737373;
+    --blue: #6daef7;
+    --amber: #f0b429;
+    --green: #3dd68c;
+    --backlog: #60a5fa;
+    --reference: #a78bfa;
+    --incubating: #fbbf24;
+    --someday: #6b7280;
+    --questions: #f472b6;
+    --waiting: #fb923c;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --radius-full: 9999px;
+    --shadow: 0 8px 32px rgba(20,14,10,0.5);
+
+    --rail-width-collapsed: 44px;
+    --rail-width-expanded: 280px;
+  }
+
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--bg-base);
+    color: var(--text-primary);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* Mockup nav */
+  .mockup-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 16px;
+    background: rgba(26,22,20,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .mockup-nav span { color: var(--text-muted); margin-right: 4px; }
+  .mockup-nav a {
+    color: var(--text-secondary); text-decoration: none;
+    padding: 4px 12px; border-radius: var(--radius-full);
+    border: 1px solid var(--border); transition: all 0.15s;
+  }
+  .mockup-nav a:hover { border-color: var(--border-hover); color: var(--text-primary); background: var(--bg-hover); }
+  .mockup-nav a.active { background: var(--accent-dim); border-color: var(--accent-border); color: var(--accent); }
+
+  /* Header */
+  .header {
+    position: fixed; top: 37px; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 24px;
+    background: rgba(26,22,20,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--text-secondary); font-size: 13px;
+    text-decoration: none; padding: 6px 12px;
+    border-radius: var(--radius-sm); transition: all 0.15s;
+  }
+  .back-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .back-btn svg { width: 14px; height: 14px; }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .layer-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 4px 10px; border-radius: var(--radius-full);
+  }
+  .layer-badge.process { background: rgba(240,180,41,0.12); color: var(--amber); border: 1px solid rgba(240,180,41,0.2); }
+  .save-status { font-size: 11px; color: var(--text-muted); }
+  .save-status::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--green); margin-right: 6px; }
+
+  /* ==========================================
+     ACTIVITY RAIL — left edge, full height
+     ========================================== */
+  .activity-rail {
+    position: fixed;
+    top: 90px;
+    left: 0;
+    bottom: 64px;
+    width: var(--rail-width-collapsed);
+    background: rgba(30,27,24,0.6);
+    border-right: 1px solid var(--border);
+    z-index: 40;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .activity-rail.expanded {
+    width: var(--rail-width-expanded);
+    background: var(--bg-card);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.3);
+  }
+
+  /* Rail toggle button */
+  .rail-toggle {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px;
+    border: none; background: none;
+    cursor: pointer; color: var(--text-muted);
+    transition: color 0.15s;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .rail-toggle:hover { color: var(--text-secondary); }
+  .rail-toggle svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .rail-toggle-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; white-space: nowrap;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .activity-rail.expanded .rail-toggle-label { opacity: 1; }
+
+  /* Rail entries */
+  .rail-entries {
+    flex: 1; overflow-y: auto;
+    padding: 8px 0;
+  }
+  .rail-entries::-webkit-scrollbar { width: 3px; }
+  .rail-entries::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 3px; }
+
+  .rail-entry {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px;
+    cursor: default;
+    transition: background 0.15s;
+    position: relative;
+  }
+  .rail-entry:hover { background: var(--bg-hover); }
+
+  /* Connecting line between entries */
+  .rail-entry::before {
+    content: '';
+    position: absolute;
+    left: 21px;
+    top: 32px;
+    bottom: -2px;
+    width: 1px;
+    background: var(--border);
+  }
+  .rail-entry:last-child::before { display: none; }
+
+  .rail-entry-icon {
+    width: 20px; height: 20px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+  }
+  .rail-entry-icon svg { width: 12px; height: 12px; }
+
+  .rail-entry-detail {
+    flex: 1; min-width: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+  .activity-rail.expanded .rail-entry-detail { opacity: 1; white-space: normal; }
+
+  .rail-entry-text { font-size: 12px; color: var(--text-secondary); line-height: 1.35; }
+  .rail-entry-text strong { color: var(--text-primary); font-weight: 600; }
+  .rail-entry-time { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+  .rail-entry-note {
+    margin-top: 4px; padding: 5px 8px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 6px; font-size: 11px;
+    color: var(--text-muted); font-style: italic;
+  }
+
+  /* Collapsed tooltip on hover */
+  .activity-rail:not(.expanded) .rail-entry[data-tip]:hover::after {
+    content: attr(data-tip);
+    position: absolute;
+    left: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 5px 10px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    font-size: 11px; color: var(--text-secondary);
+    white-space: nowrap; z-index: 60;
+    box-shadow: var(--shadow);
+    pointer-events: none;
+  }
+
+  /* ==========================================
+     MAIN CONTENT — single column guided flow
+     ========================================== */
+  .main {
+    margin-top: 90px;
+    margin-bottom: 64px;
+    margin-left: var(--rail-width-collapsed);
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    justify-content: center;
+    padding: 0 32px;
+  }
+  body.rail-open .main {
+    margin-left: var(--rail-width-expanded);
+  }
+
+  .flow {
+    width: 100%;
+    max-width: 680px;
+    padding: 28px 0 40px;
+  }
+
+  .flow-step {
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .flow-step:last-child { margin-bottom: 0; }
+
+  .flow-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 0 28px;
+  }
+
+  /* ---- TITLE ---- */
+  .title-input {
+    width: 100%;
+    font-size: 26px; font-weight: 600;
+    color: var(--text-primary);
+    background: transparent; border: none; outline: none;
+    padding: 0; line-height: 1.3;
+  }
+  .meta-line {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    font-size: 11px; color: var(--text-muted); margin-top: 8px;
+  }
+  .meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted); }
+  .source-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: var(--radius-full);
+    background: rgba(255,255,255,0.04); font-size: 10px;
+  }
+  .ai-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: var(--radius-full);
+    background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.2);
+    font-size: 10px; color: var(--reference);
+  }
+  .ai-tag svg { width: 10px; height: 10px; }
+
+  /* ---- DESTINATION (subtle inline badge + popover) ---- */
+  .dest-inline {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .dest-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; font-size: 12px; font-weight: 500;
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(96,165,250,0.25);
+    background: rgba(96,165,250,0.08);
+    color: var(--backlog);
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .dest-badge:hover { background: rgba(96,165,250,0.14); border-color: rgba(96,165,250,0.35); }
+  .dest-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--backlog); }
+  .dest-badge svg { width: 12px; height: 12px; opacity: 0.5; margin-left: 2px; }
+  .dest-change-hint {
+    font-size: 11px; color: var(--text-muted);
+  }
+
+  /* Floating destination menu */
+  .dest-popover {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 70;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-hover);
+    border-radius: var(--radius-md);
+    padding: 6px;
+    box-shadow: var(--shadow);
+    min-width: 200px;
+  }
+  .dest-popover.open { display: block; }
+  .dest-option {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; font-size: 12px;
+    border-radius: var(--radius-sm);
+    border: none; background: none; width: 100%;
+    color: var(--text-secondary); cursor: pointer;
+    transition: all 0.1s; text-align: left;
+  }
+  .dest-option:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .dest-option.active { color: var(--backlog); background: rgba(96,165,250,0.08); }
+  .dest-option .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ---- PROPERTIES (small uniform chips) ---- */
+  .step-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 10px;
+  }
+  .props-grid {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .prop-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px;
+    font-size: 11px; font-weight: 500;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.03);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .prop-chip:hover { border-color: var(--border-hover); background: var(--bg-hover); color: var(--text-secondary); }
+  .prop-chip.has-value { color: var(--text-secondary); }
+  .prop-chip svg { width: 11px; height: 11px; }
+  .prop-chip .prop-label { font-size: 11px; }
+
+  /* ---- NOTES (primary content — no label, prominent) ---- */
+  .notes-area {
+    width: 100%; min-height: 240px;
+    padding: 20px 0; font-size: 15px; line-height: 1.8;
+    color: var(--text-primary);
+    background: transparent;
+    border: none;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    outline: none; resize: none; font-family: inherit;
+    transition: border-color 0.2s;
+  }
+  .notes-area:focus { border-color: rgba(194,65,12,0.2); }
+
+  /* ---- CARD SECTIONS ---- */
+  .card-section {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.015);
+    overflow: hidden;
+  }
+  .card-section + .card-section { margin-top: 12px; }
+  .card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 13px 18px;
+  }
+  .card-title {
+    font-size: 12px; font-weight: 600; color: var(--text-secondary);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-title svg { width: 15px; height: 15px; color: var(--text-muted); }
+  .card-title .count { font-weight: 400; color: var(--text-muted); }
+  .add-btn {
+    font-size: 11px; color: var(--accent); background: none; border: none;
+    cursor: pointer; padding: 4px 8px; border-radius: var(--radius-sm);
+    transition: background 0.15s;
+  }
+  .add-btn:hover { background: var(--accent-dim); }
+  .card-body { padding: 0 18px 16px; }
+
+  /* Subtasks */
+  .subtask {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 0; border-bottom: 1px solid var(--border);
+  }
+  .subtask:last-child { border-bottom: none; }
+  .subtask-check {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.15);
+    cursor: pointer; flex-shrink: 0; transition: all 0.15s;
+  }
+  .subtask-check:hover { border-color: var(--green); }
+  .subtask-check.done { background: var(--green); border-color: var(--green); }
+  .subtask-text { font-size: 13px; color: var(--text-primary); }
+  .subtask-text.done { text-decoration: line-through; color: var(--text-muted); }
+
+  /* Linked page */
+  .linked-page {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .linked-page:hover { border-color: var(--border-hover); background: var(--bg-hover); }
+  .linked-page svg { width: 16px; height: 16px; color: var(--text-muted); }
+  .linked-page-text { font-size: 13px; color: var(--text-secondary); }
+
+  /* ---- RELATIONS + ATTACHMENTS (equal-size grid) ---- */
+  .pair-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .pair-grid .card-section {
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 180px;
+  }
+  .pair-grid .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Relations */
+  .relation-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
+    font-size: 12px; color: var(--text-secondary);
+    cursor: pointer; transition: color 0.15s;
+  }
+  .relation-item:hover { color: var(--text-primary); }
+  .relation-item:last-child { border-bottom: none; }
+  .relation-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Attachments */
+  .attachments-content {
+    display: flex; flex-direction: column; gap: 10px; flex: 1;
+  }
+  .attachments-images {
+    display: flex; gap: 8px;
+  }
+  .attachment-thumb {
+    width: 56px; height: 56px; border-radius: var(--radius-md);
+    background: rgba(255,255,255,0.04);
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border); color: var(--text-muted);
+    cursor: pointer; transition: border-color 0.15s; flex-shrink: 0;
+  }
+  .attachment-thumb:hover { border-color: var(--border-hover); }
+
+  /* Audio player */
+  .audio-player {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+  }
+  .audio-play-btn {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .audio-play-btn:hover { background: rgba(194,65,12,0.25); }
+  .audio-play-btn svg { width: 14px; height: 14px; color: var(--accent); }
+  .audio-info { flex: 1; min-width: 0; }
+  .audio-label { font-size: 11px; color: var(--text-secondary); }
+  .audio-waveform {
+    margin-top: 4px;
+    height: 20px;
+    display: flex; align-items: center; gap: 2px;
+  }
+  .audio-bar {
+    width: 3px; border-radius: 2px;
+    background: rgba(255,255,255,0.12);
+    transition: background 0.1s;
+  }
+  .audio-bar.played { background: var(--accent); }
+  .audio-duration {
+    font-size: 10px; color: var(--text-muted); flex-shrink: 0;
+  }
+
+  /* ---- FOOTER ---- */
+  .footer {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 24px;
+    background: rgba(26,22,20,0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    z-index: 50;
+  }
+  .footer-left { display: flex; gap: 8px; }
+  .footer-right { display: flex; gap: 8px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; font-size: 12px; font-weight: 500;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text-secondary); cursor: pointer;
+    transition: all 0.15s; font-family: inherit;
+  }
+  .btn:hover { border-color: var(--border-hover); background: var(--bg-hover); color: var(--text-primary); }
+  .btn svg { width: 14px; height: 14px; }
+  .btn-danger:hover { border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.08); color: #ef4444; }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
+  .btn-primary:hover { background: #a83709; border-color: #a83709; }
+  .btn-complete { background: rgba(61,214,140,0.1); border-color: rgba(61,214,140,0.25); color: var(--green); }
+  .btn-complete:hover { background: rgba(61,214,140,0.18); }
+
+  /* Layout label */
+  .layout-label {
+    position: fixed; bottom: 72px; left: 50%; transform: translateX(-50%);
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    padding: 6px 16px; border-radius: var(--radius-full);
+    font-size: 11px; color: var(--text-muted); z-index: 50;
+    box-shadow: var(--shadow); white-space: nowrap;
+  }
+  .layout-label strong { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- Mockup Navigation -->
+<nav class="mockup-nav">
+  <span>Layouts:</span>
+  <a href="layout-a.html">A: Sidebar + Main</a>
+  <a href="layout-b.html">B: 3-Column</a>
+  <a href="layout-c.html">C: Top Meta</a>
+  <a href="layout-d.html" class="active">D: Guided Flow</a>
+</nav>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-left">
+    <a href="#" class="back-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+      Back to Backlog
+    </a>
+  </div>
+  <div class="header-right">
+    <span class="layer-badge process">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v18M3 12h18"/></svg>
+      Process
+    </span>
+    <span class="save-status">Up to date</span>
+  </div>
+</header>
+
+<!-- ========== ACTIVITY RAIL (left edge) ========== -->
+<aside class="activity-rail" id="activityRail">
+  <button class="rail-toggle" onclick="toggleRail()" title="Toggle activity history">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+    <span class="rail-toggle-label">Activity</span>
+  </button>
+
+  <div class="rail-entries">
+    <div class="rail-entry" data-tip="Routed to Backlog — Feb 10">
+      <div class="rail-entry-icon" style="background: rgba(240,180,41,0.15);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2.5"><path d="m3 11 18-5v12L3 13v-2z"/></svg>
+      </div>
+      <div class="rail-entry-detail">
+        <div class="rail-entry-text">Routed to <strong>Backlog</strong></div>
+        <div class="rail-entry-time">Feb 10, 2:15 PM</div>
+        <div class="rail-entry-note">"High priority for Q3 planning cycle"</div>
+      </div>
+    </div>
+
+    <div class="rail-entry" data-tip="Scheduled for Feb 14 — Feb 10">
+      <div class="rail-entry-icon" style="background: rgba(61,214,140,0.15);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+      </div>
+      <div class="rail-entry-detail">
+        <div class="rail-entry-text">Scheduled for <strong>Feb 14, 10:00 AM</strong></div>
+        <div class="rail-entry-time">Feb 10, 2:16 PM</div>
+      </div>
+    </div>
+
+    <div class="rail-entry" data-tip="Moved to Work space — Feb 10">
+      <div class="rail-entry-icon" style="background: rgba(255,255,255,0.06);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 2 2v7.5"/><path d="M6 14V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v10"/></svg>
+      </div>
+      <div class="rail-entry-detail">
+        <div class="rail-entry-text">Space changed to <strong>Work</strong></div>
+        <div class="rail-entry-time">Feb 10, 2:14 PM</div>
+      </div>
+    </div>
+
+    <div class="rail-entry" data-tip="Priority set to High — Feb 10">
+      <div class="rail-entry-icon" style="background: rgba(194,65,12,0.15);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>
+      </div>
+      <div class="rail-entry-detail">
+        <div class="rail-entry-text">Priority set to <strong>High</strong></div>
+        <div class="rail-entry-time">Feb 10, 2:14 PM</div>
+      </div>
+    </div>
+
+    <div class="rail-entry" data-tip="Created via web — Feb 10">
+      <div class="rail-entry-icon" style="background: rgba(109,174,247,0.15);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      </div>
+      <div class="rail-entry-detail">
+        <div class="rail-entry-text">Created via <strong>web</strong></div>
+        <div class="rail-entry-time">Feb 10, 1:42 PM</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ========== MAIN — single column guided flow ========== -->
+<div class="main">
+  <div class="flow">
+
+    <!-- 1. IDENTITY — AI-generated title + meta -->
+    <div class="flow-step">
+      <input class="title-input" value="Research competitor pricing models for Q3 strategy" />
+      <div class="meta-line">
+        <span class="ai-tag">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><path d="m2 14 6-6 2 2 5-5"/><path d="M16 4h4v4"/></svg>
+          AI title
+        </span>
+        <span class="meta-dot"></span>
+        <span class="source-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10"/></svg>
+          web
+        </span>
+        <span class="meta-dot"></span>
+        <span>Feb 10, 1:42 PM</span>
+      </div>
+    </div>
+
+    <!-- 2. DESTINATION — subtle badge, click to re-route -->
+    <div class="flow-step" style="margin-bottom: 12px;">
+      <div class="dest-inline">
+        <div class="dest-badge" onclick="toggleDestMenu(this)">
+          <span class="dot"></span>
+          Backlog
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          <!-- Floating menu -->
+          <div class="dest-popover" id="destPopover">
+            <button class="dest-option active" onclick="pickDest(event, this, 'backlog', '#60a5fa')"><span class="dot" style="background: var(--backlog)"></span> Backlog</button>
+            <button class="dest-option" onclick="pickDest(event, this, 'reference', '#a78bfa')"><span class="dot" style="background: var(--reference)"></span> Reference</button>
+            <button class="dest-option" onclick="pickDest(event, this, 'incubating', '#fbbf24')"><span class="dot" style="background: var(--incubating)"></span> Incubating</button>
+            <button class="dest-option" onclick="pickDest(event, this, 'someday', '#6b7280')"><span class="dot" style="background: var(--someday)"></span> Someday</button>
+            <button class="dest-option" onclick="pickDest(event, this, 'questions', '#f472b6')"><span class="dot" style="background: var(--questions)"></span> Questions</button>
+            <button class="dest-option" onclick="pickDest(event, this, 'waiting', '#fb923c')"><span class="dot" style="background: var(--waiting)"></span> Waiting</button>
+          </div>
+        </div>
+        <span class="dest-change-hint">click to re-route</span>
+      </div>
+    </div>
+
+    <!-- 3. PROPERTIES — small uniform chips, below route, above content -->
+    <div class="flow-step" style="margin-bottom: 20px;">
+      <div class="props-grid">
+        <div class="prop-chip has-value">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+          Feb 14, 10:00
+        </div>
+        <div class="prop-chip has-value">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+          30m
+        </div>
+        <div class="prop-chip has-value">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+          Weekly
+        </div>
+        <div class="prop-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <span class="prop-label">All-day</span>
+        </div>
+        <div class="prop-chip has-value">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 2 2v7.5a.5.5 0 0 1-.5.5h-18a.5.5 0 0 1-.5-.5V14z"/><path d="M6 14V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v10"/></svg>
+          Work
+        </div>
+        <div class="prop-chip has-value">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/></svg>
+          Market Analysis
+        </div>
+        <div class="prop-chip has-value">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>
+          High
+        </div>
+        <div class="prop-chip has-value">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Medium
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-divider"></div>
+
+    <!-- 4. NOTES — primary captured content, no label needed -->
+    <div class="flow-step">
+      <textarea class="notes-area">Need to analyze at least 5 direct competitors in the B2B SaaS productivity space:
+
+1. Todoist Business ($6/user/mo) - per-seat, annual discount
+2. Things 3 ($49.99 one-time) - no subscription model
+3. TickTick Premium ($35.99/yr) - annual only, aggressive pricing
+4. Notion ($10/seat/mo) - workspace model, higher tier for teams
+5. Asana Premium ($10.99/user/mo) - per-seat, usage-based tiers
+
+Key questions to answer:
+- What's the sweet spot price for a single-user pro tier?
+- Do competitors offer monthly AND annual billing?
+- What features gate the upgrade from free to pro?
+- How do they handle team/workspace pricing vs. individual?
+
+Our current positioning: $9/mo pro feels competitive but may need annual discount option. Consider $7/mo annual ($84/yr) vs $9/mo monthly.</textarea>
+    </div>
+
+    <div class="flow-divider"></div>
+
+    <!-- 5. LINKED PAGE -->
+    <div class="flow-step">
+      <div class="card-section">
+        <div class="card-header">
+          <span class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+            Linked Page
+          </span>
+          <button class="add-btn">+ Create Page</button>
+        </div>
+        <div class="card-body">
+          <div class="linked-page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 13H8"/><path d="M16 17H8"/><path d="M16 9H8"/></svg>
+            <span class="linked-page-text">Q3 Pricing Strategy Analysis</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. SUBTASKS -->
+    <div class="flow-step">
+      <div class="card-section">
+        <div class="card-header">
+          <span class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+            Subtasks
+            <span class="count">1 / 3</span>
+          </span>
+          <button class="add-btn">+ Add</button>
+        </div>
+        <div class="card-body">
+          <div class="subtask">
+            <div class="subtask-check done"></div>
+            <span class="subtask-text done">List all direct competitors and their pricing pages</span>
+          </div>
+          <div class="subtask">
+            <div class="subtask-check" onclick="this.classList.toggle('done'); this.nextElementSibling.classList.toggle('done')"></div>
+            <span class="subtask-text">Create comparison spreadsheet with feature tiers</span>
+          </div>
+          <div class="subtask">
+            <div class="subtask-check" onclick="this.classList.toggle('done'); this.nextElementSibling.classList.toggle('done')"></div>
+            <span class="subtask-text">Draft pricing recommendation memo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-divider"></div>
+
+    <!-- 7. RELATIONS + ATTACHMENTS (equal-size grid) -->
+    <div class="flow-step pair-grid">
+      <!-- Relations -->
+      <div class="card-section">
+        <div class="card-header">
+          <span class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            Relations
+          </span>
+          <button class="add-btn">+ Add</button>
+        </div>
+        <div class="card-body">
+          <div class="relation-item">
+            <span class="relation-dot" style="background: var(--amber)"></span>
+            Gather competitive intelligence data
+          </div>
+          <div class="relation-item">
+            <span class="relation-dot" style="background: var(--blue)"></span>
+            Review pricing benchmarks 2025
+          </div>
+        </div>
+      </div>
+
+      <!-- Attachments (images + audio) -->
+      <div class="card-section">
+        <div class="card-header">
+          <span class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+            Attachments
+          </span>
+          <button class="add-btn">+ Upload</button>
+        </div>
+        <div class="card-body">
+          <div class="attachments-content">
+            <!-- Image thumbnails -->
+            <div class="attachments-images">
+              <div class="attachment-thumb">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+              </div>
+              <div class="attachment-thumb">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+              </div>
+            </div>
+
+            <!-- Audio player -->
+            <div class="audio-player">
+              <div class="audio-play-btn" onclick="this.querySelector('svg').innerHTML = this.dataset.playing ? '<polygon points=&quot;6,4 20,12 6,20&quot;/>' : '<rect x=&quot;6&quot; y=&quot;4&quot; width=&quot;4&quot; height=&quot;16&quot;/><rect x=&quot;14&quot; y=&quot;4&quot; width=&quot;4&quot; height=&quot;16&quot;/>'; this.dataset.playing = this.dataset.playing ? '' : '1';">
+                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6,4 20,12 6,20"/></svg>
+              </div>
+              <div class="audio-info">
+                <div class="audio-label">Voice recording</div>
+                <div class="audio-waveform" id="waveform"></div>
+              </div>
+              <div class="audio-duration">1:24</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /flow -->
+</div><!-- /main -->
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-left">
+    <button class="btn btn-danger">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+      Delete
+    </button>
+    <button class="btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="5" x="2" y="4" rx="2"/><path d="M4 9v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9"/><path d="M10 13h4"/></svg>
+      Archive
+    </button>
+  </div>
+  <div class="footer-right">
+    <button class="btn btn-primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      Save & Route
+    </button>
+    <button class="btn btn-complete">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+      Complete
+    </button>
+  </div>
+</footer>
+
+<div class="layout-label"><strong>Option D v2</strong> &mdash; Guided flow &bull; subtle re-route &bull; notes as primary content &bull; audio player</div>
+
+<script>
+// Activity rail toggle
+function toggleRail() {
+  const rail = document.getElementById('activityRail');
+  rail.classList.toggle('expanded');
+  document.body.classList.toggle('rail-open');
+}
+
+// Destination floating menu
+function toggleDestMenu(badge) {
+  const pop = badge.querySelector('.dest-popover');
+  pop.classList.toggle('open');
+}
+
+function pickDest(e, option, name, color) {
+  e.stopPropagation();
+  const badge = option.closest('.dest-badge');
+  const pop = badge.querySelector('.dest-popover');
+
+  // Update active state
+  pop.querySelectorAll('.dest-option').forEach(o => o.classList.remove('active'));
+  option.classList.add('active');
+
+  // Update badge text and color
+  const label = name.charAt(0).toUpperCase() + name.slice(1);
+  badge.childNodes[2].textContent = ' ' + label + ' ';
+  badge.querySelector('.dot').style.background = color;
+  badge.style.borderColor = color + '40';
+  badge.style.background = color + '14';
+  badge.style.color = color;
+
+  pop.classList.remove('open');
+}
+
+// Close dest popover when clicking outside
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.dest-badge')) {
+    document.querySelectorAll('.dest-popover').forEach(p => p.classList.remove('open'));
+  }
+});
+
+// Generate waveform bars
+(function() {
+  const wf = document.getElementById('waveform');
+  if (!wf) return;
+  const heights = [6,10,14,8,16,12,18,10,14,20,16,12,8,14,18,10,6,12,16,14,10,18,8,12,16,20,14,10,8,12];
+  heights.forEach((h, i) => {
+    const bar = document.createElement('div');
+    bar.className = 'audio-bar' + (i < 10 ? ' played' : '');
+    bar.style.height = h + 'px';
+    wf.appendChild(bar);
+  });
+})();
+</script>
+</body>
+</html>

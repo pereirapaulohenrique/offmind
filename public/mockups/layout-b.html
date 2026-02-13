@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option B: 3-Column Balanced — OffMind Item Detail</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-base: #1a1614;
+    --bg-card: #1e1b18;
+    --bg-elevated: #252220;
+    --bg-hover: rgba(255,255,255,0.05);
+    --border: rgba(255,255,255,0.06);
+    --border-hover: rgba(255,255,255,0.12);
+    --accent: #c2410c;
+    --accent-dim: rgba(194,65,12,0.15);
+    --accent-border: rgba(194,65,12,0.3);
+    --text-primary: #f5f5f5;
+    --text-secondary: #a3a3a3;
+    --text-muted: #737373;
+    --blue: #6daef7;
+    --amber: #f0b429;
+    --green: #3dd68c;
+    --backlog: #60a5fa;
+    --reference: #a78bfa;
+    --incubating: #fbbf24;
+    --someday: #6b7280;
+    --questions: #f472b6;
+    --waiting: #fb923c;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --radius-full: 9999px;
+    --shadow: 0 8px 32px rgba(20,14,10,0.5);
+  }
+
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--bg-base);
+    color: var(--text-primary);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Nav between mockups */
+  .mockup-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 16px;
+    background: rgba(26,22,20,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .mockup-nav span { color: var(--text-muted); margin-right: 4px; }
+  .mockup-nav a {
+    color: var(--text-secondary); text-decoration: none;
+    padding: 4px 12px; border-radius: var(--radius-full);
+    border: 1px solid var(--border); transition: all 0.15s;
+  }
+  .mockup-nav a:hover { border-color: var(--border-hover); color: var(--text-primary); background: var(--bg-hover); }
+  .mockup-nav a.active { background: var(--accent-dim); border-color: var(--accent-border); color: var(--accent); }
+
+  /* Header */
+  .header {
+    position: fixed; top: 37px; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 24px;
+    background: rgba(26,22,20,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--text-secondary); font-size: 13px;
+    text-decoration: none; padding: 6px 12px;
+    border-radius: var(--radius-sm); transition: all 0.15s;
+  }
+  .back-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .back-btn svg { width: 14px; height: 14px; }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .layer-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 4px 10px; border-radius: var(--radius-full);
+  }
+  .layer-badge.process { background: rgba(240,180,41,0.12); color: var(--amber); border: 1px solid rgba(240,180,41,0.2); }
+  .save-status { font-size: 11px; color: var(--text-muted); }
+  .save-status::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--green); margin-right: 6px; }
+
+  /* 3-column layout */
+  .container {
+    margin-top: 90px;
+    margin-bottom: 64px;
+    padding: 0 20px;
+    min-height: calc(100vh - 154px);
+  }
+
+  /* Title area spans full width */
+  .title-area {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 24px 0 16px;
+  }
+  .title-input {
+    width: 100%;
+    font-size: 24px; font-weight: 600;
+    color: var(--text-primary);
+    background: transparent; border: none; outline: none;
+    padding: 0; line-height: 1.3; margin-bottom: 8px;
+  }
+  .meta-line {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    font-size: 11px; color: var(--text-muted);
+  }
+  .meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted); }
+  .source-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: var(--radius-full);
+    background: rgba(255,255,255,0.04); font-size: 10px; color: var(--text-muted);
+  }
+
+  .columns {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 22% 1fr 30%;
+    gap: 20px;
+    align-items: start;
+  }
+
+  /* Column cards */
+  .col-section {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.015);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .col-section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px;
+    cursor: pointer; user-select: none;
+    transition: background 0.15s;
+  }
+  .col-section-header:hover { background: var(--bg-hover); }
+  .col-section-title {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-muted);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .col-section-title svg { width: 13px; height: 13px; }
+  .col-section-chevron {
+    width: 14px; height: 14px; color: var(--text-muted);
+    transition: transform 0.2s;
+  }
+  .col-section-chevron.collapsed { transform: rotate(-90deg); }
+  .col-section-body { padding: 0 16px 14px; }
+  .col-section-body.collapsed { display: none; }
+
+  .field { margin-bottom: 12px; }
+  .field:last-child { margin-bottom: 0; }
+  .field-label {
+    display: block; font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text-muted); margin-bottom: 5px;
+  }
+  .field-input, .field-select {
+    width: 100%; padding: 7px 10px;
+    font-size: 12px; color: var(--text-primary);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    outline: none; transition: border-color 0.15s;
+    font-family: inherit;
+  }
+  .field-input:focus, .field-select:focus { border-color: rgba(194,65,12,0.4); }
+  .field-select { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; padding-right: 28px; }
+  .field-select option { background: var(--bg-elevated); color: var(--text-primary); }
+
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between; padding: 6px 0;
+  }
+  .toggle-label { font-size: 12px; color: var(--text-secondary); }
+  .toggle {
+    width: 36px; height: 20px; border-radius: 10px;
+    background: rgba(255,255,255,0.08); position: relative; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .toggle::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--text-secondary); transition: all 0.2s;
+  }
+  .toggle.on { background: var(--accent); }
+  .toggle.on::after { left: 18px; background: white; }
+
+  /* Destination buttons */
+  .dest-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 5px 10px; font-size: 11px; font-weight: 500;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text-secondary); cursor: pointer;
+    transition: all 0.15s; margin: 2px;
+  }
+  .dest-btn:hover { border-color: var(--border-hover); background: var(--bg-hover); color: var(--text-primary); }
+  .dest-btn.active { border-color: var(--backlog); background: rgba(96,165,250,0.1); color: var(--backlog); }
+  .dest-grid { display: flex; flex-wrap: wrap; gap: 0; }
+
+  /* Center column */
+  .center-col { min-width: 0; }
+
+  .notes-label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 8px;
+  }
+  .notes-area {
+    width: 100%; min-height: 280px;
+    padding: 16px; font-size: 14px; line-height: 1.7;
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    outline: none; resize: vertical; font-family: inherit;
+    transition: border-color 0.15s;
+  }
+  .notes-area:focus { border-color: rgba(194,65,12,0.3); }
+
+  .content-section {
+    margin-top: 16px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.015);
+  }
+  .content-section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px;
+  }
+  .content-section-title {
+    font-size: 12px; font-weight: 600; color: var(--text-secondary);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .content-section-title svg { width: 14px; height: 14px; color: var(--text-muted); }
+  .add-btn {
+    font-size: 11px; color: var(--accent); background: none; border: none;
+    cursor: pointer; padding: 4px 8px; border-radius: var(--radius-sm);
+    transition: background 0.15s;
+  }
+  .add-btn:hover { background: var(--accent-dim); }
+  .content-section-body { padding: 0 16px 14px; }
+
+  .subtask {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
+  }
+  .subtask:last-child { border-bottom: none; }
+  .subtask-check {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.15);
+    cursor: pointer; flex-shrink: 0; transition: all 0.15s;
+  }
+  .subtask-check:hover { border-color: var(--accent); }
+  .subtask-check.done { background: var(--green); border-color: var(--green); }
+  .subtask-text { font-size: 13px; color: var(--text-primary); }
+  .subtask-text.done { text-decoration: line-through; color: var(--text-muted); }
+
+  .linked-page {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .linked-page:hover { border-color: var(--border-hover); background: var(--bg-hover); }
+  .linked-page svg { width: 16px; height: 16px; color: var(--text-muted); }
+  .linked-page-text { font-size: 13px; color: var(--text-secondary); }
+
+  /* Right column — sticky */
+  .right-col {
+    position: sticky;
+    top: 100px;
+    max-height: calc(100vh - 170px);
+    overflow-y: auto;
+  }
+  .right-col::-webkit-scrollbar { width: 4px; }
+  .right-col::-webkit-scrollbar-track { background: transparent; }
+  .right-col::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
+
+  /* Relations */
+  .relation-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
+    font-size: 12px; color: var(--text-secondary);
+    cursor: pointer; transition: color 0.15s;
+  }
+  .relation-item:hover { color: var(--text-primary); }
+  .relation-item:last-child { border-bottom: none; }
+  .relation-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Attachments */
+  .attachments-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+  }
+  .attachment-thumb {
+    aspect-ratio: 1; border-radius: var(--radius-md);
+    background: rgba(255,255,255,0.04);
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border); color: var(--text-muted);
+    font-size: 10px; cursor: pointer; transition: border-color 0.15s;
+  }
+  .attachment-thumb:hover { border-color: var(--border-hover); }
+
+  /* Activity Timeline */
+  .timeline-section {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.015);
+    margin-bottom: 12px;
+  }
+  .timeline-header {
+    padding: 12px 16px;
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-muted);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .timeline-header svg { width: 13px; height: 13px; }
+  .timeline-body { padding: 0 16px 14px; }
+
+  .activity-entry {
+    display: flex; gap: 10px; padding: 8px 0;
+    font-size: 11px;
+  }
+  .activity-dot-col {
+    display: flex; flex-direction: column; align-items: center; padding-top: 4px;
+  }
+  .activity-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .activity-line { width: 1px; flex: 1; background: var(--border); margin-top: 4px; }
+  .activity-content { flex: 1; }
+  .activity-text { color: var(--text-secondary); line-height: 1.4; }
+  .activity-text strong { color: var(--text-primary); font-weight: 600; }
+  .activity-time { color: var(--text-muted); font-size: 10px; margin-top: 2px; }
+  .activity-note {
+    margin-top: 4px; padding: 6px 10px;
+    background: rgba(255,255,255,0.03);
+    border-radius: var(--radius-sm);
+    font-size: 11px; color: var(--text-muted); font-style: italic;
+  }
+
+  /* Footer */
+  .footer {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 24px;
+    background: rgba(26,22,20,0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+  }
+  .footer-left { display: flex; gap: 8px; }
+  .footer-right { display: flex; gap: 8px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; font-size: 12px; font-weight: 500;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text-secondary); cursor: pointer;
+    transition: all 0.15s; font-family: inherit;
+  }
+  .btn:hover { border-color: var(--border-hover); background: var(--bg-hover); color: var(--text-primary); }
+  .btn svg { width: 14px; height: 14px; }
+  .btn-danger:hover { border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.08); color: #ef4444; }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
+  .btn-primary:hover { background: #a83709; border-color: #a83709; }
+  .btn-complete { background: rgba(61,214,140,0.1); border-color: rgba(61,214,140,0.25); color: var(--green); }
+  .btn-complete:hover { background: rgba(61,214,140,0.18); }
+
+  /* Layout label */
+  .layout-label {
+    position: fixed; bottom: 72px; left: 50%; transform: translateX(-50%);
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    padding: 6px 16px; border-radius: var(--radius-full);
+    font-size: 11px; color: var(--text-muted); z-index: 50;
+    box-shadow: var(--shadow);
+  }
+  .layout-label strong { color: var(--accent); }
+
+  /* Column headers (visual anchors) */
+  .col-heading {
+    font-size: 9px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--text-muted);
+    padding: 0 0 10px; margin-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .col-heading svg { width: 12px; height: 12px; opacity: 0.5; }
+</style>
+</head>
+<body>
+
+<!-- Mockup Navigation -->
+<nav class="mockup-nav">
+  <span>Layouts:</span>
+  <a href="layout-a.html">A: Sidebar + Main</a>
+  <a href="layout-b.html" class="active">B: 3-Column</a>
+  <a href="layout-c.html">C: Top Meta + Content</a>
+  <a href="layout-d.html">D: Guided Flow</a>
+</nav>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-left">
+    <a href="#" class="back-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+      Back to Backlog
+    </a>
+  </div>
+  <div class="header-right">
+    <span class="layer-badge process">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v18M3 12h18"/></svg>
+      Process
+    </span>
+    <span class="save-status">Up to date</span>
+  </div>
+</header>
+
+<div class="container">
+  <!-- Title (full-width) -->
+  <div class="title-area">
+    <input class="title-input" value="Research competitor pricing models for Q3 strategy" />
+    <div class="meta-line">
+      <span class="source-badge">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10"/></svg>
+        web
+      </span>
+      <span class="meta-dot"></span>
+      <span>Created Feb 10, 1:42 PM</span>
+    </div>
+  </div>
+
+  <!-- 3-Column Grid -->
+  <div class="columns">
+
+    <!-- LEFT: Schedule + Organization (WHEN and WHERE) -->
+    <div class="left-col">
+      <div class="col-heading">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+        When & Where
+      </div>
+
+      <!-- Schedule -->
+      <div class="col-section">
+        <div class="col-section-header" onclick="toggleSection(this)">
+          <span class="col-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+            Schedule
+          </span>
+          <svg class="col-section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+        <div class="col-section-body">
+          <div class="field">
+            <label class="field-label">Date & Time</label>
+            <input type="datetime-local" class="field-input" value="2026-02-14T10:00">
+          </div>
+          <div class="field">
+            <label class="field-label">Duration</label>
+            <input type="number" class="field-input" value="30" placeholder="min" min="0" step="5">
+          </div>
+          <div class="field">
+            <label class="field-label">Recurrence</label>
+            <select class="field-select">
+              <option>None</option><option>Daily</option><option>Weekdays</option>
+              <option selected>Weekly</option><option>Biweekly</option><option>Monthly</option>
+            </select>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">All-day</span>
+            <div class="toggle" onclick="this.classList.toggle('on')"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Organization -->
+      <div class="col-section">
+        <div class="col-section-header" onclick="toggleSection(this)">
+          <span class="col-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 2 2v7.5a.5.5 0 0 1-.5.5h-18a.5.5 0 0 1-.5-.5V14z"/><path d="M6 14V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v10"/></svg>
+            Organization
+          </span>
+          <svg class="col-section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+        <div class="col-section-body">
+          <div class="field">
+            <label class="field-label">Space</label>
+            <select class="field-select">
+              <option>None</option><option selected>Work</option>
+              <option>Personal</option><option>Side Projects</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">Project</label>
+            <select class="field-select">
+              <option>None</option><option selected>Market Analysis</option>
+              <option>Product Launch</option><option>Hiring Q3</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Backlog-specific (Priority, Effort) -->
+      <div class="col-section">
+        <div class="col-section-header" onclick="toggleSection(this)">
+          <span class="col-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>
+            Backlog Fields
+          </span>
+          <svg class="col-section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+        <div class="col-section-body">
+          <div class="field">
+            <label class="field-label">Priority</label>
+            <select class="field-select">
+              <option>None</option><option>Urgent</option>
+              <option selected>High</option><option>Medium</option><option>Low</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">Effort</label>
+            <select class="field-select">
+              <option>Trivial</option><option>Small</option>
+              <option selected>Medium</option><option>Large</option><option>Epic</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER: Work Area (the CONTENT) -->
+    <div class="center-col">
+      <div class="col-heading">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.855z"/></svg>
+        Work Area
+      </div>
+
+      <!-- Notes -->
+      <div class="notes-label">Notes</div>
+      <textarea class="notes-area" placeholder="Add notes...">Need to analyze at least 5 direct competitors in the B2B SaaS productivity space:
+
+1. Todoist Business ($6/user/mo) - per-seat, annual discount
+2. Things 3 ($49.99 one-time) - no subscription model
+3. TickTick Premium ($35.99/yr) - annual only, aggressive pricing
+4. Notion ($10/seat/mo) - workspace model, higher tier for teams
+5. Asana Premium ($10.99/user/mo) - per-seat, usage-based tiers
+
+Key questions to answer:
+- What's the sweet spot price for a single-user pro tier?
+- Do competitors offer monthly AND annual billing?
+- What features gate the upgrade from free to pro?
+- How do they handle team/workspace pricing vs. individual?
+
+Our current positioning: $9/mo pro feels competitive but may need annual discount option. Consider $7/mo annual ($84/yr) vs $9/mo monthly.</textarea>
+
+      <!-- Linked Page -->
+      <div class="content-section">
+        <div class="content-section-header">
+          <span class="content-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+            Linked Page
+          </span>
+          <button class="add-btn">+ Create Page</button>
+        </div>
+        <div class="content-section-body">
+          <div class="linked-page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 13H8"/><path d="M16 17H8"/><path d="M16 9H8"/></svg>
+            <span class="linked-page-text">Q3 Pricing Strategy Analysis</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subtasks -->
+      <div class="content-section">
+        <div class="content-section-header">
+          <span class="content-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+            Subtasks
+            <span style="font-weight: 400; color: var(--text-muted);">1 / 3</span>
+          </span>
+          <button class="add-btn">+ Add</button>
+        </div>
+        <div class="content-section-body">
+          <div class="subtask">
+            <div class="subtask-check done"></div>
+            <span class="subtask-text done">List all direct competitors and their pricing pages</span>
+          </div>
+          <div class="subtask">
+            <div class="subtask-check" onclick="this.classList.toggle('done'); this.nextElementSibling.classList.toggle('done')"></div>
+            <span class="subtask-text">Create comparison spreadsheet with feature tiers</span>
+          </div>
+          <div class="subtask">
+            <div class="subtask-check" onclick="this.classList.toggle('done'); this.nextElementSibling.classList.toggle('done')"></div>
+            <span class="subtask-text">Draft pricing recommendation memo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Workflow + Relations + Activity (sticky rail) -->
+    <div class="right-col">
+      <div class="col-heading">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        Workflow & Context
+      </div>
+
+      <!-- Destination -->
+      <div class="col-section">
+        <div class="col-section-header" onclick="toggleSection(this)">
+          <span class="col-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 18-5v12L3 13v-2z"/></svg>
+            Destination
+          </span>
+          <svg class="col-section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+        <div class="col-section-body">
+          <div class="dest-grid">
+            <button class="dest-btn active">Backlog</button>
+            <button class="dest-btn">Reference</button>
+            <button class="dest-btn">Incubating</button>
+            <button class="dest-btn">Someday</button>
+            <button class="dest-btn">Questions</button>
+            <button class="dest-btn">Waiting</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Relations -->
+      <div class="col-section">
+        <div class="col-section-header">
+          <span class="col-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            Relations
+          </span>
+          <button class="add-btn">+ Add link</button>
+        </div>
+        <div class="col-section-body">
+          <div class="relation-item">
+            <span class="relation-dot" style="background: var(--amber)"></span>
+            Gather competitive intelligence data
+          </div>
+          <div class="relation-item">
+            <span class="relation-dot" style="background: var(--blue)"></span>
+            Review pricing benchmarks 2025
+          </div>
+        </div>
+      </div>
+
+      <!-- Attachments -->
+      <div class="col-section">
+        <div class="col-section-header">
+          <span class="col-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+            Attachments
+          </span>
+          <button class="add-btn">+ Upload</button>
+        </div>
+        <div class="col-section-body">
+          <div class="attachments-grid">
+            <div class="attachment-thumb">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+            </div>
+            <div class="attachment-thumb">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Timeline (scrollable rail) -->
+      <div class="timeline-section">
+        <div class="timeline-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+          Activity
+        </div>
+        <div class="timeline-body">
+          <div class="activity-entry">
+            <div class="activity-dot-col">
+              <div class="activity-dot" style="background: var(--amber)"></div>
+              <div class="activity-line"></div>
+            </div>
+            <div class="activity-content">
+              <div class="activity-text">Routed to <strong>Backlog</strong></div>
+              <div class="activity-time">Feb 10, 2:15 PM</div>
+              <div class="activity-note">"High priority for Q3 planning cycle"</div>
+            </div>
+          </div>
+          <div class="activity-entry">
+            <div class="activity-dot-col">
+              <div class="activity-dot" style="background: var(--green)"></div>
+              <div class="activity-line"></div>
+            </div>
+            <div class="activity-content">
+              <div class="activity-text">Scheduled for <strong>Feb 14, 10:00 AM</strong></div>
+              <div class="activity-time">Feb 10, 2:16 PM</div>
+            </div>
+          </div>
+          <div class="activity-entry">
+            <div class="activity-dot-col">
+              <div class="activity-dot" style="background: rgba(255,255,255,0.15)"></div>
+              <div class="activity-line"></div>
+            </div>
+            <div class="activity-content">
+              <div class="activity-text">Space changed to <strong>Work</strong></div>
+              <div class="activity-time">Feb 10, 2:14 PM</div>
+            </div>
+          </div>
+          <div class="activity-entry">
+            <div class="activity-dot-col">
+              <div class="activity-dot" style="background: var(--blue)"></div>
+            </div>
+            <div class="activity-content">
+              <div class="activity-text">Created via <strong>web</strong></div>
+              <div class="activity-time">Feb 10, 1:42 PM</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /columns -->
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-left">
+    <button class="btn btn-danger">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+      Delete
+    </button>
+    <button class="btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="5" x="2" y="4" rx="2"/><path d="M4 9v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9"/><path d="M10 13h4"/></svg>
+      Archive
+    </button>
+  </div>
+  <div class="footer-right">
+    <button class="btn btn-primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      Save & Route
+    </button>
+    <button class="btn btn-complete">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+      Complete
+    </button>
+  </div>
+</footer>
+
+<div class="layout-label"><strong>Option B</strong> &mdash; 3-Column (22% / 48% / 30%) &mdash; When&Where | Work Area | Workflow&Context</div>
+
+<script>
+function toggleSection(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.col-section-chevron');
+  body.classList.toggle('collapsed');
+  chevron.classList.toggle('collapsed');
+}
+</script>
+</body>
+</html>

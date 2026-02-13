@@ -16,7 +16,6 @@ import {
   Play,
   ImageIcon,
   Volume2,
-  ChevronRight,
   MoreHorizontal,
   Sparkles,
   ChevronDown,
@@ -48,7 +47,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { SubtasksList } from '@/components/item-detail/SubtasksList';
 import { LinkedPageSection } from '@/components/item-detail/LinkedPageSection';
 import { ItemRelationsSection } from '@/components/item-detail/ItemRelationsSection';
-import { ItemActivityTimeline } from '@/components/item-detail/ItemActivityTimeline';
+import { ActivityRail } from '@/components/item-detail/ActivityRail';
 import { ChipsRow } from '@/components/item-detail/ChipsRow';
 import type {
   Item,
@@ -147,7 +146,15 @@ const DESTINATION_FIELDS: Record<
   ],
 };
 
-const SCHEDULE_RELEVANT_SLUGS = ['backlog', 'commit'];
+const DEST_COLORS: Record<string, string> = {
+  backlog: '#60a5fa',
+  reference: '#a78bfa',
+  incubating: '#fbbf24',
+  someday: '#6b7280',
+  questions: '#f472b6',
+  waiting: '#fb923c',
+  trash: '#ef4444',
+};
 
 // ---------------------------------------------------------------------------
 // Spring animation presets
@@ -301,31 +308,6 @@ function AudioPlayer({
 }
 
 // ---------------------------------------------------------------------------
-// Inline: CollapsibleSection
-// ---------------------------------------------------------------------------
-
-function CollapsibleSection({ title, defaultOpen = true, children }: {
-  title: string;
-  defaultOpen?: boolean;
-  children: React.ReactNode;
-}) {
-  const [open, setOpen] = useState(defaultOpen);
-  return (
-    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02]">
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between px-4 py-3 text-xs font-semibold uppercase tracking-widest text-neutral-500 hover:text-neutral-300 transition-colors"
-      >
-        {title}
-        <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", open && "rotate-180")} />
-      </button>
-      {open && <div className="px-4 pb-4 space-y-3">{children}</div>}
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
@@ -341,28 +323,6 @@ interface ItemDetailClientProps {
 }
 
 type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
-
-// ---------------------------------------------------------------------------
-// Layer badge helpers
-// ---------------------------------------------------------------------------
-
-const LAYER_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  capture: {
-    label: 'Capture',
-    color: 'text-blue-400',
-    bg: 'bg-blue-500/10 border-blue-500/20',
-  },
-  process: {
-    label: 'Process',
-    color: 'text-amber-400',
-    bg: 'bg-amber-500/10 border-amber-500/20',
-  },
-  commit: {
-    label: 'Commit',
-    color: 'text-emerald-400',
-    bg: 'bg-emerald-500/10 border-emerald-500/20',
-  },
-};
 
 // ---------------------------------------------------------------------------
 // Component
@@ -458,10 +418,8 @@ export function ItemDetailClient({
       return [];
     }
   })();
-  const showScheduleSection =
-    SCHEDULE_RELEVANT_SLUGS.includes(destinationSlug) || Boolean(scheduledAt);
   const showWaitingSection = destinationSlug === 'waiting';
-  const layerConfig = LAYER_CONFIG[item.layer] ?? LAYER_CONFIG.capture;
+  const destColor = DEST_COLORS[destinationSlug] || '#a3a3a3';
 
   // Parse attachments
   const attachments: Attachment[] = (() => {
@@ -475,16 +433,6 @@ export function ItemDetailClient({
   })();
   const imageAttachments = attachments.filter((a) => a.type === 'image');
   const audioAttachments = attachments.filter((a) => a.type === 'audio');
-
-  // Breadcrumb destination name
-  const breadcrumbDestName = (() => {
-    if (item.destination_id) {
-      const dest = destinations.find((d) => d.id === item.destination_id);
-      return dest?.name ?? 'Items';
-    }
-    if (item.layer === 'capture') return 'Inbox';
-    return 'Items';
-  })();
 
   // ---- Cleanup on unmount ----
   useEffect(() => {
@@ -1225,29 +1173,6 @@ export function ItemDetailClient({
 
   // ---- Render helpers ----
 
-  const renderSaveIndicator = () => {
-    if (saveStatus === 'saving') {
-      return (
-        <span className="flex items-center gap-1.5 text-xs text-orange-400/80">
-          <Loader2 className="h-3 w-3 animate-spin" />
-          Saving…
-        </span>
-      );
-    }
-    if (saveStatus === 'saved') {
-      return (
-        <span className="flex items-center gap-1.5 text-xs text-emerald-400/80">
-          <CheckCircle2 className="h-3 w-3" />
-          Saved
-        </span>
-      );
-    }
-    if (saveStatus === 'error') {
-      return <span className="text-xs text-red-400/80">Save failed</span>;
-    }
-    return <span className="text-xs text-neutral-600">Up to date</span>;
-  };
-
   const renderBuiltInField = (
     field: (typeof builtInFields)[number],
   ) => {
@@ -1485,7 +1410,7 @@ export function ItemDetailClient({
   };
 
   // ===================================================================
-  // RENDER — Centered single-column layout
+  // RENDER — Single-column guided flow + Activity Rail
   // ===================================================================
 
   const DestIcon = selectedDestination
@@ -1500,9 +1425,13 @@ export function ItemDetailClient({
         transition={springTransition}
         className="flex h-full flex-col"
       >
+        {/* ── Activity Rail (left edge, desktop only) ──────────── */}
+        <ActivityRail itemId={item.id} />
+
         {/* ── Scrollable content ─────────────────────────────────── */}
         <div className="flex-1 overflow-y-auto">
-          <div className="mx-auto max-w-7xl px-6 py-8 lg:px-10">
+          <div className="flex justify-center px-6 py-8 lg:ml-[44px]">
+            <div className="w-full max-w-[680px]">
 
             {/* ── Header: back + layer badge + save ─────────────────── */}
             <div className="flex items-center justify-between mb-6">
@@ -1511,7 +1440,6 @@ export function ItemDetailClient({
                 Back
               </button>
               <div className="flex items-center gap-3">
-                {/* Layer badge - MOVED from meta line */}
                 <span className={cn(
                   'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider',
                   item.layer === 'capture' && 'border-blue-500/20 bg-blue-500/10 text-blue-400',
@@ -1521,7 +1449,6 @@ export function ItemDetailClient({
                   {item.layer === 'capture' ? 'Capture' : item.layer === 'process' ? 'Process' : 'Commit'}
                 </span>
                 <span className="text-neutral-700">&middot;</span>
-                {/* Save indicator */}
                 <span className={cn(
                   'text-xs',
                   saveStatus === 'saving' && 'text-neutral-500',
@@ -1534,10 +1461,10 @@ export function ItemDetailClient({
               </div>
             </div>
 
-            {/* ── Content ─────────────────────────────────────────── */}
+            {/* ── Guided flow ─────────────────────────────────────── */}
             <div className="space-y-5">
 
-              {/* ── Title (full width) ────────────────────────────── */}
+              {/* ── 1. Title + Meta ────────────────────────────────── */}
               <div>
                 <Input
                   value={title}
@@ -1550,13 +1477,11 @@ export function ItemDetailClient({
                   )}
                 />
 
-                {/* ── Meta line ──────────────────────────────────────── */}
-                <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-500 mt-4">
-                  {recurrence && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 text-[10px] font-semibold text-purple-400">
-                      ↻ {recurrence === 'weekdays' ? 'Weekdays' : recurrence.charAt(0).toUpperCase() + recurrence.slice(1)}
-                    </span>
-                  )}
+                <div className="flex flex-wrap items-center gap-2 text-xs text-neutral-500 mt-3">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 text-[10px] text-purple-400">
+                    <Sparkles className="h-2.5 w-2.5" />
+                    AI title
+                  </span>
 
                   {item.source && (
                     <>
@@ -1585,7 +1510,50 @@ export function ItemDetailClient({
                 </div>
               </div>
 
-              {/* ── ChipsRow ─────────────────────────────────────── */}
+              {/* ── 2. Destination badge (subtle, click to re-route) ── */}
+              <div className="flex items-center gap-2.5">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors hover:opacity-80"
+                      style={{
+                        borderColor: `${destColor}40`,
+                        background: `${destColor}14`,
+                        color: destColor,
+                      }}
+                    >
+                      <span className="h-1.5 w-1.5 rounded-full" style={{ background: destColor }} />
+                      {selectedDestination?.name || 'No destination'}
+                      <ChevronDown className="h-2.5 w-2.5 opacity-50" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-48">
+                    {destinations
+                      .slice()
+                      .sort((a, b) => a.sort_order - b.sort_order)
+                      .map((dest) => {
+                        const Icon = ICON_MAP[dest.icon] || ICON_MAP['inbox'];
+                        const isActive = destinationId === dest.id;
+                        const dColor = DEST_COLORS[dest.slug] || '#a3a3a3';
+                        return (
+                          <DropdownMenuItem
+                            key={dest.id}
+                            onClick={() => handleDestinationChange(dest.id)}
+                            className={cn('gap-2 text-xs py-1.5', isActive && 'font-medium')}
+                          >
+                            <span className="h-2 w-2 rounded-full flex-shrink-0" style={{ background: dColor }} />
+                            <span className="flex-1">{dest.name}</span>
+                            {isActive && <CheckCircle2 className="h-3 w-3 ml-auto opacity-60" />}
+                          </DropdownMenuItem>
+                        );
+                      })}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <span className="text-[10px] text-neutral-600">click to re-route</span>
+              </div>
+
+              {/* ── 3. Property chips ──────────────────────────────── */}
               <ChipsRow
                 customValues={customValues}
                 onCustomValueChange={handleCustomValueChange}
@@ -1601,548 +1569,288 @@ export function ItemDetailClient({
                 spaceId={spaceId}
                 spaces={spaces}
                 onSpaceChange={handleSpaceChange}
+                projectId={projectId}
+                projects={projects}
+                onProjectChange={handleProjectChange}
+                effort={(customValues?.effort as string) || ''}
+                onEffortChange={(val) => handleCustomValueChange('effort', val || null)}
+                isAllDay={isAllDay}
+                onAllDayToggle={handleAllDayToggle}
               />
 
-              {/* ── 3-Column Grid ─────────────────────────────────── */}
-              <div className="grid grid-cols-1 lg:grid-cols-[25%_1fr_30%] gap-6">
+              {/* ── 4. Notes (primary content — no label, prominent) ── */}
+              <textarea
+                ref={textareaRef}
+                value={notes}
+                onChange={(e) => handleNotesChange(e.target.value)}
+                placeholder="Captured thoughts, notes, ideas..."
+                rows={4}
+                className="w-full resize-none bg-transparent border-t border-b border-white/[0.06] py-5 text-[15px] leading-relaxed text-neutral-200 placeholder:text-neutral-600 outline-none focus:border-[#c2410c]/20 transition-colors"
+                style={{ minHeight: '160px' }}
+              />
 
-                {/* ── LEFT COLUMN: Planning ────────────────────────── */}
-                <div className="order-2 lg:order-1 space-y-4">
-
-                  {/* Core Info */}
-                  <CollapsibleSection title="Core Info">
-                    <div className="space-y-3">
-                      <div>
-                        <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest text-neutral-500">Priority</label>
-                        <select value={(customValues?.priority as string) || ''} onChange={(e) => handleCustomValueChange('priority', e.target.value || null)}
-                          className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm text-neutral-200 focus:border-[#c2410c]/50 focus:outline-none">
-                          <option value="">None</option>
-                          <option value="Urgent">Urgent</option>
-                          <option value="High">High</option>
-                          <option value="Medium">Medium</option>
-                          <option value="Low">Low</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest text-neutral-500">Effort</label>
-                        <select value={(customValues?.effort as string) || ''} onChange={(e) => handleCustomValueChange('effort', e.target.value || null)}
-                          className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm text-neutral-200 focus:border-[#c2410c]/50 focus:outline-none">
-                          <option value="">None</option>
-                          <option value="Trivial">Trivial</option>
-                          <option value="Small">Small</option>
-                          <option value="Medium">Medium</option>
-                          <option value="Large">Large</option>
-                          <option value="Epic">Epic</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest text-neutral-500">Duration</label>
-                        <Input type="number" min={0} step={5} value={durationMinutes ?? ''} onChange={(e) => handleDurationChange(e.target.value)} placeholder="minutes"
-                          className="rounded-xl border-white/[0.08] bg-white/[0.03]" />
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <label className="text-[10px] font-semibold uppercase tracking-widest text-neutral-500">All-day</label>
-                        <button type="button" onClick={handleAllDayToggle}
-                          className={cn("h-5 w-9 rounded-full transition-colors", isAllDay ? 'bg-[#c2410c]' : 'bg-white/[0.08]')}>
-                          <span className={cn("block h-3.5 w-3.5 rounded-full bg-white transition-transform ml-0.5", isAllDay && "translate-x-4")} />
-                        </button>
-                      </div>
-                    </div>
-                  </CollapsibleSection>
-
-                  {/* Schedule */}
-                  <CollapsibleSection title="Schedule">
-                    <div className="space-y-3">
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-neutral-400">
-                          Scheduled At
-                        </label>
-                        <Input
-                          type="datetime-local"
-                          value={scheduledAt}
-                          onChange={(e) =>
-                            handleScheduledAtChange(e.target.value)
-                          }
-                          className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]"
-                        />
-                      </div>
-
-                      {scheduledAt && (
-                        <button
-                          type="button"
-                          onClick={() => handleScheduledAtChange('')}
-                          className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
-                        >
-                          Clear schedule
-                        </button>
+              {/* ── 5. Linked Page + AI Draft ──────────────────────── */}
+              <div className="space-y-3">
+                <LinkedPageSection
+                  item={item}
+                  linkedPage={linkedPage}
+                  userId={userId}
+                  destinationSlug={destinationSlug}
+                  onPageCreated={(pageId) => {
+                    const fetchPage = async () => {
+                      const { data } = await supabase
+                        .from('pages')
+                        .select('*')
+                        .eq('id', pageId)
+                        .single();
+                      if (data) setLinkedPage(data as Page);
+                    };
+                    fetchPage();
+                  }}
+                />
+                {!linkedPage && (
+                  <div className="flex justify-end">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={aiDraftLoading}
+                      onClick={handleAIDraftPage}
+                      className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[#c2410c] hover:bg-[#c2410c]/10 hover:text-[#c2410c] h-7 text-xs px-2.5"
+                    >
+                      {aiDraftLoading ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <Sparkles className="h-3.5 w-3.5" />
                       )}
-
-                      {/* Recurrence */}
-                      <div>
-                        <label className="mb-1 block text-xs font-medium text-neutral-500">
-                          Repeat
-                        </label>
-                        <select
-                          value={recurrence}
-                          onChange={(e) => {
-                            setRecurrence(e.target.value);
-                            handleCustomValueChange('recurrence', e.target.value);
-                          }}
-                          className={cn(
-                            'w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm text-neutral-100',
-                            'focus:border-[#c2410c]/40 focus:outline-none focus:ring-1 focus:ring-[#c2410c]/30',
-                          )}
-                        >
-                          <option value="">No repeat</option>
-                          <option value="daily">Daily</option>
-                          <option value="weekdays">Weekdays</option>
-                          <option value="weekly">Weekly</option>
-                          <option value="biweekly">Every 2 weeks</option>
-                          <option value="monthly">Monthly</option>
-                        </select>
-                      </div>
-                    </div>
-                  </CollapsibleSection>
-
-                  {/* Organization */}
-                  <CollapsibleSection title="Organization">
-                    <div className="space-y-3">
-                      {/* Space */}
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-neutral-400">
-                          Space
-                        </label>
-                        <Select
-                          value={spaceId ?? 'none'}
-                          onValueChange={handleSpaceChange}
-                        >
-                          <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
-                            <SelectValue placeholder="No space" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="none">None</SelectItem>
-                            {spaces.map((space) => {
-                              const SpaceIcon = ICON_MAP[space.icon];
-                              return (
-                                <SelectItem key={space.id} value={space.id}>
-                                  <span className="flex items-center gap-2">
-                                    {SpaceIcon && (
-                                      <SpaceIcon className="h-4 w-4" />
-                                    )}
-                                    <span>{space.name}</span>
-                                  </span>
-                                </SelectItem>
-                              );
-                            })}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      {/* Project */}
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-neutral-400">
-                          Project
-                        </label>
-                        <Select
-                          value={projectId ?? 'none'}
-                          onValueChange={handleProjectChange}
-                        >
-                          <SelectTrigger className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]">
-                            <SelectValue placeholder="No project" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="none">None</SelectItem>
-                            {projects
-                              .filter(
-                                (p) =>
-                                  !spaceId ||
-                                  p.space_id === spaceId ||
-                                  p.space_id === null,
-                              )
-                              .map((project) => {
-                                const ProjIcon = ICON_MAP[project.icon];
-                                return (
-                                  <SelectItem
-                                    key={project.id}
-                                    value={project.id}
-                                  >
-                                    <span className="flex items-center gap-2">
-                                      {ProjIcon && (
-                                        <ProjIcon className="h-4 w-4" />
-                                      )}
-                                      <span>{project.name}</span>
-                                    </span>
-                                  </SelectItem>
-                                );
-                              })}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                  </CollapsibleSection>
-
-                  {/* Workflow */}
-                  <CollapsibleSection title="Workflow">
-                    <div className="space-y-3">
-                      {/* Destination row */}
-                      <div className="flex items-center gap-3">
-                        {selectedDestination && DestIcon ? (
-                          <span className="inline-flex items-center gap-2 rounded-full border border-[#c2410c]/30 bg-[#c2410c]/10 px-3 py-1 text-sm font-medium text-[#c2410c]">
-                            <DestIcon className="h-3.5 w-3.5" />
-                            {selectedDestination.name}
-                          </span>
-                        ) : (
-                          <span className="text-sm text-neutral-500">No destination</span>
-                        )}
-
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <button
-                              type="button"
-                              className="ml-auto flex items-center gap-1.5 text-sm text-neutral-400 hover:text-[#c2410c] transition-colors"
-                            >
-                              {selectedDestination
-                                ? 'Move'
-                                : 'Choose'}
-                              <ChevronRight className="h-3.5 w-3.5" />
-                            </button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-52">
-                            {destinations
-                              .slice()
-                              .sort((a, b) => a.sort_order - b.sort_order)
-                              .map((dest) => {
-                                const Icon = ICON_MAP[dest.icon] || ICON_MAP['inbox'];
-                                const isActive = destinationId === dest.id;
-                                return (
-                                  <DropdownMenuItem
-                                    key={dest.id}
-                                    onClick={() => handleDestinationChange(dest.id)}
-                                    className={cn(
-                                      'gap-2',
-                                      isActive && 'text-[#c2410c] font-medium',
-                                    )}
-                                  >
-                                    {Icon && <Icon className="h-4 w-4" />}
-                                    <span className="flex-1">{dest.name}</span>
-                                    {isActive && <CheckCircle2 className="h-3 w-3 ml-auto opacity-60" />}
-                                  </DropdownMenuItem>
-                                );
-                              })}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-
-                      {/* Waiting-specific fields */}
-                      {showWaitingSection && (
-                        <div className="space-y-3">
-                          <div className="relative space-y-1.5">
-                            <label className="text-xs font-medium text-neutral-400">
-                              Waiting For
-                            </label>
-                            <Input
-                              value={waitingFor}
-                              onChange={(e) => {
-                                handleWaitingForChange(e.target.value);
-                                setShowContactSuggestions(true);
-                              }}
-                              onFocus={() => setShowContactSuggestions(true)}
-                              onBlur={() =>
-                                setTimeout(
-                                  () => setShowContactSuggestions(false),
-                                  200,
-                                )
-                              }
-                              placeholder="Person or thing you're waiting on"
-                              className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]"
-                            />
-                            {showContactSuggestions &&
-                              waitingFor &&
-                              contacts &&
-                              contacts.length > 0 &&
-                              (() => {
-                                const filtered = contacts
-                                  .filter((c) =>
-                                    c.name
-                                      .toLowerCase()
-                                      .includes(waitingFor.toLowerCase()),
-                                  )
-                                  .slice(0, 5);
-                                if (filtered.length === 0) return null;
-                                return (
-                                  <div className="absolute top-full left-0 right-0 z-50 mt-1 max-h-36 overflow-y-auto rounded-xl border border-white/[0.08] bg-[#1c1917] shadow-lg">
-                                    {filtered.map((c) => (
-                                      <button
-                                        key={c.id}
-                                        type="button"
-                                        onMouseDown={(e) => e.preventDefault()}
-                                        onClick={() => {
-                                          handleWaitingForChange(c.name);
-                                          setShowContactSuggestions(false);
-                                        }}
-                                        className="w-full text-left px-3 py-2 text-sm text-neutral-300 hover:bg-white/[0.06] transition-colors"
-                                      >
-                                        {c.name}
-                                        {c.email && (
-                                          <span className="ml-2 text-xs text-neutral-500">
-                                            {c.email}
-                                          </span>
-                                        )}
-                                      </button>
-                                    ))}
-                                  </div>
-                                );
-                              })()}
-                          </div>
-                          {item.waiting_since && (
-                            <div className="space-y-1">
-                              <label className="text-xs font-medium text-neutral-400">
-                                Waiting Since
-                              </label>
-                              <p className="text-sm text-neutral-300">
-                                {new Date(item.waiting_since).toLocaleDateString(
-                                  undefined,
-                                  {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                  },
-                                )}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Built-in destination fields + custom fields */}
-                      {(builtInFields.length > 0 || customFieldDefs.length > 0) && (
-                        <div className="space-y-3">
-                          {builtInFields
-                            .filter(
-                              (f) =>
-                                !(showWaitingSection && f.name === 'waiting_for'),
-                            )
-                            .map(renderBuiltInField)}
-                          {customFieldDefs.map(renderCustomField)}
-                        </div>
-                      )}
-
-                      {/* Promote to Backlog (Someday/Maybe only) */}
-                      {destinationSlug === 'someday' && (() => {
-                        const backlogDest = destinations.find((d) => d.slug === 'backlog');
-                        if (!backlogDest) return null;
-                        return (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              handleDestinationChange(backlogDest.id);
-                              toast.success('Promoted to Backlog!');
-                            }}
-                            className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-400 hover:bg-emerald-500/15 transition-colors"
-                          >
-                            Promote to Backlog
-                          </button>
-                        );
-                      })()}
-                    </div>
-                  </CollapsibleSection>
-
-                </div>{/* end LEFT column */}
-
-                {/* ── CENTER COLUMN: Work Area ─────────────────────── */}
-                <div className="order-1 lg:order-2 space-y-5">
-
-                  {/* Notes */}
-                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-neutral-400">
-                      Notes
-                    </label>
-                    <textarea
-                      ref={textareaRef}
-                      value={notes}
-                      onChange={(e) => handleNotesChange(e.target.value)}
-                      placeholder="Add notes..."
-                      rows={3}
-                      className={cn(
-                        'w-full resize-none rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3',
-                        'text-sm leading-relaxed text-neutral-300 placeholder:text-neutral-600',
-                        'outline-none transition-colors',
-                        'focus:border-[#c2410c]/30 focus:bg-white/[0.03]',
-                      )}
-                      style={{ minHeight: '80px' }}
-                    />
+                      {aiDraftLoading ? 'Drafting...' : 'AI Draft'}
+                    </Button>
                   </div>
+                )}
+              </div>
 
-                  {/* Linked Page + AI Draft */}
-                  <div className="space-y-3">
-                    <LinkedPageSection
-                      item={item}
-                      linkedPage={linkedPage}
-                      userId={userId}
-                      destinationSlug={destinationSlug}
-                      onPageCreated={(pageId) => {
-                        const fetchPage = async () => {
-                          const { data } = await supabase
-                            .from('pages')
-                            .select('*')
-                            .eq('id', pageId)
-                            .single();
-                          if (data) setLinkedPage(data as Page);
-                        };
-                        fetchPage();
-                      }}
-                    />
-                    {!linkedPage && (
-                      <div className="flex justify-end">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          disabled={aiDraftLoading}
-                          onClick={handleAIDraftPage}
-                          className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[#c2410c] hover:bg-[#c2410c]/10 hover:text-[#c2410c] h-7 text-xs px-2.5"
-                        >
-                          {aiDraftLoading ? (
-                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                          ) : (
-                            <Sparkles className="h-3.5 w-3.5" />
-                          )}
-                          {aiDraftLoading ? 'Drafting...' : 'AI Draft'}
-                        </Button>
+              {/* ── 6. Subtasks ────────────────────────────────────── */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                    Subtasks
+                  </h3>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={aiSubtasksLoading}
+                    onClick={handleAISuggestSubtasks}
+                    className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[#c2410c] hover:bg-[#c2410c]/10 hover:text-[#c2410c] h-7 text-xs px-2.5"
+                  >
+                    {aiSubtasksLoading ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Sparkles className="h-3.5 w-3.5" />
+                    )}
+                    {aiSubtasksLoading ? 'Thinking...' : 'AI Suggest'}
+                  </Button>
+                </div>
+                <SubtasksList
+                  itemId={item.id}
+                  initialSubtasks={initialSubtasks}
+                  userId={userId}
+                  onPromoteSubtask={async (subtaskTitle) => {
+                    try {
+                      const { data, error } = await supabase
+                        .from('items')
+                        .insert({
+                          user_id: userId,
+                          title: subtaskTitle,
+                          destination_id: destinationId,
+                          space_id: spaceId,
+                          project_id: projectId,
+                          layer: destinationId ? 'process' : 'capture',
+                        })
+                        .select('id')
+                        .single();
+
+                      if (error) throw error;
+                      toast.success(`"${subtaskTitle}" promoted to item`);
+                      if (data) {
+                        router.push(`/items/${data.id}`);
+                      }
+                    } catch {
+                      toast.error('Failed to promote subtask');
+                    }
+                  }}
+                />
+              </div>
+
+              {/* ── 7. Relations + Attachments (equal-size grid) ───── */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Relations */}
+                <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] min-h-[180px] flex flex-col">
+                  <div className="px-4 py-3 border-b border-white/[0.06]">
+                    <span className="text-xs font-semibold uppercase tracking-widest text-neutral-500">Relations</span>
+                  </div>
+                  <div className="flex-1 px-4 py-3">
+                    <ItemRelationsSection itemId={item.id} userId={userId} />
+                  </div>
+                </div>
+
+                {/* Attachments */}
+                <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] min-h-[180px] flex flex-col">
+                  <div className="px-4 py-3 border-b border-white/[0.06]">
+                    <span className="text-xs font-semibold uppercase tracking-widest text-neutral-500">Attachments</span>
+                  </div>
+                  <div className="flex-1 px-4 py-3 space-y-3">
+                    {imageAttachments.length > 0 && (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-1.5 text-[10px] text-neutral-500">
+                          <ImageIcon className="h-3 w-3" />
+                          <span>
+                            {imageAttachments.length} image{imageAttachments.length !== 1 ? 's' : ''}
+                          </span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {imageAttachments.map((att) => (
+                            <button
+                              key={att.id}
+                              type="button"
+                              onClick={() => setLightboxSrc(att.url)}
+                              className="group relative overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.03] transition-all hover:border-white/[0.16] cursor-zoom-in"
+                            >
+                              <img
+                                src={att.url}
+                                alt={att.filename}
+                                className="h-16 w-20 object-cover transition-transform duration-200 group-hover:scale-105"
+                              />
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     )}
-                  </div>
-
-                  {/* Subtasks */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
-                        Subtasks
-                      </h3>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={aiSubtasksLoading}
-                        onClick={handleAISuggestSubtasks}
-                        className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[#c2410c] hover:bg-[#c2410c]/10 hover:text-[#c2410c] h-7 text-xs px-2.5"
-                      >
-                        {aiSubtasksLoading ? (
-                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                        ) : (
-                          <Sparkles className="h-3.5 w-3.5" />
-                        )}
-                        {aiSubtasksLoading ? 'Thinking...' : 'AI Suggest'}
-                      </Button>
-                    </div>
-                    <SubtasksList
-                      itemId={item.id}
-                      initialSubtasks={initialSubtasks}
-                      userId={userId}
-                      onPromoteSubtask={async (subtaskTitle) => {
-                        try {
-                          const { data, error } = await supabase
-                            .from('items')
-                            .insert({
-                              user_id: userId,
-                              title: subtaskTitle,
-                              destination_id: destinationId,
-                              space_id: spaceId,
-                              project_id: projectId,
-                              layer: destinationId ? 'process' : 'capture',
-                            })
-                            .select('id')
-                            .single();
-
-                          if (error) throw error;
-                          toast.success(`"${subtaskTitle}" promoted to item`);
-                          if (data) {
-                            router.push(`/items/${data.id}`);
-                          }
-                        } catch {
-                          toast.error('Failed to promote subtask');
-                        }
-                      }}
-                    />
-                  </div>
-
-                </div>{/* end CENTER column */}
-
-                {/* ── RIGHT COLUMN: Context ────────────────────────── */}
-                <div className="order-3 lg:sticky lg:top-8 lg:self-start lg:max-h-[calc(100vh-12rem)] lg:overflow-y-auto space-y-5">
-
-                  {/* Relations */}
-                  <ItemRelationsSection itemId={item.id} userId={userId} />
-
-                  {/* Attachments */}
-                  {(imageAttachments.length > 0 ||
-                    audioAttachments.length > 0) && (
-                    <div className="space-y-4">
-                      <h3 className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
-                        Attachments
-                      </h3>
-
-                      {imageAttachments.length > 0 && (
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-1.5 text-xs text-neutral-500">
-                            <ImageIcon className="h-3.5 w-3.5" />
-                            <span>
-                              {imageAttachments.length} image
-                              {imageAttachments.length !== 1 ? 's' : ''}
-                            </span>
-                          </div>
-                          <div className="flex flex-wrap gap-2">
-                            {imageAttachments.map((att) => (
-                              <button
-                                key={att.id}
-                                type="button"
-                                onClick={() => setLightboxSrc(att.url)}
-                                className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.03] transition-all hover:border-white/[0.16] hover:shadow-lg cursor-zoom-in"
-                              >
-                                <img
-                                  src={att.url}
-                                  alt={att.filename}
-                                  className="h-28 w-36 object-cover transition-transform duration-200 group-hover:scale-105"
-                                />
-                                <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition-colors">
-                                  <Maximize2 className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                                </div>
-                              </button>
-                            ))}
-                          </div>
+                    {audioAttachments.length > 0 && (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-1.5 text-[10px] text-neutral-500">
+                          <Volume2 className="h-3 w-3" />
+                          <span>
+                            {audioAttachments.length} recording{audioAttachments.length !== 1 ? 's' : ''}
+                          </span>
                         </div>
-                      )}
+                        {audioAttachments.map((att) => (
+                          <AudioPlayer key={att.id} src={att.url} duration={att.duration} />
+                        ))}
+                      </div>
+                    )}
+                    {imageAttachments.length === 0 && audioAttachments.length === 0 && (
+                      <p className="text-xs text-neutral-600 py-2">No attachments</p>
+                    )}
+                  </div>
+                </div>
+              </div>
 
-                      {audioAttachments.length > 0 && (
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-1.5 text-xs text-neutral-500">
-                            <Volume2 className="h-3.5 w-3.5" />
-                            <span>
-                              {audioAttachments.length} audio recording
-                              {audioAttachments.length !== 1 ? 's' : ''}
-                            </span>
-                          </div>
-                          <div className="space-y-2">
-                            {audioAttachments.map((att) => (
-                              <AudioPlayer
-                                key={att.id}
-                                src={att.url}
-                                duration={att.duration}
-                              />
-                            ))}
-                          </div>
+              {/* ── 8. Destination-specific fields (conditional) ──── */}
+              {(showWaitingSection || builtInFields.filter(f => !(showWaitingSection && f.name === 'waiting_for')).length > 0 || customFieldDefs.length > 0) && (
+                <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-4 space-y-3">
+                  <span className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                    {selectedDestination?.name || 'Destination'} Details
+                  </span>
+
+                  {/* Waiting-specific fields */}
+                  {showWaitingSection && (
+                    <div className="space-y-3">
+                      <div className="relative space-y-1.5">
+                        <label className="text-xs font-medium text-neutral-400">
+                          Waiting For
+                        </label>
+                        <Input
+                          value={waitingFor}
+                          onChange={(e) => {
+                            handleWaitingForChange(e.target.value);
+                            setShowContactSuggestions(true);
+                          }}
+                          onFocus={() => setShowContactSuggestions(true)}
+                          onBlur={() =>
+                            setTimeout(() => setShowContactSuggestions(false), 200)
+                          }
+                          placeholder="Person or thing you're waiting on"
+                          className="h-9 rounded-xl border-white/[0.08] bg-white/[0.03]"
+                        />
+                        {showContactSuggestions &&
+                          waitingFor &&
+                          contacts &&
+                          contacts.length > 0 &&
+                          (() => {
+                            const filtered = contacts
+                              .filter((c) =>
+                                c.name.toLowerCase().includes(waitingFor.toLowerCase()),
+                              )
+                              .slice(0, 5);
+                            if (filtered.length === 0) return null;
+                            return (
+                              <div className="absolute top-full left-0 right-0 z-50 mt-1 max-h-36 overflow-y-auto rounded-xl border border-white/[0.08] bg-[#1c1917] shadow-lg">
+                                {filtered.map((c) => (
+                                  <button
+                                    key={c.id}
+                                    type="button"
+                                    onMouseDown={(e) => e.preventDefault()}
+                                    onClick={() => {
+                                      handleWaitingForChange(c.name);
+                                      setShowContactSuggestions(false);
+                                    }}
+                                    className="w-full text-left px-3 py-2 text-sm text-neutral-300 hover:bg-white/[0.06] transition-colors"
+                                  >
+                                    {c.name}
+                                    {c.email && (
+                                      <span className="ml-2 text-xs text-neutral-500">{c.email}</span>
+                                    )}
+                                  </button>
+                                ))}
+                              </div>
+                            );
+                          })()}
+                      </div>
+                      {item.waiting_since && (
+                        <div className="space-y-1">
+                          <label className="text-xs font-medium text-neutral-400">
+                            Waiting Since
+                          </label>
+                          <p className="text-sm text-neutral-300">
+                            {new Date(item.waiting_since).toLocaleDateString(undefined, {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric',
+                            })}
+                          </p>
                         </div>
                       )}
                     </div>
                   )}
 
-                  {/* Activity Timeline */}
-                  <ItemActivityTimeline itemId={item.id} />
+                  {/* Built-in destination fields + custom fields */}
+                  {builtInFields
+                    .filter((f) => !(showWaitingSection && f.name === 'waiting_for'))
+                    .map(renderBuiltInField)}
+                  {customFieldDefs.map(renderCustomField)}
 
-                </div>{/* end RIGHT column */}
+                  {/* Promote to Backlog (Someday only) */}
+                  {destinationSlug === 'someday' && (() => {
+                    const backlogDest = destinations.find((d) => d.slug === 'backlog');
+                    if (!backlogDest) return null;
+                    return (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleDestinationChange(backlogDest.id);
+                          toast.success('Promoted to Backlog!');
+                        }}
+                        className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-400 hover:bg-emerald-500/15 transition-colors"
+                      >
+                        Promote to Backlog
+                      </button>
+                    );
+                  })()}
+                </div>
+              )}
 
-              </div>{/* end 3-Column Grid */}
+            </div>{/* end Guided flow */}
 
-            </div>{/* end Content */}
-
+            </div>{/* end max-w-[680px] */}
           </div>
         </div>
 
