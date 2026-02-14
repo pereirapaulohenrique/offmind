@@ -3,6 +3,27 @@
 
 @custom-variant dark (&:is(.dark *));
 
+html {
+  scroll-behavior: smooth;
+}
+
+/* Waitlist form button styling override */
+#waitlist form button[type="submit"] {
+  background: var(--gradient-accent) !important;
+  border: none !important;
+  border-radius: 0.75rem !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 16px rgba(194,65,12,0.20) !important;
+}
+
+#waitlist form button[type="submit"]:hover {
+  opacity: 0.9;
+}
+
+#waitlist form input {
+  border-radius: 0.75rem !important;
+}
+
 /* =============================================================================
    "Bloom" Design System — Warm Organic Craft
    Option C: Human, warm, delightful. Every pixel feels hand-crafted.

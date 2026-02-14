@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Inbox,
@@ -31,7 +31,7 @@ import { cn } from '@/lib/utils';
 export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background bloom-surface">
-      {/* Navigation — warm, rounded, friendly */}
+      {/* Navigation */}
       <header className="sticky top-0 z-50 border-b border-[var(--border-subtle)] warm-glass">
         <nav className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-3 group">
@@ -45,12 +45,13 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             <Button
               asChild
-              className="rounded-xl shadow-md tactile-press"
+              className="rounded-xl shadow-md tactile-press text-sm sm:text-base"
               style={{ background: 'var(--gradient-accent)', border: 'none' }}
             >
               <a href="#waitlist">
-                Join Waitlist
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <span className="hidden sm:inline">Join Waitlist</span>
+                <span className="sm:hidden">Waitlist</span>
+                <ArrowRight className="ml-1.5 sm:ml-2 h-4 w-4" />
               </a>
             </Button>
           </div>
@@ -79,7 +80,7 @@ export default function LandingPage() {
             style={{ background: 'radial-gradient(circle, #7c3aed, transparent 70%)' }}
           />
 
-          <div className="relative container mx-auto px-4 py-28 sm:px-6 sm:py-40 lg:px-8">
+          <div className="relative container mx-auto px-4 py-16 sm:px-6 sm:py-28 lg:py-40 lg:px-8">
             <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
               {/* Warm pill badge */}
               <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-[var(--accent-border)] bg-[var(--accent-subtle)] px-5 py-2 text-sm font-medium text-[var(--accent-hover)]">
@@ -88,7 +89,7 @@ export default function LandingPage() {
               </div>
 
               {/* Headline */}
-              <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-7xl title-glow" style={{ letterSpacing: '-0.03em', lineHeight: '1.08' }}>
+              <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-7xl title-glow" style={{ letterSpacing: '-0.03em', lineHeight: '1.08' }}>
                 Your brain is for
                 <br />
                 <span
@@ -112,7 +113,7 @@ export default function LandingPage() {
                 <Button
                   asChild
                   size="lg"
-                  className="gap-2.5 rounded-xl px-8 shadow-lg tactile-press text-base font-semibold"
+                  className="gap-2.5 rounded-xl px-8 shadow-lg tactile-press text-base font-semibold w-full sm:w-auto"
                   style={{ background: 'var(--gradient-accent)', border: 'none', boxShadow: '0 4px 20px rgba(194,65,12,0.25), 0 1px 3px rgba(194,65,12,0.15)' }}
                 >
                   <a href="#waitlist">
@@ -124,7 +125,7 @@ export default function LandingPage() {
                   asChild
                   variant="outline"
                   size="lg"
-                  className="rounded-xl border-[var(--border-default)] bg-[var(--bg-surface)]/50 text-base text-foreground hover:bg-[var(--bg-hover)] tactile-press"
+                  className="rounded-xl border-[var(--border-default)] bg-[var(--bg-surface)]/50 text-base text-foreground hover:bg-[var(--bg-hover)] tactile-press w-full sm:w-auto"
                 >
                   <a href="#how-it-works">See How It Works</a>
                 </Button>
@@ -136,7 +137,7 @@ export default function LandingPage() {
             </div>
 
             {/* Product Preview — app screenshot */}
-            <div className="mx-auto mt-24 max-w-5xl">
+            <div className="mx-auto mt-16 sm:mt-24 max-w-4xl sm:max-w-5xl">
               <div
                 className="relative rounded-3xl border border-[var(--border-default)] bg-[var(--bg-surface)]/80 p-2 bloom-warm"
                 style={{ boxShadow: '0 8px 40px rgba(80,50,20,0.15), 0 2px 8px rgba(80,50,20,0.08), 0 0 0 1px rgba(196,145,100,0.06)' }}
@@ -172,17 +173,17 @@ export default function LandingPage() {
         ================================================================ */}
         <section className="border-y border-[var(--border-subtle)] bg-[var(--bg-inset)]">
           <div className="container mx-auto px-4 py-5 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-center gap-6 text-sm text-[var(--text-muted)]">
+            <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-6 text-sm text-[var(--text-muted)]">
               <span className="inline-flex items-center gap-1.5">
                 <BookOpen className="h-3.5 w-3.5" />
                 Built on the GTD methodology
               </span>
-              <span className="text-[var(--border-default)]">·</span>
+              <span className="hidden sm:inline text-[var(--border-default)]">&middot;</span>
               <span className="inline-flex items-center gap-1.5">
                 <Sparkles className="h-3.5 w-3.5" />
                 Powered by AI
               </span>
-              <span className="text-[var(--border-default)]">·</span>
+              <span className="hidden sm:inline text-[var(--border-default)]">&middot;</span>
               <span className="inline-flex items-center gap-1.5">
                 <Heart className="h-3.5 w-3.5" />
                 Made by an indie developer
@@ -194,7 +195,7 @@ export default function LandingPage() {
         {/* ================================================================
             HOW IT WORKS — Capture, Organize, Commit
         ================================================================ */}
-        <section id="how-it-works" className="border-b border-[var(--border-subtle)] bg-[var(--bg-inset)] py-28 sm:py-32">
+        <section id="how-it-works" className="border-b border-[var(--border-subtle)] bg-[var(--bg-inset)] py-16 sm:py-28 lg:py-32">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[var(--sage-subtle)] px-4 py-1.5 text-sm font-medium text-[var(--sage)]">
@@ -209,7 +210,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="mx-auto mt-20 grid max-w-5xl gap-8 sm:grid-cols-3">
+            <div className="mx-auto mt-20 grid max-w-5xl gap-12 sm:gap-8 sm:grid-cols-3">
               <WorkflowStep
                 number={1}
                 icon={Inbox}
@@ -241,7 +242,7 @@ export default function LandingPage() {
         {/* ================================================================
             FEATURES — 2-column warm cards
         ================================================================ */}
-        <section className="py-28 sm:py-32">
+        <section className="py-16 sm:py-28 lg:py-32">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-3xl font-bold tracking-tight sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
@@ -254,7 +255,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="mx-auto mt-16 grid max-w-5xl gap-5 sm:grid-cols-2">
+            <div className="mx-auto mt-16 grid max-w-5xl gap-4 sm:gap-5 sm:grid-cols-2">
               <FeatureCard
                 icon={Sparkles}
                 title="AI That Actually Helps"
@@ -296,9 +297,31 @@ export default function LandingPage() {
         </section>
 
         {/* ================================================================
+            WHO IT'S FOR — Identification-based social proof
+        ================================================================ */}
+        <section className="border-y border-[var(--border-subtle)] bg-[var(--bg-inset)] py-16 sm:py-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-2xl text-center mb-12">
+              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>
+                Built for people who...
+              </h2>
+            </div>
+
+            <div className="mx-auto max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <PersonaCard emoji="🧠" text="Have 50 tabs open and still feel like they're forgetting something" />
+              <PersonaCard emoji="📝" text="Have tried Notion, Todoist, Things, and Apple Reminders — and none stuck" />
+              <PersonaCard emoji="💡" text="Get their best ideas at the worst times (2AM, in the shower, mid-meeting)" />
+              <PersonaCard emoji="📅" text="Know about GTD but never found a tool that makes it effortless" />
+              <PersonaCard emoji="😤" text="Spend more time organizing their system than actually doing things" />
+              <PersonaCard emoji="🔄" text="Start every Monday with a fresh plan that falls apart by Wednesday" />
+            </div>
+          </div>
+        </section>
+
+        {/* ================================================================
             BUILT FOR OVERTHINKERS — Emotional, warm, encouraging
         ================================================================ */}
-        <section className="border-y border-[var(--border-subtle)] bg-[var(--bg-inset)] py-28 sm:py-32">
+        <section className="border-b border-[var(--border-subtle)] bg-[var(--bg-inset)] py-16 sm:py-28 lg:py-32">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[var(--lavender-subtle)] px-4 py-1.5 text-sm font-medium text-[var(--lavender)]">
@@ -317,7 +340,7 @@ export default function LandingPage() {
               </p>
 
               {/* Three warm cards */}
-              <div className="mt-12 grid gap-5 text-left sm:grid-cols-3">
+              <div className="mt-12 grid grid-cols-1 gap-4 sm:gap-5 text-left sm:grid-cols-3">
                 <div className="bloom-card p-6 inner-light">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--layer-capture-bg)] mb-4">
                     <Inbox className="h-5 w-5 text-[var(--layer-capture)]" />
@@ -353,7 +376,7 @@ export default function LandingPage() {
         {/* ================================================================
             PRICING — 3-column: Free Trial, Pro, Lifetime
         ================================================================ */}
-        <section className="py-28 sm:py-32">
+        <section className="py-16 sm:py-28 lg:py-32">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-3xl font-bold tracking-tight sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
@@ -366,7 +389,7 @@ export default function LandingPage() {
 
             <div className="mx-auto mt-16 grid max-w-5xl gap-6 sm:grid-cols-3">
               {/* Free Trial */}
-              <div className="bloom-card p-8 inner-light flex flex-col">
+              <div className="bloom-card p-6 sm:p-8 inner-light flex flex-col">
                 <div className="flex items-center gap-3 mb-2">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--sage-subtle)]">
                     <Zap className="h-5 w-5 text-[var(--sage)]" />
@@ -395,7 +418,7 @@ export default function LandingPage() {
               </div>
 
               {/* Pro */}
-              <div className="bloom-card p-8 inner-light flex flex-col">
+              <div className="bloom-card p-6 sm:p-8 inner-light flex flex-col">
                 <div className="flex items-center gap-3 mb-2">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent-subtle)]">
                     <Sun className="h-5 w-5 text-[var(--accent-hover)]" />
@@ -433,7 +456,7 @@ export default function LandingPage() {
               </div>
 
               {/* Lifetime — highlighted */}
-              <div className="relative gradient-border p-8 inner-light flex flex-col order-first sm:order-last" style={{ boxShadow: 'var(--shadow-glow)' }}>
+              <div className="relative gradient-border p-6 sm:p-8 inner-light flex flex-col order-first sm:order-last" style={{ boxShadow: 'var(--shadow-glow)' }}>
                 <div
                   className="absolute -top-3.5 left-1/2 -translate-x-1/2 bloom-accent px-5 py-1.5 text-xs font-bold tracking-wide"
                   style={{ boxShadow: '0 4px 12px rgba(194,65,12,0.25)' }}
@@ -456,7 +479,7 @@ export default function LandingPage() {
                   <PricingFeature>Everything in Pro</PricingFeature>
                   <PricingFeature>All future updates</PricingFeature>
                   <PricingFeature>Lifetime access forever</PricingFeature>
-                  <PricingFeature>Early supporter benefits</PricingFeature>
+                  <PricingFeature>Direct access to the developer</PricingFeature>
                 </ul>
                 <Button
                   asChild
@@ -481,7 +504,7 @@ export default function LandingPage() {
         {/* ================================================================
             FAQ
         ================================================================ */}
-        <section className="border-y border-[var(--border-subtle)] bg-[var(--bg-inset)] py-28 sm:py-32">
+        <section className="border-y border-[var(--border-subtle)] bg-[var(--bg-inset)] py-16 sm:py-28 lg:py-32">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-16">
               <h2 className="text-3xl font-bold tracking-tight sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
@@ -489,7 +512,7 @@ export default function LandingPage() {
               </h2>
             </div>
 
-            <div className="mx-auto max-w-2xl bloom-card p-8 inner-light">
+            <div className="mx-auto max-w-2xl bloom-card p-4 sm:p-8 inner-light">
               <FAQItem
                 question="How is OffMind different from Notion or Todoist?"
                 answer="Notion is powerful but complex — it's a workspace, not a task system. Todoist is simple but rigid. OffMind sits in the sweet spot: a fast, flexible system built on GTD principles where AI handles the organizing so you can focus on doing."
@@ -532,7 +555,7 @@ export default function LandingPage() {
             }}
           />
 
-          <div className="relative container mx-auto px-4 py-28 sm:px-6 sm:py-36 lg:px-8">
+          <div className="relative container mx-auto px-4 py-16 sm:px-6 sm:py-28 lg:py-36 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-[var(--accent-subtle)] px-4 py-1.5 text-sm font-medium text-[var(--accent-hover)]">
                 <Sparkles className="h-3.5 w-3.5" />
@@ -545,6 +568,7 @@ export default function LandingPage() {
                 Join the waitlist for launch-day access. Early supporters will get an exclusive lifetime deal.
               </p>
               <WaitlistForm />
+              <WaitlistCounter />
             </div>
           </div>
         </section>
@@ -553,7 +577,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="border-t border-[var(--border-subtle)] py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
+          <div className="flex flex-col items-center justify-between gap-4 sm:gap-6 sm:flex-row">
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--accent-subtle)]">
                 <OffMindLogo size={20} />
@@ -690,6 +714,18 @@ function FeatureCard({
 }
 
 /* =============================================================================
+   Persona Card Component — "Built for people who..."
+============================================================================= */
+function PersonaCard({ emoji, text }: { emoji: string; text: string }) {
+  return (
+    <div className="flex items-start gap-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]/50 p-4 sm:p-5">
+      <span className="text-xl flex-shrink-0 mt-0.5">{emoji}</span>
+      <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">{text}</p>
+    </div>
+  );
+}
+
+/* =============================================================================
    Pricing Feature Component
 ============================================================================= */
 function PricingFeature({ children }: { children: React.ReactNode }) {
@@ -710,7 +746,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-[var(--border-subtle)]">
+    <div className="border-b border-[var(--border-subtle)] last:border-b-0">
       <button
         type="button"
         onClick={() => setOpen(!open)}
@@ -741,5 +777,27 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+/* =============================================================================
+   Waitlist Counter Component — Shows social proof
+============================================================================= */
+function WaitlistCounter() {
+  const [count, setCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch('/api/waitlist/count')
+      .then(res => res.json())
+      .then(data => setCount(data.count))
+      .catch(() => {});
+  }, []);
+
+  if (count === null || count < 3) return null;
+
+  return (
+    <p className="mt-4 text-sm text-[var(--text-muted)]">
+      {count} {count === 1 ? 'person has' : 'people have'} joined the waitlist
+    </p>
   );
 }
