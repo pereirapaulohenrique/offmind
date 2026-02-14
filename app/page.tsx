@@ -749,7 +749,7 @@ function CaptureMethodCard({
           </span>
         )}
       </div>
-      <h3 className="text-sm sm:text-base font-bold text-foreground" style={{ letterSpacing: '-0.01em' }}>{title}</h3>
+      <h3 className="text-sm sm:text-base font-bold text-muted-foreground" style={{ letterSpacing: '-0.01em' }}>{title}</h3>
       <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-muted-foreground">{description}</p>
     </div>
   );
