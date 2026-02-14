@@ -736,7 +736,7 @@ function CaptureMethodCard({
     <div className="bloom-card p-5 sm:p-6 inner-light relative">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--bg-hover)]">
-          <Icon className="h-5 w-5 text-[var(--text-muted)]" />
+          <Icon className="h-5 w-5 text-[var(--text-secondary)]" />
         </div>
         {status === 'available' ? (
           <span className="inline-flex items-center gap-1 rounded-full bg-[var(--layer-commit-bg)] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--layer-commit)]">
@@ -749,8 +749,8 @@ function CaptureMethodCard({
           </span>
         )}
       </div>
-      <h3 className="text-sm sm:text-base font-bold text-muted-foreground" style={{ letterSpacing: '-0.01em' }}>{title}</h3>
-      <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-muted-foreground">{description}</p>
+      <h3 className="text-sm sm:text-base font-bold text-foreground" style={{ letterSpacing: '-0.01em' }}>{title}</h3>
+      <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-[var(--text-secondary)]">{description}</p>
     </div>
   );
 }
