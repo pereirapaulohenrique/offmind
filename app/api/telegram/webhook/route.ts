@@ -207,11 +207,18 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function captureItem(userId: string, title: string) {
+async function captureItem(
+  userId: string,
+  title: string,
+  target?: { project_id?: string; space_id?: string; page_id?: string }
+) {
   await supabaseAdmin.from('items').insert({
     user_id: userId,
     title,
     layer: 'capture',
     source: 'telegram',
+    ...(target?.project_id ? { project_id: target.project_id } : {}),
+    ...(target?.space_id ? { space_id: target.space_id } : {}),
+    ...(target?.page_id ? { page_id: target.page_id } : {}),
   } as any);
 }

@@ -10,10 +10,16 @@ import { toast } from 'sonner';
 import { uploadAttachment } from '@/lib/supabase/storage';
 import { useAudioRecorder } from '@/hooks/useAudioRecorder';
 import { logActivity } from '@/lib/activity-log';
+import { CaptureTargetPill } from '@/components/capture/CaptureTargetPill';
+import { useCaptureTargetStore } from '@/stores/capture-target';
+import { useCaptureContext } from '@/hooks/useCaptureContext';
 import type { Attachment } from '@/types/database';
 
 interface CaptureBarProps {
   userId: string;
+  spaces?: Array<{ id: string; name: string; icon: string; color: string }>;
+  projects?: Array<{ id: string; name: string; icon: string; color: string; space_id: string | null }>;
+  pages?: Array<{ id: string; title: string; icon: string; project_id: string | null; space_id: string | null }>;
 }
 
 function formatDuration(seconds: number): string {
@@ -22,7 +28,7 @@ function formatDuration(seconds: number): string {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
-export function CaptureBar({ userId }: CaptureBarProps) {
+export function CaptureBar({ userId, spaces = [], projects = [], pages = [] }: CaptureBarProps) {
   const [value, setValue] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,6 +39,14 @@ export function CaptureBar({ userId }: CaptureBarProps) {
   const { sidebarCollapsed, setCaptureBarFocused } = useUIStore();
   const { addItem } = useItemsStore();
   const { isRecording, duration, startRecording, stopRecording, audioBlob, clearRecording } = useAudioRecorder();
+  const { captureTarget, resetExpiryTimer } = useCaptureTargetStore();
+
+  // Auto-set capture target based on current route
+  useCaptureContext({
+    spaces,
+    projects,
+    pages: pages.map((p) => ({ id: p.id, title: p.title, icon: p.icon })),
+  });
 
   // Cmd+N to focus capture bar
   useEffect(() => {
@@ -168,6 +182,9 @@ export function CaptureBar({ userId }: CaptureBarProps) {
           layer: 'capture',
           source: 'web',
           ...(attachments.length > 0 ? { attachments } : {}),
+          ...(captureTarget?.type === 'project' ? { project_id: captureTarget.id } : {}),
+          ...(captureTarget?.type === 'space' ? { space_id: captureTarget.id } : {}),
+          ...(captureTarget?.type === 'page' ? { page_id: captureTarget.id } : {}),
         } as any)
         .select()
         .single();
@@ -197,11 +214,14 @@ export function CaptureBar({ userId }: CaptureBarProps) {
         }
       }
 
+      // Reset expiry timer if in Direct mode
+      if (captureTarget) resetExpiryTimer();
+
       setValue('');
       removeImage();
       clearRecording();
       if (inputRef.current) inputRef.current.style.height = '20px';
-      toast.success('Captured', {
+      toast.success(captureTarget ? `Captured → ${captureTarget.name}` : 'Captured', {
         description: trimmedValue
           ? (trimmedValue.length > 50 ? trimmedValue.slice(0, 50) + '...' : trimmedValue)
           : `${attachments.length} attachment${attachments.length !== 1 ? 's' : ''}`,
@@ -213,7 +233,7 @@ export function CaptureBar({ userId }: CaptureBarProps) {
     } finally {
       setIsLoading(false);
     }
-  }, [value, isLoading, userId, addItem, imageFile, audioBlob, duration, clearRecording]);
+  }, [value, isLoading, userId, addItem, imageFile, audioBlob, duration, clearRecording, captureTarget, resetExpiryTimer]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -304,16 +324,14 @@ export function CaptureBar({ userId }: CaptureBarProps) {
           className={`capture-input relative flex items-end gap-2 rounded-2xl border px-4 py-3 transition-all duration-300 ${
             isRecording
               ? 'border-red-500/40 bg-[var(--bg-surface)]/95 shadow-[0_0_0_3px_rgba(239,68,68,0.12)]'
-              : isFocused
-                ? 'border-[var(--accent-border)] bg-[var(--bg-surface)]/95 shadow-[var(--shadow-glow)]'
-                : 'border-[var(--border-default)] bg-[var(--bg-surface)]/80 shadow-[var(--shadow-card)]'
+              : captureTarget
+                ? 'border-[rgba(194,65,12,0.25)] bg-[var(--bg-surface)]/95 shadow-[0_0_0_1px_rgba(194,65,12,0.08)]'
+                : isFocused
+                  ? 'border-[var(--accent-border)] bg-[var(--bg-surface)]/95 shadow-[var(--shadow-glow)]'
+                  : 'border-[var(--border-default)] bg-[var(--bg-surface)]/80 shadow-[var(--shadow-card)]'
           } backdrop-blur-2xl`}
         >
-          <Plus
-            className={`h-4.5 w-4.5 flex-shrink-0 transition-all duration-200 ${
-              isFocused ? 'text-[var(--accent-base)] rotate-45' : 'text-[var(--text-muted)] rotate-0'
-            }`}
-          />
+          <CaptureTargetPill spaces={spaces} projects={projects} pages={pages} />
 
           <textarea
             ref={inputRef}

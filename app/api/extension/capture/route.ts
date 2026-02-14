@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get request body
-    const { title, notes, source } = await request.json();
+    const { title, notes, source, project_id, space_id, page_id } = await request.json();
 
     if (!title) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 });
@@ -46,6 +46,9 @@ export async function POST(request: NextRequest) {
       notes: notes || null,
       layer: 'capture',
       source: itemSource,
+      ...(project_id ? { project_id } : {}),
+      ...(space_id ? { space_id } : {}),
+      ...(page_id ? { page_id } : {}),
     } as any).select().single();
 
     if (error) {

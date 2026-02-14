@@ -140,7 +140,12 @@ export default async function DashboardLayout({
           />
 
           {/* Persistent capture bar */}
-          <CaptureBar userId={user.id} />
+          <CaptureBar
+            userId={user.id}
+            spaces={(spaces || []) as any}
+            projects={(projects || []) as any}
+            pages={(pages || []) as any}
+          />
 
           {/* Command Palette (global) */}
           <CommandPalette />

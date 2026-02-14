@@ -156,7 +156,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { title, notes, source } = body;
+    const { title, notes, source, project_id, space_id, page_id } = body;
+
+    // Validate targeting fields (optional UUIDs)
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    for (const [key, val] of Object.entries({ project_id, space_id, page_id })) {
+      if (val !== undefined && val !== null && (typeof val !== 'string' || !UUID_RE.test(val))) {
+        return NextResponse.json({ error: `${key} must be a valid UUID` }, { status: 400, headers });
+      }
+    }
 
     // Validate title
     if (!title || typeof title !== 'string') {
@@ -207,6 +215,9 @@ export async function POST(request: NextRequest) {
         notes: notes ? notes.trim() : null,
         layer: 'capture',
         source: source || 'api',
+        ...(project_id ? { project_id } : {}),
+        ...(space_id ? { space_id } : {}),
+        ...(page_id ? { page_id } : {}),
       })
       .select()
       .single();

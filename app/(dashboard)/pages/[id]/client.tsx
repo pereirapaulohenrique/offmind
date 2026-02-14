@@ -25,6 +25,7 @@ import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { ICON_MAP } from '@/components/icons';
 import { FolderOpen } from 'lucide-react';
+import { PageCaptureQueue } from '@/components/pages/PageCaptureQueue';
 import type { Page, Space, Project, Item } from '@/types/database';
 
 interface PageEditorClientProps {
@@ -32,6 +33,7 @@ interface PageEditorClientProps {
   spaces: Space[];
   projects: Project[];
   linkedItem: Item | null;
+  capturedItems?: Item[];
 }
 
 // Common emojis for page icons
@@ -42,6 +44,7 @@ export function PageEditorClient({
   spaces,
   projects,
   linkedItem,
+  capturedItems: initialCapturedItems = [],
 }: PageEditorClientProps) {
   const router = useRouter();
   const getSupabase = () => createClient();
@@ -49,6 +52,8 @@ export function PageEditorClient({
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date>(new Date(page.updated_at));
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [queueItems, setQueueItems] = useState<Item[]>(initialCapturedItems);
+  const editorRef = useRef<any>(null);
 
   // Smart back navigation based on page context
   const backHref = page.project_id
@@ -168,6 +173,101 @@ export function PageEditorClient({
     };
   }, []);
 
+  // Store editor reference for programmatic insertion
+  const handleEditorReady = useCallback((editor: any) => {
+    editorRef.current = editor;
+  }, []);
+
+  // Realtime subscription for new captures to this page
+  useEffect(() => {
+    const supabase = getSupabase();
+    const channel = supabase
+      .channel(`page-captures-${page.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'items',
+          filter: `page_id=eq.${page.id}`,
+        },
+        (payload: any) => {
+          const newItem = payload.new as Item;
+          if (newItem.layer === 'capture' && !newItem.archived_at) {
+            setQueueItems((prev) => [newItem, ...prev]);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [page.id]);
+
+  // Append a captured item's content to the editor
+  const handleAppendItem = useCallback(async (item: Item) => {
+    const editor = editorRef.current;
+    if (editor) {
+      const textToAppend = item.notes || item.title;
+      editor.chain().focus('end').insertContent(`<p>${textToAppend}</p>`).run();
+    }
+
+    // Clear page_id from the item
+    const supabase = getSupabase();
+    await supabase
+      .from('items')
+      .update({ page_id: null } as any)
+      .eq('id', item.id);
+
+    setQueueItems((prev) => prev.filter((i) => i.id !== item.id));
+    toast.success('Appended to page');
+  }, []);
+
+  // Append all captured items
+  const handleAppendAll = useCallback(async () => {
+    const editor = editorRef.current;
+    if (editor && queueItems.length > 0) {
+      const content = queueItems
+        .map((item) => `<p>${item.notes || item.title}</p>`)
+        .join('');
+      editor.chain().focus('end').insertContent(content).run();
+    }
+
+    const supabase = getSupabase();
+    const ids = queueItems.map((i) => i.id);
+    await supabase
+      .from('items')
+      .update({ page_id: null } as any)
+      .in('id', ids);
+
+    setQueueItems([]);
+    toast.success(`Appended ${ids.length} items`);
+  }, [queueItems]);
+
+  // Move item back to inbox (clear page_id, keep in capture layer)
+  const handleLinkItem = useCallback(async (item: Item) => {
+    const supabase = getSupabase();
+    await supabase
+      .from('items')
+      .update({ page_id: null } as any)
+      .eq('id', item.id);
+
+    setQueueItems((prev) => prev.filter((i) => i.id !== item.id));
+    toast.success('Moved to inbox');
+  }, []);
+
+  // Dismiss — just clear page_id
+  const handleDismissItem = useCallback(async (item: Item) => {
+    const supabase = getSupabase();
+    await supabase
+      .from('items')
+      .update({ page_id: null } as any)
+      .eq('id', item.id);
+
+    setQueueItems((prev) => prev.filter((i) => i.id !== item.id));
+  }, []);
+
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
@@ -184,6 +284,15 @@ export function PageEditorClient({
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Capture queue badge */}
+            <PageCaptureQueue
+              items={queueItems}
+              onAppendItem={handleAppendItem}
+              onAppendAll={handleAppendAll}
+              onLinkItem={handleLinkItem}
+              onDismissItem={handleDismissItem}
+            />
+
             {/* Save status */}
             <span className="text-xs text-[var(--text-muted)]">
               {isSaving ? 'Saving...' : `Saved ${formatDistanceToNow(lastSaved, { addSuffix: true })}`}
@@ -336,6 +445,7 @@ export function PageEditorClient({
             content={page.content}
             onChange={handleContentChange}
             placeholder="Start writing..."
+            onEditorReady={handleEditorReady}
           />
         </div>
       </div>

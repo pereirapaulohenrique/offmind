@@ -7,7 +7,7 @@ import Link from '@tiptap/extension-link';
 import TaskList from '@tiptap/extension-task-list';
 import TaskItem from '@tiptap/extension-task-item';
 import Highlight from '@tiptap/extension-highlight';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -34,6 +34,7 @@ interface TiptapEditorProps {
   placeholder?: string;
   editable?: boolean;
   className?: string;
+  onEditorReady?: (editor: any) => void;
 }
 
 type AIAction = 'continue' | 'improve' | 'summarize' | 'outline' | 'expand';
@@ -44,8 +45,11 @@ export function TiptapEditor({
   placeholder = 'Start writing...',
   editable = true,
   className,
+  onEditorReady,
 }: TiptapEditorProps) {
   const [aiLoading, setAiLoading] = useState<AIAction | null>(null);
+  const onEditorReadyRef = useRef(onEditorReady);
+  onEditorReadyRef.current = onEditorReady;
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -86,6 +90,13 @@ export function TiptapEditor({
       },
     },
   });
+
+  // Expose editor instance to parent
+  useEffect(() => {
+    if (editor && onEditorReadyRef.current) {
+      onEditorReadyRef.current(editor);
+    }
+  }, [editor]);
 
   // Update editor content when prop changes
   useEffect(() => {

@@ -69,12 +69,23 @@ export default async function PageEditorPage({ params }: PageEditorProps) {
     linkedItem = item as Item | null;
   }
 
+  // Get items captured directly to this page
+  const { data: capturedItems } = await supabase
+    .from('items')
+    .select('*')
+    .eq('page_id', id)
+    .eq('user_id', user.id)
+    .eq('layer', 'capture')
+    .is('archived_at', null)
+    .order('created_at', { ascending: false });
+
   return (
     <PageEditorClient
       page={page as Page}
       spaces={(spaces || []) as Space[]}
       projects={(projects || []) as Project[]}
       linkedItem={linkedItem}
+      capturedItems={(capturedItems || []) as Item[]}
     />
   );
 }

@@ -218,6 +218,7 @@ export interface Database {
           is_all_day: boolean;
           space_id: string | null;
           project_id: string | null;
+          page_id: string | null;
           custom_values: Json;
           waiting_for: string | null;
           waiting_since: string | null;
@@ -242,6 +243,7 @@ export interface Database {
           is_all_day?: boolean;
           space_id?: string | null;
           project_id?: string | null;
+          page_id?: string | null;
           custom_values?: Json;
           waiting_for?: string | null;
           waiting_since?: string | null;
@@ -266,6 +268,7 @@ export interface Database {
           is_all_day?: boolean;
           space_id?: string | null;
           project_id?: string | null;
+          page_id?: string | null;
           custom_values?: Json;
           waiting_for?: string | null;
           waiting_since?: string | null;
