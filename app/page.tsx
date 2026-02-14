@@ -13,20 +13,11 @@ import {
   Zap,
   Shield,
   Clock,
-  ChevronRight,
   ArrowRight,
   Check,
   Leaf,
-  Sun,
   Heart,
-  BookOpen,
   ChevronDown,
-  Gift,
-  Layers,
-  Lightbulb,
-  CalendarDays,
-  ListTodo,
-  RefreshCw,
   Globe,
   MessageSquare,
   Chrome,
@@ -180,33 +171,24 @@ export default function LandingPage() {
         </section>
 
         {/* ================================================================
-            CREDIBILITY STRIP
+            CREDIBILITY STRIP — text only, no background, no icons
         ================================================================ */}
-        <section className="border-y border-[var(--border-subtle)] bg-[var(--bg-inset)]">
-          <div className="container mx-auto px-4 py-5 sm:px-6 lg:px-8">
+        <section className="py-5">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-6 text-sm text-foreground/60">
-              <span className="inline-flex items-center gap-1.5">
-                <BookOpen className="h-3.5 w-3.5" />
-                Built on the GTD methodology
-              </span>
+              <span>Built on the GTD methodology</span>
               <span className="hidden sm:inline text-[var(--border-default)]">&middot;</span>
-              <span className="inline-flex items-center gap-1.5">
-                <Sparkles className="h-3.5 w-3.5" />
-                Powered by AI
-              </span>
+              <span>Powered by AI</span>
               <span className="hidden sm:inline text-[var(--border-default)]">&middot;</span>
-              <span className="inline-flex items-center gap-1.5">
-                <Heart className="h-3.5 w-3.5" />
-                Made by an indie developer
-              </span>
+              <span>Made by an indie developer</span>
             </div>
           </div>
         </section>
 
         {/* ================================================================
-            HOW IT WORKS — Capture, Organize, Commit
+            HOW IT WORKS — Capture, Organize, Commit (Tier 1: rich icons)
         ================================================================ */}
-        <section id="how-it-works" className="border-b border-[var(--border-subtle)] bg-[var(--bg-inset)] py-16 sm:py-28 lg:py-32">
+        <section id="how-it-works" className="border-y border-[var(--border-subtle)] bg-[var(--bg-inset)] py-16 sm:py-28 lg:py-32">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[var(--sage-subtle)] px-4 py-1.5 text-sm font-medium text-[var(--sage)]">
@@ -251,7 +233,7 @@ export default function LandingPage() {
         </section>
 
         {/* ================================================================
-            CAPTURE FROM ANYWHERE
+            CAPTURE FROM ANYWHERE (Tier 2: monochrome icons)
         ================================================================ */}
         <section className="py-16 sm:py-28 lg:py-32">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -317,9 +299,31 @@ export default function LandingPage() {
         </section>
 
         {/* ================================================================
-            FEATURES — 2-column warm cards
+            PROBLEM VALIDATION STRIP — research-backed stats
         ================================================================ */}
-        <section className="py-16 sm:py-28 lg:py-32">
+        <section className="py-12 sm:py-16">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-4xl grid grid-cols-3 gap-4 sm:gap-8 text-center">
+              <div>
+                <p className="text-2xl sm:text-4xl font-bold tracking-tight" style={{ letterSpacing: '-0.03em' }}>1,200+</p>
+                <p className="mt-2 text-xs sm:text-sm text-[var(--text-muted)]">Thoughts per week for the average knowledge worker</p>
+              </div>
+              <div>
+                <p className="text-2xl sm:text-4xl font-bold tracking-tight" style={{ letterSpacing: '-0.03em' }}>60%</p>
+                <p className="mt-2 text-xs sm:text-sm text-[var(--text-muted)]">Are potentially actionable — but never acted on</p>
+              </div>
+              <div>
+                <p className="text-2xl sm:text-4xl font-bold tracking-tight text-[var(--accent-hover)]" style={{ letterSpacing: '-0.03em' }}>&infin;</p>
+                <p className="mt-2 text-xs sm:text-sm text-[var(--text-muted)]">Lost without a system that captures them all</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ================================================================
+            FEATURES — 2-column cards (Tier 2: monochrome icons)
+        ================================================================ */}
+        <section className="border-y border-[var(--border-subtle)] bg-[var(--bg-inset)] py-16 sm:py-28 lg:py-32">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-3xl font-bold tracking-tight sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
@@ -337,68 +341,40 @@ export default function LandingPage() {
                 icon={Sparkles}
                 title="AI That Actually Helps"
                 description="Smart suggestions for where each thought belongs. Not a gimmick — a real assistant that saves you dozens of micro-decisions every day."
-                color="terracotta"
               />
               <FeatureCard
                 icon={FolderOpen}
                 title="Spaces for Every Area of Life"
                 description="Organize by context — work, personal, health, side projects. Each space keeps its own items, projects, and pages."
-                color="sage"
               />
               <FeatureCard
                 icon={FileText}
                 title="Built-in Notes & Docs"
                 description="Rich documents woven into your tasks. For when a quick thought turns into something worth developing."
-                color="lavender"
               />
               <FeatureCard
-                icon={Zap}
-                title="Capture From Anywhere"
-                description="Web app, Telegram bot, browser extension, keyboard shortcut. Two seconds from thought to captured, wherever you are."
-                color="amber"
+                icon={MessageSquare}
+                title="Natural Language Input"
+                description="Type naturally. AI extracts dates, priorities, and context from your words. 'Call dentist next Tuesday' becomes a scheduled task automatically."
               />
               <FeatureCard
                 icon={Shield}
                 title="Your Thoughts, Your Privacy"
                 description="Your data is yours alone. No ads, no tracking, no selling your information. Private by design."
-                color="sage"
               />
               <FeatureCard
                 icon={Clock}
                 title="Time Blocking That Works"
                 description="Turn organized items into committed time blocks on your calendar. See your day clearly — not your entire backlog."
-                color="terracotta"
               />
             </div>
           </div>
         </section>
 
         {/* ================================================================
-            WHO IT'S FOR — Identification-based social proof
+            BUILT FOR OVERTHINKERS — Merged with personas
         ================================================================ */}
-        <section className="border-y border-[var(--border-subtle)] bg-[var(--bg-inset)] py-16 sm:py-20">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl text-center mb-12">
-              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>
-                Built for people who...
-              </h2>
-            </div>
-
-            <div className="mx-auto max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <PersonaCard icon={Layers} text="Have 50 tabs open and still feel like they're forgetting something" color="terracotta" />
-              <PersonaCard icon={FileText} text="Have tried Notion, Todoist, Things, and Apple Reminders — and none stuck" color="sage" />
-              <PersonaCard icon={Lightbulb} text="Get their best ideas at the worst times (2AM, in the shower, mid-meeting)" color="lavender" />
-              <PersonaCard icon={CalendarDays} text="Know about GTD but never found a tool that makes it effortless" color="amber" />
-              <PersonaCard icon={ListTodo} text="Spend more time organizing their system than actually doing things" color="terracotta" />
-              <PersonaCard icon={RefreshCw} text="Start every Monday with a fresh plan that falls apart by Wednesday" color="sage" />
-            </div>
-          </div>
-        </section>
-
-        {/* ================================================================
-            BUILT FOR OVERTHINKERS — Emotional, warm, encouraging
-        ================================================================ */}
-        <section className="border-b border-[var(--border-subtle)] bg-[var(--bg-inset)] py-16 sm:py-28 lg:py-32">
+        <section className="py-16 sm:py-28 lg:py-32">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[var(--lavender-subtle)] px-4 py-1.5 text-sm font-medium text-[var(--lavender)]">
@@ -416,30 +392,31 @@ export default function LandingPage() {
                 You just need a better system.
               </p>
 
-              {/* Three warm cards */}
+              {/* Persona lines — identification-based social proof */}
+              <div className="mt-10 mx-auto max-w-2xl space-y-3 text-left">
+                <PersonaLine text="Have 50 tabs open and still feel like they're forgetting something" />
+                <PersonaLine text="Have tried Notion, Todoist, Things, and Apple Reminders — and none stuck" />
+                <PersonaLine text="Get their best ideas at the worst times" />
+                <PersonaLine text="Know about GTD but never found a tool that makes it effortless" />
+                <PersonaLine text="Spend more time organizing their system than actually doing things" />
+                <PersonaLine text="Start every Monday with a fresh plan that falls apart by Wednesday" />
+              </div>
+
+              {/* Resolution cards — no icons (Tier 3) */}
               <div className="mt-12 grid grid-cols-1 gap-4 sm:gap-5 text-left sm:grid-cols-3">
                 <div className="bloom-card p-6 inner-light">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--layer-capture-bg)] mb-4">
-                    <Inbox className="h-5 w-5 text-[var(--layer-capture)]" />
-                  </div>
                   <p className="text-[var(--text-primary)] font-semibold mb-2">Instant brain dump</p>
                   <p className="text-sm text-[var(--text-muted)] leading-relaxed">
                     Capture from anywhere in under 2 seconds. Think it, capture it, let it go. Your mind is free to do what it does best.
                   </p>
                 </div>
                 <div className="bloom-card p-6 inner-light">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--accent-subtle)] mb-4">
-                    <Sparkles className="h-5 w-5 text-[var(--accent-base)]" />
-                  </div>
                   <p className="text-[var(--text-primary)] font-semibold mb-2">AI handles the sorting</p>
                   <p className="text-sm text-[var(--text-muted)] leading-relaxed">
                     Stop spending mental energy on categorization. AI suggests where each thought belongs. You just approve.
                   </p>
                 </div>
                 <div className="bloom-card p-6 inner-light">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--layer-commit-bg)] mb-4">
-                    <Sun className="h-5 w-5 text-[var(--layer-commit)]" />
-                  </div>
                   <p className="text-[var(--text-primary)] font-semibold mb-2">Focus on today</p>
                   <p className="text-sm text-[var(--text-muted)] leading-relaxed">
                     Only see what you committed to today. Everything else is safely organized in the background.
@@ -451,9 +428,9 @@ export default function LandingPage() {
         </section>
 
         {/* ================================================================
-            PRICING — 3-column: Free Trial, Pro, Lifetime
+            PRICING — 3-column: Free Trial, Pro, Lifetime (no icon headers)
         ================================================================ */}
-        <section className="py-16 sm:py-28 lg:py-32">
+        <section className="border-y border-[var(--border-subtle)] bg-[var(--bg-inset)] py-16 sm:py-28 lg:py-32">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-3xl font-bold tracking-tight sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
@@ -467,13 +444,8 @@ export default function LandingPage() {
             <div className="mx-auto mt-16 grid max-w-5xl gap-6 sm:grid-cols-3">
               {/* Free Trial */}
               <div className="bloom-card p-6 sm:p-8 inner-light flex flex-col">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--sage-subtle)]">
-                    <Zap className="h-5 w-5 text-[var(--sage)]" />
-                  </div>
-                  <h3 className="text-xl font-bold">Free Trial</h3>
-                </div>
-                <p className="mt-2 text-sm text-[var(--text-secondary)]">Full access for 14 days</p>
+                <h3 className="text-xl font-bold mb-2">Free Trial</h3>
+                <p className="text-sm text-[var(--text-secondary)]">Full access for 14 days</p>
                 <div className="mt-6">
                   <span className="text-4xl font-bold tracking-tight" style={{ letterSpacing: '-0.03em' }}>$0</span>
                   <span className="text-[var(--text-muted)]"> for 14 days</span>
@@ -496,13 +468,8 @@ export default function LandingPage() {
 
               {/* Pro */}
               <div className="bloom-card p-6 sm:p-8 inner-light flex flex-col">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent-subtle)]">
-                    <Sun className="h-5 w-5 text-[var(--accent-hover)]" />
-                  </div>
-                  <h3 className="text-xl font-bold">Pro</h3>
-                </div>
-                <p className="mt-2 text-sm text-[var(--text-secondary)]">For individuals who think a lot</p>
+                <h3 className="text-xl font-bold mb-2">Pro</h3>
+                <p className="text-sm text-[var(--text-secondary)]">For individuals who think a lot</p>
                 <div className="mt-6">
                   <span className="text-4xl font-bold tracking-tight" style={{ letterSpacing: '-0.03em' }}>$7</span>
                   <span className="text-[var(--text-muted)]">/month</span>
@@ -540,13 +507,8 @@ export default function LandingPage() {
                 >
                   EARLY BIRD
                 </div>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent-subtle)]">
-                    <Gift className="h-5 w-5 text-[var(--accent-hover)]" />
-                  </div>
-                  <h3 className="text-xl font-bold">Lifetime</h3>
-                </div>
-                <p className="mt-2 text-sm text-[var(--text-secondary)]">Pay once, use forever</p>
+                <h3 className="text-xl font-bold mb-2">Lifetime</h3>
+                <p className="text-sm text-[var(--text-secondary)]">Pay once, use forever</p>
                 <div className="mt-6">
                   <span className="text-4xl font-bold tracking-tight" style={{ letterSpacing: '-0.03em' }}>$39</span>
                   <span className="text-[var(--text-muted)]"> one-time</span>
@@ -579,9 +541,9 @@ export default function LandingPage() {
         </section>
 
         {/* ================================================================
-            FAQ
+            FAQ — no background, no border
         ================================================================ */}
-        <section className="border-y border-[var(--border-subtle)] bg-[var(--bg-inset)] py-16 sm:py-28 lg:py-32">
+        <section className="py-16 sm:py-28 lg:py-32">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-16">
               <h2 className="text-3xl font-bold tracking-tight sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
@@ -589,7 +551,7 @@ export default function LandingPage() {
               </h2>
             </div>
 
-            <div className="mx-auto max-w-2xl bloom-card p-4 sm:p-8 inner-light">
+            <div className="mx-auto max-w-2xl">
               <FAQItem
                 question="How is OffMind different from Notion or Todoist?"
                 answer="Notion is powerful but complex — it's a workspace, not a task system. Todoist is simple but rigid. OffMind sits in the sweet spot: a fast, flexible system built on GTD principles where AI handles the organizing so you can focus on doing."
@@ -677,7 +639,7 @@ export default function LandingPage() {
 }
 
 /* =============================================================================
-   Workflow Step Component — Capture, Organize, Commit
+   Workflow Step Component — Capture, Organize, Commit (Tier 1: rich icons)
 ============================================================================= */
 function WorkflowStep({
   number,
@@ -757,7 +719,7 @@ function WorkflowStep({
 }
 
 /* =============================================================================
-   Capture Method Card Component
+   Capture Method Card Component (Tier 2: monochrome icons)
 ============================================================================= */
 function CaptureMethodCard({
   icon: Icon,
@@ -773,8 +735,8 @@ function CaptureMethodCard({
   return (
     <div className="bloom-card p-5 sm:p-6 inner-light relative">
       <div className="mb-4 flex items-center justify-between">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent-subtle)]">
-          <Icon className="h-5 w-5 text-[var(--accent-hover)]" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--bg-hover)]">
+          <Icon className="h-5 w-5 text-[var(--text-muted)]" />
         </div>
         {status === 'available' ? (
           <span className="inline-flex items-center gap-1 rounded-full bg-[var(--layer-commit-bg)] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--layer-commit)]">
@@ -794,32 +756,21 @@ function CaptureMethodCard({
 }
 
 /* =============================================================================
-   Feature Card Component — 2-column warm cards
+   Feature Card Component — monochrome icons (Tier 2)
 ============================================================================= */
 function FeatureCard({
   icon: Icon,
   title,
   description,
-  color,
 }: {
   icon: React.ElementType;
   title: string;
   description: string;
-  color: 'terracotta' | 'sage' | 'lavender' | 'amber';
 }) {
-  const colorMap: Record<string, { bg: string; text: string }> = {
-    terracotta: { bg: 'bg-[var(--accent-subtle)]', text: 'text-[var(--accent-hover)]' },
-    sage: { bg: 'bg-[var(--sage-subtle)]', text: 'text-[var(--sage)]' },
-    lavender: { bg: 'bg-[var(--lavender-subtle)]', text: 'text-[var(--lavender)]' },
-    amber: { bg: 'bg-[var(--layer-process-bg)]', text: 'text-[var(--layer-process)]' },
-  };
-
-  const c = colorMap[color] || colorMap.terracotta;
-
   return (
     <div className="bloom-card p-8 inner-light card-hover">
-      <div className={cn('flex h-12 w-12 items-center justify-center rounded-2xl', c.bg)}>
-        <Icon className={cn('h-6 w-6', c.text)} />
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--bg-hover)]">
+        <Icon className="h-6 w-6 text-[var(--text-muted)]" />
       </div>
       <h3 className="mt-5 text-lg font-bold" style={{ letterSpacing: '-0.01em' }}>{title}</h3>
       <p className="mt-3 text-sm leading-relaxed text-[var(--text-secondary)]">{description}</p>
@@ -828,33 +779,14 @@ function FeatureCard({
 }
 
 /* =============================================================================
-   Persona Card Component — "Built for people who..."
+   Persona Line Component — "Built for people who..."
 ============================================================================= */
-function PersonaCard({
-  icon: Icon,
-  text,
-  color,
-}: {
-  icon: React.ElementType;
-  text: string;
-  color: 'terracotta' | 'sage' | 'lavender' | 'amber';
-}) {
-  const colorMap: Record<string, { bg: string; text: string }> = {
-    terracotta: { bg: 'bg-[var(--accent-subtle)]', text: 'text-[var(--accent-hover)]' },
-    sage: { bg: 'bg-[var(--sage-subtle)]', text: 'text-[var(--sage)]' },
-    lavender: { bg: 'bg-[var(--lavender-subtle)]', text: 'text-[var(--lavender)]' },
-    amber: { bg: 'bg-[var(--layer-process-bg)]', text: 'text-[var(--layer-process)]' },
-  };
-
-  const c = colorMap[color] || colorMap.terracotta;
-
+function PersonaLine({ text }: { text: string }) {
   return (
-    <div className="bloom-card flex items-start gap-4 p-4 sm:p-5">
-      <div className={cn('flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl', c.bg)}>
-        <Icon className={cn('h-4.5 w-4.5', c.text)} />
-      </div>
-      <p className="text-sm sm:text-base leading-relaxed pt-1.5" style={{ color: '#f5efe8' }}>{text}</p>
-    </div>
+    <p className="text-[var(--text-secondary)] leading-relaxed">
+      <span className="text-[var(--accent-hover)] mr-2">&mdash;</span>
+      {text}
+    </p>
   );
 }
 
