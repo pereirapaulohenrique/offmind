@@ -22,6 +22,11 @@ import {
   BookOpen,
   ChevronDown,
   Gift,
+  Layers,
+  Lightbulb,
+  CalendarDays,
+  ListTodo,
+  RefreshCw,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { WaitlistForm } from '@/components/marketing/WaitlistForm';
@@ -308,12 +313,12 @@ export default function LandingPage() {
             </div>
 
             <div className="mx-auto max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <PersonaCard emoji="🧠" text="Have 50 tabs open and still feel like they're forgetting something" />
-              <PersonaCard emoji="📝" text="Have tried Notion, Todoist, Things, and Apple Reminders — and none stuck" />
-              <PersonaCard emoji="💡" text="Get their best ideas at the worst times (2AM, in the shower, mid-meeting)" />
-              <PersonaCard emoji="📅" text="Know about GTD but never found a tool that makes it effortless" />
-              <PersonaCard emoji="😤" text="Spend more time organizing their system than actually doing things" />
-              <PersonaCard emoji="🔄" text="Start every Monday with a fresh plan that falls apart by Wednesday" />
+              <PersonaCard icon={Layers} text="Have 50 tabs open and still feel like they're forgetting something" color="terracotta" />
+              <PersonaCard icon={FileText} text="Have tried Notion, Todoist, Things, and Apple Reminders — and none stuck" color="sage" />
+              <PersonaCard icon={Lightbulb} text="Get their best ideas at the worst times (2AM, in the shower, mid-meeting)" color="lavender" />
+              <PersonaCard icon={CalendarDays} text="Know about GTD but never found a tool that makes it effortless" color="amber" />
+              <PersonaCard icon={ListTodo} text="Spend more time organizing their system than actually doing things" color="terracotta" />
+              <PersonaCard icon={RefreshCw} text="Start every Monday with a fresh plan that falls apart by Wednesday" color="sage" />
             </div>
           </div>
         </section>
@@ -716,11 +721,30 @@ function FeatureCard({
 /* =============================================================================
    Persona Card Component — "Built for people who..."
 ============================================================================= */
-function PersonaCard({ emoji, text }: { emoji: string; text: string }) {
+function PersonaCard({
+  icon: Icon,
+  text,
+  color,
+}: {
+  icon: React.ElementType;
+  text: string;
+  color: 'terracotta' | 'sage' | 'lavender' | 'amber';
+}) {
+  const colorMap: Record<string, { bg: string; text: string }> = {
+    terracotta: { bg: 'bg-[var(--accent-subtle)]', text: 'text-[var(--accent-hover)]' },
+    sage: { bg: 'bg-[var(--sage-subtle)]', text: 'text-[var(--sage)]' },
+    lavender: { bg: 'bg-[var(--lavender-subtle)]', text: 'text-[var(--lavender)]' },
+    amber: { bg: 'bg-[var(--layer-process-bg)]', text: 'text-[var(--layer-process)]' },
+  };
+
+  const c = colorMap[color] || colorMap.terracotta;
+
   return (
-    <div className="bloom-card flex items-start gap-3 p-4 sm:p-5">
-      <span className="text-xl flex-shrink-0 mt-0.5">{emoji}</span>
-      <p className="text-sm sm:text-base leading-relaxed" style={{ color: '#f5efe8' }}>{text}</p>
+    <div className="bloom-card flex items-start gap-4 p-4 sm:p-5">
+      <div className={cn('flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl', c.bg)}>
+        <Icon className={cn('h-4.5 w-4.5', c.text)} />
+      </div>
+      <p className="text-sm sm:text-base leading-relaxed pt-1.5" style={{ color: '#f5efe8' }}>{text}</p>
     </div>
   );
 }
