@@ -718,9 +718,9 @@ function FeatureCard({
 ============================================================================= */
 function PersonaCard({ emoji, text }: { emoji: string; text: string }) {
   return (
-    <div className="bloom-card flex items-start gap-3 p-4 sm:p-5 inner-light">
+    <div className="bloom-card flex items-start gap-3 p-4 sm:p-5">
       <span className="text-xl flex-shrink-0 mt-0.5">{emoji}</span>
-      <p className="text-sm sm:text-base text-foreground leading-relaxed">{text}</p>
+      <p className="text-sm sm:text-base leading-relaxed" style={{ color: '#f5efe8' }}>{text}</p>
     </div>
   );
 }
