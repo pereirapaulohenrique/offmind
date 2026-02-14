@@ -173,7 +173,7 @@ export default function LandingPage() {
         ================================================================ */}
         <section className="border-y border-[var(--border-subtle)] bg-[var(--bg-inset)]">
           <div className="container mx-auto px-4 py-5 sm:px-6 lg:px-8">
-            <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-6 text-sm text-[var(--text-muted)]">
+            <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-6 text-sm text-foreground/60">
               <span className="inline-flex items-center gap-1.5">
                 <BookOpen className="h-3.5 w-3.5" />
                 Built on the GTD methodology
@@ -718,9 +718,9 @@ function FeatureCard({
 ============================================================================= */
 function PersonaCard({ emoji, text }: { emoji: string; text: string }) {
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]/50 p-4 sm:p-5">
+    <div className="flex items-start gap-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-4 sm:p-5">
       <span className="text-xl flex-shrink-0 mt-0.5">{emoji}</span>
-      <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">{text}</p>
+      <p className="text-sm sm:text-base text-foreground/80 leading-relaxed">{text}</p>
     </div>
   );
 }
