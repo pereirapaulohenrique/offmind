@@ -101,11 +101,11 @@ export default function LandingPage() {
                   thinking.
                 </span>
                 <br />
-                <span className="text-[var(--text-secondary)]">Not for storage.</span>
+                <span className="text-muted-foreground">Not for storage.</span>
               </h1>
 
               {/* Subtitle */}
-              <p className="mt-8 max-w-xl text-lg leading-relaxed text-[var(--text-secondary)]" style={{ fontSize: '1.125rem' }}>
+              <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground" style={{ fontSize: '1.125rem' }}>
                 Dump every thought, task, and idea into OffMind. AI suggests where each one belongs.
                 You only see what you committed to today.
               </p>
@@ -195,10 +195,10 @@ export default function LandingPage() {
                 <Leaf className="h-3.5 w-3.5" />
                 How it works
               </div>
-              <h2 className="text-3xl font-bold tracking-tight text-[var(--text-primary)] sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
+              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
                 Three steps to a clear mind
               </h2>
-              <p className="mt-5 text-lg text-[var(--text-secondary)]">
+              <p className="mt-5 text-lg text-muted-foreground">
                 Built on the proven GTD methodology. Simple enough for anyone, powerful enough for overthinkers.
               </p>
             </div>
@@ -242,12 +242,12 @@ export default function LandingPage() {
                 <Zap className="h-3.5 w-3.5" />
                 Zero friction capture
               </div>
-              <h2 className="text-3xl font-bold tracking-tight text-[var(--text-primary)] sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
+              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
                 Capture from anywhere.
                 <br />
-                <span className="text-[var(--text-secondary)]">Literally anywhere.</span>
+                <span className="text-muted-foreground">Literally anywhere.</span>
               </h2>
-              <p className="mt-5 text-lg text-[var(--text-secondary)]">
+              <p className="mt-5 text-lg text-muted-foreground">
                 A thought should never be lost because you weren&apos;t at your desk.
                 OffMind meets you wherever your ideas happen.
               </p>
@@ -305,11 +305,11 @@ export default function LandingPage() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-4xl grid grid-cols-3 gap-4 sm:gap-8 text-center">
               <div>
-                <p className="text-2xl sm:text-4xl font-bold tracking-tight text-[var(--text-primary)]" style={{ letterSpacing: '-0.03em' }}>1,200+</p>
+                <p className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground" style={{ letterSpacing: '-0.03em' }}>1,200+</p>
                 <p className="mt-2 text-xs sm:text-sm text-[var(--text-muted)]">Thoughts per week for the average knowledge worker</p>
               </div>
               <div>
-                <p className="text-2xl sm:text-4xl font-bold tracking-tight text-[var(--text-primary)]" style={{ letterSpacing: '-0.03em' }}>60%</p>
+                <p className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground" style={{ letterSpacing: '-0.03em' }}>60%</p>
                 <p className="mt-2 text-xs sm:text-sm text-[var(--text-muted)]">Are potentially actionable — but never acted on</p>
               </div>
               <div>
@@ -326,12 +326,12 @@ export default function LandingPage() {
         <section className="border-y border-[var(--border-subtle)] bg-[var(--bg-inset)] py-16 sm:py-28 lg:py-32">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
-              <h2 className="text-3xl font-bold tracking-tight text-[var(--text-primary)] sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
+              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
                 Powerful where it matters.
                 <br />
-                <span className="text-[var(--text-secondary)]">Simple everywhere else.</span>
+                <span className="text-muted-foreground">Simple everywhere else.</span>
               </h2>
-              <p className="mt-5 text-lg text-[var(--text-secondary)]">
+              <p className="mt-5 text-lg text-muted-foreground">
                 Every feature is designed to reduce decisions, not add to them
               </p>
             </div>
@@ -381,12 +381,12 @@ export default function LandingPage() {
                 <Heart className="h-3.5 w-3.5" />
                 Built with care
               </div>
-              <h2 className="text-3xl font-bold tracking-tight text-[var(--text-primary)] sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
+              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
                 You&apos;re not disorganized.
                 <br />
-                <span className="text-[var(--text-secondary)]">You just think a lot.</span>
+                <span className="text-muted-foreground">You just think a lot.</span>
               </h2>
-              <p className="mt-6 text-lg leading-relaxed text-[var(--text-secondary)]" style={{ fontSize: '1.125rem' }}>
+              <p className="mt-6 text-lg leading-relaxed text-muted-foreground" style={{ fontSize: '1.125rem' }}>
                 If you have 47 browser tabs open, three different note apps, and a constant
                 low hum of anxiety about forgetting something important — you&apos;re not broken.
                 You just need a better system.
@@ -405,20 +405,20 @@ export default function LandingPage() {
               {/* Resolution cards — no icons (Tier 3) */}
               <div className="mt-12 grid grid-cols-1 gap-4 sm:gap-5 text-left sm:grid-cols-3">
                 <div className="bloom-card p-6 inner-light">
-                  <p className="text-[var(--text-primary)] font-semibold mb-2">Instant brain dump</p>
-                  <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                  <p className="text-foreground font-semibold mb-2">Instant brain dump</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Capture from anywhere in under 2 seconds. Think it, capture it, let it go. Your mind is free to do what it does best.
                   </p>
                 </div>
                 <div className="bloom-card p-6 inner-light">
-                  <p className="text-[var(--text-primary)] font-semibold mb-2">AI handles the sorting</p>
-                  <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                  <p className="text-foreground font-semibold mb-2">AI handles the sorting</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Stop spending mental energy on categorization. AI suggests where each thought belongs. You just approve.
                   </p>
                 </div>
                 <div className="bloom-card p-6 inner-light">
-                  <p className="text-[var(--text-primary)] font-semibold mb-2">Focus on today</p>
-                  <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                  <p className="text-foreground font-semibold mb-2">Focus on today</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Only see what you committed to today. Everything else is safely organized in the background.
                   </p>
                 </div>
@@ -433,10 +433,10 @@ export default function LandingPage() {
         <section className="border-y border-[var(--border-subtle)] bg-[var(--bg-inset)] py-16 sm:py-28 lg:py-32">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
-              <h2 className="text-3xl font-bold tracking-tight text-[var(--text-primary)] sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
+              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
                 Simple, honest pricing
               </h2>
-              <p className="mt-5 text-lg text-[var(--text-secondary)]">
+              <p className="mt-5 text-lg text-muted-foreground">
                 Try everything free for 14 days. No credit card required.
               </p>
             </div>
@@ -444,11 +444,11 @@ export default function LandingPage() {
             <div className="mx-auto mt-16 grid max-w-5xl gap-6 sm:grid-cols-3">
               {/* Free Trial */}
               <div className="bloom-card p-6 sm:p-8 inner-light flex flex-col">
-                <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">Free Trial</h3>
-                <p className="text-sm text-[var(--text-secondary)]">Full access for 14 days</p>
+                <h3 className="text-xl font-bold mb-2 text-foreground">Free Trial</h3>
+                <p className="text-sm text-muted-foreground">Full access for 14 days</p>
                 <div className="mt-6">
-                  <span className="text-4xl font-bold tracking-tight text-[var(--text-primary)]" style={{ letterSpacing: '-0.03em' }}>$0</span>
-                  <span className="text-[var(--text-secondary)]"> for 14 days</span>
+                  <span className="text-4xl font-bold tracking-tight text-foreground" style={{ letterSpacing: '-0.03em' }}>$0</span>
+                  <span className="text-muted-foreground"> for 14 days</span>
                 </div>
                 <ul className="mt-8 space-y-4 flex-1">
                   <PricingFeature>All features included</PricingFeature>
@@ -468,13 +468,13 @@ export default function LandingPage() {
 
               {/* Pro */}
               <div className="bloom-card p-6 sm:p-8 inner-light flex flex-col">
-                <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">Pro</h3>
-                <p className="text-sm text-[var(--text-secondary)]">For individuals who think a lot</p>
+                <h3 className="text-xl font-bold mb-2 text-foreground">Pro</h3>
+                <p className="text-sm text-muted-foreground">For individuals who think a lot</p>
                 <div className="mt-6">
-                  <span className="text-4xl font-bold tracking-tight text-[var(--text-primary)]" style={{ letterSpacing: '-0.03em' }}>$7</span>
-                  <span className="text-[var(--text-secondary)]">/month</span>
+                  <span className="text-4xl font-bold tracking-tight text-foreground" style={{ letterSpacing: '-0.03em' }}>$7</span>
+                  <span className="text-muted-foreground">/month</span>
                 </div>
-                <p className="mt-1 text-xs text-[var(--text-secondary)]">or $59/year (save 30%)</p>
+                <p className="mt-1 text-xs text-muted-foreground">or $59/year (save 30%)</p>
                 <ul className="mt-8 space-y-4 flex-1">
                   <PricingFeature>Everything in trial</PricingFeature>
                   <PricingFeature>Unlimited items & spaces</PricingFeature>
@@ -507,11 +507,11 @@ export default function LandingPage() {
                 >
                   EARLY BIRD
                 </div>
-                <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">Lifetime</h3>
-                <p className="text-sm text-[var(--text-secondary)]">Pay once, use forever</p>
+                <h3 className="text-xl font-bold mb-2 text-foreground">Lifetime</h3>
+                <p className="text-sm text-muted-foreground">Pay once, use forever</p>
                 <div className="mt-6">
-                  <span className="text-4xl font-bold tracking-tight text-[var(--text-primary)]" style={{ letterSpacing: '-0.03em' }}>$39</span>
-                  <span className="text-[var(--text-secondary)]"> one-time</span>
+                  <span className="text-4xl font-bold tracking-tight text-foreground" style={{ letterSpacing: '-0.03em' }}>$39</span>
+                  <span className="text-muted-foreground"> one-time</span>
                 </div>
                 <p className="mt-1 text-xs font-medium text-[var(--accent-hover)]">Only 100 spots available</p>
                 <ul className="mt-8 space-y-4 flex-1">
@@ -546,7 +546,7 @@ export default function LandingPage() {
         <section className="py-16 sm:py-28 lg:py-32">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-16">
-              <h2 className="text-3xl font-bold tracking-tight text-[var(--text-primary)] sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
+              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
                 Questions?
               </h2>
             </div>
@@ -600,10 +600,10 @@ export default function LandingPage() {
                 <Sparkles className="h-3.5 w-3.5" />
                 Early access
               </div>
-              <h2 className="text-3xl font-bold tracking-tight text-[var(--text-primary)] sm:text-5xl title-glow" style={{ letterSpacing: '-0.02em' }}>
+              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl title-glow" style={{ letterSpacing: '-0.02em' }}>
                 Be among the first to try OffMind
               </h2>
-              <p className="mt-5 text-lg text-[var(--text-secondary)]">
+              <p className="mt-5 text-lg text-muted-foreground">
                 Join the waitlist for launch-day access. Early supporters will get an exclusive lifetime deal.
               </p>
               <WaitlistForm />
@@ -624,9 +624,9 @@ export default function LandingPage() {
               <span className="font-semibold tracking-tight text-foreground">OffMind</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-[var(--text-muted)]">
-              <a href="#" className="hover:text-[var(--text-secondary)] transition-colors">Privacy</a>
-              <a href="#" className="hover:text-[var(--text-secondary)] transition-colors">Terms</a>
-              <a href="#" className="hover:text-[var(--text-secondary)] transition-colors">Twitter/X</a>
+              <a href="#" className="hover:text-muted-foreground transition-colors">Privacy</a>
+              <a href="#" className="hover:text-muted-foreground transition-colors">Terms</a>
+              <a href="#" className="hover:text-muted-foreground transition-colors">Twitter/X</a>
             </div>
             <p className="text-sm text-[var(--text-muted)]">
               &copy; 2026 OffMind
@@ -711,9 +711,9 @@ function WorkflowStep({
       </div>
 
       {/* Title and subtitle */}
-      <h3 className="text-2xl font-bold text-[var(--text-primary)]" style={{ letterSpacing: '-0.02em' }}>{title}</h3>
+      <h3 className="text-2xl font-bold text-foreground" style={{ letterSpacing: '-0.02em' }}>{title}</h3>
       <span className={cn('mt-1 text-sm font-medium', c.text)}>{subtitle}</span>
-      <p className="mt-4 text-sm leading-relaxed text-[var(--text-secondary)] max-w-xs">{description}</p>
+      <p className="mt-4 text-sm leading-relaxed text-muted-foreground max-w-xs">{description}</p>
     </div>
   );
 }
@@ -749,8 +749,8 @@ function CaptureMethodCard({
           </span>
         )}
       </div>
-      <h3 className="text-sm sm:text-base font-bold text-[var(--text-primary)]" style={{ letterSpacing: '-0.01em' }}>{title}</h3>
-      <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-[var(--text-secondary)]">{description}</p>
+      <h3 className="text-sm sm:text-base font-bold text-foreground" style={{ letterSpacing: '-0.01em' }}>{title}</h3>
+      <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-muted-foreground">{description}</p>
     </div>
   );
 }
@@ -772,8 +772,8 @@ function FeatureCard({
       <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--bg-hover)]">
         <Icon className="h-6 w-6 text-[var(--text-muted)]" />
       </div>
-      <h3 className="mt-5 text-lg font-bold text-[var(--text-primary)]" style={{ letterSpacing: '-0.01em' }}>{title}</h3>
-      <p className="mt-3 text-sm leading-relaxed text-[var(--text-secondary)]">{description}</p>
+      <h3 className="mt-5 text-lg font-bold text-foreground" style={{ letterSpacing: '-0.01em' }}>{title}</h3>
+      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{description}</p>
     </div>
   );
 }
@@ -783,7 +783,7 @@ function FeatureCard({
 ============================================================================= */
 function PersonaLine({ text }: { text: string }) {
   return (
-    <p className="text-[var(--text-secondary)] leading-relaxed">
+    <p className="text-muted-foreground leading-relaxed">
       <span className="text-[var(--accent-hover)] mr-2">&mdash;</span>
       {text}
     </p>
@@ -799,7 +799,7 @@ function PricingFeature({ children }: { children: React.ReactNode }) {
       <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--layer-commit-bg)]">
         <Check className="h-3.5 w-3.5 text-[var(--layer-commit)]" />
       </div>
-      <span className="text-sm text-[var(--text-primary)]">{children}</span>
+      <span className="text-sm text-foreground">{children}</span>
     </li>
   );
 }
