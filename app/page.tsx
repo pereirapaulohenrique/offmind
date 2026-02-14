@@ -124,7 +124,7 @@ export default function LandingPage() {
                   asChild
                   variant="outline"
                   size="lg"
-                  className="rounded-xl border-[var(--border-default)] bg-[var(--bg-surface)]/50 text-base hover:bg-[var(--bg-hover)] tactile-press"
+                  className="rounded-xl border-[var(--border-default)] bg-[var(--bg-surface)]/50 text-base text-foreground hover:bg-[var(--bg-hover)] tactile-press"
                 >
                   <a href="#how-it-works">See How It Works</a>
                 </Button>
@@ -135,14 +135,14 @@ export default function LandingPage() {
               </p>
             </div>
 
-            {/* Product Preview — screenshot */}
-            <div className="mx-auto mt-24 max-w-5xl">
+            {/* Product Preview — coded mock dashboard */}
+            <div className="mx-auto mt-24 max-w-4xl">
               <div
                 className="relative rounded-3xl border border-[var(--border-default)] bg-[var(--bg-surface)]/80 p-2 bloom-warm"
                 style={{ boxShadow: '0 8px 40px rgba(80,50,20,0.15), 0 2px 8px rgba(80,50,20,0.08), 0 0 0 1px rgba(196,145,100,0.06)' }}
               >
                 <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-base)] overflow-hidden">
-                  {/* Browser chrome */}
+                  {/* Mock dashboard header */}
                   <div className="flex items-center gap-2 border-b border-[var(--border-subtle)] px-5 py-3.5">
                     <div className="flex gap-2">
                       <div className="h-3 w-3 rounded-full bg-red-500/50" />
@@ -154,13 +154,51 @@ export default function LandingPage() {
                       <span className="text-xs font-medium text-[var(--text-muted)]">OffMind</span>
                     </div>
                   </div>
-                  {/* Real app screenshot */}
-                  <img
-                    src="/images/app-screenshot-today.png"
-                    alt="OffMind app — Today view showing captured thoughts organized by AI"
-                    className="w-full"
-                    loading="eager"
-                  />
+
+                  {/* Mock three-layer cards */}
+                  <div className="p-7">
+                    <div className="flex items-center gap-2 mb-5">
+                      <Sun className="h-5 w-5 text-[var(--accent-hover)]" />
+                      <p className="text-lg font-semibold text-foreground">Good morning, Paulo</p>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                      {/* Capture card */}
+                      <div className="rounded-2xl border border-[var(--layer-capture-border)] bg-[var(--layer-capture-bg)] p-5">
+                        <div className="flex items-center gap-2.5 mb-3">
+                          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--layer-capture)]/15">
+                            <Inbox className="h-4 w-4 text-[var(--layer-capture)]" />
+                          </div>
+                          <span className="text-[11px] font-semibold uppercase tracking-wide text-[var(--layer-capture)]/80">Capture</span>
+                        </div>
+                        <p className="text-2xl font-bold text-foreground">5</p>
+                        <p className="text-xs text-[var(--text-muted)] mt-1">items in inbox</p>
+                      </div>
+
+                      {/* Process card */}
+                      <div className="rounded-2xl border border-[var(--layer-process-border)] bg-[var(--layer-process-bg)] p-5">
+                        <div className="flex items-center gap-2.5 mb-3">
+                          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--layer-process)]/15">
+                            <ArrowRightLeft className="h-4 w-4 text-[var(--layer-process)]" />
+                          </div>
+                          <span className="text-[11px] font-semibold uppercase tracking-wide text-[var(--layer-process)]/80">Process</span>
+                        </div>
+                        <p className="text-2xl font-bold text-foreground">2</p>
+                        <p className="text-xs text-[var(--text-muted)] mt-1">to organize</p>
+                      </div>
+
+                      {/* Commit card */}
+                      <div className="rounded-2xl border border-[var(--layer-commit-border)] bg-[var(--layer-commit-bg)] p-5">
+                        <div className="flex items-center gap-2.5 mb-3">
+                          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--layer-commit)]/15">
+                            <CalendarCheck className="h-4 w-4 text-[var(--layer-commit)]" />
+                          </div>
+                          <span className="text-[11px] font-semibold uppercase tracking-wide text-[var(--layer-commit)]/80">Commit</span>
+                        </div>
+                        <p className="text-2xl font-bold text-foreground">3</p>
+                        <p className="text-xs text-[var(--text-muted)] mt-1">today</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -489,7 +527,7 @@ export default function LandingPage() {
               </h2>
             </div>
 
-            <div className="mx-auto max-w-2xl">
+            <div className="mx-auto max-w-2xl bloom-card p-8 inner-light">
               <FAQItem
                 question="How is OffMind different from Notion or Todoist?"
                 answer="Notion is powerful but complex — it's a workspace, not a task system. Todoist is simple but rigid. OffMind sits in the sweet spot: a fast, flexible system built on GTD principles where AI handles the organizing so you can focus on doing."
@@ -716,7 +754,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
         onClick={() => setOpen(!open)}
         className="flex w-full items-center justify-between py-5 text-left"
       >
-        <span className="text-base font-semibold text-[var(--text-primary)] pr-4">{question}</span>
+        <span className="text-base font-semibold text-foreground pr-4">{question}</span>
         <motion.div
           animate={{ rotate: open ? 180 : 0 }}
           transition={{ duration: 0.2 }}
@@ -734,7 +772,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
             transition={{ duration: 0.25, ease: 'easeInOut' }}
             className="overflow-hidden"
           >
-            <p className="pb-5 text-sm leading-relaxed text-[var(--text-secondary)]">
+            <p className="pb-5 text-sm leading-relaxed text-foreground/70">
               {answer}
             </p>
           </motion.div>
