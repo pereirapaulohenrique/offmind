@@ -27,6 +27,12 @@ import {
   CalendarDays,
   ListTodo,
   RefreshCw,
+  Globe,
+  MessageSquare,
+  Chrome,
+  Smartphone,
+  Monitor,
+  Mail,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { WaitlistForm } from '@/components/marketing/WaitlistForm';
@@ -241,6 +247,72 @@ export default function LandingPage() {
                 color="commit"
               />
             </div>
+          </div>
+        </section>
+
+        {/* ================================================================
+            CAPTURE FROM ANYWHERE
+        ================================================================ */}
+        <section className="py-16 sm:py-28 lg:py-32">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-2xl text-center">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[var(--accent-subtle)] px-4 py-1.5 text-sm font-medium text-[var(--accent-hover)]">
+                <Zap className="h-3.5 w-3.5" />
+                Zero friction capture
+              </div>
+              <h2 className="text-3xl font-bold tracking-tight sm:text-5xl" style={{ letterSpacing: '-0.02em' }}>
+                Capture from anywhere.
+                <br />
+                <span className="text-[var(--text-secondary)]">Literally anywhere.</span>
+              </h2>
+              <p className="mt-5 text-lg text-[var(--text-secondary)]">
+                A thought should never be lost because you weren&apos;t at your desk.
+                OffMind meets you wherever your ideas happen.
+              </p>
+            </div>
+
+            <div className="mx-auto mt-16 max-w-4xl grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-5">
+              <CaptureMethodCard
+                icon={Globe}
+                title="Web App"
+                description="Full-featured app in your browser. Works on any device."
+                status="available"
+              />
+              <CaptureMethodCard
+                icon={MessageSquare}
+                title="Telegram Bot"
+                description="Send a message to @OffMindBot. Instantly captured."
+                status="available"
+              />
+              <CaptureMethodCard
+                icon={Chrome}
+                title="Browser Extension"
+                description="Capture thoughts, save tabs, clip pages. One click."
+                status="coming"
+              />
+              <CaptureMethodCard
+                icon={Smartphone}
+                title="Mobile App"
+                description="Native iOS & Android. Capture on the go."
+                status="coming"
+              />
+              <CaptureMethodCard
+                icon={Monitor}
+                title="Desktop App"
+                description="Global hotkey. Capture without switching windows."
+                status="available"
+              />
+              <CaptureMethodCard
+                icon={Mail}
+                title="Email to Inbox"
+                description="Forward any email. It becomes a task automatically."
+                status="coming"
+              />
+            </div>
+
+            <p className="mx-auto mt-8 max-w-xl text-center text-sm text-[var(--text-muted)]">
+              Every capture method sends to the same inbox. Process once, from anywhere.
+            </p>
           </div>
         </section>
 
@@ -680,6 +752,43 @@ function WorkflowStep({
       <h3 className="text-2xl font-bold" style={{ letterSpacing: '-0.02em' }}>{title}</h3>
       <span className={cn('mt-1 text-sm font-medium', c.text)}>{subtitle}</span>
       <p className="mt-4 text-sm leading-relaxed text-[var(--text-secondary)] max-w-xs">{description}</p>
+    </div>
+  );
+}
+
+/* =============================================================================
+   Capture Method Card Component
+============================================================================= */
+function CaptureMethodCard({
+  icon: Icon,
+  title,
+  description,
+  status,
+}: {
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  status: 'available' | 'coming';
+}) {
+  return (
+    <div className="bloom-card p-5 sm:p-6 inner-light relative">
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent-subtle)]">
+          <Icon className="h-5 w-5 text-[var(--accent-hover)]" />
+        </div>
+        {status === 'available' ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-[var(--layer-commit-bg)] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--layer-commit)]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[var(--layer-commit)]" />
+            Available
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1 rounded-full bg-[var(--bg-hover)] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+            Coming soon
+          </span>
+        )}
+      </div>
+      <h3 className="text-sm sm:text-base font-bold" style={{ letterSpacing: '-0.01em' }}>{title}</h3>
+      <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-[var(--text-secondary)]">{description}</p>
     </div>
   );
 }
