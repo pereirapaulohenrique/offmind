@@ -6,8 +6,13 @@ CREATE TABLE IF NOT EXISTS public.waitlist (
   CONSTRAINT waitlist_email_unique UNIQUE (email)
 );
 
--- Allow the service role to insert (API uses createServiceClient)
+-- Enable RLS
 ALTER TABLE public.waitlist ENABLE ROW LEVEL SECURITY;
 
--- No authenticated user policies needed — only service role inserts via API route
--- Service role bypasses RLS by default
+-- Allow anyone to insert (public waitlist signup — no auth required)
+CREATE POLICY "Anyone can join waitlist" ON public.waitlist
+  FOR INSERT WITH CHECK (true);
+
+-- Allow anyone to read count (for social proof counter)
+CREATE POLICY "Anyone can read waitlist count" ON public.waitlist
+  FOR SELECT USING (true);
