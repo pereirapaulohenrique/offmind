@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { resend } from '@/lib/email/resend';
+import { getWaitlistWelcomeEmail } from '@/lib/email/templates';
 
 export async function POST(request: NextRequest) {
   try {
@@ -56,6 +58,18 @@ export async function POST(request: NextRequest) {
         { error: 'Failed to join waitlist. Please try again.' },
         { status: 500 }
       );
+    }
+
+    // Send welcome email (non-blocking — don't fail signup if email fails)
+    try {
+      await resend.emails.send({
+        from: 'OffMind <hello@getoffmind.com>',
+        to: email.toLowerCase(),
+        subject: "You're in — welcome to OffMind",
+        html: getWaitlistWelcomeEmail(email.toLowerCase()),
+      });
+    } catch (emailError) {
+      console.error('Welcome email error:', emailError);
     }
 
     return NextResponse.json(
