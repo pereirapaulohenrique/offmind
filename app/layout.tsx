@@ -20,11 +20,20 @@ export const metadata: Metadata = {
     siteName: 'OffMind',
     title: 'OffMind',
     description: 'The calm productivity system for overthinkers',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'OffMind — Great ideas don\'t survive in a crowded mind',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'OffMind',
     description: 'The calm productivity system for overthinkers',
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,
