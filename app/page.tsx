@@ -92,21 +92,20 @@ export default function LandingPage() {
 
               {/* Headline */}
               <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-7xl title-glow" style={{ letterSpacing: '-0.03em', lineHeight: '1.08' }}>
-                Your brain is for
+                Great ideas don&apos;t survive
                 <br />
+                in a{' '}
                 <span
                   className="bg-clip-text text-transparent"
                   style={{ backgroundImage: 'linear-gradient(135deg, #c2410c, #ea580c, #f59e0b)' }}
                 >
-                  thinking.
+                  crowded mind.
                 </span>
-                <br />
-                <span className="text-muted-foreground">Not for storage.</span>
               </h1>
 
               {/* Subtitle */}
               <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground" style={{ fontSize: '1.125rem' }}>
-                Dump every thought, task, and idea into OffMind. AI suggests where each one belongs.
+                Capture every thought, task, and idea in seconds. AI suggests where each one belongs.
                 You only see what you committed to today.
               </p>
 
@@ -305,16 +304,16 @@ export default function LandingPage() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-4xl grid grid-cols-3 gap-4 sm:gap-8 text-center">
               <div>
-                <p className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground" style={{ letterSpacing: '-0.03em' }}>1,200+</p>
-                <p className="mt-2 text-xs sm:text-sm text-[var(--text-muted)]">Thoughts per week for the average knowledge worker</p>
+                <p className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground" style={{ letterSpacing: '-0.03em' }}>47+</p>
+                <p className="mt-2 text-xs sm:text-sm text-[var(--text-muted)]">Average browser tabs open for a knowledge worker</p>
               </div>
               <div>
-                <p className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground" style={{ letterSpacing: '-0.03em' }}>60%</p>
-                <p className="mt-2 text-xs sm:text-sm text-[var(--text-muted)]">Are potentially actionable — but never acted on</p>
+                <p className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground" style={{ letterSpacing: '-0.03em' }}>6+</p>
+                <p className="mt-2 text-xs sm:text-sm text-[var(--text-muted)]">Productivity apps tried before finding a system that sticks</p>
               </div>
               <div>
-                <p className="text-2xl sm:text-4xl font-bold tracking-tight text-[var(--accent-hover)]" style={{ letterSpacing: '-0.03em' }}>&infin;</p>
-                <p className="mt-2 text-xs sm:text-sm text-[var(--text-muted)]">Lost without a system that captures them all</p>
+                <p className="text-2xl sm:text-4xl font-bold tracking-tight text-[var(--accent-hover)]" style={{ letterSpacing: '-0.03em' }}>2 sec</p>
+                <p className="mt-2 text-xs sm:text-sm text-[var(--text-muted)]">Time to capture a thought in OffMind</p>
               </div>
             </div>
           </div>

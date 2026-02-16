@@ -44,7 +44,7 @@ export function getWaitlistWelcomeEmail(email: string): string {
                     <p style="margin: 0; font-size: 15px; color: #f5efe8;">
                       <span style="color: #22b8cf; font-weight: 600;">Capture</span>
                       <span style="color: #7a7068;"> — </span>
-                      <span style="color: #c4b8ab;">Dump every thought in 2 seconds. Voice, text, email.</span>
+                      <span style="color: #c4b8ab;">Capture every thought in 2 seconds. Voice, text, email.</span>
                     </p>
                   </td>
                 </tr>
