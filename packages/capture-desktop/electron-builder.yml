@@ -13,7 +13,8 @@ mac:
     - dmg
     - zip
 win:
-  icon: assets/icon.ico
+  icon: assets/icon.png
+  signAndEditExecutable: false
   target:
     - nsis
 linux:

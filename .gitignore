@@ -19,6 +19,7 @@
 
 # production
 /build
+packages/capture-desktop/release/
 
 # misc
 .DS_Store
