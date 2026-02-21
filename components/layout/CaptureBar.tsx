@@ -329,7 +329,7 @@ export function CaptureBar({ userId, spaces = [], projects = [], pages = [] }: C
             isRecording
               ? 'border-red-500/40 bg-[var(--bg-surface)]/95 shadow-[0_0_0_3px_rgba(239,68,68,0.12)]'
               : captureTarget
-                ? 'border-[rgba(194,65,12,0.25)] bg-[var(--bg-surface)]/95 shadow-[0_0_0_1px_rgba(194,65,12,0.08)]'
+                ? 'border-[var(--accent-border)] bg-[var(--bg-surface)]/95 shadow-[0_0_0_1px_var(--accent-glow)]'
                 : isFocused
                   ? 'border-[var(--accent-border)] bg-[var(--bg-surface)]/95 shadow-[var(--shadow-glow)]'
                   : 'border-[var(--border-default)] bg-[var(--bg-surface)]/80 shadow-[var(--shadow-card)]'

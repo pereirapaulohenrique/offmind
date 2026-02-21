@@ -14,9 +14,9 @@
   --text-muted: #8a7a6b;
   --text-disabled: #5c4f43;
 
-  --accent-base: #c2410c;
-  --accent-hover: #ea580c;
-  --accent-subtle: rgba(194, 65, 12, 0.12);
+  --accent-base: #2dd4bf;
+  --accent-hover: #5eead4;
+  --accent-subtle: rgba(45, 212, 191, 0.12);
 
   --layer-capture: #6daef7;
   --layer-capture-bg: rgba(109, 174, 247, 0.1);
@@ -78,7 +78,7 @@ body {
 
 .capture-container:focus-within {
   border-color: var(--accent-base);
-  box-shadow: var(--shadow-float), 0 0 0 2px rgba(194, 65, 12, 0.15);
+  box-shadow: var(--shadow-float), 0 0 0 2px rgba(45, 212, 191, 0.15);
 }
 
 /* Input area */

@@ -122,9 +122,11 @@ offmind/
 - **List**: Collapsible destination groups, compact rows
 - **Grid**: Card grid grouped by destination sections
 
-## Visual Identity (Bloom Design System)
+## Visual Identity (Bloom Design System — Hybrid Teal + Terracotta)
 
-- **Brand accent:** Terracotta `#c2410c` — warmth, earth, craft
+- **Product accent (Teal):** `#2dd4bf` (dark) / `#0d9488` (light) — navigation, AI indicators, focus states, interactive controls, progress. The product's interactive personality.
+- **CTA accent (Terracotta):** `#c2410c` (dark) / `#b93d0a` (light) — conversion buttons, landing page, pricing, marketing. Warmth that drives action.
+- **Logo:** Teal-to-terracotta gradient (bridges both accents)
 - **Secondary:** Sage green `#65a30d`, Lavender `#7c3aed`
 - **Layer colors:** Warm blue (capture), Golden amber (process), Warm emerald (commit)
 - **Dark mode:** Warm charcoal backgrounds (#1a1614 base)
@@ -163,4 +165,6 @@ offmind/
 - Don't change the database schema unless absolutely necessary
 - Don't replace Radix/shadcn components with custom implementations
 - Don't over-animate (subtle, fast, purposeful only)
-- Don't use amber as the brand accent (terracotta is the brand, amber is the Process layer)
+- Don't use amber as the brand accent (amber is the Process layer)
+- Don't use terracotta (`--cta-*`) for product UI elements — use teal (`--accent-*`). Terracotta is only for CTA/marketing/conversion elements.
+- Don't hardcode color hex values — always use CSS variable tokens (`var(--accent-base)`, `var(--cta-base)`, etc.)

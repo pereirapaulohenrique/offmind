@@ -201,7 +201,7 @@ export function WaitingForPageClient({
               {/* Title — clickable */}
               <button
                 type="button"
-                className="text-left text-sm font-medium text-[var(--text-primary)] transition-colors hover:text-[#c2410c] focus-visible:outline-none focus-visible:text-[#c2410c]"
+                className="text-left text-sm font-medium text-[var(--text-primary)] transition-colors hover:text-[var(--accent-base)] focus-visible:outline-none focus-visible:text-[var(--accent-base)]"
                 onClick={() => router.push(`/items/${item.id}`)}
               >
                 {item.title}
@@ -247,7 +247,7 @@ export function WaitingForPageClient({
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 gap-1.5 rounded-xl text-xs font-medium text-[var(--text-muted)] hover:text-[#c2410c] hover:bg-[rgba(194,65,12,0.08)]"
+              className="h-8 gap-1.5 rounded-xl text-xs font-medium text-[var(--text-muted)] hover:text-[var(--accent-base)] hover:bg-[var(--accent-glow)]"
               onClick={() => handleFollowUp(item)}
             >
               <MessageSquare className="h-3.5 w-3.5" />
@@ -345,7 +345,7 @@ export function WaitingForPageClient({
                     onClick={() => scrollToGroup(group.contact)}
                     className={cn(
                       'flex shrink-0 items-center gap-2 rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)] px-3.5 py-2 text-left transition-colors',
-                      'hover:border-[var(--accent-base,#c2410c)] hover:bg-[var(--bg-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base,#c2410c)]/40',
+                      'hover:border-[var(--accent-base)] hover:bg-[var(--bg-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                     )}
                   >
                     <span className="text-sm font-medium text-[var(--text-primary)]">

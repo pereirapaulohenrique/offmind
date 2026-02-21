@@ -502,13 +502,13 @@ export function BacklogPageClient({
                     <div
                       className={cn(
                         'group relative rounded-2xl border border-[var(--border-default)] bg-[var(--bg-surface)] shadow-[var(--shadow-card)] transition-all duration-200',
-                        'hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-px hover:border-[#c2410c]/30',
+                        'hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-px hover:border-[var(--accent-base)]/30',
                       )}
                     >
                       {/* Main row */}
                       <div className="flex items-start gap-4 p-5">
                         {/* Circle indicator */}
-                        <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-[var(--border-default)] transition-colors group-hover:border-[#c2410c]/50" />
+                        <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-[var(--border-default)] transition-colors group-hover:border-[var(--accent-base)]/50" />
 
                         {/* Content */}
                         <div className="flex-1 min-w-0">
@@ -516,7 +516,7 @@ export function BacklogPageClient({
                             {/* Title — clickable */}
                             <button
                               type="button"
-                              className="text-left text-sm font-medium text-[var(--text-primary)] transition-colors hover:text-[#c2410c] focus-visible:outline-none focus-visible:text-[#c2410c]"
+                              className="text-left text-sm font-medium text-[var(--text-primary)] transition-colors hover:text-[var(--accent-base)] focus-visible:outline-none focus-visible:text-[var(--accent-base)]"
                               onClick={() => router.push(`/items/${item.id}`)}
                             >
                               {item.title}
@@ -556,8 +556,8 @@ export function BacklogPageClient({
                             className={cn(
                               'h-8 gap-1.5 rounded-xl text-xs font-medium',
                               isScheduling
-                                ? 'bg-[rgba(194,65,12,0.1)] text-[#c2410c]'
-                                : 'text-[var(--text-muted)] hover:text-[#c2410c] hover:bg-[rgba(194,65,12,0.08)]',
+                                ? 'bg-[var(--accent-subtle)] text-[var(--accent-base)]'
+                                : 'text-[var(--text-muted)] hover:text-[var(--accent-base)] hover:bg-[var(--accent-glow)]',
                             )}
                             onClick={() =>
                               setSchedulingItemId(isScheduling ? null : item.id)
@@ -597,7 +597,7 @@ export function BacklogPageClient({
                                   key={preset.label}
                                   variant="outline"
                                   size="sm"
-                                  className="h-7 rounded-xl border-[var(--border-default)] text-xs hover:border-[#c2410c]/40 hover:text-[#c2410c] hover:bg-[rgba(194,65,12,0.06)]"
+                                  className="h-7 rounded-xl border-[var(--border-default)] text-xs hover:border-[var(--accent-base)]/40 hover:text-[var(--accent-base)] hover:bg-[var(--accent-glow)]"
                                   onClick={() =>
                                     handleSchedule(item.id, preset.days)
                                   }
@@ -609,7 +609,7 @@ export function BacklogPageClient({
                               {/* Native date input as fallback for custom date */}
                               <input
                                 type="date"
-                                className="h-7 rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)] px-2 text-xs text-[var(--text-primary)] outline-none focus:border-[#c2410c]/50"
+                                className="h-7 rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)] px-2 text-xs text-[var(--text-primary)] outline-none focus:border-[var(--accent-base)]/50"
                                 min={new Date().toISOString().split('T')[0]}
                                 onChange={(e) => {
                                   if (e.target.value) {

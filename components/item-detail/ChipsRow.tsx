@@ -47,7 +47,7 @@ const chipActive =
 const popoverClass =
   'w-52 rounded-xl border border-white/[0.08] bg-[#252220] p-3 shadow-xl';
 const selectClass =
-  'w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-xs text-neutral-200 focus:border-[#c2410c]/50 focus:outline-none';
+  'w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-xs text-neutral-200 focus:border-[var(--accent-base)]/50 focus:outline-none';
 const inputClass = selectClass;
 
 export function ChipsRow({

@@ -755,7 +755,7 @@ function CommitItemCard({
         <div className="flex-1 min-w-0">
           <h3
             className={cn(
-              'text-sm font-medium text-foreground cursor-pointer hover:text-[#c2410c] transition-colors',
+              'text-sm font-medium text-foreground cursor-pointer hover:text-[var(--accent-base)] transition-colors',
               item.is_completed && 'line-through text-muted-foreground'
             )}
             onClick={() => router.push(`/items/${item.id}`)}
@@ -862,7 +862,7 @@ function UnscheduledCard({
   return (
     <div className="group rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-3 transition-all hover:border-[var(--border-default)]">
       <p
-        className="text-sm font-medium text-[var(--text-primary)] cursor-pointer hover:text-[#c2410c] transition-colors truncate"
+        className="text-sm font-medium text-[var(--text-primary)] cursor-pointer hover:text-[var(--accent-base)] transition-colors truncate"
         onClick={() => router.push(`/items/${item.id}`)}
       >
         {item.title}
@@ -911,7 +911,7 @@ function UnscheduledCard({
               }
             }}
             onBlur={() => setShowDatePicker(false)}
-            className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)] px-2 py-0.5 text-[10px] text-[var(--text-primary)] focus:border-[#c2410c]/40 focus:outline-none"
+            className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)] px-2 py-0.5 text-[10px] text-[var(--text-primary)] focus:border-[var(--accent-base)]/40 focus:outline-none"
             min={new Date().toISOString().split('T')[0]}
           />
         )}

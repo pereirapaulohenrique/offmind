@@ -37,7 +37,7 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 border-b border-[var(--border-subtle)] warm-glass">
         <nav className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--accent-subtle)] group-hover:bg-[var(--accent-base)]/15 transition-colors duration-200">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--cta-subtle)] group-hover:bg-[var(--cta-base)]/15 transition-colors duration-200">
               <OffMindLogo size={24} />
             </div>
             <span className="text-lg font-semibold tracking-tight text-foreground" style={{ letterSpacing: '-0.02em' }}>
@@ -48,7 +48,7 @@ export default function LandingPage() {
             <Button
               asChild
               className="rounded-xl shadow-md tactile-press text-sm sm:text-base"
-              style={{ background: 'var(--gradient-accent)', border: 'none' }}
+              style={{ background: 'var(--gradient-cta)', border: 'none' }}
             >
               <a href="#waitlist">
                 <span className="hidden sm:inline">Join Waitlist</span>
@@ -85,7 +85,7 @@ export default function LandingPage() {
           <div className="relative container mx-auto px-4 py-16 sm:px-6 sm:py-28 lg:py-40 lg:px-8">
             <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
               {/* Warm pill badge */}
-              <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-[var(--accent-border)] bg-[var(--accent-subtle)] px-5 py-2 text-sm font-medium text-[var(--accent-hover)]">
+              <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-[var(--cta-border)] bg-[var(--cta-subtle)] px-5 py-2 text-sm font-medium text-[var(--cta-hover)]">
                 <Sparkles className="h-4 w-4" />
                 AI-powered productivity for busy minds
               </div>
@@ -115,7 +115,7 @@ export default function LandingPage() {
                   asChild
                   size="lg"
                   className="gap-2.5 rounded-xl px-8 shadow-lg tactile-press text-base font-semibold w-full sm:w-auto"
-                  style={{ background: 'var(--gradient-accent)', border: 'none', boxShadow: '0 4px 20px rgba(194,65,12,0.25), 0 1px 3px rgba(194,65,12,0.15)' }}
+                  style={{ background: 'var(--gradient-cta)', border: 'none', boxShadow: '0 4px 20px rgba(194,65,12,0.25), 0 1px 3px rgba(194,65,12,0.15)' }}
                 >
                   <a href="#waitlist">
                     Join the Waitlist
@@ -237,7 +237,7 @@ export default function LandingPage() {
         <section className="py-16 sm:py-28 lg:py-32">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[var(--accent-subtle)] px-4 py-1.5 text-sm font-medium text-[var(--accent-hover)]">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[var(--cta-subtle)] px-4 py-1.5 text-sm font-medium text-[var(--cta-hover)]">
                 <Zap className="h-3.5 w-3.5" />
                 Zero friction capture
               </div>
@@ -312,7 +312,7 @@ export default function LandingPage() {
                 <p className="mt-2 text-xs sm:text-sm text-[var(--text-muted)]">Productivity apps tried before finding a system that sticks</p>
               </div>
               <div>
-                <p className="text-2xl sm:text-4xl font-bold tracking-tight text-[var(--accent-hover)]" style={{ letterSpacing: '-0.03em' }}>2 sec</p>
+                <p className="text-2xl sm:text-4xl font-bold tracking-tight text-[var(--cta-hover)]" style={{ letterSpacing: '-0.03em' }}>2 sec</p>
                 <p className="mt-2 text-xs sm:text-sm text-[var(--text-muted)]">Time to capture a thought in OffMind</p>
               </div>
             </div>
@@ -486,7 +486,7 @@ export default function LandingPage() {
                   size="lg"
                   className="mt-8 w-full rounded-xl tactile-press font-semibold"
                   style={{
-                    background: 'var(--gradient-accent)',
+                    background: 'var(--gradient-cta)',
                     border: 'none',
                     boxShadow: '0 4px 16px rgba(194,65,12,0.20)',
                   }}
@@ -499,7 +499,7 @@ export default function LandingPage() {
               </div>
 
               {/* Lifetime — highlighted */}
-              <div className="relative gradient-border p-6 sm:p-8 inner-light flex flex-col order-first sm:order-last" style={{ boxShadow: 'var(--shadow-glow)' }}>
+              <div className="relative gradient-border p-6 sm:p-8 inner-light flex flex-col order-first sm:order-last" style={{ boxShadow: 'var(--shadow-cta-glow)' }}>
                 <div
                   className="absolute -top-3.5 left-1/2 -translate-x-1/2 bloom-accent px-5 py-1.5 text-xs font-bold tracking-wide"
                   style={{ boxShadow: '0 4px 12px rgba(194,65,12,0.25)' }}
@@ -512,7 +512,7 @@ export default function LandingPage() {
                   <span className="text-4xl font-bold tracking-tight text-foreground" style={{ letterSpacing: '-0.03em' }}>$39</span>
                   <span className="text-muted-foreground"> one-time</span>
                 </div>
-                <p className="mt-1 text-xs font-medium text-[var(--accent-hover)]">Only 100 spots available</p>
+                <p className="mt-1 text-xs font-medium text-[var(--cta-hover)]">Only 100 spots available</p>
                 <ul className="mt-8 space-y-4 flex-1">
                   <PricingFeature>Everything in Pro</PricingFeature>
                   <PricingFeature>All future updates</PricingFeature>
@@ -524,7 +524,7 @@ export default function LandingPage() {
                   size="lg"
                   className="mt-8 w-full rounded-xl tactile-press font-semibold"
                   style={{
-                    background: 'var(--gradient-accent)',
+                    background: 'var(--gradient-cta)',
                     border: 'none',
                     boxShadow: '0 4px 16px rgba(194,65,12,0.20)',
                   }}
@@ -595,7 +595,7 @@ export default function LandingPage() {
 
           <div className="relative container mx-auto px-4 py-16 sm:px-6 sm:py-28 lg:py-36 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-[var(--accent-subtle)] px-4 py-1.5 text-sm font-medium text-[var(--accent-hover)]">
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-[var(--cta-subtle)] px-4 py-1.5 text-sm font-medium text-[var(--cta-hover)]">
                 <Sparkles className="h-3.5 w-3.5" />
                 Early access
               </div>
@@ -617,7 +617,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-4 sm:gap-6 sm:flex-row">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--accent-subtle)]">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--cta-subtle)]">
                 <OffMindLogo size={20} />
               </div>
               <span className="font-semibold tracking-tight text-foreground">OffMind</span>
@@ -700,7 +700,7 @@ function WorkflowStep({
         <span
           className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold shadow-md"
           style={{
-            background: 'var(--gradient-accent)',
+            background: 'var(--gradient-cta)',
             color: '#fef3e8',
             boxShadow: '0 2px 8px rgba(194,65,12,0.25)',
           }}
@@ -783,7 +783,7 @@ function FeatureCard({
 function PersonaLine({ text }: { text: string }) {
   return (
     <p className="text-muted-foreground leading-relaxed">
-      <span className="text-[var(--accent-hover)] mr-2">&mdash;</span>
+      <span className="text-[var(--cta-hover)] mr-2">&mdash;</span>
       {text}
     </p>
   );

@@ -91,7 +91,7 @@ export function CaptureTargetPill({ spaces, projects, pages }: CaptureTargetPill
           className={cn(
             'flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium transition-all duration-200 flex-shrink-0',
             hasTarget
-              ? 'bg-[rgba(194,65,12,0.08)] text-[#c2410c] border border-[rgba(194,65,12,0.2)] hover:bg-[rgba(194,65,12,0.12)]'
+              ? 'bg-[var(--accent-glow)] text-[var(--accent-base)] border border-[var(--accent-border)] hover:bg-[var(--accent-subtle)]'
               : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]'
           )}
         >
@@ -192,7 +192,7 @@ function TargetRow({
       className={cn(
         'flex w-full items-center gap-2.5 px-3 py-2 text-left transition-colors',
         isActive
-          ? 'bg-[rgba(194,65,12,0.06)] text-[var(--text-primary)]'
+          ? 'bg-[var(--accent-glow)] text-[var(--text-primary)]'
           : 'hover:bg-[var(--bg-hover)] text-[var(--text-secondary)]'
       )}
     >

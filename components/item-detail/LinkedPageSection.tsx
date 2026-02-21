@@ -175,10 +175,10 @@ export function LinkedPageSection({
           href={`/pages/${linkedPage.id}`}
           className={cn(
             'group flex items-center gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4',
-            'transition-all duration-200 hover:border-[#c2410c]/30 hover:bg-[#c2410c]/[0.04]'
+            'transition-all duration-200 hover:border-[var(--accent-base)]/30 hover:bg-[var(--accent-base)]/[0.04]'
           )}
         >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#c2410c]/10 text-lg">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--accent-base)]/10 text-lg">
             {linkedPage.icon || '\uD83D\uDCC4'}
           </div>
           <div className="min-w-0 flex-1">
@@ -193,7 +193,7 @@ export function LinkedPageSection({
               })}
             </p>
           </div>
-          <ExternalLink className="h-4 w-4 shrink-0 text-white/20 transition-colors group-hover:text-[#c2410c]" />
+          <ExternalLink className="h-4 w-4 shrink-0 text-white/20 transition-colors group-hover:text-[var(--accent-base)]" />
         </Link>
       </section>
     );
@@ -222,7 +222,7 @@ export function LinkedPageSection({
             size="sm"
             disabled={isCreating}
             onClick={handleCreatePage}
-            className="shrink-0 gap-1.5 rounded-xl bg-[#c2410c]/10 text-[#c2410c] hover:bg-[#c2410c]/20"
+            className="shrink-0 gap-1.5 rounded-xl bg-[var(--accent-base)]/10 text-[var(--accent-base)] hover:bg-[var(--accent-base)]/20"
           >
             {isCreating ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />

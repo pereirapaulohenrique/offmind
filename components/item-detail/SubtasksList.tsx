@@ -377,7 +377,7 @@ export function SubtasksList({ itemId, userId, initialSubtasks, onPromoteSubtask
                 'h-full rounded-full',
                 completed === total && total > 0
                   ? 'bg-emerald-500'
-                  : 'bg-[#c2410c]',
+                  : 'bg-[var(--accent-base)]',
               )}
               initial={false}
               animate={{ width: `${progressPercent}%` }}
@@ -453,8 +453,8 @@ export function SubtasksList({ itemId, userId, initialSubtasks, onPromoteSubtask
               transition={{ type: 'spring', damping: 20, stiffness: 300 }}
               className={cn(
                 'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg',
-                'bg-[#c2410c] text-white transition-colors',
-                'hover:bg-[#c2410c]/80',
+                'bg-[var(--accent-base)] text-white transition-colors',
+                'hover:bg-[var(--accent-base)]/80',
                 'disabled:opacity-50',
               )}
               aria-label="Add subtask"

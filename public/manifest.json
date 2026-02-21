@@ -4,7 +4,7 @@
   "description": "The calm productivity system for overthinkers",
   "start_url": "/",
   "display": "standalone",
-  "theme_color": "#c2410c",
+  "theme_color": "#2dd4bf",
   "background_color": "#1a1614",
   "orientation": "portrait-primary",
   "icons": [

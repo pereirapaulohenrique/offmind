@@ -94,7 +94,7 @@ export function SubtaskItem({ subtask, onToggle, onUpdate, onDelete, onPromote }
         className={cn(
           'relative flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-md border transition-colors duration-150',
           isCompleted
-            ? 'border-[#c2410c] bg-[#c2410c]'
+            ? 'border-[var(--accent-base)] bg-[var(--accent-base)]'
             : 'border-white/[0.12] bg-white/[0.03] hover:border-white/[0.20] hover:bg-white/[0.06]',
         )}
         aria-label={isCompleted ? 'Mark as incomplete' : 'Mark as complete'}
@@ -155,7 +155,7 @@ export function SubtaskItem({ subtask, onToggle, onUpdate, onDelete, onPromote }
             className={cn(
               'flex h-6 w-6 items-center justify-center rounded-lg',
               'text-neutral-600 transition-all duration-150',
-              'hover:bg-[#c2410c]/10 hover:text-[#c2410c]',
+              'hover:bg-[var(--accent-base)]/10 hover:text-[var(--accent-base)]',
             )}
             aria-label="Promote to item"
             title="Promote to item"

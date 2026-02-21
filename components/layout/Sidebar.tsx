@@ -143,9 +143,9 @@ function getLayerStyle(pathname: string): LayerStyle {
   }
   if (pathname.startsWith('/review')) {
     return {
-      bg: 'rgba(194,65,12,0.10)',
-      text: '#c2410c',
-      pill: '#c2410c',
+      bg: 'rgba(45,212,191,0.10)',
+      text: 'var(--accent-base)',
+      pill: 'var(--accent-base)',
     };
   }
   if (pathname.startsWith('/archive')) {
@@ -162,11 +162,11 @@ function getLayerStyle(pathname: string): LayerStyle {
       pill: '#a855f7',
     };
   }
-  // Default: terracotta
+  // Default: teal accent
   return {
-    bg: 'rgba(194,65,12,0.10)',
-    text: '#c2410c',
-    pill: '#c2410c',
+    bg: 'rgba(45,212,191,0.10)',
+    text: 'var(--accent-base)',
+    pill: 'var(--accent-base)',
   };
 }
 
@@ -180,7 +180,7 @@ function WarmSeparator({ className }: { className?: string }) {
       className={cn('mx-3 h-[1.5px] rounded-full', className)}
       style={{
         background:
-          'linear-gradient(to right, transparent, rgba(194,65,12,0.14), rgba(161,98,7,0.08), transparent)',
+          'linear-gradient(to right, transparent, rgba(45,212,191,0.14), rgba(20,184,166,0.08), transparent)',
       }}
     />
   );
@@ -259,7 +259,7 @@ function NavItem({
         />
         {/* Badge — collapsed: absolute dot */}
         {isCollapsed && badge !== undefined && badge > 0 && (
-          <span className="absolute -top-2 -right-2.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#c2410c] px-1 text-[9px] font-bold text-white shadow-[0_2px_6px_rgba(194,65,12,0.3)]">
+          <span className="absolute -top-2 -right-2.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[var(--accent-base)] px-1 text-[9px] font-bold text-white shadow-[0_2px_6px_rgba(45,212,191,0.3)]">
             {badge > 99 ? '99+' : badge}
           </span>
         )}
@@ -270,7 +270,7 @@ function NavItem({
         <>
           <span className="flex-1 truncate">{label}</span>
           {badge !== undefined && badge > 0 && (
-            <span className="rounded-full bg-[rgba(234,88,12,0.12)] px-2 py-0.5 text-[11px] font-semibold text-[#c2410c] tabular-nums">
+            <span className="rounded-full bg-[var(--accent-subtle)] px-2 py-0.5 text-[11px] font-semibold text-[var(--accent-base)] tabular-nums">
               {badge > 99 ? '99+' : badge}
             </span>
           )}
@@ -292,7 +292,7 @@ function NavItem({
           <TooltipContent side="right" className="flex items-center gap-2 rounded-xl">
             <span>{label}</span>
             {badge !== undefined && badge > 0 && (
-              <span className="rounded-full bg-[rgba(234,88,12,0.12)] px-1.5 py-0.5 text-[10px] font-medium text-[#c2410c]">
+              <span className="rounded-full bg-[var(--accent-subtle)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--accent-base)]">
                 {badge}
               </span>
             )}
@@ -350,14 +350,14 @@ function SpaceTreeItem({ space, pathname, isExpanded, onToggle }: SpaceTreeItemP
           className={cn(
             'flex flex-1 items-center gap-2.5 rounded-xl px-2 py-1.5 text-[13px] transition-all duration-200',
             isSpaceActive
-              ? 'bg-[rgba(194,65,12,0.08)] text-[var(--text-primary)] font-medium'
+              ? 'bg-[var(--accent-subtle)] text-[var(--text-primary)] font-medium'
               : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]'
           )}
         >
           <div
             className={cn(
               'flex h-5 w-5 items-center justify-center rounded-lg transition-colors duration-200',
-              colorOption?.bgSubtle || 'bg-[rgba(194,65,12,0.06)]'
+              colorOption?.bgSubtle || 'bg-[var(--accent-glow)]'
             )}
           >
             <SpaceIcon
@@ -422,14 +422,14 @@ function ProjectTreeItem({ project, pathname }: ProjectTreeItemProps) {
         className={cn(
           'flex items-center gap-2.5 rounded-xl px-2 py-1.5 text-[13px] transition-all duration-200',
           isProjectActive
-            ? 'bg-[rgba(194,65,12,0.08)] text-[var(--text-primary)] font-medium'
+            ? 'bg-[var(--accent-subtle)] text-[var(--text-primary)] font-medium'
             : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]'
         )}
       >
         <div
           className={cn(
             'flex h-5 w-5 items-center justify-center rounded-lg transition-colors duration-200',
-            colorOption?.bgSubtle || 'bg-[rgba(194,65,12,0.06)]'
+            colorOption?.bgSubtle || 'bg-[var(--accent-glow)]'
           )}
         >
           <ProjectIcon
@@ -477,7 +477,7 @@ function PageTreeItem({ page, pathname }: PageTreeItemProps) {
       className={cn(
         'flex items-center gap-2 rounded-xl px-2 py-1 text-[12px] transition-all duration-200',
         isPageActive
-          ? 'bg-[rgba(194,65,12,0.06)] text-[var(--text-primary)] font-medium'
+          ? 'bg-[var(--accent-glow)] text-[var(--text-primary)] font-medium'
           : 'text-[var(--text-muted)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-secondary)]'
       )}
     >
@@ -708,7 +708,7 @@ export function Sidebar({ inboxCount: _inboxCountProp = 0, spaces = [] }: Sideba
                   {/* Add space button */}
                   <Button
                     variant="ghost"
-                    className="w-full justify-start gap-2 text-[12px] text-[var(--text-disabled)] hover:text-[#c2410c] hover:bg-[rgba(194,65,12,0.06)] h-8 rounded-xl transition-all duration-200"
+                    className="w-full justify-start gap-2 text-[12px] text-[var(--text-disabled)] hover:text-[var(--accent-base)] hover:bg-[var(--accent-glow)] h-8 rounded-xl transition-all duration-200"
                     asChild
                   >
                     <Link href="/spaces">
@@ -774,7 +774,7 @@ export function Sidebar({ inboxCount: _inboxCountProp = 0, spaces = [] }: Sideba
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="w-full h-9 mb-1.5 rounded-xl text-[var(--text-muted)] hover:text-sidebar-foreground hover:bg-[var(--bg-hover)] border border-transparent hover:border-[rgba(194,65,12,0.12)] transition-all duration-200"
+                  className="w-full h-9 mb-1.5 rounded-xl text-[var(--text-muted)] hover:text-sidebar-foreground hover:bg-[var(--bg-hover)] border border-transparent hover:border-[var(--accent-border)] transition-all duration-200"
                   onClick={toggleSidebar}
                   aria-label="Expand sidebar"
                 >

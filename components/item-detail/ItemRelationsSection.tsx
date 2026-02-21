@@ -224,7 +224,7 @@ export function ItemRelationsSection({ itemId, userId }: ItemRelationsSectionPro
           className={cn(
             'flex h-6 w-6 items-center justify-center rounded-lg transition-colors',
             showSearch
-              ? 'bg-[#c2410c]/10 text-[#c2410c]'
+              ? 'bg-[var(--accent-base)]/10 text-[var(--accent-base)]'
               : 'text-neutral-600 hover:bg-white/[0.06] hover:text-neutral-300',
           )}
         >
@@ -274,7 +274,7 @@ export function ItemRelationsSection({ itemId, userId }: ItemRelationsSectionPro
               placeholder="Search items..."
               className={cn(
                 'w-full rounded-xl border border-white/[0.08] bg-white/[0.03] pl-9 pr-3 py-2 text-sm text-neutral-100',
-                'placeholder:text-neutral-600 focus:border-[#c2410c]/40 focus:outline-none focus:ring-1 focus:ring-[#c2410c]/30',
+                'placeholder:text-neutral-600 focus:border-[var(--accent-base)]/40 focus:outline-none focus:ring-1 focus:ring-[var(--accent-base)]/30',
               )}
             />
             {isSearching && (

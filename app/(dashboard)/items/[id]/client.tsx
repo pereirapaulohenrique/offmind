@@ -282,7 +282,7 @@ function AudioPlayer({
     <div className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2.5">
       <button
         onClick={toggle}
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#c2410c] text-white hover:bg-[#c2410c]/80 transition-colors"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--accent-base)] text-white hover:bg-[var(--accent-base)]/80 transition-colors"
       >
         {playing ? (
           <Pause className="h-3.5 w-3.5" />
@@ -294,7 +294,7 @@ function AudioPlayer({
       <div className="flex-1 min-w-0">
         <div className="h-1.5 rounded-full bg-white/[0.08] overflow-hidden">
           <div
-            className="h-full rounded-full bg-[#c2410c] transition-[width] duration-100"
+            className="h-full rounded-full bg-[var(--accent-base)] transition-[width] duration-100"
             style={{ width: `${progress * 100}%` }}
           />
         </div>
@@ -1293,7 +1293,7 @@ export function ItemDetailClient({
               className={cn(
                 'h-5 w-5 shrink-0 rounded-md border transition-colors',
                 value
-                  ? 'border-[#c2410c] bg-[#c2410c]'
+                  ? 'border-[var(--accent-base)] bg-[var(--accent-base)]'
                   : 'border-white/[0.12] bg-white/[0.03]',
               )}
             >
@@ -1386,7 +1386,7 @@ export function ItemDetailClient({
                 handleCustomValueChange(field.id, e.target.value)
               }
               rows={3}
-              className="w-full resize-none rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm text-neutral-100 placeholder:text-neutral-500 outline-none focus:border-[#c2410c]/40 focus:ring-1 focus:ring-[#c2410c]/20"
+              className="w-full resize-none rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm text-neutral-100 placeholder:text-neutral-500 outline-none focus:border-[var(--accent-base)]/40 focus:ring-1 focus:ring-[var(--accent-base)]/20"
             />
           </div>
         );
@@ -1585,7 +1585,7 @@ export function ItemDetailClient({
                 onChange={(e) => handleNotesChange(e.target.value)}
                 placeholder="Captured thoughts, notes, ideas..."
                 rows={4}
-                className="w-full resize-none bg-transparent border-t border-b border-white/[0.06] py-5 text-[15px] leading-relaxed text-neutral-200 placeholder:text-neutral-600 outline-none focus:border-[#c2410c]/20 transition-colors"
+                className="w-full resize-none bg-transparent border-t border-b border-white/[0.06] py-5 text-[15px] leading-relaxed text-neutral-200 placeholder:text-neutral-600 outline-none focus:border-[var(--accent-base)]/20 transition-colors"
                 style={{ minHeight: '160px' }}
               />
 
@@ -1615,7 +1615,7 @@ export function ItemDetailClient({
                       size="sm"
                       disabled={aiDraftLoading}
                       onClick={handleAIDraftPage}
-                      className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[#c2410c] hover:bg-[#c2410c]/10 hover:text-[#c2410c] h-7 text-xs px-2.5"
+                      className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[var(--accent-base)] hover:bg-[var(--accent-base)]/10 hover:text-[var(--accent-base)] h-7 text-xs px-2.5"
                     >
                       {aiDraftLoading ? (
                         <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -1639,7 +1639,7 @@ export function ItemDetailClient({
                     size="sm"
                     disabled={aiSubtasksLoading}
                     onClick={handleAISuggestSubtasks}
-                    className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[#c2410c] hover:bg-[#c2410c]/10 hover:text-[#c2410c] h-7 text-xs px-2.5"
+                    className="gap-1.5 rounded-xl border-white/[0.08] bg-transparent text-[var(--accent-base)] hover:bg-[var(--accent-base)]/10 hover:text-[var(--accent-base)] h-7 text-xs px-2.5"
                   >
                     {aiSubtasksLoading ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -1910,7 +1910,7 @@ export function ItemDetailClient({
               disabled={!destinationId}
               className={cn(
                 'gap-2 rounded-xl',
-                'bg-[#c2410c] text-white hover:bg-[#c2410c]/90',
+                'bg-[var(--cta-base)] text-white hover:bg-[var(--cta-base)]/90',
                 'shadow-[0_2px_12px_rgba(194,65,12,0.25)]',
                 !destinationId && 'opacity-50 cursor-not-allowed',
               )}
@@ -1978,7 +1978,7 @@ export function ItemDetailClient({
                     <Button
                       size="sm"
                       onClick={handleCreateMeetingPage}
-                      className="flex-1 gap-2 rounded-xl bg-[#c2410c] text-white hover:bg-[#c2410c]/90"
+                      className="flex-1 gap-2 rounded-xl bg-[var(--cta-base)] text-white hover:bg-[var(--cta-base)]/90"
                     >
                       Start a Page
                     </Button>
@@ -2009,7 +2009,7 @@ export function ItemDetailClient({
                     <Button
                       size="sm"
                       onClick={handleCreateFollowUp}
-                      className="flex-1 gap-2 rounded-xl bg-[#c2410c] text-white hover:bg-[#c2410c]/90"
+                      className="flex-1 gap-2 rounded-xl bg-[var(--cta-base)] text-white hover:bg-[var(--cta-base)]/90"
                     >
                       New Item
                     </Button>

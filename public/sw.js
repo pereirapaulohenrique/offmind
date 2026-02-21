@@ -151,11 +151,11 @@ async function networkFirstWithOfflineFallback(request) {
       padding: 2rem;
     }
     .container { max-width: 400px; }
-    h1 { font-size: 1.5rem; margin-bottom: 0.75rem; color: #c2410c; }
+    h1 { font-size: 1.5rem; margin-bottom: 0.75rem; color: #2dd4bf; }
     p { font-size: 1rem; line-height: 1.6; opacity: 0.8; margin-bottom: 1.5rem; }
     button {
-      background: #c2410c;
-      color: white;
+      background: #2dd4bf;
+      color: #0e0e11;
       border: none;
       padding: 0.75rem 1.5rem;
       border-radius: 1rem;

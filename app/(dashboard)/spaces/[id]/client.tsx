@@ -85,7 +85,7 @@ export function SpaceDetailClient({
     name: '',
     description: '',
     icon: 'folder-open',
-    color: COLOR_PALETTE[projects.length % COLOR_PALETTE.length]?.value || '#c2410c',
+    color: COLOR_PALETTE[projects.length % COLOR_PALETTE.length]?.value || '#2dd4bf',
   });
   const [isCreatingProject, setIsCreatingProject] = useState(false);
   const [isCreatingPage, setIsCreatingPage] = useState(false);
@@ -176,7 +176,7 @@ export function SpaceDetailClient({
         name: '',
         description: '',
         icon: 'folder-open',
-        color: COLOR_PALETTE[(projects.length + 1) % COLOR_PALETTE.length]?.value || '#c2410c',
+        color: COLOR_PALETTE[(projects.length + 1) % COLOR_PALETTE.length]?.value || '#2dd4bf',
       });
       toast.success('Project created');
       router.refresh();

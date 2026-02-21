@@ -427,7 +427,7 @@ export function PageEditorClient({
                   <span className="text-[var(--text-muted)]">Born from:</span>
                   <Link
                     href={`/items/${linkedItem.id}`}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-[var(--bg-hover)] px-2.5 py-0.5 text-sm hover:bg-[rgba(194,65,12,0.12)] hover:text-[#c2410c] transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-[var(--bg-hover)] px-2.5 py-0.5 text-sm hover:bg-[var(--accent-subtle)] hover:text-[var(--accent-base)] transition-colors"
                   >
                     <span className="text-[10px]">🌱</span>
                     {linkedItem.title}

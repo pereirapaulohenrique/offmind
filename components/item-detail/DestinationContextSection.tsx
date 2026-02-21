@@ -25,7 +25,7 @@ interface DestinationContextSectionProps {
 const fieldClasses = 'rounded-xl border-white/[0.08] bg-white/[0.03]';
 
 const actionButtonPromote =
-  'bg-[#c2410c]/10 text-[#c2410c] hover:bg-[#c2410c]/20 rounded-xl';
+  'bg-[var(--accent-base)]/10 text-[var(--accent-base)] hover:bg-[var(--accent-base)]/20 rounded-xl';
 const actionButtonComplete =
   'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 rounded-xl';
 

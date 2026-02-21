@@ -51,20 +51,47 @@ Warm charcoal - not cold zinc, not hot amber. Subtly warm to feel human without 
 | `--text-muted` | `#6a6a78` | `#9e9eac` | Placeholders, hints |
 | `--text-disabled` | `#484854` | `#c4c4cc` | Disabled elements |
 
-### Brand Accent (Teal)
+### Hybrid Accent System (Teal + Terracotta)
 
-The teal accent is the OffMind brand color. Used for: primary buttons, active navigation, links, interactive highlights, the capture bar glow, AI features indication.
+OffMind uses a **dual-accent system** where color carries intent:
+
+- **Teal (`--accent-*`)** = Product UI. Navigation, AI indicators, focus states, interactive controls, progress, checkboxes, selection. The product's interactive personality.
+- **Terracotta (`--cta-*`)** = CTA/Marketing. Conversion buttons, landing page badges, pricing CTAs, waitlist forms, email templates. Warmth that drives action.
+
+The logo bridges both colors with a teal-to-terracotta gradient.
+
+#### Product Accent (Teal)
+
+Used for: active navigation, focus rings, links, interactive highlights, capture bar glow, AI feature indicators, checkboxes, toggles, progress bars.
+
+| Token | Dark | Light | Usage |
+|-------|------|-------|-------|
+| `--accent-base` | `#2dd4bf` | `#0d9488` | Primary accent |
+| `--accent-hover` | `#5eead4` | `#14b8a6` | Hover state |
+| `--accent-active` | `#14b8a6` | `#0f766e` | Pressed state |
+| `--accent-subtle` | `rgba(45, 212, 191, 0.10)` | `rgba(13, 148, 136, 0.06)` | Subtle backgrounds |
+| `--accent-border` | `rgba(45, 212, 191, 0.25)` | `rgba(13, 148, 136, 0.22)` | Accent borders |
+| `--accent-glow` | `rgba(45, 212, 191, 0.08)` | `rgba(13, 148, 136, 0.08)` | Glow/shadow effects |
+
+#### CTA Accent (Terracotta)
+
+Used for: CTA buttons on landing page, pricing section buttons, waitlist form submit, "EARLY BIRD" badges, step number badges, marketing emails.
+
+| Token | Dark | Light | Usage |
+|-------|------|-------|-------|
+| `--cta-base` | `#c2410c` | `#b93d0a` | CTA buttons |
+| `--cta-hover` | `#ea580c` | `#d4520f` | Hover state |
+| `--cta-active` | `#9a3412` | `#9a3412` | Pressed state |
+| `--cta-subtle` | `rgba(194, 65, 12, 0.10)` | `rgba(185, 61, 10, 0.06)` | Badge backgrounds |
+| `--cta-border` | `rgba(194, 65, 12, 0.25)` | `rgba(185, 61, 10, 0.22)` | CTA borders |
+| `--cta-glow` | `rgba(194, 65, 12, 0.08)` | `rgba(185, 61, 10, 0.08)` | CTA glow effects |
+
+#### Gradient Tokens
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| `--accent` | `#2dd4bf` | Primary accent |
-| `--accent-hover` | `#5eead4` | Hover state |
-| `--accent-active` | `#14b8a6` | Pressed state |
-| `--accent-subtle` | `rgba(45, 212, 191, 0.10)` | Subtle backgrounds |
-| `--accent-border` | `rgba(45, 212, 191, 0.25)` | Accent borders |
-| `--accent-glow` | `rgba(45, 212, 191, 0.08)` | Glow/shadow effects |
-
-In light mode, accent values stay the same but `--accent` shifts slightly darker for contrast: `#0d9488`.
+| `--gradient-accent` | `linear-gradient(135deg, teal-base, teal-hover)` | Product UI gradients |
+| `--gradient-cta` | `linear-gradient(135deg, terracotta-base, terracotta-hover)` | CTA button gradients |
 
 ### Layer Colors (Functional, Not Brand)
 

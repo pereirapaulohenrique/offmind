@@ -196,7 +196,7 @@ function StepIndicator({
               className={cn(
                 'relative flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold transition-colors duration-300',
                 isCompleted && 'bg-emerald-500/20 text-emerald-400',
-                isCurrent && 'bg-[#c2410c] text-white shadow-lg shadow-[#c2410c]/20',
+                isCurrent && 'bg-[var(--accent-base)] text-white shadow-lg shadow-[var(--accent-base)]/20',
                 isFuture && 'border border-[var(--border-subtle)] text-[var(--text-muted)]',
               )}
               animate={isCurrent ? { scale: [1, 1.08, 1] } : {}}
@@ -658,7 +658,7 @@ export function WeeklyReviewClient({
       {/* Accent bar */}
       <motion.div
         variants={fadeInUp}
-        className="mb-6 h-1 w-20 rounded-full bg-gradient-to-r from-[#c2410c] to-[#f59e0b] opacity-60"
+        className="mb-6 h-1 w-20 rounded-full bg-gradient-to-r from-[var(--accent-base)] to-[var(--accent-hover)] opacity-60"
       />
 
       <motion.h1
@@ -719,21 +719,21 @@ export function WeeklyReviewClient({
           <button
             onClick={fetchAISummary}
             className={cn(
-              'inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[rgba(194,65,12,0.15)] bg-[var(--bg-surface)] px-5 py-3.5',
+              'inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[var(--accent-subtle)] bg-[var(--bg-surface)] px-5 py-3.5',
               'text-sm font-medium text-[var(--text-secondary)]',
-              'transition-all duration-200 hover:border-[rgba(194,65,12,0.3)] hover:bg-[rgba(194,65,12,0.04)]',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+              'transition-all duration-200 hover:border-[var(--accent-border)] hover:bg-[var(--accent-glow)]',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
             )}
           >
-            <Sparkles className="h-4 w-4 text-[#c2410c]" />
+            <Sparkles className="h-4 w-4 text-[var(--accent-base)]" />
             {aiSummaryError ? 'Retry AI Summary' : 'Get AI Summary'}
           </button>
         )}
 
         {aiSummaryLoading && (
-          <div className="rounded-2xl border border-[rgba(194,65,12,0.15)] bg-[var(--bg-surface)] p-5 space-y-4">
+          <div className="rounded-2xl border border-[var(--accent-subtle)] bg-[var(--bg-surface)] p-5 space-y-4">
             <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-[#c2410c]" />
+              <Sparkles className="h-4 w-4 text-[var(--accent-base)]" />
               <span className="text-sm font-medium text-[var(--text-secondary)]">
                 AI Review Summary
               </span>
@@ -753,11 +753,11 @@ export function WeeklyReviewClient({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 28 }}
-            className="rounded-2xl border border-[rgba(194,65,12,0.15)] bg-[var(--bg-surface)] p-5 text-left space-y-4"
+            className="rounded-2xl border border-[var(--accent-subtle)] bg-[var(--bg-surface)] p-5 text-left space-y-4"
           >
             {/* Header */}
             <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-[#c2410c]" />
+              <Sparkles className="h-4 w-4 text-[var(--accent-base)]" />
               <span className="text-sm font-medium text-[var(--text-secondary)]">
                 AI Review Summary
               </span>
@@ -808,9 +808,9 @@ export function WeeklyReviewClient({
 
             {/* Suggestion */}
             {aiSummary.suggestion && (
-              <div className="rounded-xl bg-[rgba(194,65,12,0.04)] border border-[rgba(194,65,12,0.08)] px-4 py-3">
+              <div className="rounded-xl bg-[var(--accent-glow)] border border-[var(--accent-glow)] px-4 py-3">
                 <div className="flex items-start gap-2">
-                  <Lightbulb className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#c2410c]" />
+                  <Lightbulb className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--accent-base)]" />
                   <p className="text-sm italic text-[var(--text-secondary)]">
                     {aiSummary.suggestion}
                   </p>
@@ -835,10 +835,10 @@ export function WeeklyReviewClient({
         onClick={goForwardWithHook}
         className={cn(
           'mt-6 inline-flex items-center gap-2 rounded-2xl px-8 py-3.5',
-          'bg-[#c2410c] text-white font-semibold text-base',
-          'shadow-lg shadow-[#c2410c]/20',
-          'transition-all duration-200 hover:bg-[#9a3409] hover:shadow-xl hover:shadow-[#c2410c]/30',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]',
+          'bg-[var(--accent-base)] text-white font-semibold text-base',
+          'shadow-lg shadow-[var(--accent-base)]/20',
+          'transition-all duration-200 hover:bg-[var(--accent-active)] hover:shadow-xl hover:shadow-[var(--accent-base)]/30',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]',
         )}
       >
         Begin Review
@@ -902,9 +902,9 @@ export function WeeklyReviewClient({
                 onClick={() => router.push('/inbox')}
                 className={cn(
                   'inline-flex items-center gap-2 rounded-xl px-4 py-2',
-                  'bg-[#c2410c] text-white text-sm font-medium',
-                  'transition-all duration-200 hover:bg-[#9a3409]',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+                  'bg-[var(--accent-base)] text-white text-sm font-medium',
+                  'transition-all duration-200 hover:bg-[var(--accent-active)]',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                 )}
               >
                 Go to Inbox
@@ -997,7 +997,7 @@ export function WeeklyReviewClient({
                         'rounded-lg border px-2.5 py-1 text-[11px] font-semibold transition-all duration-200',
                         opt.color,
                         'hover:scale-105 hover:brightness-110',
-                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                       )}
                     >
                       {opt.label}
@@ -1059,7 +1059,7 @@ export function WeeklyReviewClient({
                   className={cn(
                     'inline-flex items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-muted)]',
                     'transition-all duration-200 hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-400',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                   )}
                 >
                   <Archive className="h-3 w-3" />
@@ -1144,7 +1144,7 @@ export function WeeklyReviewClient({
                     className={cn(
                       'inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-400',
                       'transition-all duration-200 hover:bg-emerald-500/20',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                     )}
                   >
                     <ArrowUpRight className="h-3 w-3" />
@@ -1158,7 +1158,7 @@ export function WeeklyReviewClient({
                     className={cn(
                       'inline-flex items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-muted)]',
                       'transition-all duration-200 hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-400',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                     )}
                   >
                     <Archive className="h-3 w-3" />
@@ -1272,7 +1272,7 @@ export function WeeklyReviewClient({
                     className={cn(
                       'inline-flex items-center gap-1 rounded-lg border border-blue-500/30 bg-blue-500/10 px-2.5 py-1 text-[11px] font-medium text-blue-400',
                       'transition-all duration-200 hover:bg-blue-500/20',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                     )}
                   >
                     Follow up sent
@@ -1282,7 +1282,7 @@ export function WeeklyReviewClient({
                     className={cn(
                       'inline-flex items-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium text-emerald-400',
                       'transition-all duration-200 hover:bg-emerald-500/20',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                     )}
                   >
                     Response received
@@ -1292,7 +1292,7 @@ export function WeeklyReviewClient({
                     className={cn(
                       'inline-flex items-center gap-1 rounded-lg border border-[var(--border-subtle)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-muted)]',
                       'transition-all duration-200 hover:bg-[var(--bg-hover)]',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                     )}
                   >
                     Extend +7d
@@ -1537,7 +1537,7 @@ export function WeeklyReviewClient({
                     key={stat.label}
                     className="flex items-center gap-2 rounded-xl bg-[var(--bg-hover)] px-3 py-2"
                   >
-                    <Sparkles className="h-3.5 w-3.5 text-[#c2410c]" />
+                    <Sparkles className="h-3.5 w-3.5 text-[var(--accent-base)]" />
                     <div>
                       <span className="text-sm font-bold tabular-nums text-[var(--text-primary)]">
                         {stat.value}
@@ -1558,10 +1558,10 @@ export function WeeklyReviewClient({
           onClick={() => router.push('/today')}
           className={cn(
             'mt-8 inline-flex items-center gap-2 rounded-2xl px-8 py-3.5',
-            'bg-[#c2410c] text-white font-semibold text-base',
-            'shadow-lg shadow-[#c2410c]/20',
-            'transition-all duration-200 hover:bg-[#9a3409] hover:shadow-xl hover:shadow-[#c2410c]/30',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]',
+            'bg-[var(--accent-base)] text-white font-semibold text-base',
+            'shadow-lg shadow-[var(--accent-base)]/20',
+            'transition-all duration-200 hover:bg-[var(--accent-active)] hover:shadow-xl hover:shadow-[var(--accent-base)]/30',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]',
           )}
         >
           Done
@@ -1641,7 +1641,7 @@ export function WeeklyReviewClient({
               className={cn(
                 'inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium text-[var(--text-muted)]',
                 'transition-all duration-200 hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
               )}
             >
               <ChevronLeft className="h-4 w-4" />
@@ -1655,7 +1655,7 @@ export function WeeklyReviewClient({
                 className={cn(
                   'inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium text-[var(--text-muted)]',
                   'transition-all duration-200 hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                 )}
               >
                 Skip
@@ -1666,10 +1666,10 @@ export function WeeklyReviewClient({
                 onClick={goForwardWithHook}
                 className={cn(
                   'inline-flex items-center gap-1.5 rounded-2xl px-5 py-2',
-                  'bg-[#c2410c] text-white text-sm font-medium',
-                  'shadow-md shadow-[#c2410c]/15',
-                  'transition-all duration-200 hover:bg-[#9a3409]',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]',
+                  'bg-[var(--accent-base)] text-white text-sm font-medium',
+                  'shadow-md shadow-[var(--accent-base)]/15',
+                  'transition-all duration-200 hover:bg-[var(--accent-active)]',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]',
                 )}
               >
                 Continue
@@ -1689,7 +1689,7 @@ export function WeeklyReviewClient({
               className={cn(
                 'inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium text-[var(--text-muted)]',
                 'transition-all duration-200 hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
               )}
             >
               <ChevronLeft className="h-4 w-4" />
@@ -1753,8 +1753,8 @@ function ScheduleRow({
             onClick={() => setShowDatePicker(true)}
             className={cn(
               'inline-flex items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-muted)]',
-              'transition-all duration-200 hover:border-[#c2410c]/30 hover:bg-[rgba(194,65,12,0.08)] hover:text-[#c2410c]',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+              'transition-all duration-200 hover:border-[var(--accent-base)]/30 hover:bg-[var(--accent-glow)] hover:text-[var(--accent-base)]',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
             )}
           >
             <Calendar className="h-3 w-3" />
@@ -1769,15 +1769,15 @@ function ScheduleRow({
               min={format(new Date(), 'yyyy-MM-dd')}
               className={cn(
                 'h-7 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)] px-2 text-[11px] text-[var(--text-primary)]',
-                'focus:border-[#c2410c] focus:outline-none focus:ring-1 focus:ring-[#c2410c]/40',
+                'focus:border-[var(--accent-base)] focus:outline-none focus:ring-1 focus:ring-[var(--accent-base)]/40',
               )}
             />
             <button
               onClick={handleSchedule}
               className={cn(
-                'inline-flex items-center rounded-lg bg-[#c2410c] px-2.5 py-1 text-[11px] font-medium text-white',
-                'transition-all duration-200 hover:bg-[#9a3409]',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+                'inline-flex items-center rounded-lg bg-[var(--accent-base)] px-2.5 py-1 text-[11px] font-medium text-white',
+                'transition-all duration-200 hover:bg-[var(--accent-active)]',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
               )}
             >
               Set

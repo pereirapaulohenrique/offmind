@@ -136,7 +136,7 @@ function SummaryCard({
         'group relative w-full overflow-hidden rounded-2xl border p-5 text-left',
         'transition-all duration-300',
         'hover:scale-[1.02] hover:shadow-[var(--shadow-card-hover)]',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]',
         borderClass,
         bgClass,
         hoverBgClass,
@@ -178,7 +178,7 @@ function ItemRow({
         'group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left',
         'transition-all duration-200',
         'hover:bg-[var(--bg-hover)]',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
         muted && 'opacity-60',
       )}
     >
@@ -302,17 +302,17 @@ function AIInsightsCard({
 
   return (
     <motion.section variants={itemVariants}>
-      <div className="rounded-2xl border border-[rgba(194,65,12,0.2)] bg-[var(--bg-surface)] shadow-[var(--shadow-card)]">
+      <div className="rounded-2xl border border-[var(--accent-border)] bg-[var(--bg-surface)] shadow-[var(--shadow-card)]">
         {/* Header */}
         <div className="flex items-center gap-3 px-6 py-4">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[rgba(194,65,12,0.1)]">
-            <Brain className="h-5 w-5 text-[#c2410c]" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--accent-subtle)]">
+            <Brain className="h-5 w-5 text-[var(--accent-base)]" />
           </div>
           <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--text-primary)]">
             AI Insights
           </h2>
           {insights && totalInsights > 0 && (
-            <span className="rounded-full bg-[rgba(194,65,12,0.1)] px-2.5 py-0.5 text-xs font-semibold tabular-nums text-[#c2410c]">
+            <span className="rounded-full bg-[var(--accent-subtle)] px-2.5 py-0.5 text-xs font-semibold tabular-nums text-[var(--accent-base)]">
               {totalInsights}
             </span>
           )}
@@ -322,10 +322,10 @@ function AIInsightsCard({
             className={cn(
               'ml-auto flex items-center gap-2 rounded-xl border px-3 py-1.5 text-xs font-medium',
               'transition-all duration-200',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
               loading
                 ? 'cursor-not-allowed border-[var(--border-default)] text-[var(--text-disabled)]'
-                : 'border-[rgba(194,65,12,0.3)] text-[#c2410c] hover:bg-[rgba(194,65,12,0.06)]',
+                : 'border-[var(--accent-border)] text-[var(--accent-base)] hover:bg-[var(--accent-glow)]',
             )}
           >
             {loading ? (
@@ -342,13 +342,13 @@ function AIInsightsCard({
         {/* Loading state */}
         {loading && (
           <>
-            <div className="mx-6 h-px bg-[rgba(194,65,12,0.1)]" />
+            <div className="mx-6 h-px bg-[var(--accent-subtle)]" />
             <div className="flex flex-col items-center justify-center px-6 py-10 text-center">
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
               >
-                <Brain className="h-8 w-8 text-[#c2410c] opacity-40" />
+                <Brain className="h-8 w-8 text-[var(--accent-base)] opacity-40" />
               </motion.div>
               <p className="mt-4 text-sm text-[var(--text-muted)]">
                 Analyzing your items...
@@ -360,7 +360,7 @@ function AIInsightsCard({
         {/* Error state */}
         {error && !loading && (
           <>
-            <div className="mx-6 h-px bg-[rgba(194,65,12,0.1)]" />
+            <div className="mx-6 h-px bg-[var(--accent-subtle)]" />
             <div className="flex flex-col items-center justify-center px-6 py-8 text-center">
               <AlertCircle className="h-6 w-6 text-red-400 opacity-60" />
               <p className="mt-3 text-sm text-[var(--text-muted)]">
@@ -373,7 +373,7 @@ function AIInsightsCard({
         {/* Insights loaded */}
         {insights && !loading && !error && (
           <>
-            <div className="mx-6 h-px bg-[rgba(194,65,12,0.1)]" />
+            <div className="mx-6 h-px bg-[var(--accent-subtle)]" />
 
             {totalInsights === 0 ? (
               <div className="flex flex-col items-center justify-center px-6 py-10 text-center">
@@ -562,10 +562,10 @@ function AIInsightsCard({
         {/* Initial state (no insights yet, not loading) */}
         {!insights && !loading && !error && (
           <>
-            <div className="mx-6 h-px bg-[rgba(194,65,12,0.1)]" />
+            <div className="mx-6 h-px bg-[var(--accent-subtle)]" />
             <div className="flex flex-col items-center justify-center px-6 py-8 text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(194,65,12,0.06)]">
-                <Sparkles className="h-5 w-5 text-[#c2410c] opacity-50" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--accent-glow)]">
+                <Sparkles className="h-5 w-5 text-[var(--accent-base)] opacity-50" />
               </div>
               <p className="mt-4 max-w-xs text-sm text-[var(--text-muted)]">
                 Get AI-powered suggestions to promote ideas, group related items, and clean up stale tasks.
@@ -643,12 +643,12 @@ export function TodayPageClient({
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: 'spring' as const, stiffness: 300, damping: 25 }}
         >
-          {/* Terracotta accent bar */}
-          <div className="mb-4 h-1 w-16 rounded-full bg-gradient-to-r from-[#c2410c] to-[#f59e0b] opacity-60" />
+          {/* Accent bar */}
+          <div className="mb-4 h-1 w-16 rounded-full bg-gradient-to-r from-[var(--accent-base)] to-[var(--accent-hover)] opacity-60" />
 
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <GreetingIcon className="h-6 w-6 text-[#c2410c] opacity-70" />
+              <GreetingIcon className="h-6 w-6 text-[var(--accent-base)] opacity-70" />
               <h1 className="text-3xl font-semibold tracking-tight text-[var(--text-primary)]">
                 {greetingText}, {userName}
               </h1>
@@ -725,8 +725,8 @@ export function TodayPageClient({
               variants={itemVariants}
               className="flex flex-col items-center justify-center rounded-2xl border border-[var(--border-default)] bg-[var(--bg-surface)] px-6 py-16 text-center shadow-[var(--shadow-card)]"
             >
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[rgba(194,65,12,0.08)]">
-                <Sun className="h-8 w-8 text-[#c2410c] opacity-60" />
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--accent-glow)]">
+                <Sun className="h-8 w-8 text-[var(--accent-base)] opacity-60" />
               </div>
               <p className="mt-6 max-w-xs text-base font-medium text-[var(--text-primary)]">
                 Your mind is clear.
@@ -852,7 +852,7 @@ export function TodayPageClient({
                   className={cn(
                     'flex w-full items-center gap-3 px-6 py-4 text-left',
                     'transition-colors duration-200 hover:bg-[var(--bg-hover)]',
-                    'rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2410c]/40',
+                    'rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                   )}
                 >
                   <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[rgba(52,211,153,0.10)]">
