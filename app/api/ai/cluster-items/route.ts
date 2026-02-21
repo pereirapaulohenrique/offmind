@@ -1,7 +1,12 @@
+import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { callAIWithJSON, calculateCost } from '@/lib/ai/client';
 import { CLUSTER_ITEMS_PROMPT } from '@/lib/ai/prompts';
+import { validateBody } from '@/lib/validations/validate';
+import { clusterItemsSchema } from '@/lib/validations/schemas';
+import { withRateLimit } from '@/lib/api-utils';
+import { AI_RATE_LIMIT } from '@/lib/rate-limit';
 
 interface Cluster {
   theme: string;
@@ -27,12 +32,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get request body
-    const { items } = await request.json();
+    // Rate limit
+    const rateCheck = withRateLimit(user.id, AI_RATE_LIMIT, 'ai');
+    if (!rateCheck.allowed) return rateCheck.response;
 
-    if (!items || items.length === 0) {
-      return NextResponse.json({ error: 'Items are required' }, { status: 400 });
-    }
+    // Validate request body
+    const body = await request.json();
+    const validation = validateBody(clusterItemsSchema, body);
+    if (!validation.success) return validation.response;
+    const { items } = validation.data;
 
     // Call AI
     const prompt = CLUSTER_ITEMS_PROMPT(items);
@@ -57,6 +65,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(result);
   } catch (error) {
+    Sentry.captureException(error);
     console.error('Error clustering items:', error);
     return NextResponse.json(
       { error: 'Failed to cluster items' },

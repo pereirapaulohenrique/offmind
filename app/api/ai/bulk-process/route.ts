@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { callAIWithJSON, calculateCost } from '@/lib/ai/client';
@@ -8,15 +9,19 @@ import {
   IMPROVE_TITLES_PROMPT,
   SUGGEST_SCHEDULE_PROMPT,
 } from '@/lib/ai/prompts';
+import { validateBody } from '@/lib/validations/validate';
+import { bulkProcessSchema } from '@/lib/validations/schemas';
+import { withRateLimit } from '@/lib/api-utils';
+import { AI_RATE_LIMIT } from '@/lib/rate-limit';
 
 type BulkAction = 'categorize' | 'merge' | 'cleanup' | 'improve' | 'schedule';
 
 interface BulkItem {
   id: string;
   title: string;
-  notes?: string;
-  destination_id?: string;
-  layer?: string;
+  notes?: string | null;
+  destination_id?: string | null;
+  layer?: string | null;
 }
 
 interface DestinationInfo {
@@ -47,35 +52,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get request body
-    const { items, action, destinations } = await request.json() as {
-      items: BulkItem[];
-      action: BulkAction;
-      destinations?: DestinationInfo[];
-    };
+    // Rate limit
+    const rateCheck = withRateLimit(user.id, AI_RATE_LIMIT, 'ai');
+    if (!rateCheck.allowed) return rateCheck.response;
 
-    if (!items || items.length === 0) {
-      return NextResponse.json({ error: 'No items provided' }, { status: 400 });
-    }
-
-    if (!action) {
-      return NextResponse.json({ error: 'Action is required' }, { status: 400 });
-    }
+    // Validate request body
+    const body = await request.json();
+    const validation = validateBody(bulkProcessSchema, body);
+    if (!validation.success) return validation.response;
+    const { items, action, destinations } = validation.data;
 
     // Build prompt based on action
     let prompt: string;
     const itemsForPrompt = items.map(item => ({
       id: item.id,
       title: item.title,
-      notes: item.notes,
+      notes: item.notes ?? undefined,
     }));
 
     switch (action) {
       case 'categorize':
-        if (!destinations || destinations.length === 0) {
-          return NextResponse.json({ error: 'Destinations required for categorize' }, { status: 400 });
-        }
-        prompt = BATCH_CATEGORIZE_PROMPT(itemsForPrompt, destinations);
+        prompt = BATCH_CATEGORIZE_PROMPT(itemsForPrompt, destinations!);
         break;
       case 'merge':
         prompt = FIND_SIMILAR_PROMPT(itemsForPrompt);
@@ -97,7 +94,7 @@ export async function POST(request: Request) {
     const result = await callAIWithJSON<any[]>(prompt, 2000);
 
     // Transform results to consistent format
-    const suggestions: BulkSuggestion[] = transformResults(result, items, action, destinations);
+    const suggestions: BulkSuggestion[] = transformResults(result, items, action, destinations ?? undefined);
 
     // Log AI usage
     const estimatedInputTokens = Math.ceil(prompt.length / 4);
@@ -117,6 +114,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ suggestions });
   } catch (error) {
+    Sentry.captureException(error);
     console.error('Error in bulk AI processing:', error);
     return NextResponse.json(
       { error: 'Failed to process items' },

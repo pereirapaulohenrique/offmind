@@ -1,7 +1,12 @@
+import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { callAIWithJSON, calculateCost } from '@/lib/ai/client';
 import { REVIEW_SUMMARY_PROMPT } from '@/lib/ai/prompts';
+import { validateBody } from '@/lib/validations/validate';
+import { reviewSummarySchema } from '@/lib/validations/schemas';
+import { withRateLimit } from '@/lib/api-utils';
+import { AI_RATE_LIMIT } from '@/lib/rate-limit';
 
 interface ReviewSummaryResponse {
   greeting: string;
@@ -23,7 +28,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const rateCheck = withRateLimit(user.id, AI_RATE_LIMIT, 'ai');
+    if (!rateCheck.allowed) return rateCheck.response;
+
     // Get request body
+    const body = await request.json();
+    const validation = validateBody(reviewSummarySchema, body);
+    if (!validation.success) return validation.response;
     const {
       inboxCount,
       backlogCount,
@@ -33,7 +44,7 @@ export async function POST(request: Request) {
       completedThisWeek,
       streakCount,
       topItems,
-    } = await request.json();
+    } = validation.data;
 
     // Call AI
     const prompt = REVIEW_SUMMARY_PROMPT({
@@ -67,6 +78,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(result);
   } catch (error) {
+    Sentry.captureException(error);
     console.error('Error generating review summary:', error);
     return NextResponse.json(
       { error: 'Failed to generate review summary' },

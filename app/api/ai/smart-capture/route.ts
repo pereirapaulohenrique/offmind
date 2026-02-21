@@ -1,7 +1,12 @@
+import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { callAIWithJSON, calculateCost } from '@/lib/ai/client';
 import { SUGGEST_DESTINATION_PROMPT, EXTRACT_DATE_PROMPT } from '@/lib/ai/prompts';
+import { validateBody } from '@/lib/validations/validate';
+import { smartCaptureSchema } from '@/lib/validations/schemas';
+import { withRateLimit } from '@/lib/api-utils';
+import { AI_RATE_LIMIT } from '@/lib/rate-limit';
 
 interface CategorizeResponse {
   destination: string;
@@ -30,12 +35,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get request body
-    const { text } = await request.json();
+    const rateCheck = withRateLimit(user.id, AI_RATE_LIMIT, 'ai');
+    if (!rateCheck.allowed) return rateCheck.response;
 
-    if (!text) {
-      return NextResponse.json({ error: 'Text is required' }, { status: 400 });
-    }
+    // Get request body
+    const body = await request.json();
+    const validation = validateBody(smartCaptureSchema, body);
+    if (!validation.success) return validation.response;
+    const { text } = validation.data;
 
     // First, extract any date from the text
     const datePrompt = EXTRACT_DATE_PROMPT(text);
@@ -114,6 +121,7 @@ export async function POST(request: Request) {
       confidence: suggestion.confidence,
     });
   } catch (error) {
+    Sentry.captureException(error);
     console.error('Error in smart capture:', error);
     return NextResponse.json(
       { error: 'Failed to capture item' },

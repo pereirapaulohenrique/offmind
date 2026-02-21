@@ -1,15 +1,18 @@
 'use client';
-import { useCallback, useState } from 'react';
-import { softDeleteItem, restoreItem } from '@/lib/utils/soft-delete';
+import { useCallback } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import { softDeleteItem } from '@/lib/utils/soft-delete';
 import { useItemsStore } from '@/stores/items';
 import { toast } from 'sonner';
+import type { Item } from '@/types/database';
 
 export function useSoftDelete() {
-  // Track recently deleted items for undo
-  const [recentlyDeleted, setRecentlyDeleted] = useState<Map<string, NodeJS.Timeout>>(new Map());
   const { removeItem, addItem } = useItemsStore();
 
   const deleteItem = useCallback(async (itemId: string, itemTitle: string) => {
+    // Snapshot the item before removing from UI
+    const snapshot = useItemsStore.getState().items.find((i) => i.id === itemId);
+
     // Optimistically remove from UI
     removeItem(itemId);
 
@@ -17,6 +20,8 @@ export function useSoftDelete() {
     const result = await softDeleteItem(itemId);
 
     if (!result.success) {
+      // Revert: add item back to store
+      if (snapshot) addItem(snapshot);
       toast.error('Failed to delete item');
       return;
     }
@@ -27,14 +32,24 @@ export function useSoftDelete() {
       action: {
         label: 'Undo',
         onClick: async () => {
-          const restored = await restoreItem(itemId);
-          if (restored.success) {
+          const supabase = createClient();
+          const { data, error } = await supabase
+            .from('items')
+            .update({ archived_at: null } as Record<string, unknown>)
+            .eq('id', itemId)
+            .select()
+            .single();
+
+          if (!error && data) {
+            addItem(data as Item);
             toast.success('Item restored');
+          } else {
+            toast.error('Failed to restore');
           }
         },
       },
     });
-  }, [removeItem]);
+  }, [removeItem, addItem]);
 
   return { deleteItem };
 }

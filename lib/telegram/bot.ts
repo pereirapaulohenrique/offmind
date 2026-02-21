@@ -57,6 +57,8 @@ export const BOT_COMMANDS = {
   connect: '/connect',
   capture: '/capture',
   inbox: '/inbox',
+  today: '/today',
+  done: '/done',
   help: '/help',
 };
 
@@ -69,10 +71,12 @@ export const HELP_TEXT = `
 /connect CODE - Connect your account
 /capture TEXT - Capture a new item
 /inbox - View your inbox count
+/today - See today's schedule
+/done - Mark items as done
 /help - Show this help
 
 <b>Quick Capture:</b>
-Just send any message to capture it instantly!
+Send any message, photo, or voice note to capture it instantly!
 `.trim();
 
 // Welcome text for new users
@@ -84,5 +88,10 @@ To connect your account:
 2. Click "Connect Telegram"
 3. Send /connect CODE with your connection code
 
-Or just start sending messages to capture them!
+You can capture:
+• Text messages
+• Photos (with optional captions)
+• Voice notes
+
+Use /help to see all commands.
 `.trim();

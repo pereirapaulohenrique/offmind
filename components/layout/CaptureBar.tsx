@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { uploadAttachment } from '@/lib/supabase/storage';
 import { useAudioRecorder } from '@/hooks/useAudioRecorder';
 import { logActivity } from '@/lib/activity-log';
+import { trackItemCaptured } from '@/lib/analytics/events';
 import { CaptureTargetPill } from '@/components/capture/CaptureTargetPill';
 import { useCaptureTargetStore } from '@/stores/capture-target';
 import { useCaptureContext } from '@/hooks/useCaptureContext';
@@ -201,6 +202,9 @@ export function CaptureBar({ userId, spaces = [], projects = [], pages = [] }: C
           action: 'created',
           metadata: { source: 'web' },
         });
+
+        // Track analytics
+        trackItemCaptured('web', !!(imageFile || audioBlob));
 
         // For long captures, request AI-generated title in the background
         if (isLongCapture && trimmedValue) {

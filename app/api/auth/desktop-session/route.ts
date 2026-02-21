@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { createClient } from '@/lib/supabase/server';
 
 export async function GET() {
@@ -25,6 +26,7 @@ export async function GET() {
       },
     });
   } catch (error: any) {
+    Sentry.captureException(error);
     return NextResponse.json(
       { error: error.message || 'Failed to get session' },
       { status: 500 }

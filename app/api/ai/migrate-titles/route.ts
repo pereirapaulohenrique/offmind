@@ -1,7 +1,10 @@
+import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { callAI, calculateCost } from '@/lib/ai/client';
 import { GENERATE_TITLE_PROMPT } from '@/lib/ai/prompts';
+import { withRateLimit } from '@/lib/api-utils';
+import { AI_RATE_LIMIT } from '@/lib/rate-limit';
 
 export async function POST() {
   try {
@@ -14,6 +17,9 @@ export async function POST() {
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const rateCheck = withRateLimit(user.id, AI_RATE_LIMIT, 'ai');
+    if (!rateCheck.allowed) return rateCheck.response;
 
     // Fetch items where notes is null/empty AND title has content
     const { data: items, error: fetchError } = await supabase
@@ -103,6 +109,7 @@ export async function POST() {
       results,
     });
   } catch (error) {
+    Sentry.captureException(error);
     console.error('Error in migrate-titles:', error);
     return NextResponse.json(
       { error: 'Failed to migrate titles' },

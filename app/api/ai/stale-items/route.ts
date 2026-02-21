@@ -1,7 +1,12 @@
+import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { callAIWithJSON, calculateCost } from '@/lib/ai/client';
 import { STALE_ITEMS_PROMPT } from '@/lib/ai/prompts';
+import { validateBody } from '@/lib/validations/validate';
+import { staleItemsSchema } from '@/lib/validations/schemas';
+import { withRateLimit } from '@/lib/api-utils';
+import { AI_RATE_LIMIT } from '@/lib/rate-limit';
 
 interface StaleItem {
   item_id: string;
@@ -27,12 +32,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get request body
-    const { items } = await request.json();
+    const rateCheck = withRateLimit(user.id, AI_RATE_LIMIT, 'ai');
+    if (!rateCheck.allowed) return rateCheck.response;
 
-    if (!items || items.length === 0) {
-      return NextResponse.json({ error: 'Items are required' }, { status: 400 });
-    }
+    // Get request body
+    const body = await request.json();
+    const validation = validateBody(staleItemsSchema, body);
+    if (!validation.success) return validation.response;
+    const { items } = validation.data;
 
     // Call AI
     const prompt = STALE_ITEMS_PROMPT(items);
@@ -57,6 +64,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(result);
   } catch (error) {
+    Sentry.captureException(error);
     console.error('Error analyzing stale items:', error);
     return NextResponse.json(
       { error: 'Failed to analyze stale items' },

@@ -16,6 +16,9 @@ import {
   UserPlus,
   Loader2,
   Sparkles,
+  Download,
+  AlertTriangle,
+  MessageSquare,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -42,6 +45,7 @@ import { ColorPicker } from '@/components/shared/ColorPicker';
 import { ICON_MAP, COLOR_PALETTE, getSuggestedColor } from '@/components/icons';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useContacts } from '@/hooks/useContacts';
+import { FeedbackWidget } from '@/components/shared/FeedbackWidget';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -98,6 +102,17 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
   // Migration state
   const [isMigrating, setIsMigrating] = useState(false);
   const [migrationResult, setMigrationResult] = useState<{ migrated: number; total: number } | null>(null);
+
+  // Export state
+  const [isExporting, setIsExporting] = useState(false);
+
+  // Feedback state
+  const [showFeedback, setShowFeedback] = useState(false);
+
+  // Account deletion state
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Handle checkout result
   useEffect(() => {
@@ -424,6 +439,55 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
       toast.error('Migration failed. Check console for details.');
     } finally {
       setIsMigrating(false);
+    }
+  };
+
+  const handleExportData = async () => {
+    setIsExporting(true);
+    try {
+      const res = await fetch('/api/export');
+      if (!res.ok) throw new Error('Export failed');
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `offmind-export-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      toast.success('Data exported successfully');
+    } catch {
+      toast.error('Failed to export data');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmText !== 'DELETE MY ACCOUNT') return;
+
+    setIsDeleting(true);
+    try {
+      const res = await fetch('/api/account/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirmation: 'DELETE MY ACCOUNT' }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Deletion failed');
+      }
+
+      toast.success('Account deleted. Goodbye.');
+      window.location.href = '/';
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to delete account');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -791,10 +855,57 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
             </div>
           </section>
 
+          {/* Your Data */}
+          <section>
+            <h2 className="mb-4 text-lg font-semibold">Your Data</h2>
+            <div className="rounded-2xl bg-[var(--bg-surface)] shadow-[var(--shadow-card)] p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-medium">Export All Data</h3>
+                  <p className="text-sm text-[var(--text-muted)]">
+                    Download all your items, projects, spaces, pages, contacts, and settings as JSON.
+                  </p>
+                </div>
+                <Button onClick={handleExportData} disabled={isExporting} className="gap-2">
+                  {isExporting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Exporting...
+                    </>
+                  ) : (
+                    <>
+                      <Download className="h-4 w-4" />
+                      Export
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </section>
+
+          {/* Feedback */}
+          <section>
+            <h2 className="mb-4 text-lg font-semibold">Feedback</h2>
+            <div className="rounded-2xl bg-[var(--bg-surface)] shadow-[var(--shadow-card)] p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-medium">Send Feedback</h3>
+                  <p className="text-sm text-[var(--text-muted)]">
+                    Report a bug, request a feature, or share your thoughts.
+                  </p>
+                </div>
+                <Button onClick={() => setShowFeedback(true)} className="gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  Feedback
+                </Button>
+              </div>
+            </div>
+          </section>
+
           {/* Danger Zone */}
           <section>
             <h2 className="mb-4 text-lg font-semibold text-red-500">Danger Zone</h2>
-            <div className="rounded-2xl border border-red-500/30 bg-red-500/5 p-6">
+            <div className="rounded-2xl border border-red-500/30 bg-red-500/5 p-6 space-y-6">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-medium">Sign Out</h3>
@@ -805,6 +916,84 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
                 <Button variant="destructive" onClick={handleSignOut}>
                   Sign Out
                 </Button>
+              </div>
+
+              <div className="border-t border-red-500/20 pt-6">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="h-5 w-5 text-red-500" />
+                      <h3 className="font-medium text-red-500">Delete Account</h3>
+                    </div>
+                    <p className="mt-1 text-sm text-[var(--text-muted)]">
+                      Permanently delete your account and all associated data. This cannot be undone.
+                    </p>
+                  </div>
+                  {!showDeleteConfirm ? (
+                    <Button
+                      variant="destructive"
+                      onClick={() => setShowDeleteConfirm(true)}
+                    >
+                      Delete Account
+                    </Button>
+                  ) : null}
+                </div>
+
+                {showDeleteConfirm && (
+                  <div className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 p-4 space-y-3">
+                    <p className="text-sm font-medium text-red-400">
+                      This will permanently delete:
+                    </p>
+                    <ul className="text-sm text-[var(--text-muted)] space-y-1 list-disc pl-5">
+                      <li>All your items, projects, spaces, and pages</li>
+                      <li>All contacts and destinations</li>
+                      <li>All uploaded files and recordings</li>
+                      <li>Your subscription (will be canceled)</li>
+                      <li>Your account credentials</li>
+                    </ul>
+                    <p className="text-sm text-[var(--text-muted)]">
+                      We recommend exporting your data first.
+                    </p>
+                    <div className="space-y-2">
+                      <Label htmlFor="delete-confirm" className="text-sm text-red-400">
+                        Type <strong>DELETE MY ACCOUNT</strong> to confirm
+                      </Label>
+                      <Input
+                        id="delete-confirm"
+                        value={deleteConfirmText}
+                        onChange={(e) => setDeleteConfirmText(e.target.value)}
+                        placeholder="DELETE MY ACCOUNT"
+                        className="border-red-500/30 bg-red-500/5"
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="destructive"
+                        onClick={handleDeleteAccount}
+                        disabled={deleteConfirmText !== 'DELETE MY ACCOUNT' || isDeleting}
+                        className="gap-2"
+                      >
+                        {isDeleting ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            Deleting...
+                          </>
+                        ) : (
+                          'Permanently Delete'
+                        )}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setShowDeleteConfirm(false);
+                          setDeleteConfirmText('');
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </section>
@@ -952,6 +1141,9 @@ export function SettingsPageClient({ user, profile, destinations: initialDestina
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Feedback Widget */}
+      <FeedbackWidget open={showFeedback} onOpenChange={setShowFeedback} />
 
       {/* Contact Dialog */}
       <Dialog open={isContactDialogOpen} onOpenChange={(open) => { if (!open) { setIsContactDialogOpen(false); setEditingContact(null); resetContactForm(); } }}>

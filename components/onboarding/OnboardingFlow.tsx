@@ -13,6 +13,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { OffMindLogo } from '@/components/brand/OffMindLogo';
 import { cn } from '@/lib/utils';
+import { trackOnboardingCompleted } from '@/lib/analytics/events';
 
 interface OnboardingFlowProps {
   userName: string;
@@ -96,6 +97,7 @@ export function OnboardingFlow({ userName, onComplete }: OnboardingFlowProps) {
 
   const next = () => {
     if (isLast) {
+      trackOnboardingCompleted(steps.length);
       onComplete();
     } else {
       setCurrentStep(currentStep + 1);
@@ -103,6 +105,7 @@ export function OnboardingFlow({ userName, onComplete }: OnboardingFlowProps) {
   };
 
   const skip = () => {
+    trackOnboardingCompleted(currentStep);
     onComplete();
   };
 

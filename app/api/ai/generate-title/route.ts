@@ -1,7 +1,12 @@
+import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { callAI, calculateCost } from '@/lib/ai/client';
 import { GENERATE_TITLE_PROMPT } from '@/lib/ai/prompts';
+import { validateBody } from '@/lib/validations/validate';
+import { generateTitleSchema } from '@/lib/validations/schemas';
+import { withRateLimit } from '@/lib/api-utils';
+import { AI_RATE_LIMIT } from '@/lib/rate-limit';
 
 export async function POST(request: Request) {
   try {
@@ -15,11 +20,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { itemId, text } = await request.json();
+    const rateCheck = withRateLimit(user.id, AI_RATE_LIMIT, 'ai');
+    if (!rateCheck.allowed) return rateCheck.response;
 
-    if (!text) {
-      return NextResponse.json({ error: 'Text is required' }, { status: 400 });
-    }
+    const body = await request.json();
+    const validation = validateBody(generateTitleSchema, body);
+    if (!validation.success) return validation.response;
+    const { itemId, text } = validation.data;
 
     const prompt = GENERATE_TITLE_PROMPT(text);
     const title = (await callAI(prompt, 50)).trim().replace(/^["']|["']$/g, '');
@@ -51,6 +58,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ title });
   } catch (error) {
+    Sentry.captureException(error);
     console.error('Error generating title:', error);
     return NextResponse.json(
       { error: 'Failed to generate title' },

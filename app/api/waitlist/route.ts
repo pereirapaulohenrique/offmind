@@ -1,27 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { createClient } from '@/lib/supabase/server';
 import { resend } from '@/lib/email/resend';
 import { getWaitlistWelcomeEmail } from '@/lib/email/templates';
+import { waitlistSchema } from '@/lib/validations/schemas';
+import { validateBody } from '@/lib/validations/validate';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email } = await request.json();
-
-    if (!email || typeof email !== 'string') {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      );
-    }
-
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Invalid email address' },
-        { status: 400 }
-      );
-    }
+    const body = await request.json();
+    const validation = validateBody(waitlistSchema, body);
+    if (!validation.success) return validation.response;
+    const { email } = validation.data;
 
     const supabase = await createClient();
 
@@ -77,6 +67,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error: any) {
+    Sentry.captureException(error);
     console.error('Waitlist API error:', error);
     return NextResponse.json(
       { error: 'Something went wrong. Please try again.' },

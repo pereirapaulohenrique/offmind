@@ -1,44 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { createClient } from '@/lib/supabase/server';
 import { createServiceClient } from '@/lib/supabase/server';
-
-// Rate limiting: In-memory store (simple implementation)
-// In production, consider using Redis or a more robust solution
-const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT_MAX = 60; // 60 requests
-const RATE_LIMIT_WINDOW = 60 * 1000; // per minute (60 seconds)
-
-function checkRateLimit(userId: string): { allowed: boolean; remaining: number; resetTime: number } {
-  cleanupExpiredEntries();
-  const now = Date.now();
-  const userLimit = rateLimitStore.get(userId);
-
-  if (!userLimit || now > userLimit.resetTime) {
-    // Create new window
-    const resetTime = now + RATE_LIMIT_WINDOW;
-    rateLimitStore.set(userId, { count: 1, resetTime });
-    return { allowed: true, remaining: RATE_LIMIT_MAX - 1, resetTime };
-  }
-
-  if (userLimit.count >= RATE_LIMIT_MAX) {
-    return { allowed: false, remaining: 0, resetTime: userLimit.resetTime };
-  }
-
-  // Increment count
-  userLimit.count++;
-  rateLimitStore.set(userId, userLimit);
-  return { allowed: true, remaining: RATE_LIMIT_MAX - userLimit.count, resetTime: userLimit.resetTime };
-}
-
-// Clean up expired entries on each check (no interval needed in serverless)
-function cleanupExpiredEntries() {
-  const now = Date.now();
-  for (const [userId, limit] of rateLimitStore.entries()) {
-    if (now > limit.resetTime) {
-      rateLimitStore.delete(userId);
-    }
-  }
-}
+import { checkRateLimit, CAPTURE_RATE_LIMIT } from '@/lib/rate-limit';
+import { validateBody } from '@/lib/validations/validate';
+import { captureSchema } from '@/lib/validations/schemas';
 
 /**
  * POST /api/capture
@@ -119,11 +85,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Check rate limit
-    const rateLimit = checkRateLimit(userId);
+    const rateLimit = checkRateLimit(userId, CAPTURE_RATE_LIMIT, 'capture');
 
     // Add rate limit headers
     const headers = new Headers();
-    headers.set('X-RateLimit-Limit', RATE_LIMIT_MAX.toString());
+    headers.set('X-RateLimit-Limit', CAPTURE_RATE_LIMIT.max.toString());
     headers.set('X-RateLimit-Remaining', rateLimit.remaining.toString());
     headers.set('X-RateLimit-Reset', new Date(rateLimit.resetTime).toISOString());
 
@@ -137,7 +103,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Rate limit exceeded',
-          limit: RATE_LIMIT_MAX,
+          limit: CAPTURE_RATE_LIMIT.max,
           window: '60s',
           resetAt: new Date(rateLimit.resetTime).toISOString(),
         },
@@ -150,60 +116,11 @@ export async function POST(request: NextRequest) {
     try {
       body = await request.json();
     } catch (e) {
-      return NextResponse.json(
-        { error: 'Invalid JSON body' },
-        { status: 400, headers }
-      );
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400, headers });
     }
-
-    const { title, notes, source, project_id, space_id, page_id } = body;
-
-    // Validate targeting fields (optional UUIDs)
-    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    for (const [key, val] of Object.entries({ project_id, space_id, page_id })) {
-      if (val !== undefined && val !== null && (typeof val !== 'string' || !UUID_RE.test(val))) {
-        return NextResponse.json({ error: `${key} must be a valid UUID` }, { status: 400, headers });
-      }
-    }
-
-    // Validate title
-    if (!title || typeof title !== 'string') {
-      return NextResponse.json(
-        { error: 'Title is required and must be a string' },
-        { status: 400, headers }
-      );
-    }
-
-    if (title.length > 500) {
-      return NextResponse.json(
-        { error: 'Title must not exceed 500 characters' },
-        { status: 400, headers }
-      );
-    }
-
-    // Validate notes
-    if (notes !== undefined && notes !== null) {
-      if (typeof notes !== 'string') {
-        return NextResponse.json(
-          { error: 'Notes must be a string' },
-          { status: 400, headers }
-        );
-      }
-      if (notes.length > 5000) {
-        return NextResponse.json(
-          { error: 'Notes must not exceed 5000 characters' },
-          { status: 400, headers }
-        );
-      }
-    }
-
-    // Validate source
-    if (source !== undefined && source !== null && typeof source !== 'string') {
-      return NextResponse.json(
-        { error: 'Source must be a string' },
-        { status: 400, headers }
-      );
-    }
+    const validation = validateBody(captureSchema, body, headers);
+    if (!validation.success) return validation.response;
+    const { title, notes, source, project_id, space_id, page_id } = validation.data;
 
     // Create the item using service client (bypasses RLS)
     const serviceClient = await createServiceClient();
@@ -223,6 +140,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (insertError) {
+      Sentry.captureException(insertError);
       console.error('Error creating item:', insertError);
       return NextResponse.json(
         { error: 'Failed to create item', details: insertError.message },
@@ -237,7 +155,7 @@ export async function POST(request: NextRequest) {
         meta: {
           authMethod,
           rateLimit: {
-            limit: RATE_LIMIT_MAX,
+            limit: CAPTURE_RATE_LIMIT.max,
             remaining: rateLimit.remaining,
             resetAt: new Date(rateLimit.resetTime).toISOString(),
           },
@@ -246,6 +164,7 @@ export async function POST(request: NextRequest) {
       { status: 201, headers }
     );
   } catch (error: any) {
+    Sentry.captureException(error);
     console.error('Capture API error:', error);
 
     const headers = new Headers();
@@ -309,11 +228,11 @@ export async function GET(request: NextRequest) {
     }
 
     // Check rate limit
-    const rateLimit = checkRateLimit(userId);
+    const rateLimit = checkRateLimit(userId, CAPTURE_RATE_LIMIT, 'capture');
 
     // Add headers
     const headers = new Headers();
-    headers.set('X-RateLimit-Limit', RATE_LIMIT_MAX.toString());
+    headers.set('X-RateLimit-Limit', CAPTURE_RATE_LIMIT.max.toString());
     headers.set('X-RateLimit-Remaining', rateLimit.remaining.toString());
     headers.set('X-RateLimit-Reset', new Date(rateLimit.resetTime).toISOString());
     headers.set('Access-Control-Allow-Origin', '*');
@@ -325,7 +244,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Rate limit exceeded',
-          limit: RATE_LIMIT_MAX,
+          limit: CAPTURE_RATE_LIMIT.max,
           window: '60s',
           resetAt: new Date(rateLimit.resetTime).toISOString(),
         },
@@ -344,6 +263,7 @@ export async function GET(request: NextRequest) {
       .limit(10);
 
     if (fetchError) {
+      Sentry.captureException(fetchError);
       console.error('Error fetching items:', fetchError);
       return NextResponse.json(
         { error: 'Failed to fetch items', details: fetchError.message },
@@ -358,7 +278,7 @@ export async function GET(request: NextRequest) {
         count: items?.length || 0,
         meta: {
           rateLimit: {
-            limit: RATE_LIMIT_MAX,
+            limit: CAPTURE_RATE_LIMIT.max,
             remaining: rateLimit.remaining,
             resetAt: new Date(rateLimit.resetTime).toISOString(),
           },
@@ -367,6 +287,7 @@ export async function GET(request: NextRequest) {
       { status: 200, headers }
     );
   } catch (error: any) {
+    Sentry.captureException(error);
     console.error('Capture GET API error:', error);
 
     const headers = new Headers();

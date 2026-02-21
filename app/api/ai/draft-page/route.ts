@@ -1,7 +1,12 @@
+import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { callAI, calculateCost } from '@/lib/ai/client';
 import { DRAFT_PAGE_PROMPT } from '@/lib/ai/prompts';
+import { validateBody } from '@/lib/validations/validate';
+import { draftPageSchema } from '@/lib/validations/schemas';
+import { withRateLimit } from '@/lib/api-utils';
+import { AI_RATE_LIMIT } from '@/lib/rate-limit';
 
 export async function POST(request: Request) {
   try {
@@ -16,12 +21,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get request body
-    const { itemId, title, notes, subtasks, destinationSlug } = await request.json();
+    // Rate limit
+    const rateCheck = withRateLimit(user.id, AI_RATE_LIMIT, 'ai');
+    if (!rateCheck.allowed) return rateCheck.response;
 
-    if (!title) {
-      return NextResponse.json({ error: 'Title is required' }, { status: 400 });
-    }
+    // Validate request body
+    const body = await request.json();
+    const validation = validateBody(draftPageSchema, body);
+    if (!validation.success) return validation.response;
+    const { itemId, title, notes, subtasks, destinationSlug } = validation.data;
 
     // Call AI (plain text response, not JSON)
     const prompt = DRAFT_PAGE_PROMPT(title, notes, subtasks, destinationSlug);
@@ -46,6 +54,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ content });
   } catch (error) {
+    Sentry.captureException(error);
     console.error('Error drafting page:', error);
     return NextResponse.json(
       { error: 'Failed to draft page' },

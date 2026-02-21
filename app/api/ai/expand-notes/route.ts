@@ -1,7 +1,12 @@
+import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { callAI, calculateCost } from '@/lib/ai/client';
 import { EXPAND_NOTE_PROMPT } from '@/lib/ai/prompts';
+import { validateBody } from '@/lib/validations/validate';
+import { expandNotesSchema } from '@/lib/validations/schemas';
+import { withRateLimit } from '@/lib/api-utils';
+import { AI_RATE_LIMIT } from '@/lib/rate-limit';
 
 export async function POST(request: Request) {
   try {
@@ -16,12 +21,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get request body
-    const { notes, title = 'Note' } = await request.json();
+    // Rate limit
+    const rateCheck = withRateLimit(user.id, AI_RATE_LIMIT, 'ai');
+    if (!rateCheck.allowed) return rateCheck.response;
 
-    if (!notes) {
-      return NextResponse.json({ error: 'Notes are required' }, { status: 400 });
-    }
+    // Validate request body
+    const body = await request.json();
+    const validation = validateBody(expandNotesSchema, body);
+    if (!validation.success) return validation.response;
+    const { notes, title: validatedTitle } = validation.data;
+    const title = validatedTitle || 'Note';
 
     // Call AI to expand notes
     const prompt = EXPAND_NOTE_PROMPT(title, notes);
@@ -45,6 +54,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ expanded });
   } catch (error) {
+    Sentry.captureException(error);
     console.error('Error expanding notes:', error);
     return NextResponse.json(
       { error: 'Failed to expand notes' },

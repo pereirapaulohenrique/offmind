@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
+import { trackServerEvent } from '@/lib/analytics/server';
 import { headers } from 'next/headers';
 import { stripe } from '@/lib/stripe/client';
 import { createClient } from '@supabase/supabase-js';
@@ -28,6 +30,7 @@ export async function POST(request: NextRequest) {
       process.env.STRIPE_WEBHOOK_SECRET!
     );
   } catch (error: any) {
+    Sentry.captureException(error);
     console.error('Webhook signature verification failed:', error.message);
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
@@ -64,6 +67,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ received: true });
   } catch (error: any) {
+    Sentry.captureException(error);
     console.error('Webhook handler error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -109,6 +113,12 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
       } as any)
       .eq('user_id', userId);
   }
+
+  // Track subscription started
+  trackServerEvent(userId, 'subscription_started', {
+    plan: plan || (session.mode === 'payment' ? 'lifetime' : 'monthly'),
+    mode: session.mode,
+  });
 }
 
 async function handleSubscriptionUpdate(subscription: any) {

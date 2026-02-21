@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { createClient } from '@/lib/supabase/server';
 import { generateConnectionCode } from '@/lib/telegram/bot';
 
@@ -35,6 +36,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ code });
   } catch (error: any) {
+    Sentry.captureException(error);
     console.error('Telegram connect error:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to generate code' },
@@ -71,6 +73,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ connected: false });
   } catch (error: any) {
+    Sentry.captureException(error);
     return NextResponse.json(
       { error: error.message || 'Failed to check connection' },
       { status: 500 }
@@ -96,6 +99,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
+    Sentry.captureException(error);
     return NextResponse.json(
       { error: error.message || 'Failed to disconnect' },
       { status: 500 }

@@ -1,7 +1,12 @@
+import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { callAIWithJSON, calculateCost } from '@/lib/ai/client';
 import { SUGGEST_DESTINATION_PROMPT } from '@/lib/ai/prompts';
+import { validateBody } from '@/lib/validations/validate';
+import { suggestDestinationSchema } from '@/lib/validations/schemas';
+import { withRateLimit } from '@/lib/api-utils';
+import { AI_RATE_LIMIT } from '@/lib/rate-limit';
 
 interface SuggestionResponse {
   destination: string;
@@ -22,15 +27,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get request body
-    const { itemId, title, notes } = await request.json();
+    const rateCheck = withRateLimit(user.id, AI_RATE_LIMIT, 'ai');
+    if (!rateCheck.allowed) return rateCheck.response;
 
-    if (!title) {
-      return NextResponse.json({ error: 'Title is required' }, { status: 400 });
-    }
+    // Get request body
+    const body = await request.json();
+    const validation = validateBody(suggestDestinationSchema, body);
+    if (!validation.success) return validation.response;
+    const { itemId, title, notes } = validation.data;
 
     // Call AI
-    const prompt = SUGGEST_DESTINATION_PROMPT(title, notes);
+    const prompt = SUGGEST_DESTINATION_PROMPT(title, notes ?? undefined);
     const suggestion = await callAIWithJSON<SuggestionResponse>(prompt);
 
     // Get the destination ID for the suggested slug
@@ -65,6 +72,7 @@ export async function POST(request: Request) {
       reasoning: suggestion.reasoning,
     });
   } catch (error) {
+    Sentry.captureException(error);
     console.error('Error suggesting destination:', error);
     return NextResponse.json(
       { error: 'Failed to suggest destination' },

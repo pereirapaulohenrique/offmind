@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { createClient } from '@supabase/supabase-js';
+import { extensionCaptureSchema } from '@/lib/validations/schemas';
+import { validateBody } from '@/lib/validations/validate';
 
 // Use service role for API key auth (bypasses RLS)
 const supabaseAdmin = createClient(
@@ -29,12 +32,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid API key' }, { status: 401 });
     }
 
-    // Get request body
-    const { title, notes, source, project_id, space_id, page_id } = await request.json();
-
-    if (!title) {
-      return NextResponse.json({ error: 'Title is required' }, { status: 400 });
-    }
+    // Get and validate request body
+    const body = await request.json();
+    const validation = validateBody(extensionCaptureSchema, body);
+    if (!validation.success) return validation.response;
+    const { title, notes, source, project_id, space_id, page_id } = validation.data;
 
     // Accept source from extension or desktop clients
     const itemSource = source === 'desktop' ? 'desktop' : 'extension';
@@ -57,6 +59,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, item: data });
   } catch (error: any) {
+    Sentry.captureException(error);
     console.error('Extension capture error:', error);
     return NextResponse.json(
       { error: error.message || 'Capture failed' },

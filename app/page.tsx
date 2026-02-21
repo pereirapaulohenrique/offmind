@@ -623,8 +623,8 @@ export default function LandingPage() {
               <span className="font-semibold tracking-tight text-foreground">OffMind</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-[var(--text-muted)]">
-              <a href="#" className="hover:text-muted-foreground transition-colors">Privacy</a>
-              <a href="#" className="hover:text-muted-foreground transition-colors">Terms</a>
+              <a href="/privacy" className="hover:text-muted-foreground transition-colors">Privacy</a>
+              <a href="/terms" className="hover:text-muted-foreground transition-colors">Terms</a>
               <a href="#" className="hover:text-muted-foreground transition-colors">Twitter/X</a>
             </div>
             <p className="text-sm text-[var(--text-muted)]">

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { createClient } from '@/lib/supabase/server';
 import { stripe, PRICES } from '@/lib/stripe/client';
+import { createCheckoutSchema } from '@/lib/validations/schemas';
+import { validateBody } from '@/lib/validations/validate';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +15,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { plan } = await request.json();
+    const body = await request.json();
+    const validation = validateBody(createCheckoutSchema, body);
+    if (!validation.success) return validation.response;
+    const { plan } = validation.data;
 
     // Validate plan
     const priceId = PRICES[plan as keyof typeof PRICES];
@@ -70,6 +76,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url: session.url });
   } catch (error: any) {
+    Sentry.captureException(error);
     console.error('Stripe checkout error:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to create checkout session' },

@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/client';
 import type { Attachment } from '@/types/database';
 
 const BUCKET = 'attachments';
+const SIGNED_URL_EXPIRY = 3600; // 1 hour
 
 export async function uploadAttachment(
   file: File,
@@ -21,16 +22,12 @@ export async function uploadAttachment(
 
   if (error) throw error;
 
-  const { data: urlData } = supabase.storage
-    .from(BUCKET)
-    .getPublicUrl(path);
-
   const type: 'image' | 'audio' = file.type.startsWith('audio/') ? 'audio' : 'image';
 
   return {
     id,
     type,
-    url: urlData.publicUrl,
+    url: path,
     filename: file.name,
     size: file.size,
     created_at: new Date().toISOString(),
@@ -46,11 +43,15 @@ export async function deleteAttachment(path: string): Promise<void> {
   if (error) throw error;
 }
 
-export function getAttachmentUrl(path: string): string {
+export async function getAttachmentUrl(path: string): Promise<string> {
   const supabase = createClient();
-  const { data } = supabase.storage
+  const { data, error } = await supabase.storage
     .from(BUCKET)
-    .getPublicUrl(path);
+    .createSignedUrl(path, SIGNED_URL_EXPIRY);
 
-  return data.publicUrl;
+  if (error || !data?.signedUrl) {
+    throw error || new Error('Failed to create signed URL');
+  }
+
+  return data.signedUrl;
 }

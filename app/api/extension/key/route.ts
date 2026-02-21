@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { createClient } from '@/lib/supabase/server';
 import { randomBytes } from 'crypto';
 
@@ -34,6 +35,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ apiKey });
   } catch (error: any) {
+    Sentry.captureException(error);
     console.error('Extension key error:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to generate key' },
@@ -62,6 +64,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ hasKey: !!apiKey, apiKey: apiKey || null });
   } catch (error: any) {
+    Sentry.captureException(error);
     return NextResponse.json(
       { error: error.message || 'Failed to get key' },
       { status: 500 }
@@ -95,6 +98,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
+    Sentry.captureException(error);
     return NextResponse.json(
       { error: error.message || 'Failed to delete key' },
       { status: 500 }

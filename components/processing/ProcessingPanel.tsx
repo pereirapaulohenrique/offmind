@@ -18,12 +18,15 @@ import type { Item, Destination, Space, Project, Contact, Json, Attachment } fro
 import type { CustomFieldDefinition } from '@/types';
 import { RoutingNoteModal } from '@/components/shared/RoutingNoteModal';
 import { logActivity } from '@/lib/activity-log';
+import { useAttachmentUrl } from '@/hooks/useAttachmentUrl';
+import { trackItemProcessed, trackItemScheduled } from '@/lib/analytics/events';
 
 // ---------------------------------------------------------------------------
 // Lightbox (fullscreen image viewer)
 // ---------------------------------------------------------------------------
 
 function ImageLightbox({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
+  const resolvedUrl = useAttachmentUrl(src);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -32,16 +35,18 @@ function ImageLightbox({ src, alt, onClose }: { src: string; alt: string; onClos
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm cursor-zoom-out"
       onClick={onClose}
     >
-      <motion.img
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-        src={src}
-        alt={alt}
-        className="max-h-[85vh] max-w-[90vw] rounded-2xl object-contain shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      />
+      {resolvedUrl && (
+        <motion.img
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+          src={resolvedUrl}
+          alt={alt}
+          className="max-h-[85vh] max-w-[90vw] rounded-2xl object-contain shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        />
+      )}
       <button
         onClick={onClose}
         className="absolute top-5 right-5 rounded-full bg-white/10 p-2 text-white/70 hover:bg-white/20 hover:text-white transition-colors"
@@ -53,10 +58,37 @@ function ImageLightbox({ src, alt, onClose }: { src: string; alt: string; onClos
 }
 
 // ---------------------------------------------------------------------------
+// Attachment thumbnail (resolves signed URLs)
+// ---------------------------------------------------------------------------
+
+function AttachmentThumbnail({ att, onClickLightbox }: { att: Attachment; onClickLightbox: (url: string) => void }) {
+  const resolvedUrl = useAttachmentUrl(att.url);
+  if (!resolvedUrl) return <div className="h-24 w-32 rounded-xl bg-white/[0.03] animate-pulse" />;
+  return (
+    <button
+      key={att.id}
+      type="button"
+      onClick={() => onClickLightbox(att.url)}
+      className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.03] transition-all hover:border-white/[0.16] hover:shadow-lg cursor-zoom-in"
+    >
+      <img
+        src={resolvedUrl}
+        alt={att.filename}
+        className="h-24 w-32 object-cover transition-transform duration-200 group-hover:scale-105"
+      />
+      <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition-colors">
+        <Maximize2 className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+      </div>
+    </button>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Audio player (inline)
 // ---------------------------------------------------------------------------
 
 function AudioPlayer({ src, duration: initialDuration }: { src: string; duration?: number }) {
+  const resolvedSrc = useAttachmentUrl(src);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -65,7 +97,8 @@ function AudioPlayer({ src, duration: initialDuration }: { src: string; duration
   const rafRef = useRef<number>(0);
 
   useEffect(() => {
-    const audio = new Audio(src);
+    if (!resolvedSrc) return;
+    const audio = new Audio(resolvedSrc);
     audioRef.current = audio;
 
     audio.addEventListener('loadedmetadata', () => {
@@ -234,7 +267,7 @@ export function ProcessingPanel({
     toggleProcessingPanelExpanded,
   } = useUIStore();
 
-  const { updateItem, removeItem } = useItemsStore();
+  const { updateItem, removeItem, addItem } = useItemsStore();
 
   // ---- Local state ----
   const [item, setItem] = useState<Item | null>(null);
@@ -534,7 +567,7 @@ export function ProcessingPanel({
     setCustomValues(next);
   };
 
-  // ---- Delete ----
+  // ---- Delete (soft delete with undo) ----
   const handleDelete = async () => {
     if (!confirmDelete) {
       setConfirmDelete(true);
@@ -542,32 +575,78 @@ export function ProcessingPanel({
     }
 
     if (!item) return;
+    const snapshot = { ...item };
 
-    try {
-      const { error } = await supabase.from('items').delete().eq('id', item.id);
-      if (error) throw error;
+    removeItem(item.id);
+    closeProcessingPanel();
 
-      removeItem(item.id);
-      toast.success('Item deleted');
-      closeProcessingPanel();
-    } catch {
+    const result = await softDeleteItem(item.id);
+    if (!result.success) {
+      addItem(snapshot);
       toast.error('Failed to delete item');
+      return;
     }
+
+    toast('Item deleted', {
+      description: item.title,
+      action: {
+        label: 'Undo',
+        onClick: async () => {
+          const { data, error } = await supabase
+            .from('items')
+            .update({ archived_at: null } as Record<string, unknown>)
+            .eq('id', item.id)
+            .select()
+            .single();
+          if (!error && data) {
+            addItem(data as Item);
+            toast.success('Item restored');
+          } else {
+            toast.error('Failed to restore');
+          }
+        },
+      },
+    });
   };
 
   // ---- Archive ----
   const handleArchive = useCallback(async () => {
     if (!item) return;
+    const snapshot = { ...item };
+
+    removeItem(item.id);
+    closeProcessingPanel();
+
     const result = await softDeleteItem(item.id);
-    if (result.success) {
-      removeItem(item.id);
-      logActivity({ itemId: item.id, userId, action: 'archived' });
-      toast.success('Item archived');
-      closeProcessingPanel();
-    } else {
+    if (!result.success) {
+      addItem(snapshot);
       toast.error('Failed to archive item');
+      return;
     }
-  }, [item, userId, removeItem, closeProcessingPanel]);
+
+    logActivity({ itemId: item.id, userId, action: 'archived' });
+
+    toast('Item archived', {
+      description: item.title,
+      action: {
+        label: 'Undo',
+        onClick: async () => {
+          const { data, error } = await supabase
+            .from('items')
+            .update({ archived_at: null } as Record<string, unknown>)
+            .eq('id', item.id)
+            .select()
+            .single();
+          if (!error && data) {
+            addItem(data as Item);
+            toast.success('Item restored');
+          } else {
+            toast.error('Failed to restore');
+          }
+        },
+      },
+    });
+  }, [item, userId, removeItem, addItem, closeProcessingPanel, supabase]);
 
   // ---- Mark Done ----
   const handleDone = async () => {
@@ -576,6 +655,7 @@ export function ProcessingPanel({
     // Flush any pending debounce first
     if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
 
+    const snapshot = { ...item };
     const now = new Date().toISOString();
     const updates: Partial<Item> = {
       title,
@@ -604,8 +684,31 @@ export function ProcessingPanel({
       const completed = { ...item, ...updates } as Item;
       updateItem(completed);
       logActivity({ itemId: item.id, userId, action: 'completed' });
-      toast.success('Item completed');
       closeProcessingPanel();
+
+      toast('Item completed', {
+        description: item.title,
+        action: {
+          label: 'Undo',
+          onClick: async () => {
+            const revert: Partial<Item> = {
+              is_completed: false,
+              completed_at: null,
+              updated_at: new Date().toISOString(),
+            };
+            const { error: revertErr } = await supabase
+              .from('items')
+              .update(revert as Record<string, unknown>)
+              .eq('id', item.id);
+            if (!revertErr) {
+              updateItem({ ...completed, ...revert } as Item);
+              toast.success('Completion undone');
+            } else {
+              toast.error('Failed to undo');
+            }
+          },
+        },
+      });
     } catch {
       toast.error('Failed to complete item');
     }
@@ -662,6 +765,7 @@ export function ProcessingPanel({
 
       // Log scheduled activity if scheduled_at is being set for the first time
       if (updates.scheduled_at && !item!.scheduled_at) {
+        trackItemScheduled(!!updates.is_all_day);
         logActivity({
           itemId: item!.id,
           userId,
@@ -677,6 +781,7 @@ export function ProcessingPanel({
       if (updates.destination_id && updates.destination_id !== item!.destination_id) {
         const fromDest = destinations.find((d) => d.id === item!.destination_id);
         const toDest = destinations.find((d) => d.id === updates.destination_id);
+        trackItemProcessed(toDest?.slug ?? 'unknown');
         logActivity({
           itemId: item!.id,
           userId,
@@ -1136,21 +1241,7 @@ export function ProcessingPanel({
                         {images.length > 0 && (
                           <div className="flex flex-wrap gap-2">
                             {images.map((att) => (
-                              <button
-                                key={att.id}
-                                type="button"
-                                onClick={() => setLightboxSrc(att.url)}
-                                className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.03] transition-all hover:border-white/[0.16] hover:shadow-lg cursor-zoom-in"
-                              >
-                                <img
-                                  src={att.url}
-                                  alt={att.filename}
-                                  className="h-24 w-32 object-cover transition-transform duration-200 group-hover:scale-105"
-                                />
-                                <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition-colors">
-                                  <Maximize2 className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                                </div>
-                              </button>
+                              <AttachmentThumbnail key={att.id} att={att} onClickLightbox={setLightboxSrc} />
                             ))}
                           </div>
                         )}
