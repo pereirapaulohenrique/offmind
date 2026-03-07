@@ -828,3 +828,4 @@ Driven by user demand. MCP Server and Public API are strategic priorities. Impor
 5. **No work starts on a new tier** until Paulo approves the plan.
 6. **Design-first items** (marked in description) need a design review before implementation.
 7. **Research references** are in `docs/PREMIUM-PRODUCT-AUDIT.md`.
+8. **Roadmap sync:** After changing any item status, run `npm run sync-roadmap` to update the dashboard.
