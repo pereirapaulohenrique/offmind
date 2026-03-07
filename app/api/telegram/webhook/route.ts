@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as Sentry from '@sentry/nextjs';
 import { headers } from 'next/headers';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import {
   sendTelegramMessage,
   TELEGRAM_WEBHOOK_SECRET,
@@ -10,12 +10,6 @@ import {
 } from '@/lib/telegram/bot';
 import { downloadTelegramMedia } from '@/lib/telegram/media';
 import type { Attachment } from '@/types/database';
-
-// Use service role for webhook (bypasses RLS)
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
 
 interface TelegramUpdate {
   update_id: number;
@@ -46,6 +40,8 @@ interface TelegramUpdate {
 }
 
 export async function POST(request: NextRequest) {
+  const supabaseAdmin = getSupabaseAdmin();
+
   // Verify webhook secret
   const headersList = await headers();
   const secretToken = headersList.get('x-telegram-bot-api-secret-token');
@@ -360,6 +356,8 @@ async function captureItem(
   attachments?: Attachment[],
   target?: { project_id?: string; space_id?: string; page_id?: string }
 ) {
+  const supabaseAdmin = getSupabaseAdmin();
+
   // Generate title from text
   const words = title.split(/\s+/);
   const isLong = words.length > 8;
@@ -384,6 +382,7 @@ async function handleCallbackQuery(query: {
   message?: { chat: { id: number }; message_id: number };
   data?: string;
 }) {
+  const supabaseAdmin = getSupabaseAdmin();
   const data = query.data || '';
   const chatId = query.message?.chat.id;
 

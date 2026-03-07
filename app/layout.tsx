@@ -20,20 +20,11 @@ export const metadata: Metadata = {
     siteName: 'OffMind',
     title: 'OffMind',
     description: 'The calm productivity system for overthinkers',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'OffMind — Great ideas don\'t survive in a crowded mind',
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'OffMind',
     description: 'The calm productivity system for overthinkers',
-    images: ['/og-image.png'],
   },
   icons: {
     icon: [
@@ -54,7 +45,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#faf8f5' },
-    { media: '(prefers-color-scheme: dark)', color: '#1a1614' },
+    { media: '(prefers-color-scheme: dark)', color: '#09090b' },
   ],
   width: 'device-width',
   initialScale: 1,

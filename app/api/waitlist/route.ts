@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as Sentry from '@sentry/nextjs';
 import { createClient } from '@/lib/supabase/server';
-import { resend } from '@/lib/email/resend';
+import { getResend } from '@/lib/email/resend';
 import { getWaitlistWelcomeEmail } from '@/lib/email/templates';
 import { waitlistSchema } from '@/lib/validations/schemas';
 import { validateBody } from '@/lib/validations/validate';
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
 
     // Send welcome email (non-blocking — don't fail signup if email fails)
     try {
-      await resend.emails.send({
+      await getResend().emails.send({
         from: 'OffMind <hello@getoffmind.com>',
         to: email.toLowerCase(),
         subject: "You're in — welcome to OffMind",

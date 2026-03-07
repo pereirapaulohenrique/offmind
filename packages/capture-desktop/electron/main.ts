@@ -351,7 +351,7 @@ function setupIPC(): void {
       tokenExpiresAt: store.get('tokenExpiresAt', 0) as number,
       userId: store.get('userId', '') as string,
       userEmail: store.get('userEmail', '') as string,
-      apiUrl: store.get('apiUrl', 'https://offmind.ai') as string,
+      apiUrl: store.get('apiUrl', 'https://getoffmind.com') as string,
       supabaseUrl: store.get('supabaseUrl', '') as string,
       shortcut: store.get('shortcut', 'CommandOrControl+Shift+Space') as string,
       launchAtLogin: store.get('launchAtLogin', false) as boolean,

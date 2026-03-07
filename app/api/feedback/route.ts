@@ -3,10 +3,22 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    return null;
+  }
+  return new Resend(apiKey);
+}
 
 export async function POST(request: Request) {
   try {
+    const resend = getResendClient();
+    if (!resend) {
+      console.warn('RESEND_API_KEY not configured — feedback email not sent');
+      return NextResponse.json({ error: 'Email service not configured' }, { status: 503 });
+    }
+
     const supabase = await createClient();
 
     const {
@@ -23,7 +35,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Message is required' }, { status: 400 });
     }
 
-    const feedbackEmail = process.env.FEEDBACK_EMAIL || 'feedback@offmind.ai';
+    const feedbackEmail = process.env.FEEDBACK_EMAIL || 'hello@getoffmind.com';
 
     const categoryLabels: Record<string, string> = {
       bug: 'Bug Report',
@@ -34,7 +46,7 @@ export async function POST(request: Request) {
     const categoryLabel = categoryLabels[category] || 'General Feedback';
 
     await resend.emails.send({
-      from: 'OffMind Feedback <noreply@offmind.ai>',
+      from: 'OffMind Feedback <noreply@getoffmind.com>',
       to: feedbackEmail,
       subject: `[${categoryLabel}] Feedback from ${user.email}`,
       html: `

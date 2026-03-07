@@ -45,3 +45,11 @@ export function trackProjectCreated() {
 export function trackSearchUsed(hasResults: boolean) {
   posthog.capture('search_used', { has_results: hasResults });
 }
+
+export function trackCTAClicked(ctaName: string, location: string) {
+  posthog.capture('cta_clicked', { cta_name: ctaName, location });
+}
+
+export function trackCheckoutStarted(plan: string) {
+  posthog.capture('checkout_started', { plan });
+}

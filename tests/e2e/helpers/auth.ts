@@ -1,6 +1,6 @@
 import { Page, expect } from '@playwright/test';
 
-const TEST_EMAIL = process.env.E2E_TEST_EMAIL || 'e2e-test@offmind.ai';
+const TEST_EMAIL = process.env.E2E_TEST_EMAIL || 'e2e-test@getoffmind.com';
 const TEST_PASSWORD = process.env.E2E_TEST_PASSWORD || 'test-password-e2e';
 
 export async function login(page: Page) {

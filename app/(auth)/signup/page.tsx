@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { trackSignup } from '@/lib/analytics/events';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -45,6 +46,7 @@ export default function SignupPage() {
       if (error) {
         setMessage({ type: 'error', text: error.message });
       } else {
+        trackSignup('email');
         setMessage({
           type: 'success',
           text: 'Check your email for the magic link! Click it to complete sign up.',
@@ -99,11 +101,13 @@ export default function SignupPage() {
         });
 
         if (signInError) {
+          trackSignup('email');
           setMessage({
             type: 'success',
             text: 'Account created! Check your email to confirm, then sign in.',
           });
         } else {
+          trackSignup('email');
           router.push('/today');
         }
       }
@@ -131,7 +135,7 @@ export default function SignupPage() {
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-foreground" style={{ letterSpacing: 'var(--tracking-tight)' }}>Create your account</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Start your 14-day free trial
+              Get started for free
             </p>
           </div>
         </div>
@@ -248,9 +252,9 @@ export default function SignupPage() {
           )}
         </div>
 
-        {/* Trial info */}
+        {/* Info */}
         <p className="text-center text-xs text-muted-foreground/70">
-          No credit card required. Cancel anytime.
+          No credit card required to explore.
         </p>
 
         {/* Login link */}

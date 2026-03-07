@@ -28,14 +28,14 @@ export function SubscriptionStatus() {
   const getStatusDisplay = () => {
     if (!subscription) return { label: 'Unknown', color: 'text-[var(--text-muted)]', bg: 'bg-[var(--bg-hover)]' };
 
-    if (subscription.type === 'lifetime') {
-      return { label: 'Lifetime', color: 'text-[var(--accent-base)]', bg: 'bg-[var(--accent-subtle)]' };
+    if (subscription.type === 'believer') {
+      return { label: 'Believer', color: 'text-[var(--accent-base)]', bg: 'bg-[var(--accent-subtle)]' };
     }
-    if (subscription.type === 'annual') {
-      return { label: 'Annual', color: 'text-blue-500', bg: 'bg-blue-500/10' };
+    if (subscription.type === 'builder') {
+      return { label: 'Builder', color: 'text-blue-500', bg: 'bg-blue-500/10' };
     }
-    if (subscription.type === 'monthly') {
-      return { label: 'Monthly', color: 'text-green-500', bg: 'bg-green-500/10' };
+    if (subscription.type === 'starter') {
+      return { label: 'Starter', color: 'text-green-500', bg: 'bg-green-500/10' };
     }
     if (subscription.type === 'trial') {
       return { label: 'Trial', color: 'text-yellow-500', bg: 'bg-yellow-500/10' };
@@ -68,20 +68,20 @@ export function SubscriptionStatus() {
             </p>
           )}
 
-          {isActive && !isTrial && subscription?.type !== 'lifetime' && (
+          {isActive && !isTrial && !['starter', 'builder', 'believer'].includes(subscription?.type || '') && (
             <p className="mt-1 text-sm text-[var(--text-muted)]">
               Your subscription is active
             </p>
           )}
 
-          {subscription?.type === 'lifetime' && (
+          {['starter', 'builder', 'believer'].includes(subscription?.type || '') && (
             <p className="mt-1 text-sm text-[var(--text-muted)]">
-              You have lifetime access. Thank you for your support!
+              You have founding member access. Thank you for your support!
             </p>
           )}
         </div>
 
-        {isActive && !isTrial && subscription?.type !== 'lifetime' && (
+        {isActive && !isTrial && !['starter', 'builder', 'believer'].includes(subscription?.type || '') && (
           <Button variant="outline" onClick={handleManageSubscription}>
             Manage
           </Button>

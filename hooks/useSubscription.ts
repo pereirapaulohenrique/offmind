@@ -3,6 +3,7 @@
 import { useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useSubscriptionStore } from '@/stores/subscription';
+import { trackCheckoutStarted } from '@/lib/analytics/events';
 import type { SubscriptionStatus } from '@/types';
 
 const getSupabase = () => createClient();
@@ -41,7 +42,7 @@ export function useSubscription() {
       let type: SubscriptionStatus['type'] = 'expired_trial';
       let daysRemaining: number | undefined;
 
-      if (sub.status === 'active' || sub.plan === 'lifetime') {
+      if (sub.status === 'active' || ['starter', 'builder', 'believer'].includes(sub.plan)) {
         active = true;
         type = sub.plan as SubscriptionStatus['type'];
       } else if (sub.status === 'trialing' && sub.trial_ends_at) {
@@ -69,8 +70,9 @@ export function useSubscription() {
   }, [setSubscription, setLoading]);
 
   // Create checkout session
-  const createCheckout = useCallback(async (plan: 'monthly' | 'annual' | 'lifetime') => {
+  const createCheckout = useCallback(async (plan: 'starter' | 'builder' | 'believer') => {
     try {
+      trackCheckoutStarted(plan);
       const response = await fetch('/api/stripe/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

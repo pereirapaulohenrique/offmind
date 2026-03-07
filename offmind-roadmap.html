@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OffMind Command Center</title>
+<style>
+  :root {
+    --zinc-50:#fafafa;--zinc-100:#f4f4f5;--zinc-200:#e4e4e7;
+    --zinc-300:#d4d4d8;--zinc-400:#a1a1aa;--zinc-500:#71717a;
+    --zinc-600:#52525b;--zinc-700:#3f3f46;--zinc-800:#27272a;
+    --zinc-850:#1e1e22;--zinc-900:#18181b;--zinc-950:#09090b;
+    --teal-400:#2dd4bf;--teal-500:#14b8a6;--teal-600:#0d9488;
+    --teal-700:#0f766e;--teal-900:#134e4a;
+    --amber-400:#fbbf24;--amber-500:#f59e0b;
+    --red-400:#f87171;--red-500:#ef4444;
+    --orange-400:#fb923c;--orange-500:#f97316;
+    --yellow-400:#facc15;--green-400:#4ade80;--green-500:#22c55e;
+    --purple-400:#c084fc;--blue-400:#60a5fa;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--zinc-950);color:var(--zinc-200);min-height:100vh;line-height:1.5}
+
+  /* Header */
+  .header{background:linear-gradient(135deg,var(--zinc-900),var(--zinc-850));border-bottom:1px solid var(--zinc-800);padding:20px 28px;position:sticky;top:0;z-index:100}
+  .header-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  .header h1{font-size:22px;font-weight:700;color:var(--zinc-50);display:flex;align-items:center;gap:10px}
+  .header h1 .logo{width:26px;height:26px;background:var(--teal-500);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--zinc-950)}
+  .meta{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--zinc-500)}
+
+  /* Overall progress */
+  .overall-progress{margin-top:14px;display:flex;align-items:center;gap:12px}
+  .bar-bg{flex:1;height:8px;background:var(--zinc-800);border-radius:4px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:4px;transition:width 0.4s ease}
+  .overall-progress .bar-fill{background:linear-gradient(90deg,var(--teal-600),var(--teal-400))}
+  .pct{font-size:14px;font-weight:600;color:var(--teal-400);min-width:48px;text-align:right}
+
+  /* Tier stats row */
+  .tier-stats{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .tier-stat{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;border:1px solid var(--zinc-800);display:flex;align-items:center;gap:6px;cursor:default}
+  .tier-stat .dot{width:8px;height:8px;border-radius:50%}
+
+  /* Filters */
+  .filters{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+  .filter-btn{padding:4px 10px;font-size:11px;border-radius:6px;border:1px solid var(--zinc-700);background:transparent;color:var(--zinc-400);cursor:pointer;transition:all 0.15s;font-family:inherit}
+  .filter-btn:hover{border-color:var(--zinc-500);color:var(--zinc-200)}
+  .filter-btn.active{background:var(--teal-900);border-color:var(--teal-600);color:var(--teal-400)}
+  .filter-group{display:flex;gap:4px;align-items:center}
+  .filter-label{font-size:10px;color:var(--zinc-600);text-transform:uppercase;letter-spacing:0.5px;margin-right:4px;font-weight:600}
+  .filter-sep{width:1px;height:18px;background:var(--zinc-800);margin:0 6px}
+
+  /* Tiers container */
+  .tiers{max-width:1200px;margin:0 auto;padding:20px 28px}
+
+  /* Tier */
+  .tier{background:var(--zinc-900);border:1px solid var(--zinc-800);border-radius:12px;margin-bottom:16px;overflow:hidden}
+  .tier-header{padding:14px 18px;border-bottom:1px solid var(--zinc-800);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+  .tier-header:hover{background:var(--zinc-850)}
+  .tier-title{font-size:15px;font-weight:700;color:var(--zinc-50);display:flex;align-items:center;gap:8px}
+  .tier-title .icon{font-size:16px}
+  .tier-right{display:flex;align-items:center;gap:10px}
+  .tier-progress{display:flex;align-items:center;gap:8px;min-width:160px}
+  .tier-progress .bar-bg{height:6px}
+  .tier-progress .stats{font-size:12px;color:var(--zinc-500);min-width:44px;text-align:right}
+  .chevron{font-size:11px;color:var(--zinc-600);transition:transform 0.2s}
+  .tier.collapsed .chevron{transform:rotate(-90deg)}
+  .tier.collapsed .tier-body{display:none}
+
+  /* Sections within tiers */
+  .section{border-bottom:1px solid var(--zinc-850)}
+  .section:last-child{border-bottom:none}
+  .section-header{display:flex;align-items:center;justify-content:space-between;padding:8px 18px;cursor:pointer;user-select:none}
+  .section-header:hover{background:rgba(255,255,255,0.02)}
+  .section-label{font-size:11px;font-weight:600;color:var(--zinc-500);text-transform:uppercase;letter-spacing:0.5px}
+  .section-count{font-size:11px;color:var(--zinc-600)}
+  .section.collapsed .section-items{display:none}
+  .section .chevron{font-size:10px}
+
+  /* Items */
+  .section-items{padding:0 10px 6px}
+  .item{display:flex;align-items:flex-start;gap:10px;padding:7px 8px;border-radius:8px;transition:background 0.15s}
+  .item:hover{background:var(--zinc-850)}
+  .item.hidden{display:none}
+
+  .item input[type="checkbox"]{appearance:none;-webkit-appearance:none;width:17px;height:17px;min-width:17px;border:2px solid var(--zinc-600);border-radius:4px;cursor:pointer;position:relative;top:2px;transition:all 0.15s;background:transparent}
+  .item input[type="checkbox"]:hover{border-color:var(--teal-500)}
+  .item input[type="checkbox"]:checked{background:var(--teal-500);border-color:var(--teal-500)}
+  .item input[type="checkbox"]:checked::after{content:'';position:absolute;left:3px;top:0px;width:6px;height:10px;border:solid var(--zinc-950);border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .item-content{flex:1;min-width:0}
+  .item-title{font-size:13px;color:var(--zinc-200);line-height:1.4}
+  .item.done .item-title{color:var(--zinc-600);text-decoration:line-through}
+  .item-meta{display:flex;gap:5px;margin-top:3px;flex-wrap:wrap;align-items:center}
+
+  .badge{font-size:9px;font-weight:600;padding:1px 5px;border-radius:3px;text-transform:uppercase;letter-spacing:0.3px}
+  .badge-claude{background:var(--teal-900);color:var(--teal-400)}
+  .badge-paulo{background:rgba(251,191,36,0.15);color:var(--amber-400)}
+  .badge-both{background:rgba(168,85,247,0.15);color:var(--purple-400)}
+  .badge-blocked{background:rgba(239,68,68,0.15);color:var(--red-400)}
+  .badge-done{background:rgba(34,197,94,0.15);color:var(--green-400)}
+  .item-id{font-size:9px;color:var(--zinc-600);font-family:'SF Mono',Monaco,monospace}
+  .item-note{font-size:11px;color:var(--zinc-600);font-style:italic;margin-top:2px}
+
+  /* Responsive */
+  @media(max-width:768px){.header{padding:14px}.tiers{padding:14px}.filters{gap:4px}.filter-sep{display:none}.tier-progress{min-width:100px}}
+  @media print{body{background:#fff;color:#000}.header{position:static;background:#fff;border-bottom:2px solid #ccc}.tier{border:1px solid #ccc;break-inside:avoid}.filters,.tier-stats{display:none}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-top">
+    <h1><span class="logo">O</span> OffMind Command Center</h1>
+    <div class="meta">
+      <span id="lastUpdated">Updated: \u2014</span>
+      <span>Spec v2</span>
+    </div>
+  </div>
+  <div class="overall-progress">
+    <span style="font-size:12px;color:var(--zinc-400)">Overall</span>
+    <div class="bar-bg"><div class="bar-fill" id="overallBar" style="width:0%"></div></div>
+    <span class="pct" id="overallPct">0%</span>
+  </div>
+  <div class="tier-stats" id="tierStats"></div>
+  <div class="filters" id="filters">
+    <div class="filter-group">
+      <span class="filter-label">Owner</span>
+      <button class="filter-btn active" data-filter="owner" data-value="all">All</button>
+      <button class="filter-btn" data-filter="owner" data-value="claude">Claude</button>
+      <button class="filter-btn" data-filter="owner" data-value="paulo">Paulo</button>
+      <button class="filter-btn" data-filter="owner" data-value="both">Both</button>
+    </div>
+    <div class="filter-sep"></div>
+    <div class="filter-group">
+      <span class="filter-label">Status</span>
+      <button class="filter-btn active" data-filter="status" data-value="all">All</button>
+      <button class="filter-btn" data-filter="status" data-value="done">Done</button>
+      <button class="filter-btn" data-filter="status" data-value="open">Open</button>
+      <button class="filter-btn" data-filter="status" data-value="blocked">Blocked</button>
+    </div>
+  </div>
+</div>
+
+<div class="tiers" id="tiers"></div>
+
+<script>
+const DATA = [
+  {
+    id:'t1', title:'T1 \u2014 Launch Gate', icon:'\u{1F6A8}', color:'var(--red-500)',
+    desc:'Cannot launch without these',
+    sections:[
+      { label:'Engineering (Done)', items:[
+        {id:'OM-001',title:'Fix Module-Scope Build Errors',owner:'claude',done:true},
+        {id:'OM-002',title:'Privacy Policy Page',owner:'claude',done:true},
+        {id:'OM-003',title:'Terms of Service Page',owner:'claude',done:true},
+        {id:'OM-005',title:'Landing Page Revamp',owner:'claude',done:true},
+      ]},
+      { label:'Commercial Alignment (Days 1-3)', items:[
+        {id:'INF-001',title:'Create 3 Stripe Prices ($49/$79/$149 one-time)',owner:'paulo',done:false,note:'Stripe Dashboard \u2192 3 one-time prices'},
+        {id:'INF-002',title:'Add Price IDs to .env vars',owner:'paulo',done:false},
+        {id:'INF-004',title:'Update lib/stripe/client.ts with founding tiers',owner:'claude',done:false,note:'Replace monthly/annual/lifetime with starter/builder/believer'},
+        {id:'INF-003',title:'Update create-checkout route (all payment mode)',owner:'claude',done:false,note:'All 3 tiers use mode: payment'},
+        {id:'INF-011',title:'Wire pricing card CTAs to actual checkout',owner:'claude',done:false,note:'Currently href="#" \u2014 buttons do nothing'},
+        {id:'INF-012',title:'Remove "14-day free trial" from signup page',owner:'claude',done:false,note:'Contradicts founding member offer'},
+        {id:'INF-013',title:'Unify domain to getoffmind.com everywhere',owner:'claude',done:false,note:'4 different domains/emails in codebase'},
+        {id:'INF-014',title:'Update Stripe webhook for new tier names',owner:'claude',done:false},
+      ]},
+      { label:'Deploy & Verify', items:[
+        {id:'INF-005',title:'Vercel project setup & deploy',owner:'both',done:false},
+        {id:'INF-006',title:'Verify getoffmind.com DNS/SSL',owner:'paulo',done:false},
+        {id:'INF-009',title:'Test checkout flow end-to-end (all 3 tiers)',owner:'both',done:false,note:'Buy each tier in test mode'},
+        {id:'INF-010',title:'Verify all routes in production',owner:'both',done:false},
+      ]},
+      { label:'Monitoring & Tracking', items:[
+        {id:'INF-007',title:'PostHog project creation + key',owner:'paulo',done:false},
+        {id:'INF-008',title:'Sentry project creation + DSN',owner:'paulo',done:false},
+        {id:'INF-015',title:'Instrument CTA click, signup, checkout, purchase events',owner:'claude',done:false},
+      ]},
+      { label:'Other T1 Items', items:[
+        {id:'OM-040',title:'Landing Page Social Proof',owner:'claude',done:false,note:'Testimonials, credibility'},
+        {id:'OM-041',title:'Custom 404 Pages',owner:'claude',done:false},
+        {id:'OM-042',title:'Error Boundary on Landing Page',owner:'claude',done:false},
+      ]},
+    ]
+  },
+  {
+    id:'t2', title:'T2 \u2014 Premium Baseline', icon:'\u2728', color:'var(--orange-500)',
+    desc:'Without this, product doesn\'t justify $79+',
+    sections:[
+      { label:'UX Bugs (Paulo\'s Notes)', items:[
+        {id:'OM-010',title:'Backlog Real-time Refresh Bug',owner:'claude',done:false},
+        {id:'OM-011',title:'Save & Route Button UX Confusion',owner:'claude',done:false},
+        {id:'OM-012',title:'Dropdown Readability Issues',owner:'claude',done:false},
+        {id:'OM-013',title:'Duplicate Effort Fields',owner:'claude',done:false},
+        {id:'OM-014',title:'Standard Sorting for Screens',owner:'claude',done:false},
+      ]},
+      { label:'Analytics & Monitoring', items:[
+        {id:'OM-016',title:'PostHog Analytics Configuration',owner:'claude',done:false},
+        {id:'OM-017',title:'Sentry Error Monitoring Configuration',owner:'claude',done:false},
+      ]},
+      { label:'Undo & Safety', items:[
+        {id:'OM-043',title:'Undo on Destructive Actions',owner:'claude',done:false},
+        {id:'OM-044',title:'Account Delete Confirmation',owner:'claude',done:false},
+      ]},
+      { label:'Accessibility (WCAG AA)', items:[
+        {id:'OM-045',title:'Skip Navigation Link',owner:'claude',done:false},
+        {id:'OM-046',title:'Respect prefers-reduced-motion',owner:'claude',done:false},
+        {id:'OM-047',title:'aria-live Regions for Dynamic Updates',owner:'claude',done:false},
+      ]},
+      { label:'Polish & Settings', items:[
+        {id:'OM-048',title:'Keyboard Shortcut Help Modal (?)',owner:'claude',done:false},
+        {id:'OM-049',title:'Data Export in Settings UI',owner:'claude',done:false},
+        {id:'OM-050',title:'Theme Toggle in Settings UI',owner:'claude',done:false},
+        {id:'OM-051',title:'Global Search in Command Palette',owner:'claude',done:false},
+        {id:'OM-052',title:'Favicon & PWA Icons',owner:'claude',done:false},
+        {id:'OM-053',title:'Breadcrumbs in Dashboard',owner:'claude',done:false},
+      ]},
+    ]
+  },
+  {
+    id:'t3', title:'T3 \u2014 Retention & Habits', icon:'\u{1F504}', color:'var(--teal-500)',
+    desc:'Without this, users churn after month 1',
+    sections:[
+      { label:'Rituals System', items:[
+        {id:'OM-060',title:'Morning Planning Ritual',owner:'claude',done:false,note:'Guided 5-step daily planning flow'},
+        {id:'OM-061',title:'Evening Shutdown Ritual',owner:'claude',done:false,note:'End-of-day review + reflection'},
+      ]},
+      { label:'Personal Analytics', items:[
+        {id:'OM-062',title:'Capture & Processing Analytics',owner:'claude',done:false,note:'/insights page'},
+        {id:'OM-063',title:'Productivity & Focus Analytics',owner:'claude',done:false,note:'Depends on ritual data'},
+      ]},
+      { label:'Habits & Recurrence', items:[
+        {id:'OM-064',title:'Recurring Items',owner:'claude',done:false,note:'iCal RRULE, auto-create next'},
+        {id:'OM-065',title:'Habit Tracker (Lightweight)',owner:'claude',done:false,note:'Streak calendar, daily habits'},
+      ]},
+      { label:'Notifications & Reminders', items:[
+        {id:'OM-066',title:'Contextual Reminders',owner:'claude',done:false,note:'Browser/email/Telegram'},
+        {id:'OM-067',title:'Daily Digest Email',owner:'claude',done:false,note:'Morning summary via Resend'},
+        {id:'OM-068',title:'Stale Item & Inbox Nudges',owner:'claude',done:false},
+      ]},
+      { label:'Templates & Onboarding', items:[
+        {id:'OM-069',title:'Item & Page Templates',owner:'claude',done:false,note:'Meeting Notes, Project Brief, etc.'},
+        {id:'OM-070',title:'Space Templates (Onboarding)',owner:'claude',done:false,note:'Work, Personal, Health presets'},
+        {id:'OM-071',title:'Progressive Onboarding Milestones',owner:'claude',done:false,note:'Badges: Brain Dump, Inbox Zero, etc.'},
+        {id:'OM-072',title:'Define & Track Aha Moment',owner:'both',done:false,note:'5 captures + 3 processed in 48h'},
+      ]},
+      { label:'UX Improvements', items:[
+        {id:'OM-015',title:'Organize Page Rethink',owner:'claude',done:false,note:'Dashboard-like destination overview'},
+        {id:'OM-024',title:'Bulk Select in Inbox',owner:'claude',done:false},
+        {id:'OM-073',title:'Offline / Network Error Handling',owner:'claude',done:false,note:'Queue captures, reconnect banner'},
+      ]},
+    ]
+  },
+  {
+    id:'t4', title:'T4 \u2014 Differentiation', icon:'\u{1F9E0}', color:'var(--purple-400)',
+    desc:'What makes OffMind unique vs. competitors',
+    sections:[
+      { label:'Time Awareness', items:[
+        {id:'OM-074',title:'Estimated Duration on Items',owner:'claude',done:false,note:'Overcommit warnings'},
+        {id:'OM-075',title:'Calendar Time Blocking',owner:'claude',done:false,note:'Drag to calendar, two-way sync'},
+        {id:'OM-076',title:'Focus Timer',owner:'claude',done:false,note:'Pomodoro, actual vs estimated'},
+      ]},
+      { label:'Knowledge Connection', items:[
+        {id:'OM-077',title:'Automatic Backlinks',owner:'claude',done:false,note:'Bidirectional page/item links'},
+        {id:'OM-078',title:'Daily Notes',owner:'claude',done:false,note:'Auto-created daily page'},
+      ]},
+      { label:'Voice & Multimodal', items:[
+        {id:'OM-079',title:'Voice-to-Item with AI',owner:'claude',done:false,note:'Speak \u2192 transcribe \u2192 extract items'},
+        {id:'OM-080',title:'Natural Language Quick Add',owner:'claude',done:false,note:'Inline date parsing in capture'},
+      ]},
+      { label:'AI Reflection', items:[
+        {id:'OM-023',title:'AI Confidence Routing',owner:'claude',done:false,note:'Auto-route high confidence items'},
+        {id:'OM-081',title:'AI Self-Knowledge Insights',owner:'claude',done:false,note:'"You\'re overcommitting" \u2014 thinking partner'},
+      ]},
+      { label:'Integration & Items', items:[
+        {id:'OM-025',title:'Embedded Integration Vision',owner:'both',done:false,note:'Desktop shortcut, PWA share target'},
+        {id:'OM-031',title:'Chained Items',owner:'claude',done:false,note:'Items that generate follow-ups'},
+        {id:'OM-033',title:'Day Planning Screen',owner:'claude',done:false,note:'May merge with Morning Ritual'},
+      ]},
+    ]
+  },
+  {
+    id:'t5', title:'T5 \u2014 Scale & Ecosystem', icon:'\u{1F30D}', color:'var(--blue-400)',
+    desc:'Post-product-market-fit',
+    sections:[
+      { label:'Platform', items:[
+        {id:'OM-082',title:'Public REST API v1',owner:'claude',done:false,note:'CRUD + webhooks + API keys'},
+        {id:'OM-083',title:'MCP Server for Claude',owner:'claude',done:false,note:'OffMind as MCP tool'},
+        {id:'OM-084',title:'Import from Other Tools',owner:'claude',done:false,note:'Todoist, Notion, Apple Reminders'},
+      ]},
+      { label:'Features', items:[
+        {id:'OM-020',title:'Tags on Backlog Items',owner:'claude',done:false},
+        {id:'OM-021',title:'Quick Actions & Highlight Colors',owner:'claude',done:false},
+        {id:'OM-022',title:'Default View Preferences',owner:'claude',done:false},
+        {id:'OM-030',title:'Capture-to-Destination Direct Routing',owner:'claude',done:false},
+        {id:'OM-032',title:'Subpages',owner:'claude',done:false},
+      ]},
+      { label:'Polish & Security', items:[
+        {id:'OM-085',title:'Changelog / What\'s New',owner:'claude',done:false},
+        {id:'OM-086',title:'Content Security Policy (CSP)',owner:'claude',done:false},
+        {id:'OM-087',title:'Print / PDF Views',owner:'claude',done:false},
+        {id:'OM-088',title:'Touch Gestures (Mobile)',owner:'claude',done:false},
+        {id:'OM-089',title:'Rate Limit Feedback on AI',owner:'claude',done:false},
+      ]},
+    ]
+  },
+  {
+    id:'mkt', title:'Marketing & Launch', icon:'\u{1F4E3}', color:'var(--amber-500)',
+    desc:'30-day launch playbook (see LAUNCH-PLAYBOOK.md)',
+    sections:[
+      { label:'Research Complete', items:[
+        {id:'MKT-001',title:'Growth research complete',owner:'claude',done:true},
+        {id:'MKT-002',title:'Social media audit',owner:'claude',done:true},
+        {id:'LCH-001',title:'Landing page live with pricing',owner:'claude',done:true},
+        {id:'LCH-002',title:'Privacy + Terms pages',owner:'claude',done:true},
+        {id:'LCH-003',title:'Build passes cleanly',owner:'claude',done:true},
+        {id:'LCH-004',title:'OG image + Twitter cards',owner:'claude',done:true},
+      ]},
+      { label:'Days 1-3: Seal the Pipe', items:[
+        {id:'MKT-100',title:'Update X bio with getoffmind.com',owner:'paulo',done:false},
+        {id:'MKT-101',title:'Update LinkedIn headline',owner:'paulo',done:false},
+        {id:'MKT-102',title:'Set up Kit email landing page',owner:'paulo',done:false},
+        {id:'MKT-103',title:'Define content pillars document',owner:'claude',done:false},
+        {id:'LCH-005',title:'Stripe checkout tested (all 3 tiers)',owner:'both',done:false},
+        {id:'LCH-006',title:'Production deploy verified',owner:'both',done:false},
+        {id:'LCH-007',title:'Analytics tracking verified',owner:'both',done:false},
+        {id:'LCH-008',title:'Error monitoring verified',owner:'both',done:false},
+      ]},
+      { label:'Days 4-14: Conversations Not Campaigns', items:[
+        {id:'MKT-110',title:'Reddit: 3-5 helpful comments/day (r/ClaudeAI, r/analytics)',owner:'paulo',done:false,note:'Value first, no links yet'},
+        {id:'MKT-111',title:'Reddit: Hit 50 karma',owner:'paulo',done:false},
+        {id:'MKT-112',title:'X: First build-in-public thread',owner:'paulo',done:false,note:'Share what you built and why'},
+        {id:'MKT-113',title:'X: 3-5 genuine replies/day on AI/productivity threads',owner:'paulo',done:false},
+        {id:'MKT-114',title:'LinkedIn: First post (insight, not product)',owner:'paulo',done:false,note:'Data/AI leadership angle'},
+        {id:'MKT-115',title:'Email first warm contacts (personal, not blast)',owner:'paulo',done:false,note:'10-15 people who would genuinely care'},
+        {id:'MKT-116',title:'Monitor Sentry for production errors',owner:'claude',done:false},
+        {id:'MKT-117',title:'Monitor PostHog for conversions',owner:'both',done:false},
+      ]},
+      { label:'Days 15-21: Double Down on What Works', items:[
+        {id:'MKT-120',title:'Review Day 14 metrics: which channel converts?',owner:'both',done:false,note:'Gate: 5+ paying customers needed'},
+        {id:'MKT-121',title:'Reddit: first original post if karma > 50',owner:'paulo',done:false,note:'Workflow post, not product pitch'},
+        {id:'MKT-122',title:'X: reach 50 followers',owner:'paulo',done:false},
+        {id:'MKT-123',title:'LinkedIn: establish 2 posts/week cadence',owner:'paulo',done:false},
+        {id:'MKT-124',title:'Collect first testimonial from paying user',owner:'paulo',done:false,note:'Required for scale phase'},
+        {id:'MKT-125',title:'Fix production bugs from user feedback',owner:'claude',done:false},
+        {id:'MKT-126',title:'Deploy first P1 bug fixes',owner:'claude',done:false},
+      ]},
+      { label:'Days 22-30: Scale Channels (Conditional)', items:[
+        {id:'MKT-130',title:'GATE CHECK: 5+ customers + 1 testimonial?',owner:'both',done:false,note:'If NO: rewrite positioning, do NOT scale'},
+        {id:'MKT-131',title:'Consider X Premium (if X is converting)',owner:'paulo',done:false},
+        {id:'MKT-132',title:'Create Indie Hackers profile + post',owner:'paulo',done:false,note:'Only if gate passes'},
+        {id:'MKT-133',title:'List on SaaSHub',owner:'paulo',done:false,note:'Only if gate passes'},
+        {id:'MKT-134',title:'List on AlternativeTo',owner:'paulo',done:false,note:'Only if gate passes'},
+        {id:'MKT-135',title:'Create lead magnet: Compound Thinking Starter Kit',owner:'both',done:false,note:'Only if email channel works'},
+        {id:'MKT-136',title:'Weekly review of all metrics',owner:'both',done:false},
+      ]},
+      { label:'Kill Criteria & Gates', items:[
+        {id:'MKT-140',title:'KILL: 0 customers after Day 14 \u2192 rewrite positioning',owner:'both',done:false,note:'Do NOT scale, pivot messaging'},
+        {id:'MKT-141',title:'KILL: < $200 revenue after Day 30 \u2192 fundamental pivot',owner:'both',done:false,note:'Product, pricing, or audience change'},
+        {id:'MKT-142',title:'Product Hunt / Show HN only after gate passes',owner:'both',done:false,note:'Requires: 5+ customers, 1+ testimonial, working checkout'},
+      ]},
+    ]
+  },
+];
+
+const LS_KEY='offmind-cc-v2';
+const LS_COLLAPSE='offmind-cc-v2-collapse';
+
+function loadState(){try{return JSON.parse(localStorage.getItem(LS_KEY))||{}}catch{return{}}}
+function saveState(s){localStorage.setItem(LS_KEY,JSON.stringify(s))}
+function loadCollapsed(){try{return JSON.parse(localStorage.getItem(LS_COLLAPSE))||{}}catch{return{}}}
+function saveCollapsed(c){localStorage.setItem(LS_COLLAPSE,JSON.stringify(c))}
+function getChecked(id,def){const s=loadState();return s[id]!==undefined?s[id]:def}
+function setChecked(id,v){const s=loadState();s[id]=v;s['_lastUpdated']=new Date().toISOString();saveState(s)}
+
+let filters={owner:'all',status:'all'};
+
+function render(){
+  const container=document.getElementById('tiers');
+  container.innerHTML='';
+  let totalItems=0,totalDone=0;
+  const tierSummaries=[];
+
+  DATA.forEach(tier=>{
+    const el=document.createElement('div');
+    el.className='tier';
+    const collapsed=loadCollapsed();
+    const tierCollapsed=collapsed['tier-'+tier.id]||false;
+    if(tierCollapsed)el.classList.add('collapsed');
+
+    let tItems=0,tDone=0;
+    let sectionsHTML='';
+
+    tier.sections.forEach((sec,si)=>{
+      const secKey=tier.id+'-'+si;
+      const secCollapsed=collapsed[secKey]||false;
+      let sItems=0,sDone=0,itemsHTML='';
+
+      sec.items.forEach(item=>{
+        const done=getChecked(item.id,item.done);
+        sItems++;tItems++;totalItems++;
+        if(done){sDone++;tDone++;totalDone++}
+
+        const ownerClass='badge-'+item.owner;
+        const ownerLabel=item.owner==='both'?'Both':item.owner==='claude'?'Claude':'Paulo';
+        let statusBadge='',statusClass='';
+        if(done){statusBadge='<span class="badge badge-done">Done</span>';statusClass='done'}
+        else if(item.blocked){statusBadge='<span class="badge badge-blocked">Blocked</span>'}
+
+        let hidden=false;
+        if(filters.owner!=='all'&&item.owner!==filters.owner)hidden=true;
+        if(filters.status==='done'&&!done)hidden=true;
+        if(filters.status==='open'&&done)hidden=true;
+        if(filters.status==='blocked'&&!item.blocked)hidden=true;
+
+        itemsHTML+=`<div class="item ${statusClass} ${hidden?'hidden':''}" data-id="${item.id}">
+          <input type="checkbox" ${done?'checked':''} data-item-id="${item.id}" data-default="${item.done}">
+          <div class="item-content">
+            <div class="item-title">${item.title}</div>
+            <div class="item-meta">
+              <span class="item-id">${item.id}</span>
+              <span class="badge ${ownerClass}">${ownerLabel}</span>
+              ${statusBadge}
+            </div>
+            ${item.note?`<div class="item-note">${item.note}</div>`:''}
+          </div>
+        </div>`;
+      });
+
+      sectionsHTML+=`<div class="section ${secCollapsed?'collapsed':''}" data-section-key="${secKey}">
+        <div class="section-header">
+          <span class="section-label">${sec.label}</span>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="section-count">${sDone}/${sItems}</span>
+            <span class="chevron">\u25BC</span>
+          </div>
+        </div>
+        <div class="section-items">${itemsHTML}</div>
+      </div>`;
+    });
+
+    const pct=tItems?Math.round((tDone/tItems)*100):0;
+    tierSummaries.push({id:tier.id,title:tier.title,color:tier.color,done:tDone,total:tItems,pct});
+
+    el.innerHTML=`<div class="tier-header" data-tier-id="${tier.id}">
+      <div class="tier-title"><span class="icon">${tier.icon}</span>${tier.title}<span style="font-size:11px;font-weight:400;color:var(--zinc-500);margin-left:6px">${tier.desc}</span></div>
+      <div class="tier-right">
+        <div class="tier-progress">
+          <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${tier.color}"></div></div>
+          <span class="stats">${tDone}/${tItems}</span>
+        </div>
+        <span class="chevron">\u25BC</span>
+      </div>
+    </div>
+    <div class="tier-body">${sectionsHTML}</div>`;
+    container.appendChild(el);
+  });
+
+  // Overall
+  const overallPct=totalItems?Math.round((totalDone/totalItems)*100):0;
+  document.getElementById('overallBar').style.width=overallPct+'%';
+  document.getElementById('overallPct').textContent=overallPct+'%';
+
+  // Tier stats
+  const statsEl=document.getElementById('tierStats');
+  statsEl.innerHTML=tierSummaries.map(t=>`<div class="tier-stat"><span class="dot" style="background:${t.color}"></span>${t.done}/${t.total}</div>`).join('');
+
+  // Timestamp
+  const state=loadState();
+  const lastUp=state['_lastUpdated'];
+  document.getElementById('lastUpdated').textContent=lastUp?'Updated: '+new Date(lastUp).toLocaleString():'Updated: '+new Date().toLocaleString();
+
+  // Bind checkboxes
+  document.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
+    cb.addEventListener('change',e=>{setChecked(e.target.dataset.itemId,e.target.checked);render()});
+  });
+
+  // Bind tier collapse
+  document.querySelectorAll('.tier-header').forEach(th=>{
+    th.addEventListener('click',()=>{
+      const t=th.parentElement;const id='tier-'+th.dataset.tierId;
+      const c=loadCollapsed();c[id]=!t.classList.contains('collapsed');saveCollapsed(c);
+      t.classList.toggle('collapsed');
+    });
+  });
+
+  // Bind section collapse
+  document.querySelectorAll('.section-header').forEach(sh=>{
+    sh.addEventListener('click',e=>{
+      e.stopPropagation();
+      const sec=sh.parentElement;const key=sec.dataset.sectionKey;
+      const c=loadCollapsed();c[key]=!sec.classList.contains('collapsed');saveCollapsed(c);
+      sec.classList.toggle('collapsed');
+    });
+  });
+}
+
+// Filters
+document.getElementById('filters').addEventListener('click',e=>{
+  const btn=e.target.closest('.filter-btn');if(!btn)return;
+  const ft=btn.dataset.filter,val=btn.dataset.value;
+  btn.parentElement.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  filters[ft]=val;render();
+});
+
+render();
+</script>
+</body>
+</html>

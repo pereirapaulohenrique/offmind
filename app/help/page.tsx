@@ -170,7 +170,7 @@ export default function HelpPage() {
                 />
                 <FAQCard
                   question="How do I get help or report a bug?"
-                  answer="You can reach us at support@offmind.ai or through the in-app feedback button. We read every message and respond within 24 hours."
+                  answer="You can reach us at hello@getoffmind.com or through the in-app feedback button. We read every message and respond within 24 hours."
                 />
               </div>
             </div>
@@ -425,11 +425,11 @@ export default function HelpPage() {
               </p>
               <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
                 <a
-                  href="mailto:support@offmind.ai"
+                  href="mailto:hello@getoffmind.com"
                   className="inline-flex items-center gap-2 rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)] px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-[var(--bg-hover)] tactile-press"
                   style={{ boxShadow: 'var(--shadow-card)' }}
                 >
-                  Email support@offmind.ai
+                  Email hello@getoffmind.com
                 </a>
               </div>
             </div>

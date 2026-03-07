@@ -25,36 +25,38 @@ export const stripe = {
   get webhooks() { return getStripe().webhooks; },
 } as unknown as Stripe;
 
-// Price IDs from environment
+// Founding Member Price IDs from environment
 export const PRICES = {
-  monthly: process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID || '',
-  annual: process.env.NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID || '',
-  lifetime: process.env.NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID || '',
+  starter: process.env.NEXT_PUBLIC_STRIPE_STARTER_PRICE_ID || '',
+  builder: process.env.NEXT_PUBLIC_STRIPE_BUILDER_PRICE_ID || '',
+  believer: process.env.NEXT_PUBLIC_STRIPE_BELIEVER_PRICE_ID || '',
 };
 
-// Plan details for display
+// All founding member plans are one-time payments (mode: 'payment')
 export const PLANS = {
-  trial: {
-    name: 'Trial',
-    description: '14-day free trial',
-    features: ['Unlimited captures', 'AI suggestions', 'All views'],
+  starter: {
+    name: 'Starter',
+    price: '$49',
+    priceId: PRICES.starter,
+    mode: 'payment' as const,
+    features: ['Everything included', '1 year of updates', 'Community access'],
+    spots: 50,
   },
-  monthly: {
-    name: 'Monthly',
-    price: '$9/month',
-    priceId: PRICES.monthly,
-    features: ['Everything in trial', 'Unlimited items', 'Priority support'],
+  builder: {
+    name: 'Builder',
+    price: '$79',
+    priceId: PRICES.builder,
+    mode: 'payment' as const,
+    features: ['Everything included', 'Lifetime updates', 'Priority support', 'Direct access to Paulo'],
+    spots: 100,
+    recommended: true,
   },
-  annual: {
-    name: 'Annual',
-    price: '$79/year',
-    priceId: PRICES.annual,
-    features: ['Everything in monthly', 'Save 27%', '2 months free'],
-  },
-  lifetime: {
-    name: 'Lifetime',
-    price: '$199 once',
-    priceId: PRICES.lifetime,
-    features: ['Everything forever', 'All future updates', 'Founding member'],
+  believer: {
+    name: 'Believer',
+    price: '$149',
+    priceId: PRICES.believer,
+    mode: 'payment' as const,
+    features: ['Everything in Builder', 'Lifetime updates + all future products', 'Private Discord channel', 'Shape the roadmap'],
+    spots: 50,
   },
 };

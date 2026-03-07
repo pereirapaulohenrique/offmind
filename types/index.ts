@@ -33,7 +33,7 @@ export interface AIExpandResponse {
 // Subscription status
 export interface SubscriptionStatus {
   active: boolean;
-  type: 'trial' | 'monthly' | 'annual' | 'lifetime' | 'expired_trial' | string;
+  type: 'trial' | 'starter' | 'builder' | 'believer' | 'expired_trial' | string;
   daysRemaining?: number;
 }
 

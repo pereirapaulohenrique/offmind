@@ -10,10 +10,10 @@ interface PricingCardProps {
   price: string;
   description?: string;
   features: string[];
-  plan: 'monthly' | 'annual' | 'lifetime';
+  plan: 'starter' | 'builder' | 'believer';
   isPopular?: boolean;
   isCurrentPlan?: boolean;
-  onSelect: (plan: 'monthly' | 'annual' | 'lifetime') => Promise<void>;
+  onSelect: (plan: 'starter' | 'builder' | 'believer') => Promise<void>;
 }
 
 export function PricingCard({

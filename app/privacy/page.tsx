@@ -24,7 +24,7 @@ export default function PrivacyPolicyPage() {
           <section>
             <h2>1. Introduction</h2>
             <p>
-              OffMind (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) is a productivity application operated by Paulo Pereira as a sole proprietorship. This Privacy Policy explains how we collect, use, and protect your personal information when you use OffMind at offmind.ai and related services.
+              OffMind (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) is a productivity application operated by Paulo Pereira as a sole proprietorship. This Privacy Policy explains how we collect, use, and protect your personal information when you use OffMind at getoffmind.com and related services.
             </p>
             <p>
               By using OffMind, you agree to the collection and use of information in accordance with this policy. If you do not agree, please do not use the service.

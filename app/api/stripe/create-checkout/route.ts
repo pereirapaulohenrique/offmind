@@ -52,14 +52,13 @@ export async function POST(request: NextRequest) {
         .eq('user_id', user.id);
     }
 
-    // Determine if this is a subscription or one-time payment
-    const isLifetime = plan === 'lifetime';
+    // All founding member plans are one-time payments
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
     // Create checkout session
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      mode: isLifetime ? 'payment' : 'subscription',
+      mode: 'payment',
       line_items: [
         {
           price: priceId,

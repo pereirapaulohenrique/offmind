@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 export function PricingSection() {
   const { subscription, createCheckout } = useSubscription();
 
-  const handleSelectPlan = async (plan: 'monthly' | 'annual' | 'lifetime') => {
+  const handleSelectPlan = async (plan: 'starter' | 'builder' | 'believer') => {
     try {
       await createCheckout(plan);
     } catch (error) {
@@ -21,38 +21,38 @@ export function PricingSection() {
   return (
     <div className="py-8">
       <div className="mb-8 text-center">
-        <h2 className="text-2xl font-bold">Choose Your Plan</h2>
+        <h2 className="text-2xl font-bold">Founding Member Access</h2>
         <p className="mt-2 text-[var(--text-muted)]">
-          Upgrade to unlock all features and support development
+          One-time payment. No subscriptions. Support development from day one.
         </p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
         <PricingCard
-          name={PLANS.monthly.name}
-          price={PLANS.monthly.price}
-          features={PLANS.monthly.features}
-          plan="monthly"
-          isCurrentPlan={currentPlan === 'monthly'}
+          name={PLANS.starter.name}
+          price={PLANS.starter.price}
+          features={PLANS.starter.features}
+          plan="starter"
+          isCurrentPlan={currentPlan === 'starter'}
           onSelect={handleSelectPlan}
         />
 
         <PricingCard
-          name={PLANS.annual.name}
-          price={PLANS.annual.price}
-          features={PLANS.annual.features}
-          plan="annual"
+          name={PLANS.builder.name}
+          price={PLANS.builder.price}
+          features={PLANS.builder.features}
+          plan="builder"
           isPopular
-          isCurrentPlan={currentPlan === 'annual'}
+          isCurrentPlan={currentPlan === 'builder'}
           onSelect={handleSelectPlan}
         />
 
         <PricingCard
-          name={PLANS.lifetime.name}
-          price={PLANS.lifetime.price}
-          features={PLANS.lifetime.features}
-          plan="lifetime"
-          isCurrentPlan={currentPlan === 'lifetime'}
+          name={PLANS.believer.name}
+          price={PLANS.believer.price}
+          features={PLANS.believer.features}
+          plan="believer"
+          isCurrentPlan={currentPlan === 'believer'}
           onSelect={handleSelectPlan}
         />
       </div>

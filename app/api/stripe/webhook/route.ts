@@ -3,14 +3,8 @@ import * as Sentry from '@sentry/nextjs';
 import { trackServerEvent } from '@/lib/analytics/server';
 import { headers } from 'next/headers';
 import { stripe } from '@/lib/stripe/client';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import Stripe from 'stripe';
-
-// Use service role for webhook (bypasses RLS)
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
 
 export async function POST(request: NextRequest) {
   const body = await request.text();
@@ -74,6 +68,7 @@ export async function POST(request: NextRequest) {
 }
 
 async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
+  const supabaseAdmin = getSupabaseAdmin();
   const userId = session.metadata?.supabase_user_id;
   const plan = session.metadata?.plan;
 
@@ -83,19 +78,25 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
   }
 
   if (session.mode === 'payment') {
-    // Lifetime purchase
+    // Founding member one-time purchase (starter/builder/believer)
+    const foundingPlan = plan || 'starter';
     await supabaseAdmin
       .from('subscriptions')
       .update({
         status: 'active',
-        plan: 'lifetime',
+        plan: foundingPlan,
         stripe_customer_id: session.customer as string,
         current_period_start: new Date().toISOString(),
-        current_period_end: null, // No end for lifetime
+        current_period_end: null, // One-time purchase, no expiry
       } as any)
       .eq('user_id', userId);
+
+    trackServerEvent(userId, 'purchase_completed', {
+      plan: foundingPlan,
+      mode: 'payment',
+    });
   } else if (session.mode === 'subscription' && session.subscription) {
-    // Recurring subscription
+    // Legacy recurring subscription (kept for backwards compatibility)
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
     ) as any;
@@ -112,16 +113,16 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
         cancel_at_period_end: subscription.cancel_at_period_end,
       } as any)
       .eq('user_id', userId);
-  }
 
-  // Track subscription started
-  trackServerEvent(userId, 'subscription_started', {
-    plan: plan || (session.mode === 'payment' ? 'lifetime' : 'monthly'),
-    mode: session.mode,
-  });
+    trackServerEvent(userId, 'subscription_started', {
+      plan: plan || 'monthly',
+      mode: 'subscription',
+    });
+  }
 }
 
 async function handleSubscriptionUpdate(subscription: any) {
+  const supabaseAdmin = getSupabaseAdmin();
   const customerId = subscription.customer as string;
 
   // Find user by Stripe customer ID
@@ -155,6 +156,7 @@ async function handleSubscriptionUpdate(subscription: any) {
 }
 
 async function handleSubscriptionDeleted(subscription: any) {
+  const supabaseAdmin = getSupabaseAdmin();
   const customerId = subscription.customer as string;
 
   // Find user by Stripe customer ID
@@ -178,6 +180,7 @@ async function handleSubscriptionDeleted(subscription: any) {
 }
 
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
+  const supabaseAdmin = getSupabaseAdmin();
   const customerId = invoice.customer as string;
 
   // Find user by Stripe customer ID

@@ -1,10 +1,5 @@
 import { TELEGRAM_API_URL } from './bot';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 
 interface TelegramFile {
   file_id: string;
@@ -28,6 +23,8 @@ export async function downloadTelegramMedia(
   duration?: number;
 } | null> {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
+
     // 1. Get file path from Telegram
     const fileResponse = await fetch(`${TELEGRAM_API_URL}/getFile`, {
       method: 'POST',
