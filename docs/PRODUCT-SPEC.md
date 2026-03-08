@@ -116,6 +116,23 @@ These are Paulo-led items required before going live:
 
 ---
 
+## Design System Migration (T1 — Launch Visual Identity)
+
+Migrated from warm charcoal (#1a1614) + terracotta (#c2410c) to zinc-950 + teal-only. Required for demo videos and final brand consistency with landing page.
+
+| ID | Title | Owner | Status |
+|----|-------|-------|--------|
+| DSN-001 | Migrate dark mode tokens (Zinc palette) | Claude | Done ✓ |
+| DSN-002 | Migrate light mode tokens | Claude | Done ✓ |
+| DSN-003 | Update shadcn + Tailwind theme blocks | Claude | Done ✓ |
+| DSN-004 | Fix hardcoded warm colors in components | Claude | Done ✓ |
+| DSN-005 | Replace terracotta with teal-only CTAs | Claude | Done ✓ |
+| DSN-006 | Update OffMindLogo gradients | Claude | Done ✓ |
+| DSN-007 | Update email templates | Claude | Done ✓ |
+| DSN-008 | Update manifest/SW/Electron assets | Claude | Done ✓ |
+
+---
+
 ## T2 — Premium Baseline
 
 *Without these, the product doesn't justify $79+. UX bugs, polish, accessibility.*

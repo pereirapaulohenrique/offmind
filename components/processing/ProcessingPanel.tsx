@@ -1125,8 +1125,8 @@ export function ProcessingPanel({
             className={cn(
               'fixed right-0 top-0 z-50 flex h-full flex-col',
               'border-l border-white/[0.06]',
-              // Bloom warm organic surface
-              'bg-gradient-to-b from-[#1c1917] via-[#1a1815] to-[#171412]',
+              // Zinc surface gradient
+              'bg-gradient-to-b from-[#0c0c0e] via-[#0b0b0d] to-[#09090b]',
               'shadow-[-8px_0_32px_rgba(0,0,0,0.5)]',
               panelWidthClass,
             )}
@@ -1305,7 +1305,7 @@ export function ProcessingPanel({
                                 ).slice(0, 5);
                                 if (filtered.length === 0) return null;
                                 return (
-                                  <div className="absolute top-full left-0 right-0 z-50 mt-1 max-h-36 overflow-y-auto rounded-xl border border-white/[0.08] bg-[#1c1917] shadow-lg">
+                                  <div className="absolute top-full left-0 right-0 z-50 mt-1 max-h-36 overflow-y-auto rounded-xl border border-white/[0.08] bg-[var(--bg-surface)] shadow-lg">
                                     {filtered.map((c) => (
                                       <button
                                         key={c.id}
@@ -1571,7 +1571,7 @@ export function ProcessingPanel({
                     className={cn(
                       'gap-2 rounded-xl',
                       'bg-[var(--cta-base)] text-white hover:bg-[var(--cta-base)]/90',
-                      'shadow-[0_2px_12px_rgba(194,65,12,0.25)]',
+                      'shadow-[0_2px_12px_rgba(20,184,166,0.25)]',
                       !destinationId && 'opacity-50 cursor-not-allowed',
                     )}
                   >

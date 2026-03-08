@@ -31,7 +31,7 @@ export function PageCaptureQueue({
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="inline-flex items-center gap-1.5 rounded-full bg-[rgba(109,174,247,0.1)] border border-[rgba(109,174,247,0.2)] px-2.5 py-1 text-xs font-medium text-[#6daef7] hover:bg-[rgba(109,174,247,0.15)] transition-colors"
+          className="inline-flex items-center gap-1.5 rounded-full bg-[rgba(109,174,247,0.1)] border border-[rgba(109,174,247,0.2)] px-2.5 py-1 text-xs font-medium text-[var(--layer-capture)] hover:bg-[rgba(109,174,247,0.15)] transition-colors"
         >
           <Inbox className="h-3 w-3" />
           {items.length} new
@@ -51,7 +51,7 @@ export function PageCaptureQueue({
             <Button
               variant="ghost"
               size="sm"
-              className="h-6 gap-1 px-2 text-[10px] text-[#6daef7] hover:text-[#6daef7] hover:bg-[rgba(109,174,247,0.1)]"
+              className="h-6 gap-1 px-2 text-[10px] text-[var(--layer-capture)] hover:text-[var(--layer-capture)] hover:bg-[rgba(109,174,247,0.1)]"
               onClick={() => {
                 onAppendAll();
                 setOpen(false);
@@ -86,7 +86,7 @@ export function PageCaptureQueue({
               <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
                   onClick={() => onAppendItem(item)}
-                  className="rounded-md p-1 text-[var(--text-muted)] hover:text-[#6daef7] hover:bg-[rgba(109,174,247,0.1)] transition-colors"
+                  className="rounded-md p-1 text-[var(--text-muted)] hover:text-[var(--layer-capture)] hover:bg-[rgba(109,174,247,0.1)] transition-colors"
                   title="Append to page"
                 >
                   <Plus className="h-3.5 w-3.5" />

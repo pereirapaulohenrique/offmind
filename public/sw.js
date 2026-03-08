@@ -141,8 +141,8 @@ async function networkFirstWithOfflineFallback(request) {
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #1a1614;
-      color: #e8e0d8;
+      background: #09090b;
+      color: #fafafa;
       display: flex;
       align-items: center;
       justify-content: center;

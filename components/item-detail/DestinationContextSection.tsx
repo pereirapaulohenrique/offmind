@@ -162,7 +162,7 @@ function WaitingSection({
               className={fieldClasses}
             />
             {showDropdown && filteredContacts.length > 0 && (
-              <div className="absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-white/[0.08] bg-[#1a1614] shadow-lg">
+              <div className="absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-white/[0.08] bg-[var(--bg-base)] shadow-lg">
                 <div className="max-h-48 overflow-y-auto py-1">
                   {filteredContacts.map((contact) => (
                     <button

@@ -1783,7 +1783,7 @@ export function ItemDetailClient({
                               .slice(0, 5);
                             if (filtered.length === 0) return null;
                             return (
-                              <div className="absolute top-full left-0 right-0 z-50 mt-1 max-h-36 overflow-y-auto rounded-xl border border-white/[0.08] bg-[#1c1917] shadow-lg">
+                              <div className="absolute top-full left-0 right-0 z-50 mt-1 max-h-36 overflow-y-auto rounded-xl border border-white/[0.08] bg-[var(--bg-surface)] shadow-lg">
                                 {filtered.map((c) => (
                                   <button
                                     key={c.id}
@@ -1911,7 +1911,7 @@ export function ItemDetailClient({
               className={cn(
                 'gap-2 rounded-xl',
                 'bg-[var(--cta-base)] text-white hover:bg-[var(--cta-base)]/90',
-                'shadow-[0_2px_12px_rgba(194,65,12,0.25)]',
+                'shadow-[0_2px_12px_rgba(20,184,166,0.25)]',
                 !destinationId && 'opacity-50 cursor-not-allowed',
               )}
             >
@@ -1961,7 +1961,7 @@ export function ItemDetailClient({
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="rounded-2xl border border-white/[0.08] bg-[#252220] p-6 shadow-xl max-w-sm w-full mx-4"
+              className="rounded-2xl border border-white/[0.08] bg-[var(--bg-surface)] p-6 shadow-xl max-w-sm w-full mx-4"
               onClick={(e) => e.stopPropagation()}
             >
               {showCompletionPrompt === 'schedule' ? (

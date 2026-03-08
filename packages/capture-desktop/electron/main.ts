@@ -41,7 +41,7 @@ function createCaptureWindow(): BrowserWindow {
     alwaysOnTop: true,
     show: false,
     hasShadow: true,
-    backgroundColor: '#1a1614',
+    backgroundColor: '#09090b',
     webPreferences: {
       preload: join(__dirname, 'preload.js'),
       contextIsolation: true,

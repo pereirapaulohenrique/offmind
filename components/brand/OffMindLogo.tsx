@@ -1,10 +1,10 @@
 /**
- * OffMind Logo — Infinity symbol with teal-to-terracotta gradient.
+ * OffMind Logo — Infinity symbol with monochromatic teal gradient.
  *
- * Represents the continuous GTD flow: capture (teal/blue) → process → commit (terracotta/warm).
+ * Represents the continuous GTD flow: capture → process → commit.
  * The infinity loop = thoughts flowing endlessly until OffMind breaks the cycle.
  *
- * Colors: Teal #22b8cf → Terracotta #c2410c
+ * Colors: Teal #14b8a6 → #2dd4bf → #5eead4
  */
 
 interface OffMindLogoProps {
@@ -61,7 +61,7 @@ function InfinityMark({
       aria-label="OffMind logo"
     >
       <defs>
-        {/* Main gradient: teal (left) to terracotta (right) */}
+        {/* Main gradient: teal progression */}
         <linearGradient
           id={`${id}-main`}
           x1="0"
@@ -70,11 +70,11 @@ function InfinityMark({
           y2="62"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0%" stopColor="#22b8cf" />
-          <stop offset="35%" stopColor="#3ba5c4" />
-          <stop offset="50%" stopColor="#b07040" />
-          <stop offset="65%" stopColor="#d45a1a" />
-          <stop offset="100%" stopColor="#c2410c" />
+          <stop offset="0%" stopColor="#5eead4" />
+          <stop offset="35%" stopColor="#2dd4bf" />
+          <stop offset="50%" stopColor="#14b8a6" />
+          <stop offset="65%" stopColor="#0d9488" />
+          <stop offset="100%" stopColor="#0f766e" />
         </linearGradient>
 
         {/* Top highlight for 3D depth */}
@@ -91,7 +91,7 @@ function InfinityMark({
           <stop offset="100%" stopColor="rgba(0,0,0,0.1)" />
         </linearGradient>
 
-        {/* Left loop gradient (teal emphasis) */}
+        {/* Left loop gradient (lighter teal) */}
         <linearGradient
           id={`${id}-left`}
           x1="0"
@@ -100,12 +100,12 @@ function InfinityMark({
           y2="90"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0%" stopColor="#0ea5c7" />
-          <stop offset="60%" stopColor="#22b8cf" />
-          <stop offset="100%" stopColor="#45a0b0" />
+          <stop offset="0%" stopColor="#5eead4" />
+          <stop offset="60%" stopColor="#2dd4bf" />
+          <stop offset="100%" stopColor="#14b8a6" />
         </linearGradient>
 
-        {/* Right loop gradient (terracotta emphasis) */}
+        {/* Right loop gradient (deeper teal) */}
         <linearGradient
           id={`${id}-right`}
           x1="100"
@@ -114,9 +114,9 @@ function InfinityMark({
           y2="90"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0%" stopColor="#d4680e" />
-          <stop offset="40%" stopColor="#c2410c" />
-          <stop offset="100%" stopColor="#ea580c" />
+          <stop offset="0%" stopColor="#14b8a6" />
+          <stop offset="40%" stopColor="#0d9488" />
+          <stop offset="100%" stopColor="#0f766e" />
         </linearGradient>
 
         {/* Cross-over front piece gradient (blend zone) */}
@@ -128,9 +128,9 @@ function InfinityMark({
           y2="104"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0%" stopColor="#22b8cf" />
-          <stop offset="50%" stopColor="#8a7050" />
-          <stop offset="100%" stopColor="#c2410c" />
+          <stop offset="0%" stopColor="#5eead4" />
+          <stop offset="50%" stopColor="#2dd4bf" />
+          <stop offset="100%" stopColor="#0d9488" />
         </linearGradient>
 
         {/* Subtle drop shadow */}
@@ -223,9 +223,9 @@ export function OffMindIcon({ size = 16, className = '' }: { size?: number; clas
           y2="62"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0%" stopColor="#22b8cf" />
-          <stop offset="45%" stopColor="#6a8a70" />
-          <stop offset="100%" stopColor="#c2410c" />
+          <stop offset="0%" stopColor="#5eead4" />
+          <stop offset="45%" stopColor="#2dd4bf" />
+          <stop offset="100%" stopColor="#0d9488" />
         </linearGradient>
       </defs>
 

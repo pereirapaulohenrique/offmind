@@ -147,8 +147,8 @@ export function ActivityRail({ itemId }: ActivityRailProps) {
         'fixed top-[57px] bottom-[57px] right-0 z-40 flex-col border-l border-white/[0.06] transition-all duration-300 overflow-hidden',
         'hidden lg:flex',
         expanded
-          ? 'w-[280px] bg-[#1e1b18] shadow-[-4px_0_24px_rgba(0,0,0,0.3)]'
-          : 'w-[44px] bg-[#1e1b18]/60',
+          ? 'w-[280px] bg-[var(--bg-inset)] shadow-[-4px_0_24px_rgba(0,0,0,0.3)]'
+          : 'w-[44px] bg-[var(--bg-inset)]/60',
       )}
     >
       {/* Toggle */}

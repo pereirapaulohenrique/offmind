@@ -51,7 +51,7 @@ export async function POST(request: Request) {
       subject: `[${categoryLabel}] Feedback from ${user.email}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px;">
-          <h2 style="color: #1a1614;">${categoryLabel}</h2>
+          <h2 style="color: #09090b;">${categoryLabel}</h2>
           <p><strong>From:</strong> ${user.email} (${user.id})</p>
           ${url ? `<p><strong>Page:</strong> ${url}</p>` : ''}
           <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 16px 0;" />

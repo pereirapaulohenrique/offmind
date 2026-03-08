@@ -543,7 +543,7 @@ export function Sidebar({ inboxCount: _inboxCountProp = 0, spaces = [] }: Sideba
         className="fixed left-0 top-0 z-40 flex h-screen flex-col rounded-r-2xl"
         style={{
           background: 'var(--bg-inset)',
-          boxShadow: '4px 0 20px rgba(80,50,20,0.08)',
+          boxShadow: '4px 0 20px rgba(0,0,0,0.12)',
         }}
       >
         {/* ---- Logo header ------------------------------------------------ */}

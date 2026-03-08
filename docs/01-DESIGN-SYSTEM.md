@@ -2,7 +2,7 @@
 
 ## Philosophy
 
-OffMind's design is **calm, premium, and focused**. The app should feel like a quiet room where you think clearly - not a dashboard screaming for attention. Every element earns its place. Color is used intentionally: teal for the brand, layer colors for workflow context, and warm neutrals for everything else.
+OffMind's design is **calm, premium, and focused**. The app should feel like a quiet room where you think clearly — not a dashboard screaming for attention. Every element earns its place. Color is used intentionally: teal for interactivity and brand, layer colors for workflow context, and zinc-neutral for everything else.
 
 Dark mode is the flagship experience. Light mode is fully supported from day one for non-tech users.
 
@@ -12,86 +12,82 @@ Dark mode is the flagship experience. Light mode is fully supported from day one
 
 ### Backgrounds (Dark Mode)
 
-Warm charcoal - not cold zinc, not hot amber. Subtly warm to feel human without being distracting.
+Zinc-950 progression — cool, neutral, professional. Matches modern SaaS aesthetics (Linear, Vercel, Raycast).
 
 | Token | Hex | Usage |
 |-------|-----|-------|
-| `--bg-base` | `#0e0e11` | Page background |
-| `--bg-surface` | `#141418` | Sidebar, panels |
-| `--bg-elevated` | `#1b1b20` | Cards, dropdowns |
-| `--bg-hover` | `#222228` | Hover states |
-| `--bg-active` | `#2c2c34` | Active/pressed states |
-| `--bg-card` | `#18181d` | Card backgrounds |
+| `--bg-base` | `#09090b` | Page background |
+| `--bg-inset` | `#141417` | Inset panels |
+| `--bg-surface` | `#18181b` | Sidebar, cards, panels |
+| `--bg-elevated` | `#1f1f23` | Dropdowns, popovers |
+| `--bg-hover` | `#27272a` | Hover states |
+| `--bg-active` | `#3f3f46` | Active/pressed states |
+| `--bg-overlay` | `#52525b` | Overlay surfaces |
 
 ### Backgrounds (Light Mode)
 
+Clean white/zinc-gray — no warm cream.
+
 | Token | Hex | Usage |
 |-------|-----|-------|
-| `--bg-base` | `#fafaf9` | Page background (warm white) |
-| `--bg-surface` | `#f5f5f3` | Sidebar, panels |
-| `--bg-elevated` | `#ffffff` | Cards, dropdowns |
-| `--bg-hover` | `#f0f0ed` | Hover states |
-| `--bg-active` | `#e8e8e4` | Active/pressed states |
-| `--bg-card` | `#ffffff` | Card backgrounds |
+| `--bg-base` | `#ffffff` | Page background |
+| `--bg-inset` | `#f4f4f5` | Inset panels |
+| `--bg-surface` | `#ffffff` | Cards, panels |
+| `--bg-elevated` | `#ffffff` | Dropdowns, popovers |
+| `--bg-hover` | `#e4e4e7` | Hover states |
+| `--bg-active` | `#d4d4d8` | Active/pressed states |
 
 ### Borders
 
 | Token | Dark | Light | Usage |
 |-------|------|-------|-------|
-| `--border-subtle` | `#1f1f27` | `#f0f0ed` | Dividers, subtle separators |
-| `--border-default` | `#2a2a33` | `#e5e5e0` | Card borders, inputs |
-| `--border-emphasis` | `#3d3d4a` | `#d4d4ce` | Focused inputs, emphasis |
+| `--border-subtle` | `rgba(161,161,170,0.10)` | `#e4e4e7` | Dividers, subtle separators |
+| `--border-default` | `rgba(161,161,170,0.18)` | `#d4d4d8` | Card borders, inputs |
+| `--border-emphasis` | `rgba(161,161,170,0.28)` | `#a1a1aa` | Focused inputs, emphasis |
 
 ### Text
 
 | Token | Dark | Light | Usage |
 |-------|------|-------|-------|
-| `--text-primary` | `#ededf0` | `#1a1a1e` | Headings, body text |
-| `--text-secondary` | `#9e9eac` | `#6b6b78` | Descriptions, labels |
-| `--text-muted` | `#6a6a78` | `#9e9eac` | Placeholders, hints |
-| `--text-disabled` | `#484854` | `#c4c4cc` | Disabled elements |
+| `--text-primary` | `#fafafa` | `#09090b` | Headings, body text |
+| `--text-secondary` | `#a1a1aa` | `#52525b` | Descriptions, labels |
+| `--text-muted` | `#71717a` | `#71717a` | Placeholders, hints |
+| `--text-disabled` | `#52525b` | `#a1a1aa` | Disabled elements |
 
-### Hybrid Accent System (Teal + Terracotta)
+### Teal-Only Accent System
 
-OffMind uses a **dual-accent system** where color carries intent:
+OffMind uses a **single accent color** — teal — for all interactive and CTA elements. No terracotta.
 
-- **Teal (`--accent-*`)** = Product UI. Navigation, AI indicators, focus states, interactive controls, progress, checkboxes, selection. The product's interactive personality.
-- **Terracotta (`--cta-*`)** = CTA/Marketing. Conversion buttons, landing page badges, pricing CTAs, waitlist forms, email templates. Warmth that drives action.
+- **Teal (`--accent-*` / `--cta-*`)** = Everything interactive. Navigation, AI indicators, focus states, CTAs, buttons, pricing, marketing. One cohesive color language.
 
-The logo bridges both colors with a teal-to-terracotta gradient.
+The logo uses a monochromatic teal gradient.
 
-#### Product Accent (Teal)
-
-Used for: active navigation, focus rings, links, interactive highlights, capture bar glow, AI feature indicators, checkboxes, toggles, progress bars.
+#### Accent (Teal — Product UI)
 
 | Token | Dark | Light | Usage |
 |-------|------|-------|-------|
 | `--accent-base` | `#2dd4bf` | `#0d9488` | Primary accent |
 | `--accent-hover` | `#5eead4` | `#14b8a6` | Hover state |
 | `--accent-active` | `#14b8a6` | `#0f766e` | Pressed state |
-| `--accent-subtle` | `rgba(45, 212, 191, 0.10)` | `rgba(13, 148, 136, 0.06)` | Subtle backgrounds |
-| `--accent-border` | `rgba(45, 212, 191, 0.25)` | `rgba(13, 148, 136, 0.22)` | Accent borders |
-| `--accent-glow` | `rgba(45, 212, 191, 0.08)` | `rgba(13, 148, 136, 0.08)` | Glow/shadow effects |
+| `--accent-subtle` | `rgba(45,212,191,0.10)` | `rgba(13,148,136,0.06)` | Subtle backgrounds |
+| `--accent-border` | `rgba(45,212,191,0.25)` | `rgba(13,148,136,0.22)` | Accent borders |
+| `--accent-glow` | `rgba(45,212,191,0.08)` | `rgba(13,148,136,0.08)` | Glow/shadow effects |
 
-#### CTA Accent (Terracotta)
-
-Used for: CTA buttons on landing page, pricing section buttons, waitlist form submit, "EARLY BIRD" badges, step number badges, marketing emails.
+#### CTA (Teal — Unified with Accent)
 
 | Token | Dark | Light | Usage |
 |-------|------|-------|-------|
-| `--cta-base` | `#c2410c` | `#b93d0a` | CTA buttons |
-| `--cta-hover` | `#ea580c` | `#d4520f` | Hover state |
-| `--cta-active` | `#9a3412` | `#9a3412` | Pressed state |
-| `--cta-subtle` | `rgba(194, 65, 12, 0.10)` | `rgba(185, 61, 10, 0.06)` | Badge backgrounds |
-| `--cta-border` | `rgba(194, 65, 12, 0.25)` | `rgba(185, 61, 10, 0.22)` | CTA borders |
-| `--cta-glow` | `rgba(194, 65, 12, 0.08)` | `rgba(185, 61, 10, 0.08)` | CTA glow effects |
+| `--cta-base` | `#14b8a6` | `#0d9488` | CTA buttons |
+| `--cta-hover` | `#2dd4bf` | `#0f766e` | Hover state |
+| `--cta-active` | `#0d9488` | `#115e59` | Pressed state |
+| `--cta-text` | `#042f2e` | `#ffffff` | Text on CTA buttons |
 
 #### Gradient Tokens
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| `--gradient-accent` | `linear-gradient(135deg, teal-base, teal-hover)` | Product UI gradients |
-| `--gradient-cta` | `linear-gradient(135deg, terracotta-base, terracotta-hover)` | CTA button gradients |
+| `--gradient-accent` | `linear-gradient(135deg, #2dd4bf, #5eead4)` | Product UI gradients |
+| `--gradient-cta` | `linear-gradient(135deg, #14b8a6, #2dd4bf)` | CTA button gradients |
 
 ### Layer Colors (Functional, Not Brand)
 
@@ -325,9 +321,9 @@ All animations use Framer Motion. Keep them **subtle and fast**.
 
 ## Logo
 
-The OffMind logo is a gradient sphere (violet `#7c5cfc` to teal `#2dd4bf`) with a subtle inner arc. It represents thoughts flowing out of the mind into clarity.
+The OffMind logo is an infinity symbol with a monochromatic teal gradient (`#5eead4` lighter → `#0f766e` deeper). It represents thoughts flowing endlessly until OffMind breaks the cycle.
 
-- App icon: 28x28px sphere
-- Favicon: sphere only
-- Full logo: sphere + "OffMind" text (Geist Sans 600, 15px)
-- Used in: sidebar header, landing page, auth pages, favicon
+- Mark only: infinity symbol (default)
+- Full logo: infinity mark + "OffMind" text (Geist Sans 600)
+- Favicon: simplified single-path infinity
+- Used in: sidebar header, landing page, auth pages, favicon, email templates
