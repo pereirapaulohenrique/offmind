@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
@@ -146,26 +146,29 @@ function StatusBar({
   return (
     <motion.div
       variants={itemVariants}
-      className="flex items-center gap-1 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-1"
+      className="flex items-center rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)]"
     >
-      {segments.map((seg) => (
+      {segments.map((seg, i) => (
         <button
           key={seg.key}
           onClick={() => onNavigate(seg.path)}
           className={cn(
-            'group flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2.5',
-            'transition-all duration-200',
+            'group flex flex-1 items-center justify-center gap-1.5 py-2',
+            'transition-all duration-150',
             'hover:bg-[var(--bg-hover)]',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
+            i === 0 && 'rounded-l-lg',
+            i === segments.length - 1 && 'rounded-r-lg',
+            i < segments.length - 1 && 'border-r border-[var(--border-subtle)]',
           )}
         >
-          <seg.icon className="h-3.5 w-3.5 text-[var(--text-muted)]" />
-          <span className="text-xs font-medium text-[var(--text-muted)]">{seg.label}</span>
+          <seg.icon className="h-3.5 w-3.5 text-[var(--text-disabled)]" />
+          <span className="text-xs text-[var(--text-muted)]">{seg.label}</span>
           <span
             className={cn(
-              'min-w-[20px] rounded-md px-1.5 py-0.5 text-center text-xs font-bold tabular-nums',
+              'text-xs tabular-nums',
               seg.count > 0
-                ? 'bg-[var(--accent-subtle)] text-[var(--accent-base)]'
+                ? 'font-semibold text-[var(--text-primary)]'
                 : 'text-[var(--text-disabled)]',
             )}
           >
@@ -268,6 +271,7 @@ function AIInsightsCard({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [expandedCluster, setExpandedCluster] = useState<number | null>(null);
+  const hasFetched = useRef(false);
 
   const fetchInsights = async () => {
     setLoading(true);
@@ -334,6 +338,16 @@ function AIInsightsCard({
   };
 
   const hasAnyData = somedayItems.length >= 2 || allActiveItems.length >= 5 || staleItems.length >= 2;
+
+  // Auto-fetch on mount
+  useEffect(() => {
+    if (hasAnyData && !hasFetched.current) {
+      hasFetched.current = true;
+      fetchInsights();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasAnyData]);
+
   if (!hasAnyData) return null;
 
   const totalInsights = insights
@@ -388,15 +402,10 @@ function AIInsightsCard({
         {loading && (
           <>
             <div className="mx-4 h-px bg-[var(--border-subtle)]" />
-            <div className="flex flex-col items-center justify-center px-4 py-8 text-center">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-              >
-                <Brain className="h-6 w-6 text-[var(--accent-base)] opacity-40" />
-              </motion.div>
-              <p className="mt-3 text-xs text-[var(--text-muted)]">
-                Analyzing your items...
+            <div className="flex items-center justify-center gap-2 px-4 py-4">
+              <Loader2 className="h-3.5 w-3.5 animate-spin text-[var(--accent-base)] opacity-50" />
+              <p className="text-xs text-[var(--text-muted)]">
+                Analyzing...
               </p>
             </div>
           </>
@@ -406,10 +415,10 @@ function AIInsightsCard({
         {error && !loading && (
           <>
             <div className="mx-4 h-px bg-[var(--border-subtle)]" />
-            <div className="flex flex-col items-center justify-center px-4 py-6 text-center">
-              <AlertCircle className="h-5 w-5 text-red-400 opacity-60" />
-              <p className="mt-2 text-xs text-[var(--text-muted)]">
-                Something went wrong. Try again.
+            <div className="flex items-center gap-2 px-4 py-3">
+              <AlertCircle className="h-3.5 w-3.5 text-red-400/60" />
+              <p className="text-xs text-[var(--text-muted)]">
+                Failed to load. Try refreshing.
               </p>
             </div>
           </>
@@ -421,12 +430,10 @@ function AIInsightsCard({
             <div className="mx-4 h-px bg-[var(--border-subtle)]" />
 
             {totalInsights === 0 ? (
-              <div className="flex flex-col items-center justify-center px-4 py-8 text-center">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--bg-hover)]">
-                  <CheckCircle2 className="h-4 w-4 text-[var(--text-muted)]" />
-                </div>
-                <p className="mt-3 text-xs text-[var(--text-muted)]">
-                  Your system looks healthy, nothing to flag right now.
+              <div className="flex items-center gap-2 px-4 py-3">
+                <CheckCircle2 className="h-3.5 w-3.5 text-[var(--text-disabled)]" />
+                <p className="text-xs text-[var(--text-muted)]">
+                  All clear. Nothing to flag.
                 </p>
               </div>
             ) : (
@@ -597,20 +604,7 @@ function AIInsightsCard({
           </>
         )}
 
-        {/* Initial state (no insights yet, not loading) */}
-        {!insights && !loading && !error && (
-          <>
-            <div className="mx-4 h-px bg-[var(--border-subtle)]" />
-            <div className="flex flex-col items-center justify-center px-4 py-6 text-center">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent-glow)]">
-                <Sparkles className="h-4 w-4 text-[var(--accent-base)] opacity-50" />
-              </div>
-              <p className="mt-3 max-w-xs text-xs text-[var(--text-muted)]">
-                AI-powered suggestions to promote ideas, group related items, and clean up stale tasks.
-              </p>
-            </div>
-          </>
-        )}
+        {/* Initial state — just header, no extra content (auto-fetch handles the rest) */}
       </div>
     </motion.section>
   );
@@ -698,7 +692,7 @@ export function TodayPageClient({
       {/* Content */}
       <div className="flex-1 overflow-auto px-6 pb-6 pt-3">
         <motion.div
-          className="mx-auto max-w-2xl space-y-4"
+          className="mx-auto max-w-2xl space-y-3"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -735,17 +729,19 @@ export function TodayPageClient({
           {isEverythingEmpty && (
             <motion.div
               variants={itemVariants}
-              className="flex flex-col items-center justify-center rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-6 py-12 text-center"
+              className="flex items-center gap-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-5 py-5"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--accent-glow)]">
-                <Sun className="h-6 w-6 text-[var(--accent-base)] opacity-60" />
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--accent-glow)]">
+                <Sun className="h-4 w-4 text-[var(--accent-base)] opacity-60" />
               </div>
-              <p className="mt-4 text-sm font-medium text-[var(--text-primary)]">
-                Your mind is clear.
-              </p>
-              <p className="mt-1 text-xs text-[var(--text-muted)]">
-                Capture something when inspiration strikes.
-              </p>
+              <div>
+                <p className="text-sm font-medium text-[var(--text-primary)]">
+                  Your mind is clear.
+                </p>
+                <p className="text-xs text-[var(--text-muted)]">
+                  Capture something when inspiration strikes.
+                </p>
+              </div>
             </motion.div>
           )}
 
@@ -834,14 +830,9 @@ export function TodayPageClient({
                     ))}
                   </motion.div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center px-4 py-8 text-center">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--bg-hover)]">
-                      <Calendar className="h-4 w-4 text-[var(--text-disabled)]" />
-                    </div>
-                    <p className="mt-3 text-xs text-[var(--text-muted)]">
-                      Nothing scheduled. Focus on what matters.
-                    </p>
-                  </div>
+                  <p className="px-4 py-4 text-xs text-[var(--text-disabled)]">
+                    Nothing scheduled today.
+                  </p>
                 )}
               </div>
             </motion.section>
