@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OffMind — Design Reference</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #f0efed;
+    color: #1c1b1a;
+    font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===================== PAGE CHROME ===================== */
+
+  .page-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2.5rem;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1c1b1a;
+    margin-bottom: 0.35rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.9rem;
+    color: #8c8680;
+    margin-bottom: 3rem;
+  }
+
+  .section {
+    margin-bottom: 4rem;
+  }
+
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #a09890;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #1c1b1a;
+    margin-bottom: 1.75rem;
+  }
+
+  /* ===================== APP FRAME ===================== */
+
+  .app-frame {
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.04),
+      0 6px 16px rgba(0,0,0,0.06),
+      0 24px 60px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.06);
+    background: #faf9f7;
+    display: flex;
+    min-height: 580px;
+  }
+
+  /* ===================== SIDEBAR ===================== */
+
+  .sidebar {
+    width: 240px;
+    padding: 1.5rem 1rem;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(0,0,0,0.05);
+    background: #f4f3f1;
+  }
+
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .sidebar-logo .logo-mark {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1c1b1a;
+  }
+
+  .sidebar-logo .logo-mark svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .dark-frame .sidebar-logo .logo-mark { color: #ededec; }
+
+  .sidebar-logo .logo-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1c1b1a;
+    letter-spacing: -0.01em;
+  }
+
+  .sidebar-section {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #a09890;
+    padding: 0 0.75rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
+    color: #6b6560;
+    cursor: default;
+    transition: background 0.15s;
+  }
+
+  .sidebar-item:hover {
+    background: rgba(0,0,0,0.03);
+  }
+
+  .sidebar-item.active {
+    font-weight: 600;
+    color: #1c1b1a;
+  }
+
+  .sidebar-item .icon {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+
+  .sidebar-item .icon svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .sidebar-item.active .icon {
+    opacity: 0.8;
+  }
+
+  .sidebar-item .count {
+    margin-left: auto;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.1rem 0.45rem;
+    border-radius: 1rem;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  .sidebar-spacer { flex: 1; }
+
+  .sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .sidebar-user .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #e0ddd8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #8c8680;
+  }
+
+  .sidebar-user .user-info { flex: 1; }
+
+  .sidebar-user .user-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1c1b1a;
+  }
+
+  .sidebar-user .user-plan {
+    font-size: 0.65rem;
+    color: #a09890;
+  }
+
+  /* ===================== MAIN CONTENT ===================== */
+
+  .main-content {
+    flex: 1;
+    background: #faf9f7;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .top-bar {
+    display: flex;
+    align-items: center;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    gap: 1rem;
+  }
+
+  .top-bar .page-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1c1b1a;
+  }
+
+  .top-bar .tab-row {
+    display: flex;
+    gap: 0;
+    margin-left: 1.5rem;
+  }
+
+  .top-bar .tab {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 0.4rem;
+    color: #8c8680;
+    font-weight: 500;
+    cursor: default;
+  }
+
+  .top-bar .tab.active {
+    background: rgba(0,0,0,0.04);
+    color: #1c1b1a;
+    font-weight: 600;
+  }
+
+  .top-bar .spacer { flex: 1; }
+
+  .top-bar .action-btn {
+    padding: 0.4rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .top-bar .icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 0.4rem;
+    border: 1px solid rgba(0,0,0,0.08);
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #8c8680;
+  }
+
+  .top-bar .icon-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .content-area {
+    flex: 1;
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    overflow: auto;
+  }
+
+  /* Item cards */
+  .item-card {
+    background: #ffffff;
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    box-shadow:
+      0 1px 2px rgba(0,0,0,0.03),
+      0 2px 8px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.04);
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    transition: box-shadow 0.15s, border-color 0.15s;
+    cursor: default;
+  }
+
+  .item-card:hover {
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.04),
+      0 4px 12px rgba(0,0,0,0.05);
+    border-color: rgba(0,0,0,0.07);
+  }
+
+  .item-card .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 0.45rem;
+    flex-shrink: 0;
+  }
+
+  .item-card .item-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .item-card .item-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1c1b1a;
+    margin-bottom: 0.2rem;
+  }
+
+  .item-card .item-desc {
+    font-size: 0.8rem;
+    color: #8c8680;
+    margin-bottom: 0.6rem;
+    line-height: 1.4;
+  }
+
+  .item-card .item-tags {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+  }
+
+  .item-card .tag {
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 0.15rem 0.55rem;
+    border-radius: 0.35rem;
+    border: 1px solid rgba(0,0,0,0.06);
+    background: rgba(0,0,0,0.02);
+    color: #6b6560;
+  }
+
+  .item-card .tag.accent {
+    border-color: transparent;
+  }
+
+  .item-card .item-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .item-card .meta {
+    font-size: 0.7rem;
+    color: #a09890;
+  }
+
+  .item-card .item-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .item-card .time {
+    font-size: 0.7rem;
+    color: #a09890;
+    white-space: nowrap;
+  }
+
+  .item-card .ai-badge {
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 0.2rem 0.6rem;
+    border-radius: 2rem;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .item-card .ai-badge svg {
+    width: 12px;
+    height: 12px;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Capture bar */
+  .capture-bar {
+    margin: 0 2rem 1.5rem;
+    padding: 0.85rem 1.25rem;
+    background: #ffffff;
+    border-radius: 0.75rem;
+    box-shadow:
+      0 1px 2px rgba(0,0,0,0.03),
+      0 4px 12px rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .capture-bar:hover {
+    border-color: rgba(0,0,0,0.1);
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.04),
+      0 6px 16px rgba(0,0,0,0.06);
+  }
+
+  .capture-bar .capture-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.3;
+  }
+
+  .capture-bar .capture-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .capture-bar .capture-text {
+    flex: 1;
+    font-size: 0.85rem;
+    color: #a09890;
+  }
+
+  .capture-bar .shortcut-key {
+    font-size: 0.65rem;
+    font-family: 'DM Sans', monospace;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.3rem;
+    background: #f4f3f1;
+    border: 1px solid rgba(0,0,0,0.06);
+    color: #a09890;
+    font-weight: 500;
+  }
+
+  /* Review card */
+  .review-prompt {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    box-shadow:
+      0 1px 2px rgba(0,0,0,0.03),
+      0 2px 8px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.04);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .review-prompt .review-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .review-prompt .review-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .review-prompt .review-body { flex: 1; }
+
+  .review-prompt .review-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1c1b1a;
+    margin-bottom: 0.15rem;
+  }
+
+  .review-prompt .review-desc {
+    font-size: 0.78rem;
+    color: #8c8680;
+  }
+
+  .review-prompt .review-btn {
+    padding: 0.4rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    flex-shrink: 0;
+  }
+
+  /* ===================== HERO SECTION ===================== */
+
+  .hero-frame {
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.04),
+      0 6px 16px rgba(0,0,0,0.06),
+      0 24px 60px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .hero-content {
+    padding: 5rem 3rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .hero-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .hero-logo svg {
+    height: 28px;
+    width: auto;
+  }
+  .hero-logo .hero-logo-text {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .dark-hero .hero-logo { color: #ededec; }
+  .dark-hero .hero-logo .hero-logo-text { color: #ededec; }
+
+  .hero-content .hero-pill {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.35rem 1rem;
+    border-radius: 2rem;
+    border: 1px solid rgba(0,0,0,0.08);
+    background: white;
+    color: #6b6560;
+  }
+
+  .hero-content .hero-headline {
+    font-size: 3.25rem;
+    font-weight: 700;
+    line-height: 1.08;
+    max-width: 620px;
+    color: #1c1b1a;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-content .hero-sub {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    max-width: 480px;
+    color: #6b6560;
+  }
+
+  .hero-content .cta-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .hero-content .hero-cta {
+    padding: 0.75rem 1.75rem;
+    border-radius: 0.6rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .hero-content .hero-cta-secondary {
+    padding: 0.75rem 1.75rem;
+    border-radius: 0.6rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid rgba(0,0,0,0.1);
+    cursor: pointer;
+    background: white;
+    color: #1c1b1a;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .hero-content .hero-note {
+    font-size: 0.75rem;
+    color: #a09890;
+    margin-top: 0.25rem;
+  }
+
+  /* ===================== LAYOUT ===================== */
+
+  .mockup-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .mockup-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ===================== DARK MODE ===================== */
+
+  .dark-frame {
+    background: #1a1918;
+    color: #ededec;
+  }
+
+  .dark-frame .sidebar {
+    background: #141312;
+    border-right-color: rgba(255,255,255,0.04);
+  }
+
+  .dark-frame .sidebar-logo .logo-text { color: #ededec; }
+  .dark-frame .sidebar-section { color: #5a5550; }
+  .dark-frame .sidebar-item { color: #8c8680; }
+  .dark-frame .sidebar-item:hover { background: rgba(255,255,255,0.03); }
+  .dark-frame .sidebar-item.active { color: #ededec; }
+  .dark-frame .sidebar-user .avatar { background: #2a2928; color: #8c8680; }
+  .dark-frame .sidebar-user .user-name { color: #ededec; }
+  .dark-frame .sidebar-user .user-plan { color: #5a5550; }
+
+  .dark-frame .main-content { background: #1a1918; }
+  .dark-frame .top-bar { border-bottom-color: rgba(255,255,255,0.04); }
+  .dark-frame .top-bar .page-name { color: #ededec; }
+  .dark-frame .top-bar .tab { color: #5a5550; }
+  .dark-frame .top-bar .tab.active { background: rgba(255,255,255,0.05); color: #ededec; }
+  .dark-frame .top-bar .icon-btn { background: #1f1e1d; border-color: rgba(255,255,255,0.06); color: #8c8680; }
+
+  .dark-frame .item-card {
+    background: #1f1e1d;
+    border-color: rgba(255,255,255,0.04);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .dark-frame .item-card:hover {
+    border-color: rgba(255,255,255,0.07);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .dark-frame .item-card .item-title { color: #ededec; }
+  .dark-frame .item-card .item-desc { color: #6b6560; }
+  .dark-frame .item-card .tag { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.06); color: #8c8680; }
+  .dark-frame .item-card .time { color: #5a5550; }
+
+  .dark-frame .review-prompt {
+    background: #1f1e1d;
+    border-color: rgba(255,255,255,0.04);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .dark-frame .review-prompt .review-title { color: #ededec; }
+  .dark-frame .review-prompt .review-desc { color: #6b6560; }
+
+  .dark-frame .capture-bar {
+    background: #1f1e1d;
+    border-color: rgba(255,255,255,0.06);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .dark-frame .capture-bar:hover {
+    border-color: rgba(255,255,255,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .dark-frame .capture-bar .capture-text { color: #5a5550; }
+  .dark-frame .capture-bar .shortcut-key {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.06);
+    color: #5a5550;
+  }
+
+  .dark-hero { background: #1a1918; }
+  .dark-hero .hero-pill {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.08);
+    color: #8c8680;
+  }
+  .dark-hero .hero-headline { color: #ededec; }
+  .dark-hero .hero-sub { color: #6b6560; }
+  .dark-hero .hero-cta-secondary {
+    background: transparent;
+    border-color: rgba(255,255,255,0.1);
+    color: #ededec;
+  }
+  .dark-hero .hero-note { color: #5a5550; }
+
+  /* ===================== DESIGN TOKENS REFERENCE ===================== */
+
+  .tokens-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .token-card {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .token-swatch {
+    width: 100%;
+    height: 48px;
+    border-radius: 0.5rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .token-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1c1b1a;
+  }
+
+  .token-value {
+    font-size: 0.7rem;
+    color: #8c8680;
+    font-family: 'DM Sans', monospace;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- OffMind Logo SVG Definitions -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="offmind-mark" viewBox="93 90 115 110">
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M474.797 319.77C497.772 314.39 523.307 314.534 546.389 319.773C549.936 320.578 554.796 322.231 557.772 324.086C565.2 328.715 552.997 340.439 547.959 341.606C545.995 341.791 543.146 341.344 541.196 341.088C516.556 337.723 497.731 338.101 473.967 344.284C461.173 348.561 453.105 351.547 441.105 357.885C423.44 370.201 403.716 383.392 391.032 401.11C384.644 411.671 369.749 436.89 369.869 448.881C370.017 463.661 368.41 490.556 372.173 504.241C393.414 581.47 481.958 624.79 557.684 607.002C572.207 603.606 586.468 594.843 599.826 588.334C623.18 570.886 630.224 567.807 646.674 541.857C649.458 536.151 653.379 528.318 655.823 522.48C661.391 509.182 661.455 478.283 658.804 464.286C653.815 442.688 639.714 421.144 624.165 405.773C611.026 392.786 597.825 391.453 607.55 371.131C617.822 343.336 628.388 358.101 644.054 371.513C652.135 376.319 682.893 409.837 682.876 418.291C700.89 440.815 702.155 479.496 701.703 506.618C702.435 525.48 696.73 546.516 687.595 563.018C685.019 576.373 665.784 598.355 656.38 607.837C583.356 681.466 447.485 674.078 377.319 600.045C353.543 574.959 332.566 540.837 332.878 505.113C329.291 502.154 331.044 491.007 330.618 485.895C328.268 457.718 337.474 425.246 352.271 400.758C378.674 357.063 419.367 332.98 468.047 321.19C470.164 320.605 472.618 320.193 474.797 319.77Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M332.878 505.113C333.41 505.551 334.057 506.082 334.818 506.708C335.96 513.628 339.705 529.618 342.477 535.685C348.221 548.253 354.947 563.414 362.755 574.521C383.673 603.771 413.977 627.363 447.145 641.142C459.955 646.464 473.846 648.581 487.072 651.402C518.789 658.167 544.24 655.106 575.19 647.707C612.254 638.846 639.327 624.205 663.212 594.096C670.402 585.342 677.212 573.366 683.827 563.773C685.293 563.479 686.549 563.228 687.595 563.018C685.019 576.373 665.784 598.355 656.38 607.837C583.356 681.466 447.485 674.078 377.319 600.045C353.543 574.959 332.566 540.837 332.878 505.113Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M391.032 401.11C391.886 387.792 425.996 353.41 441.105 357.885C423.44 370.201 403.716 383.392 391.032 401.11Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M646.674 541.857C647.576 555.883 616.559 586.126 603.007 591.124C600.487 590.124 601.354 590.817 599.826 588.334C623.18 570.886 630.224 567.807 646.674 541.857Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M473.967 344.284L473.7 342.923C484.92 335.562 532.848 331.217 541.131 338.522L541.196 341.088C516.556 337.723 497.731 338.101 473.967 344.284Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M607.55 371.131C617.822 343.336 628.388 358.101 644.054 371.513C634.211 371.534 631.329 364.081 622.099 361.18C614.831 358.897 617.18 365.732 607.929 370.922L607.55 371.131Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M474.797 319.77C479.011 320.196 479.11 319.509 481.805 321.782C479.979 325.899 473.458 325.709 469.718 324.595C468.828 323.28 468.341 322.778 468.047 321.19C470.164 320.605 472.618 320.193 474.797 319.77Z"/>
+  </symbol>
+
+  <!-- Lucide icons as reusable symbols -->
+  <symbol id="icon-inbox" viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></symbol>
+  <symbol id="icon-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+  <symbol id="icon-archive" viewBox="0 0 24 24"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></symbol>
+  <symbol id="icon-lightbulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></symbol>
+  <symbol id="icon-help-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></symbol>
+  <symbol id="icon-calendar" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></symbol>
+  <symbol id="icon-file-text" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></symbol>
+  <symbol id="icon-folder" viewBox="0 0 24 24"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></symbol>
+  <symbol id="icon-refresh-cw" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></symbol>
+  <symbol id="icon-settings" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></symbol>
+  <symbol id="icon-sliders" viewBox="0 0 24 24"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="2" x2="6" y1="14" y2="14"/><line x1="10" x2="14" y1="8" y2="8"/><line x1="18" x2="22" y1="16" y2="16"/></symbol>
+  <symbol id="icon-sparkles" viewBox="0 0 24 24"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></symbol>
+  <symbol id="icon-plus" viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></symbol>
+</svg>
+
+<div class="page-wrapper">
+
+<div class="page-title">OffMind — Design Reference</div>
+<p class="page-subtitle">Final design direction. Terracotta #c27a5a. DM Sans. Warm cream + warm charcoal. Open loop monochrome logo.</p>
+
+<!-- ===================== LIGHT MODE ===================== -->
+
+<div class="section">
+  <div class="section-label">App Interface</div>
+  <div class="section-title">Light Mode</div>
+
+  <div class="app-frame" style="margin-bottom: 2.5rem;">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">
+          <svg><use href="#offmind-mark"/></svg>
+        </div>
+        <span class="logo-text">offmind</span>
+      </div>
+
+      <div class="sidebar-section">Capture</div>
+      <div class="sidebar-item active" style="background: rgba(194,122,90,0.06);">
+        <span class="icon"><svg><use href="#icon-inbox"/></svg></span>
+        <span>Inbox</span>
+        <span class="count" style="background: rgba(194,122,90,0.1); color: #a65f3e;">7</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon"><svg><use href="#icon-zap"/></svg></span>
+        <span>Quick Capture</span>
+      </div>
+
+      <div class="sidebar-section">Route</div>
+      <div class="sidebar-item">
+        <span class="icon"><svg><use href="#icon-archive"/></svg></span>
+        <span>Backlog</span>
+        <span class="count" style="background: rgba(0,0,0,0.04); color: #a09890;">14</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon"><svg><use href="#icon-lightbulb"/></svg></span>
+        <span>Ideas</span>
+        <span class="count" style="background: rgba(0,0,0,0.04); color: #a09890;">23</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon"><svg><use href="#icon-help-circle"/></svg></span>
+        <span>Questions</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon"><svg><use href="#icon-calendar"/></svg></span>
+        <span>Schedule</span>
+      </div>
+
+      <div class="sidebar-section">Compound</div>
+      <div class="sidebar-item">
+        <span class="icon"><svg><use href="#icon-file-text"/></svg></span>
+        <span>Pages</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon"><svg><use href="#icon-folder"/></svg></span>
+        <span>Projects</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon"><svg><use href="#icon-refresh-cw"/></svg></span>
+        <span>Weekly Review</span>
+      </div>
+
+      <div class="sidebar-spacer"></div>
+
+      <div class="sidebar-item">
+        <span class="icon"><svg><use href="#icon-settings"/></svg></span>
+        <span>Settings</span>
+      </div>
+
+      <div class="sidebar-user">
+        <div class="avatar">P</div>
+        <div class="user-info">
+          <div class="user-name">Paulo H.</div>
+          <div class="user-plan">Founding Builder</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="top-bar">
+        <div class="page-name">Inbox</div>
+        <div class="tab-row">
+          <div class="tab active">All</div>
+          <div class="tab">Unrouted</div>
+          <div class="tab">Routed</div>
+        </div>
+        <div class="spacer"></div>
+        <div class="icon-btn"><svg><use href="#icon-search"/></svg></div>
+        <div class="icon-btn"><svg><use href="#icon-sliders"/></svg></div>
+        <div class="action-btn" style="background: #c27a5a; color: white;">+ Capture</div>
+      </div>
+
+      <div class="content-area">
+        <!-- Review prompt -->
+        <div class="review-prompt">
+          <div class="review-icon" style="background: rgba(194,122,90,0.08); color: #a65f3e;">
+            <svg><use href="#icon-refresh-cw"/></svg>
+          </div>
+          <div class="review-body">
+            <div class="review-title">Weekly Review ready</div>
+            <div class="review-desc">3 items unrouted for 7+ days. 5 stale items to revisit.</div>
+          </div>
+          <div class="review-btn" style="background: rgba(194,122,90,0.08); color: #a65f3e;">Start Review</div>
+        </div>
+
+        <!-- Item cards -->
+        <div class="item-card">
+          <div class="status-dot" style="background: #c27a5a;"></div>
+          <div class="item-body">
+            <div class="item-title">Research Tauri vs Electron for desktop capture</div>
+            <div class="item-desc">System-level keyboard shortcut needs native app. Compare bundle size, startup time, and auto-update.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(194,122,90,0.08); color: #a65f3e;">Research</span>
+              <span class="tag">Desktop</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">2 min ago</div>
+            <div class="ai-badge" style="background: rgba(194,122,90,0.08); color: #a65f3e;"><svg><use href="#icon-sparkles"/></svg> Route to Backlog</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #e8c95a;"></div>
+          <div class="item-body">
+            <div class="item-title">Weekly email digest of compounded thoughts</div>
+            <div class="item-desc">Every Friday, send a summary of what grew this week. Surface connections between items.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(194,122,90,0.08); color: #a65f3e;">Feature</span>
+              <span class="tag">Email</span>
+              <span class="tag">Engagement</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">15 min ago</div>
+            <div class="ai-badge" style="background: rgba(194,122,90,0.08); color: #a65f3e;"><svg><use href="#icon-sparkles"/></svg> Route to Ideas</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #c4bab0;"></div>
+          <div class="item-body">
+            <div class="item-title">Meeting note: Q2 hiring freeze confirmed</div>
+            <div class="item-desc">Diego's role stays contractor through June. Revisit headcount in July planning.</div>
+            <div class="item-tags">
+              <span class="tag">Work</span>
+              <span class="tag">Planning</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">1 hr ago</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #c27a5a;"></div>
+          <div class="item-body">
+            <div class="item-title">"Capture is the moat, not the editor"</div>
+            <div class="item-desc">From competition research. If capture UX is flawless, building power can grow over time.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(194,122,90,0.08); color: #a65f3e;">Insight</span>
+              <span class="tag">Strategy</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">3 hrs ago</div>
+            <div class="ai-badge" style="background: rgba(194,122,90,0.08); color: #a65f3e;"><svg><use href="#icon-sparkles"/></svg> Route to Pages</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #c4bab0;"></div>
+          <div class="item-body">
+            <div class="item-title">Call dentist for Thursday appointment</div>
+            <div class="item-meta-row">
+              <span class="meta">Quick capture from mobile</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">Yesterday</div>
+            <div class="ai-badge" style="background: rgba(194,122,90,0.08); color: #a65f3e;"><svg><use href="#icon-sparkles"/></svg> Route to Schedule</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="capture-bar">
+        <div class="capture-icon"><svg><use href="#icon-plus"/></svg></div>
+        <div class="capture-text">What's on your mind?</div>
+        <div class="shortcut-key">&#8984;N</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== DARK MODE ===================== -->
+
+<div class="section">
+  <div class="section-label">App Interface</div>
+  <div class="section-title">Dark Mode</div>
+
+  <div class="app-frame dark-frame" style="margin-bottom: 2.5rem;">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">
+          <svg><use href="#offmind-mark"/></svg>
+        </div>
+        <span class="logo-text">offmind</span>
+      </div>
+
+      <div class="sidebar-section">Capture</div>
+      <div class="sidebar-item active" style="background: rgba(194,122,90,0.08);">
+        <span class="icon"><svg><use href="#icon-inbox"/></svg></span>
+        <span>Inbox</span>
+        <span class="count" style="background: rgba(194,122,90,0.12); color: #d4a088;">7</span>
+      </div>
+      <div class="sidebar-item"><span class="icon"><svg><use href="#icon-zap"/></svg></span><span>Quick Capture</span></div>
+
+      <div class="sidebar-section">Route</div>
+      <div class="sidebar-item"><span class="icon"><svg><use href="#icon-archive"/></svg></span><span>Backlog</span><span class="count" style="background: rgba(255,255,255,0.04); color: #5a5550;">14</span></div>
+      <div class="sidebar-item"><span class="icon"><svg><use href="#icon-lightbulb"/></svg></span><span>Ideas</span><span class="count" style="background: rgba(255,255,255,0.04); color: #5a5550;">23</span></div>
+      <div class="sidebar-item"><span class="icon"><svg><use href="#icon-help-circle"/></svg></span><span>Questions</span></div>
+      <div class="sidebar-item"><span class="icon"><svg><use href="#icon-calendar"/></svg></span><span>Schedule</span></div>
+
+      <div class="sidebar-section">Compound</div>
+      <div class="sidebar-item"><span class="icon"><svg><use href="#icon-file-text"/></svg></span><span>Pages</span></div>
+      <div class="sidebar-item"><span class="icon"><svg><use href="#icon-folder"/></svg></span><span>Projects</span></div>
+      <div class="sidebar-item"><span class="icon"><svg><use href="#icon-refresh-cw"/></svg></span><span>Weekly Review</span></div>
+
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-item"><span class="icon"><svg><use href="#icon-settings"/></svg></span><span>Settings</span></div>
+      <div class="sidebar-user">
+        <div class="avatar">P</div>
+        <div class="user-info">
+          <div class="user-name">Paulo H.</div>
+          <div class="user-plan">Founding Builder</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="top-bar">
+        <div class="page-name">Inbox</div>
+        <div class="tab-row">
+          <div class="tab active">All</div>
+          <div class="tab">Unrouted</div>
+          <div class="tab">Routed</div>
+        </div>
+        <div class="spacer"></div>
+        <div class="icon-btn"><svg><use href="#icon-search"/></svg></div>
+        <div class="icon-btn"><svg><use href="#icon-sliders"/></svg></div>
+        <div class="action-btn" style="background: #c27a5a; color: white;">+ Capture</div>
+      </div>
+
+      <div class="content-area">
+        <div class="review-prompt">
+          <div class="review-icon" style="background: rgba(194,122,90,0.08); color: #d4a088;">
+            <svg><use href="#icon-refresh-cw"/></svg>
+          </div>
+          <div class="review-body">
+            <div class="review-title">Weekly Review ready</div>
+            <div class="review-desc">3 items unrouted for 7+ days. 5 stale items to revisit.</div>
+          </div>
+          <div class="review-btn" style="background: rgba(194,122,90,0.08); color: #d4a088;">Start Review</div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #c27a5a;"></div>
+          <div class="item-body">
+            <div class="item-title">Research Tauri vs Electron for desktop capture</div>
+            <div class="item-desc">System-level keyboard shortcut needs native app. Compare bundle size, startup time, and auto-update.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(194,122,90,0.08); border-color: transparent; color: #d4a088;">Research</span>
+              <span class="tag">Desktop</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">2 min ago</div>
+            <div class="ai-badge" style="background: rgba(194,122,90,0.08); color: #d4a088;"><svg><use href="#icon-sparkles"/></svg> Route to Backlog</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #e8c95a;"></div>
+          <div class="item-body">
+            <div class="item-title">Weekly email digest of compounded thoughts</div>
+            <div class="item-desc">Every Friday, send a summary of what grew this week. Surface connections between items.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(194,122,90,0.08); border-color: transparent; color: #d4a088;">Feature</span>
+              <span class="tag">Email</span>
+              <span class="tag">Engagement</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">15 min ago</div>
+            <div class="ai-badge" style="background: rgba(194,122,90,0.08); color: #d4a088;"><svg><use href="#icon-sparkles"/></svg> Route to Ideas</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #5a5550;"></div>
+          <div class="item-body">
+            <div class="item-title">Meeting note: Q2 hiring freeze confirmed</div>
+            <div class="item-desc">Diego's role stays contractor through June. Revisit headcount in July planning.</div>
+            <div class="item-tags"><span class="tag">Work</span><span class="tag">Planning</span></div>
+          </div>
+          <div class="item-right"><div class="time">1 hr ago</div></div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #c27a5a;"></div>
+          <div class="item-body">
+            <div class="item-title">"Capture is the moat, not the editor"</div>
+            <div class="item-desc">From competition research. If capture UX is flawless, building power can grow over time.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(194,122,90,0.08); border-color: transparent; color: #d4a088;">Insight</span>
+              <span class="tag">Strategy</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">3 hrs ago</div>
+            <div class="ai-badge" style="background: rgba(194,122,90,0.08); color: #d4a088;"><svg><use href="#icon-sparkles"/></svg> Route to Pages</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="capture-bar">
+        <div class="capture-icon"><svg><use href="#icon-plus"/></svg></div>
+        <div class="capture-text">What's on your mind?</div>
+        <div class="shortcut-key">&#8984;N</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== LANDING PAGE HEROES ===================== -->
+
+<div class="section">
+  <div class="section-label">Landing Page</div>
+  <div class="section-title">Hero sections for light and dark backgrounds</div>
+
+  <div class="mockup-row">
+    <!-- Light Hero -->
+    <div class="mockup-wrapper">
+      <div class="hero-frame">
+        <div class="hero-content" style="background: #faf9f7;">
+          <div class="hero-logo" style="color: #1c1b1a;">
+            <svg style="height: 24px; width: auto;"><use href="#offmind-mark"/></svg>
+            <span class="hero-logo-text">offmind</span>
+          </div>
+          <div class="hero-pill">A personal workspace that captures first</div>
+          <div class="hero-headline">Finally. One place for everything in your head.</div>
+          <div class="hero-sub" style="color: #6b6560;">Capture any thought in seconds. Route it when ready. Watch it grow into pages, projects, and knowledge. No system to build first.</div>
+          <div class="cta-row">
+            <div class="hero-cta" style="background: #c27a5a; color: white;">Get Founding Access</div>
+            <div class="hero-cta-secondary">See How It Works</div>
+          </div>
+          <div class="hero-note">One-time payment. Yours forever. 127 founders already in.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dark Hero -->
+    <div class="mockup-wrapper">
+      <div class="hero-frame">
+        <div class="hero-content dark-hero" style="background: radial-gradient(ellipse at 50% 0%, rgba(194,122,90,0.06) 0%, #1a1918 70%);">
+          <div class="hero-logo" style="color: #ededec;">
+            <svg style="height: 24px; width: auto;"><use href="#offmind-mark"/></svg>
+            <span class="hero-logo-text">offmind</span>
+          </div>
+          <div class="hero-pill">A personal workspace that captures first</div>
+          <div class="hero-headline">Finally. One place for everything in your head.</div>
+          <div class="hero-sub">Capture any thought in seconds. Route it when ready. Watch it grow into pages, projects, and knowledge. No system to build first.</div>
+          <div class="cta-row">
+            <div class="hero-cta" style="background: #c27a5a; color: white;">Get Founding Access</div>
+            <div class="hero-cta-secondary" style="background: transparent; border-color: rgba(194,122,90,0.2); color: #d4a088;">See How It Works</div>
+          </div>
+          <div class="hero-note">One-time payment. Yours forever. 127 founders already in.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== DESIGN TOKENS ===================== -->
+
+<div class="section">
+  <div class="section-label">Reference</div>
+  <div class="section-title">Design Tokens</div>
+
+  <div class="tokens-grid">
+    <div class="token-card">
+      <div class="token-swatch" style="background: #c27a5a;"></div>
+      <div class="token-name">Accent</div>
+      <div class="token-value">#c27a5a</div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background: #faf9f7;"></div>
+      <div class="token-name">Page Background (Light)</div>
+      <div class="token-value">#faf9f7</div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background: #f4f3f1;"></div>
+      <div class="token-name">Sidebar (Light)</div>
+      <div class="token-value">#f4f3f1</div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background: #ffffff; "></div>
+      <div class="token-name">Card Surface (Light)</div>
+      <div class="token-value">#ffffff</div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background: #1a1918;"></div>
+      <div class="token-name">Page Background (Dark)</div>
+      <div class="token-value">#1a1918</div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background: #141312;"></div>
+      <div class="token-name">Sidebar (Dark)</div>
+      <div class="token-value">#141312</div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background: #1f1e1d;"></div>
+      <div class="token-name">Card Surface (Dark)</div>
+      <div class="token-value">#1f1e1d</div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background: #1c1b1a;"></div>
+      <div class="token-name">Text Primary (Light)</div>
+      <div class="token-value">#1c1b1a</div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background: #ededec;"></div>
+      <div class="token-name">Text Primary (Dark)</div>
+      <div class="token-value">#ededec</div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background: #8c8680;"></div>
+      <div class="token-name">Text Secondary</div>
+      <div class="token-value">#8c8680</div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background: #a09890;"></div>
+      <div class="token-name">Text Tertiary</div>
+      <div class="token-value">#a09890</div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background: #e8c95a;"></div>
+      <div class="token-name">Status: Pending</div>
+      <div class="token-value">#e8c95a</div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align: center; padding: 2rem 0 3rem; color: #a09890; font-size: 0.8rem;">
+  <p>OffMind Design Reference | March 2026</p>
+  <p style="margin-top: 0.25rem;">DM Sans | Terracotta #c27a5a | Warm cream #faf9f7 / Warm charcoal #1a1918 | Open loop monochrome logo</p>
+  <p style="margin-top: 0.25rem;">Card shadows, spacing, and surface hierarchy create the "light but precise" feeling.</p>
+  <p style="margin-top: 0.25rem;">Icons: Lucide (lucide.dev) | Font weight: 400 body, 600 labels, 700 titles</p>
+</div>
+
+</div>
+</body>
+</html>

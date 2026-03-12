@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OffMind Logo Directions by Codex</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --panel: rgba(24, 24, 27, 0.9);
+    --line: rgba(161, 161, 170, 0.18);
+    --text: #f5f5f5;
+    --muted: #a1a1aa;
+    --muted-2: #71717a;
+    --teal-1: #5eead4;
+    --teal-2: #2dd4bf;
+    --teal-3: #14b8a6;
+    --teal-4: #0d9488;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--text);
+    background:
+      radial-gradient(circle at top left, rgba(45, 212, 191, 0.14), transparent 28%),
+      radial-gradient(circle at 85% 15%, rgba(20, 184, 166, 0.10), transparent 22%),
+      linear-gradient(180deg, #09090d 0%, #0a0a0f 100%);
+    padding: 56px 24px 88px;
+  }
+
+  .page { max-width: 1220px; margin: 0 auto; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--teal-2); margin-bottom: 14px; }
+  h1 { font-size: clamp(34px, 5vw, 56px); line-height: 0.96; letter-spacing: -0.045em; max-width: 860px; margin-bottom: 14px; }
+  .subhead { max-width: 840px; color: var(--muted); font-size: 18px; line-height: 1.65; }
+
+  .position, .summary, .direction {
+    border-radius: 22px;
+    border: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(24, 24, 27, 0.94), rgba(12, 12, 16, 0.94));
+    box-shadow: 0 22px 70px rgba(0, 0, 0, 0.28);
+  }
+
+  .position, .summary { margin-top: 28px; padding: 24px; }
+  .position strong, .summary strong { color: var(--teal-1); }
+  .position p, .summary p { color: #d4d4d8; font-size: 15px; line-height: 1.75; }
+
+  .section-title { font-size: 24px; letter-spacing: -0.03em; margin: 48px 0 22px; }
+
+  .diagnosis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 14px;
+  }
+
+  .diag-card {
+    padding: 18px;
+    border-radius: 16px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+  }
+
+  .diag-card h3 {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--teal-2);
+    margin-bottom: 10px;
+  }
+
+  .diag-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  #directions { display: grid; gap: 28px; }
+
+  .direction { padding: 26px; }
+  .direction-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 14px; }
+  .direction-kicker { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal-2); margin-bottom: 10px; }
+  .direction h2 { font-size: clamp(26px, 3vw, 34px); line-height: 1; letter-spacing: -0.04em; margin-bottom: 10px; }
+  .tag {
+    flex-shrink: 0;
+    padding: 9px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(45, 212, 191, 0.24);
+    background: rgba(45, 212, 191, 0.08);
+    color: var(--teal-1);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .direction-desc { max-width: 780px; color: var(--muted); font-size: 16px; line-height: 1.72; margin-bottom: 20px; }
+
+  .rationale {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .rationale-item, .size-card, .lockup-card {
+    border-radius: 16px;
+    border: 1px solid rgba(161, 161, 170, 0.12);
+    background: rgba(9, 9, 12, 0.42);
+  }
+
+  .rationale-item { min-height: 104px; padding: 16px; }
+  .rationale-item strong { display: block; color: #f4f4f5; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 8px; }
+  .rationale-item span { display: block; color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+  .sizes { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+  .size-card, .lockup-card { padding: 18px; }
+  .size-label, .bg-label, .score-label { display: block; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted-2); margin-bottom: 12px; }
+  .size-preview { min-height: 180px; display: flex; align-items: center; justify-content: center; }
+  .size-preview.small { min-height: 118px; }
+
+  .lockups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+  .lockup-card { min-height: 130px; display: flex; flex-direction: column; }
+  .lockup-dark { background: #0a0a0f; }
+  .lockup-mid { background: #18181b; }
+  .lockup-light { background: #ffffff; border-color: rgba(9, 9, 11, 0.08); }
+  .lockup { flex: 1; display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .wordmark { font-size: 22px; font-weight: 600; letter-spacing: -0.04em; }
+  .wordmark-dark { color: #f4f4f5; }
+  .wordmark-light { color: #09090b; }
+
+  .scores { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  .score-bar { height: 6px; border-radius: 999px; background: rgba(63, 63, 70, 0.8); overflow: hidden; }
+  .score-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--teal-1), var(--teal-3)); }
+
+  @media (max-width: 960px) {
+    .sizes, .lockups, .scores { grid-template-columns: 1fr; }
+    .direction-head { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <div class="eyebrow">OffMind / Codex Critique</div>
+      <h1>2B has the right instinct, but the wrong silhouette.</h1>
+      <p class="subhead">
+        The compact loop is the closest Claude got because it finally stops relying on pure infinity logic. But it still asks too much of the viewer at small sizes. The next move is sharper geometry, a stronger gap, and one concept that survives at 16px.
+      </p>
+    </header>
+
+    <section class="position">
+      <p>
+        <strong>Position:</strong> do not ship 2B as-is. It reads like a generic SaaS monogram badge, not a calm thinking brand with a precise promise. If you stay in the OM family, make the gap unmistakable and the M legible. If you leave the monogram family, the best path is a mark that shows a thought being removed, not a loop being stylized.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="section-title">Why 2B Stalls</h2>
+      <div class="diagnosis">
+        <article class="diag-card"><h3>Reading Failure</h3><p>At hero size it can be explained as OM. At 32px it reads as a badge. At 16px it stops reading as letters and collapses into a tiny anonymous blob.</p></article>
+        <article class="diag-card"><h3>Gap Too Weak</h3><p>The brand story is the release point. In 2B the gap feels accidental, not authored. The mark still feels closed, contained, and inward.</p></article>
+        <article class="diag-card"><h3>Tech Monogram Trap</h3><p>Rounded container plus angular inner peaks is one of the most generic mark grammars in SaaS, crypto, and dev tools right now. It does not feel ownable enough.</p></article>
+        <article class="diag-card"><h3>Wrong Emotional Weight</h3><p>OffMind should feel lighter after the system does its job. 2B feels compact, sealed, and technical. It stylizes the tension instead of resolving it.</p></article>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">New Directions</h2>
+      <div id="directions"></div>
+    </section>
+
+    <section class="summary">
+      <h2 style="font-size:24px; letter-spacing:-0.03em; margin-bottom:12px;">Recommendation</h2>
+      <p>
+        <strong>Primary:</strong> Detached Thought. It is the most ownable move away from generic infinity logic, the cleanest story at small sizes, and the easiest to animate without feeling busy. <strong>If you want initials:</strong> take Notched OM, not 2B. It keeps the compact monogram instinct but gives it a readable silhouette and a gap that actually matters. <strong>Skip:</strong> any direction that still depends on a loop reading as both infinity and OM.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    const directions = [
+      {
+        id: "01",
+        key: "notched",
+        title: "Notched OM",
+        tag: "Refinement of 2B",
+        desc: "Keep the OM instinct, but stop hiding it inside a loop. The O becomes a stable square footprint, the M becomes explicit, and the notch becomes the off gesture.",
+        rationale: [
+          ["Story", "A system-shaped O with a deliberate release cut. The mind is no longer a loop. It is a container with an opening."],
+          ["Why Stronger", "2B hides the initials. This makes the M legible and gives the overall silhouette a square favicon-native footprint."],
+          ["16 / 32px", "At 16px it holds as broken tile plus M. At 32px it reads as a designed monogram, not a vague badge."],
+          ["200px", "The notch creates a clean motion cue without needing tricks. The gradient can live on the outer shell, not on decorative overlap."]
+        ],
+        scores: { Ownable: 8, Scalable: 9, Adaptable: 9, Animatable: 8 }
+      },
+      {
+        id: "02",
+        key: "detached",
+        title: "Detached Thought",
+        tag: "Primary Pick",
+        desc: "A single mind form with one capsule lifted out. No initials, no infinity, no extra symbolism. It encodes exactly what OffMind promises: one thought removed from the pressure loop and placed outside the head.",
+        rationale: [
+          ["Story", "The larger form is the overloaded mind. The detached capsule is the thought that has been pulled out and made manageable."],
+          ["Why Stronger", "2B needs explanation. This reads in one beat. It is simpler, calmer, and closer to the product promise than any loop-based monogram."],
+          ["16 / 32px", "At 16px it reduces to open ring plus chip. At 32px the detached piece becomes a distinctive signature instead of a detail."],
+          ["200px", "The separation creates elegant motion language: the chip can lift, slide, or settle without becoming a gimmick."]
+        ],
+        scores: { Ownable: 9, Scalable: 10, Adaptable: 8, Animatable: 10 }
+      },
+      {
+        id: "03",
+        key: "frame",
+        title: "Release Frame",
+        tag: "Most Literal Product Story",
+        desc: "This is the strongest evolution of the capture-release idea from the research. Instead of a loose bracket, it becomes a precise frame with a side exit. The dot is the thought. The frame is the system. The opening is the relief.",
+        rationale: [
+          ["Story", "The thought enters a stable system and leaves your attention cleanly. This is the closest mark to the line: 'Your mind captures everything. OffMind organizes it.'"],
+          ["Why Stronger", "2B is still closed and interpretive. This is directional, readable, and more aligned with calm clarity than with tech-logo cleverness."],
+          ["16 / 32px", "At small sizes it stays clear as frame plus dot. It does not depend on letter recognition or thin overlaps."],
+          ["200px", "The dot can travel through the exit channel in motion. The structure also holds up cleanly on app UI surfaces and landing pages."]
+        ],
+        scores: { Ownable: 8, Scalable: 10, Adaptable: 9, Animatable: 9 }
+      }
+    ];
+
+    let gradientCounter = 0;
+
+    function gradient(id) {
+      return `
+        <defs>
+          <linearGradient id="${id}" x1="18" y1="18" x2="122" y2="122" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#5eead4"/>
+            <stop offset="44%" stop-color="#2dd4bf"/>
+            <stop offset="76%" stop-color="#14b8a6"/>
+            <stop offset="100%" stop-color="#0d9488"/>
+          </linearGradient>
+        </defs>
+      `;
+    }
+
+    function markPath(key, paint) {
+      if (key === "notched") {
+        return `
+          <path d="M42 20H74" stroke="${paint}" stroke-width="10" stroke-linecap="round"/>
+          <path d="M96 26Q118 36 118 58V90Q118 120 88 120H52Q22 120 22 90V50Q22 20 52 20H68" stroke="${paint}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M44 88V48L70 70L96 48V88" stroke="${paint}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+        `;
+      }
+      if (key === "detached") {
+        return `
+          <path d="M50 26C33 34 20 51 20 70C20 98 42 120 70 120C98 120 120 98 120 70C120 53 112 39 100 30" stroke="${paint}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="93" y="18" width="24" height="12" rx="6" fill="${paint}" transform="rotate(16 105 24)"/>
+        `;
+      }
+      return `
+        <path d="M84 20H42Q20 20 20 42V98Q20 120 42 120H84" stroke="${paint}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M98 28V48" stroke="${paint}" stroke-width="10" stroke-linecap="round"/>
+        <path d="M98 92V112" stroke="${paint}" stroke-width="10" stroke-linecap="round"/>
+        <circle cx="114" cy="70" r="10" fill="${paint}"/>
+      `;
+    }
+
+    function renderMark(key, size, mode, theme) {
+      const id = `g-${key}-${gradientCounter++}`;
+      const paint = mode === "gradient" ? `url(#${id})` : (theme === "light" ? "#0d9488" : "#2dd4bf");
+      const defs = mode === "gradient" ? gradient(id) : "";
+      return `
+        <svg width="${size}" height="${size}" viewBox="0 0 140 140" fill="none" aria-hidden="true">
+          ${defs}
+          ${markPath(key, paint)}
+        </svg>
+      `;
+    }
+
+    function scoreBars(scores) {
+      return Object.entries(scores).map(([label, value]) => `
+        <div>
+          <span class="score-label">${label} / ${value}</span>
+          <div class="score-bar"><div class="score-fill" style="width:${value * 10}%"></div></div>
+        </div>
+      `).join("");
+    }
+
+    function rationale(items) {
+      return items.map(([title, body]) => `
+        <div class="rationale-item">
+          <strong>${title}</strong>
+          <span>${body}</span>
+        </div>
+      `).join("");
+    }
+
+    function directionCard(d) {
+      return `
+        <article class="direction">
+          <div class="direction-head">
+            <div>
+              <div class="direction-kicker">Direction ${d.id}</div>
+              <h2>${d.title}</h2>
+            </div>
+            <div class="tag">${d.tag}</div>
+          </div>
+          <p class="direction-desc">${d.desc}</p>
+          <div class="rationale">${rationale(d.rationale)}</div>
+          <div class="sizes">
+            <div class="size-card"><span class="size-label">Hero / 180px</span><div class="size-preview">${renderMark(d.key, 180, "gradient", "dark")}</div></div>
+            <div class="size-card"><span class="size-label">Nav / 32px</span><div class="size-preview small">${renderMark(d.key, 32, "solid", "dark")}</div></div>
+            <div class="size-card"><span class="size-label">Favicon / 16px</span><div class="size-preview small">${renderMark(d.key, 16, "solid", "dark")}</div></div>
+          </div>
+          <div class="lockups">
+            <div class="lockup-card lockup-dark"><span class="bg-label">Dark / #0a0a0f</span><div class="lockup">${renderMark(d.key, 34, "solid", "dark")}<span class="wordmark wordmark-dark">OffMind</span></div></div>
+            <div class="lockup-card lockup-mid"><span class="bg-label">Mid / #18181b</span><div class="lockup">${renderMark(d.key, 34, "solid", "dark")}<span class="wordmark wordmark-dark">OffMind</span></div></div>
+            <div class="lockup-card lockup-light"><span class="bg-label">Light / #ffffff</span><div class="lockup">${renderMark(d.key, 34, "solid", "light")}<span class="wordmark wordmark-light">OffMind</span></div></div>
+          </div>
+          <div class="scores">${scoreBars(d.scores)}</div>
+        </article>
+      `;
+    }
+
+    document.getElementById("directions").innerHTML = directions.map(directionCard).join("");
+  </script>
+</body>
+</html>

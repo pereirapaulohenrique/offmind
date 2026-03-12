@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OffMind — Crystal Shard Preview</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; font-family: system-ui; background: #09090b; color: #a1a1aa; padding: 48px; display: flex; flex-direction: column; align-items: center; gap: 48px; }
+  h1 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: #52525b; margin: 0; }
+  h2 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: #52525b; margin: 0 0 12px; }
+  .row { display: flex; gap: 32px; align-items: end; flex-wrap: wrap; justify-content: center; }
+  .card { padding: 20px; border-radius: 14px; text-align: center; }
+  .dark { background: #09090b; border: 1px solid #27272a; }
+  .light { background: #fafafa; border: 1px solid #e4e4e7; }
+  .s span { font-size: 8px; display: block; margin-top: 5px; color: #3f3f46; }
+  .section { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .versus { display: flex; gap: 80px; align-items: start; flex-wrap: wrap; justify-content: center; }
+  .col { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .col-label { font-size: 13px; font-weight: 600; color: #a1a1aa; letter-spacing: 0.05em; }
+  .wordmark { display: flex; align-items: center; }
+  .wordmark span { font-family: 'Satoshi', sans-serif; font-weight: 500; letter-spacing: 0.08em; }
+  .nav { width: 580px; height: 48px; background: #09090b; border: 1px solid #27272a; border-radius: 10px; display: flex; align-items: center; padding: 0 16px; }
+  .nav .wm { display: flex; align-items: center; gap: 4px; }
+  .nav .wm span { font-family: 'Satoshi', sans-serif; font-weight: 500; font-size: 15px; letter-spacing: 0.08em; color: #fafafa; }
+  .nav .links { margin-left: auto; display: flex; align-items: center; gap: 16px; font-size: 12px; color: #71717a; }
+  .nav .cta { background: #14b8a6; color: #09090b; padding: 5px 12px; border-radius: 6px; font-weight: 600; font-size: 13px; }
+</style>
+</head>
+<body>
+
+  <h1>OffMind — Crystal Shard (Teal Facets)</h1>
+
+  <!-- Display -->
+  <div class="section">
+    <h2>Display</h2>
+    <div class="versus">
+      <div class="col">
+        <span class="col-label">Dark</span>
+        <div class="card dark"><img src="logo-gem.svg" width="67" height="180"></div>
+      </div>
+      <div class="col">
+        <span class="col-label">Light</span>
+        <div class="card light"><img src="logo-gem.svg" width="67" height="180"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Size Scale -->
+  <div class="section">
+    <h2>Size Scale — Dark</h2>
+    <div class="row">
+      <div class="card dark s"><img src="logo-gem.svg" width="37" height="100"><span>100h</span></div>
+      <div class="card dark s"><img src="logo-gem.svg" width="24" height="64"><span>64h</span></div>
+      <div class="card dark s"><img src="logo-gem.svg" width="12" height="32"><span>32h</span></div>
+      <div class="card dark s"><img src="logo-gem.svg" width="9" height="24"><span>24h</span></div>
+      <div class="card dark s"><img src="logo-gem.svg" width="6" height="16"><span>16h</span></div>
+    </div>
+  </div>
+
+  <!-- Wordmark -->
+  <div class="section">
+    <h2>Wordmark Lockup</h2>
+    <div class="versus">
+      <div class="col">
+        <span class="col-label">Dark</span>
+        <div class="card dark wordmark" style="gap:5px;">
+          <img src="logo-gem.svg" width="11" height="30">
+          <span style="font-size:17px;color:#fafafa;">offmind</span>
+        </div>
+      </div>
+      <div class="col">
+        <span class="col-label">Light</span>
+        <div class="card light wordmark" style="gap:5px;">
+          <img src="logo-gem.svg" width="11" height="30">
+          <span style="font-size:17px;color:#18181b;">offmind</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <div class="section">
+    <h2>Navigation</h2>
+    <div class="nav">
+      <div class="wm">
+        <img src="logo-gem.svg" width="10" height="28">
+        <span>offmind</span>
+      </div>
+      <div class="links">How it works &nbsp; Features &nbsp; Pricing <span class="cta">Get Access</span></div>
+    </div>
+  </div>
+
+  <!-- vs Previous -->
+  <div class="section">
+    <h2>Before vs Now</h2>
+    <div class="versus">
+      <div class="col">
+        <span class="col-label">Previous Crystal</span>
+        <div class="card dark"><img src="logo-premium.svg" width="80" height="80"></div>
+      </div>
+      <div class="col">
+        <span class="col-label">Crystal Shard (new)</span>
+        <div class="card dark"><img src="logo-gem.svg" width="37" height="100"></div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

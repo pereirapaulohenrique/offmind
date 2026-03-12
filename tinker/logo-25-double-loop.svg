@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="teal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <!-- Double loop: two overlapping loops like a figure-8 with distinct character -->
+  <!-- Left loop: complete (captured thoughts) -->
+  <!-- Right loop: has a gap (released/organized thoughts) -->
+  <!-- Overlap point at center is where OffMind works -->
+
+  <!-- Left loop: complete circle -->
+  <circle cx="76" cy="100" r="52" fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round"/>
+
+  <!-- Right loop: circle with gap at ~2 o'clock position -->
+  <!-- Gap from about 310deg to 350deg -->
+  <!-- Center (124,100), radius 52 -->
+  <!-- 310deg: x=124+52*cos(310)=157.4, y=100+52*sin(310)=60.2 -->
+  <!-- 350deg: x=124+52*cos(350)=175.2, y=100+52*sin(350)=91.0 -->
+  <path d="M 157.4 60.2
+           A 52 52 0 1 0 175.2 91.0"
+        fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round"/>
+</svg>

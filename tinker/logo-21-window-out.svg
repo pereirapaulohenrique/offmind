@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="teal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <!-- Window/portal: rounded rectangle -->
+  <rect x="44" y="36" width="112" height="128" rx="20" ry="20"
+        fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Horizontal divider in window -->
+  <line x1="44" y1="100" x2="156" y2="100"
+        stroke="url(#teal-grad)" stroke-width="12" stroke-linecap="round"/>
+
+  <!-- Arrow element passing outward through the right side of the window -->
+  <!-- Arrow shaft: starts inside the window, exits through the right boundary -->
+  <line x1="80" y1="68" x2="168" y2="68"
+        stroke="url(#teal-grad)" stroke-width="12" stroke-linecap="round"/>
+
+  <!-- Arrow head pointing right -->
+  <path d="M 154 54 L 172 68 L 154 82"
+        fill="none" stroke="url(#teal-grad)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

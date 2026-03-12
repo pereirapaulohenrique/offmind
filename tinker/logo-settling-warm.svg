@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="settle-grad-w" gradientUnits="userSpaceOnUse" x1="50" y1="10" x2="50" y2="85">
+      <stop offset="0" stop-color="#5eebb8" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#14b892"/>
+    </linearGradient>
+  </defs>
+  <circle cx="30" cy="18" r="6" fill="#5eebb8" opacity="0.35"/>
+  <circle cx="56" cy="12" r="6" fill="#5eebb8" opacity="0.45"/>
+  <circle cx="76" cy="22" r="6" fill="#5eebb8" opacity="0.55"/>
+  <circle cx="38" cy="46" r="6.5" fill="#2dd4a8" opacity="0.65"/>
+  <circle cx="62" cy="42" r="6.5" fill="#2dd4a8" opacity="0.75"/>
+  <ellipse cx="50" cy="76" rx="20" ry="12" fill="url(#settle-grad-w)"/>
+</svg>

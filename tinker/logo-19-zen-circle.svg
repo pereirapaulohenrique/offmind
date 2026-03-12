@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="teal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <!-- Enso circle: nearly complete with gap at top-right, brush stroke tapers -->
+  <!-- Thick organic stroke that thins toward the opening -->
+  <!-- Main brush stroke arc: starts thick (bottom-left), sweeps around, thins at gap (top-right) -->
+  <path d="M 120 38
+           C 82 28, 38 52, 34 100
+           C 30 148, 66 174, 100 176
+           C 134 178, 170 152, 172 108
+           C 173 78, 156 54, 138 44"
+        fill="none" stroke="url(#teal-grad)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Taper effect: a thinner overlapping stroke near the gap to simulate brush thinning -->
+  <path d="M 138 44
+           C 144 48, 148 52, 150 58"
+        fill="none" stroke="url(#teal-grad)" stroke-width="10" stroke-linecap="round"/>
+  <!-- Thick start point emphasis -->
+  <path d="M 104 38
+           C 108 36, 114 36, 120 38"
+        fill="none" stroke="url(#teal-grad)" stroke-width="8" stroke-linecap="round"/>
+</svg>

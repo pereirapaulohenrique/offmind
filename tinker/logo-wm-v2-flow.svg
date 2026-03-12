@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 100">
+  <defs>
+    <style>
+      @import url('https://api.fontshare.com/v2/css?f[]=satoshi@500&amp;display=swap');
+    </style>
+    <linearGradient id="o-flow" gradientUnits="userSpaceOnUse" x1="14" y1="42" x2="40" y2="68">
+      <stop offset="0" stop-color="#5eebb8"/>
+      <stop offset="1" stop-color="#14b892"/>
+    </linearGradient>
+  </defs>
+
+  <!--
+    Flow variant — inspired by "progress" reference
+    The loop's terminal points TOWARD the "ff",
+    creating visual flow from symbol into typography.
+
+    Gap positioned at 3 o'clock (right side) so the
+    terminal naturally leads the eye into "ffmind"
+    Like a river flowing into text.
+  -->
+
+  <!-- Open loop "o" — gap on right, flowing into "ff" -->
+  <path
+    d="M 39.5 50
+       A 13.5 15.5 0 1 1 39.5 59"
+    fill="none"
+    stroke="url(#o-flow)"
+    stroke-width="5"
+    stroke-linecap="round"
+  />
+
+  <text
+    x="44" y="70"
+    font-family="'Satoshi', 'Inter', 'Geist Sans', sans-serif"
+    font-weight="500"
+    font-size="52"
+    letter-spacing="0.5"
+    fill="#fafafa"
+  >ffmind</text>
+</svg>

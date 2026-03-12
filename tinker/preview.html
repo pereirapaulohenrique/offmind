@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OffMind Logo Concepts — 25 Directions</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #141418;
+    --border: #1e1e26;
+    --text: #e4e4e7;
+    --muted: #71717a;
+    --accent: #2dd4bf;
+    --accent-dim: rgba(45, 212, 191, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 40px 24px;
+    min-height: 100vh;
+  }
+
+  body.light {
+    --bg: #f8f8fa;
+    --surface: #ffffff;
+    --border: #e4e4e7;
+    --text: #18181b;
+    --muted: #71717a;
+  }
+
+  .header {
+    max-width: 1200px;
+    margin: 0 auto 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .header p {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 6px;
+    max-width: 600px;
+  }
+
+  .controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+
+  .btn:hover { border-color: var(--accent); }
+  .btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+  .size-toggle { display: flex; gap: 0; }
+  .size-toggle .btn { border-radius: 0; margin-left: -1px; }
+  .size-toggle .btn:first-child { border-radius: 8px 0 0 8px; margin-left: 0; }
+  .size-toggle .btn:last-child { border-radius: 0 8px 8px 0; }
+
+  .grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  .card.selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-dim), 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  .card-number {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .card-img {
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .card-img.size-sm { width: 48px; height: 48px; }
+  .card-img.size-xs { width: 24px; height: 24px; }
+
+  .card-name {
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .card-desc {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .card-sizes {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    justify-content: center;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+    width: 100%;
+  }
+
+  .card-sizes .size-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .card-sizes .size-label {
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .detail-panel {
+    display: none;
+    max-width: 1200px;
+    margin: 48px auto 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+  }
+
+  .detail-panel.visible { display: block; }
+
+  .detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+
+  .detail-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .detail-close {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .detail-row {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .detail-size-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .detail-size-group .label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .detail-bg-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .bg-card {
+    padding: 24px 32px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .bg-dark { background: #0a0a0f; border: 1px solid #1e1e26; }
+  .bg-light { background: #ffffff; border: 1px solid #e4e4e7; }
+  .bg-mid { background: #18181b; border: 1px solid #27272a; }
+
+  .bg-card img { width: 40px; height: 40px; }
+  .bg-card .wordmark {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .bg-dark .wordmark { color: #e4e4e7; }
+  .bg-light .wordmark { color: #18181b; }
+  .bg-mid .wordmark { color: #a1a1aa; }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+  }
+
+  .footer {
+    max-width: 1200px;
+    margin: 48px auto 0;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .card { padding: 14px; }
+    .card-img { width: 80px; height: 80px; }
+    body { padding: 20px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>OffMind Logo Concepts</h1>
+    <p>25 directions exploring around and beyond the OM monogram. Click any card to see it at multiple sizes and on different backgrounds.</p>
+  </div>
+  <div class="controls">
+    <button class="btn" id="theme-toggle" onclick="toggleTheme()">Light Mode</button>
+    <div class="size-toggle">
+      <button class="btn active" data-size="lg" onclick="setSize('lg', this)">Large</button>
+      <button class="btn" data-size="sm" onclick="setSize('sm', this)">Small</button>
+      <button class="btn" data-size="xs" onclick="setSize('xs', this)">Tiny</button>
+    </div>
+  </div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="detail-panel" id="detail-panel">
+  <div class="detail-header">
+    <h2 id="detail-title">—</h2>
+    <button class="detail-close" onclick="closeDetail()">Close</button>
+  </div>
+
+  <div class="section-label">Size Scale</div>
+  <div class="detail-row" id="detail-sizes"></div>
+
+  <div class="section-label" style="margin-top:24px">Lockup on Backgrounds</div>
+  <div class="detail-bg-row" id="detail-bgs"></div>
+</div>
+
+<div class="footer">
+  OffMind Logo Exploration — 25 concepts generated 2026-03-08. Click a card, compare sizes, pick your direction.
+</div>
+
+<script>
+const concepts = [
+  { id: '01', file: 'logo-01-om-loop-refined.svg', name: 'OM Loop Refined', desc: 'Direction 2B refined. O wraps M in continuous stroke, gap at top-right.' },
+  { id: '02', file: 'logo-02-om-loop-angular.svg', name: 'OM Loop Angular', desc: 'Angular/circuit-board take on the O-wraps-M concept.' },
+  { id: '03', file: 'logo-03-om-infinity-break.svg', name: 'OM Infinity Break', desc: 'O and M forming infinity with a break at the crossing.' },
+  { id: '04', file: 'logo-04-om-overlap.svg', name: 'OM Overlap', desc: 'Circle O with chevron M inside. Clean Linear-style.' },
+  { id: '05', file: 'logo-05-broken-circle-m.svg', name: 'Broken Circle M', desc: 'C-shaped circle with angular M inside. Gap = release.' },
+  { id: '06', file: 'logo-06-square-om.svg', name: 'Square OM', desc: 'App-icon rounded square with M inside, corner break.' },
+  { id: '07', file: 'logo-07-mind-release.svg', name: 'Mind Release', desc: 'Thought bubble opening at top, particles escaping.' },
+  { id: '08', file: 'logo-08-off-switch.svg', name: 'Off Switch', desc: 'Power button symbol with subtle "ff" in the stem.' },
+  { id: '09', file: 'logo-09-flow-arrows.svg', name: 'Flow Arrows', desc: 'Three arrows: capture, organize, commit. GTD flow.' },
+  { id: '10', file: 'logo-10-knot-om.svg', name: 'Celtic Knot OM', desc: 'Single-stroke Celtic knot forming O and M loops.' },
+  { id: '11', file: 'logo-11-brackets-dot.svg', name: 'Brackets + Dot', desc: 'Ultra-minimal [ ] with floating dot above. System + thought.' },
+  { id: '12', file: 'logo-12-hexagon-m.svg', name: 'Hexagon M', desc: 'Hexagon outline with M formed by bottom edges.' },
+  { id: '13', file: 'logo-13-wave-m.svg', name: 'Wave M', desc: 'Sine wave with two peaks forming M. Brain waves.' },
+  { id: '14', file: 'logo-14-orbit-dot.svg', name: 'Orbit + Dot', desc: 'Orbit circle with dot exiting through gap. Thought escaping.' },
+  { id: '15', file: 'logo-15-stack-release.svg', name: 'Stack Release', desc: 'Three lines (todo list), top one fading upward.' },
+  { id: '16', file: 'logo-16-aperture-m.svg', name: 'Aperture M', desc: 'Camera aperture with M in negative space. Focus/clarity.' },
+  { id: '17', file: 'logo-17-spiral-break.svg', name: 'Spiral Break', desc: 'Tightening spiral that stops before center. OffMind breaks it.' },
+  { id: '18', file: 'logo-18-moebius-om.svg', name: 'Mobius OM', desc: 'Mobius strip twist forming O and M. One surface, no friction.' },
+  { id: '19', file: 'logo-19-zen-circle.svg', name: 'Zen Circle (Enso)', desc: 'Nearly complete brush circle with gap. Mindfulness meets GTD.' },
+  { id: '20', file: 'logo-20-neural-node.svg', name: 'Neural Node', desc: 'Three nodes, one disconnecting. Neural pathway release.' },
+  { id: '21', file: 'logo-21-window-out.svg', name: 'Window Portal', desc: 'Window with arrow passing through. Thoughts organized on exit.' },
+  { id: '22', file: 'logo-22-letter-o-gap.svg', name: 'O with Gap + M', desc: 'Thick O with precise gap, subtle inner M. Apple-level minimal.' },
+  { id: '23', file: 'logo-23-origami-m.svg', name: 'Origami M', desc: 'Folded paper triangles forming M. Complex to simple.' },
+  { id: '24', file: 'logo-24-checkbox-mind.svg', name: 'Checkbox Mind', desc: 'Checkmark that becomes brain wave. GTD meets mind.' },
+  { id: '25', file: 'logo-25-double-loop.svg', name: 'Double Loop', desc: 'Complete loop + broken loop overlapping. Capture + release.' },
+];
+
+const grid = document.getElementById('grid');
+
+concepts.forEach(c => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.onclick = () => showDetail(c);
+  card.innerHTML = `
+    <span class="card-number">${c.id}</span>
+    <div class="card-img">
+      <img src="${c.file}" alt="${c.name}">
+    </div>
+    <div class="card-name">${c.name}</div>
+    <div class="card-desc">${c.desc}</div>
+    <div class="card-sizes">
+      <div class="size-preview">
+        <img src="${c.file}" style="width:32px;height:32px" alt="32px">
+        <span class="size-label">32px</span>
+      </div>
+      <div class="size-preview">
+        <img src="${c.file}" style="width:16px;height:16px" alt="16px">
+        <span class="size-label">16px</span>
+      </div>
+    </div>
+  `;
+  grid.appendChild(card);
+});
+
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  const btn = document.getElementById('theme-toggle');
+  btn.textContent = document.body.classList.contains('light') ? 'Dark Mode' : 'Light Mode';
+}
+
+function setSize(size, btn) {
+  document.querySelectorAll('.size-toggle .btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.card-img').forEach(el => {
+    el.classList.remove('size-sm', 'size-xs');
+    if (size === 'sm') el.classList.add('size-sm');
+    if (size === 'xs') el.classList.add('size-xs');
+  });
+}
+
+function showDetail(concept) {
+  const panel = document.getElementById('detail-panel');
+  document.getElementById('detail-title').textContent = `${concept.id} — ${concept.name}`;
+
+  const sizes = [200, 120, 80, 48, 32, 20, 16];
+  const sizesEl = document.getElementById('detail-sizes');
+  sizesEl.innerHTML = sizes.map(s => `
+    <div class="detail-size-group">
+      <img src="${concept.file}" style="width:${s}px;height:${s}px" alt="${s}px">
+      <span class="label">${s}px</span>
+    </div>
+  `).join('');
+
+  const bgsEl = document.getElementById('detail-bgs');
+  bgsEl.innerHTML = `
+    <div class="bg-card bg-dark">
+      <img src="${concept.file}" alt="dark bg">
+      <span class="wordmark">OffMind</span>
+    </div>
+    <div class="bg-card bg-light">
+      <img src="${concept.file}" alt="light bg">
+      <span class="wordmark">OffMind</span>
+    </div>
+    <div class="bg-card bg-mid">
+      <img src="${concept.file}" alt="mid bg">
+      <span class="wordmark">OffMind</span>
+    </div>
+  `;
+
+  panel.classList.add('visible');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function closeDetail() {
+  document.getElementById('detail-panel').classList.remove('visible');
+}
+</script>
+</body>
+</html>

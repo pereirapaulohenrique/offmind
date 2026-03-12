@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OffMind Logo Concepts — v2</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #09090b;
+    color: #fafafa;
+    font-family: 'Satoshi', 'Inter', sans-serif;
+    padding: 40px;
+    min-height: 100vh;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+    color: #2dd4bf;
+  }
+  .subtitle {
+    font-size: 14px;
+    color: #71717a;
+    margin-bottom: 48px;
+  }
+  .concept {
+    margin-bottom: 64px;
+    border-bottom: 1px solid rgba(161,161,170,0.1);
+    padding-bottom: 48px;
+  }
+  .concept:last-child { border-bottom: none; }
+  .concept-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+  .concept-num {
+    font-size: 13px;
+    font-weight: 500;
+    color: #2dd4bf;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .concept-name {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .concept-tag {
+    font-size: 11px;
+    font-weight: 500;
+    color: #09090b;
+    background: #2dd4bf;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .concept-desc {
+    font-size: 14px;
+    color: #a1a1aa;
+    margin-bottom: 32px;
+    max-width: 640px;
+    line-height: 1.6;
+  }
+
+  /* Size rows */
+  .sizes {
+    display: flex;
+    align-items: flex-end;
+    gap: 48px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .size-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .size-label {
+    font-size: 11px;
+    color: #52525b;
+    font-weight: 500;
+  }
+  .size-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #18181b;
+    border-radius: 12px;
+    border: 1px solid rgba(161,161,170,0.08);
+  }
+  .size-box img {
+    display: block;
+  }
+
+  /* Lockup rows */
+  .lockups {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+  .lockup {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #18181b;
+    padding: 16px 24px;
+    border-radius: 12px;
+    border: 1px solid rgba(161,161,170,0.08);
+  }
+  .lockup-light {
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  .lockup-light .lockup-text {
+    color: #09090b;
+  }
+  .lockup img {
+    display: block;
+  }
+  .lockup-text {
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: 0.02em;
+    color: #fafafa;
+  }
+  .lockup-text-sm {
+    font-size: 16px;
+  }
+
+  /* Favicon simulation */
+  .favicon-row {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    margin-top: 16px;
+  }
+  .favicon-sim {
+    width: 16px;
+    height: 16px;
+    image-rendering: auto;
+  }
+  .favicon-sim-32 {
+    width: 32px;
+    height: 32px;
+  }
+  .favicon-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #27272a;
+    padding: 6px 12px;
+    border-radius: 8px 8px 0 0;
+    font-size: 12px;
+    color: #a1a1aa;
+  }
+  .favicon-tab img {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Comparison section at bottom */
+  .comparison {
+    margin-top: 64px;
+    padding-top: 48px;
+    border-top: 1px solid rgba(161,161,170,0.15);
+  }
+  .comparison h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 32px;
+    letter-spacing: -0.02em;
+  }
+  .comp-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+  }
+  .comp-card {
+    background: #18181b;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    border: 1px solid rgba(161,161,170,0.08);
+  }
+  .comp-card img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+  }
+  .comp-card .comp-name {
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .comp-card .comp-meta {
+    font-size: 11px;
+    color: #71717a;
+    text-align: center;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<h1>OffMind Logo Concepts v2</h1>
+<p class="subtitle">5 directions from competitive analysis + brand strategy + product vision. Teal on zinc-950.</p>
+
+<!-- CONCEPT 1: Open Loop -->
+<div class="concept">
+  <div class="concept-header">
+    <span class="concept-num">Concept 1</span>
+    <span class="concept-name">The Open Loop</span>
+    <span class="concept-tag">RECOMMENDED</span>
+  </div>
+  <p class="concept-desc">A ~300° arc with a deliberate gap. The gap IS "Off" (release). The loop IS "Mind" (thoughts). Name encoded in form. Maximum simplicity — one stroke, one gesture.</p>
+
+  <div class="sizes">
+    <div class="size-item">
+      <div class="size-box" style="width:200px;height:200px;"><img src="logo-open-loop.svg" width="160" height="160"></div>
+      <span class="size-label">Display 160px</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:100px;height:100px;"><img src="logo-open-loop.svg" width="64" height="64"></div>
+      <span class="size-label">Medium 64px</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:60px;height:60px;"><img src="logo-open-loop.svg" width="32" height="32"></div>
+      <span class="size-label">Icon 32px</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:44px;height:44px;"><img src="logo-open-loop.svg" width="16" height="16"></div>
+      <span class="size-label">Favicon 16px</span>
+    </div>
+  </div>
+
+  <div class="lockups">
+    <div class="lockup">
+      <img src="logo-open-loop.svg" width="30" height="30">
+      <span class="lockup-text">offmind</span>
+    </div>
+    <div class="lockup lockup-light">
+      <img src="logo-open-loop.svg" width="30" height="30">
+      <span class="lockup-text">offmind</span>
+    </div>
+    <div class="lockup">
+      <img src="logo-open-loop.svg" width="20" height="20">
+      <span class="lockup-text lockup-text-sm">offmind</span>
+    </div>
+  </div>
+
+  <div class="favicon-row">
+    <div class="favicon-tab"><img src="logo-open-loop.svg" class="favicon-tab">OffMind</div>
+  </div>
+</div>
+
+<!-- CONCEPT 1B: Open Loop AS the O in wordmark -->
+<div class="concept">
+  <div class="concept-header">
+    <span class="concept-num">Concept 1B</span>
+    <span class="concept-name">The Open Loop Wordmark</span>
+    <span class="concept-tag">NEW</span>
+  </div>
+  <p class="concept-desc">The Open Loop replaces the "o" in "offmind" — the mark and the word become one. The loop IS the letter. No separate icon needed.</p>
+
+  <div class="sizes">
+    <div class="size-item">
+      <div class="size-box" style="width:480px;height:120px;"><img src="logo-wordmark-loop.svg" width="440" height="80"></div>
+      <span class="size-label">Display</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:280px;height:72px;"><img src="logo-wordmark-loop.svg" width="240" height="44"></div>
+      <span class="size-label">Medium</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:180px;height:52px;"><img src="logo-wordmark-loop.svg" width="150" height="28"></div>
+      <span class="size-label">Small</span>
+    </div>
+  </div>
+
+  <div class="lockups">
+    <div class="lockup">
+      <img src="logo-wordmark-loop.svg" width="200" height="38">
+    </div>
+    <div class="lockup lockup-light">
+      <img src="logo-wordmark-loop.svg" width="200" height="38">
+    </div>
+  </div>
+</div>
+
+<!-- CONCEPT 6: The Unboxed (Anti-Notion) -->
+<div class="concept">
+  <div class="concept-header">
+    <span class="concept-num">Concept 6</span>
+    <span class="concept-name">The Unboxed</span>
+    <span class="concept-tag">ANTI-NOTION</span>
+  </div>
+  <p class="concept-desc">The direct opposite of Notion's N-in-a-cube. Four corner fragments of a rounded rectangle, pulling apart — the box is dissolving. Structure that lets go instead of containing. Where Notion says "here's a box, fill it," OffMind says "the box was never needed."</p>
+
+  <div class="sizes">
+    <div class="size-item">
+      <div class="size-box" style="width:200px;height:200px;"><img src="logo-unboxed.svg" width="160" height="160"></div>
+      <span class="size-label">Display 160px</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:100px;height:100px;"><img src="logo-unboxed.svg" width="64" height="64"></div>
+      <span class="size-label">Medium 64px</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:60px;height:60px;"><img src="logo-unboxed.svg" width="32" height="32"></div>
+      <span class="size-label">Icon 32px</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:44px;height:44px;"><img src="logo-unboxed.svg" width="16" height="16"></div>
+      <span class="size-label">Favicon 16px</span>
+    </div>
+  </div>
+
+  <div class="lockups">
+    <div class="lockup">
+      <img src="logo-unboxed.svg" width="30" height="30">
+      <span class="lockup-text">offmind</span>
+    </div>
+    <div class="lockup lockup-light">
+      <img src="logo-unboxed.svg" width="30" height="30">
+      <span class="lockup-text">offmind</span>
+    </div>
+    <div class="lockup">
+      <img src="logo-unboxed.svg" width="20" height="20">
+      <span class="lockup-text lockup-text-sm">offmind</span>
+    </div>
+  </div>
+</div>
+
+<!-- CONCEPT 6B: Unboxed enclosing "off" -->
+<div class="concept">
+  <div class="concept-header">
+    <span class="concept-num">Concept 6B</span>
+    <span class="concept-name">The Unboxed "off"</span>
+    <span class="concept-tag">NEW</span>
+  </div>
+  <p class="concept-desc">The dissolving box encloses "off" — the word is still inside the breaking structure, about to be released. "mind" sits outside, already free. The logo IS the product promise: taking things off your mind means breaking out of the rigid box.</p>
+
+  <div class="sizes">
+    <div class="size-item">
+      <div class="size-box" style="width:520px;height:140px;"><img src="logo-unboxed-off.svg" width="480" height="100"></div>
+      <span class="size-label">Display</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:320px;height:88px;"><img src="logo-unboxed-off.svg" width="280" height="58"></div>
+      <span class="size-label">Medium</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:220px;height:64px;"><img src="logo-unboxed-off.svg" width="180" height="38"></div>
+      <span class="size-label">Small</span>
+    </div>
+  </div>
+
+  <div class="lockups">
+    <div class="lockup">
+      <img src="logo-unboxed-off.svg" width="200" height="42">
+    </div>
+    <div class="lockup lockup-light">
+      <img src="logo-unboxed-off.svg" width="200" height="42">
+    </div>
+  </div>
+</div>
+
+<!-- CONCEPT 2: The Settling -->
+<div class="concept">
+  <div class="concept-header">
+    <span class="concept-num">Concept 2</span>
+    <span class="concept-name">The Settling</span>
+  </div>
+  <p class="concept-desc">Scattered elements converging into a unified form. The mark captures the transition itself — scattered anxiety becoming calm confidence, visualized.</p>
+
+  <div class="sizes">
+    <div class="size-item">
+      <div class="size-box" style="width:200px;height:200px;"><img src="logo-settling.svg" width="160" height="160"></div>
+      <span class="size-label">Display 160px</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:100px;height:100px;"><img src="logo-settling.svg" width="64" height="64"></div>
+      <span class="size-label">Medium 64px</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:60px;height:60px;"><img src="logo-settling.svg" width="32" height="32"></div>
+      <span class="size-label">Icon 32px</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:44px;height:44px;"><img src="logo-settling.svg" width="16" height="16"></div>
+      <span class="size-label">Favicon 16px</span>
+    </div>
+  </div>
+
+  <div class="lockups">
+    <div class="lockup">
+      <img src="logo-settling.svg" width="30" height="30">
+      <span class="lockup-text">offmind</span>
+    </div>
+    <div class="lockup lockup-light">
+      <img src="logo-settling.svg" width="30" height="30">
+      <span class="lockup-text">offmind</span>
+    </div>
+  </div>
+</div>
+
+<!-- CONCEPT 3: The Wordmark -->
+<div class="concept">
+  <div class="concept-header">
+    <span class="concept-num">Concept 3</span>
+    <span class="concept-name">The Wordmark (Open O)</span>
+  </div>
+  <p class="concept-desc">"offmind" in Satoshi Medium with the "o" broken open at the top — echoing the Open Loop gesture at typographic scale. The word IS the logo.</p>
+
+  <div class="sizes">
+    <div class="size-item">
+      <div class="size-box" style="width:480px;height:120px;"><img src="logo-wordmark.svg" width="440" height="80"></div>
+      <span class="size-label">Display</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:280px;height:72px;"><img src="logo-wordmark.svg" width="240" height="44"></div>
+      <span class="size-label">Medium</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:180px;height:52px;"><img src="logo-wordmark.svg" width="150" height="28"></div>
+      <span class="size-label">Small</span>
+    </div>
+  </div>
+
+  <div class="lockups">
+    <div class="lockup">
+      <img src="logo-wordmark.svg" width="180" height="34">
+    </div>
+    <div class="lockup lockup-light">
+      <img src="logo-wordmark.svg" width="180" height="34">
+    </div>
+  </div>
+</div>
+
+<!-- CONCEPT 4: The Nest -->
+<div class="concept">
+  <div class="concept-header">
+    <span class="concept-num">Concept 4</span>
+    <span class="concept-name">The Nest</span>
+  </div>
+  <p class="concept-desc">Two organic curves that arc and cross, creating a cradling form. Most direct Caregiver expression. Radically organic in a geometric category. Warmth meets structure.</p>
+
+  <div class="sizes">
+    <div class="size-item">
+      <div class="size-box" style="width:200px;height:200px;"><img src="logo-nest.svg" width="160" height="160"></div>
+      <span class="size-label">Display 160px</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:100px;height:100px;"><img src="logo-nest.svg" width="64" height="64"></div>
+      <span class="size-label">Medium 64px</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:60px;height:60px;"><img src="logo-nest.svg" width="32" height="32"></div>
+      <span class="size-label">Icon 32px</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:44px;height:44px;"><img src="logo-nest.svg" width="16" height="16"></div>
+      <span class="size-label">Favicon 16px</span>
+    </div>
+  </div>
+
+  <div class="lockups">
+    <div class="lockup">
+      <img src="logo-nest.svg" width="30" height="30">
+      <span class="lockup-text">offmind</span>
+    </div>
+    <div class="lockup lockup-light">
+      <img src="logo-nest.svg" width="30" height="30">
+      <span class="lockup-text">offmind</span>
+    </div>
+    <div class="lockup">
+      <img src="logo-nest.svg" width="20" height="20">
+      <span class="lockup-text lockup-text-sm">offmind</span>
+    </div>
+  </div>
+</div>
+
+<!-- CONCEPT 5: The Seed -->
+<div class="concept">
+  <div class="concept-header">
+    <span class="concept-num">Concept 5</span>
+    <span class="concept-name">The Seed</span>
+  </div>
+  <p class="concept-desc">A teardrop seed with a single organic shoot emerging upward. The compound mechanic in miniature: small thought captured → something real growing from it.</p>
+
+  <div class="sizes">
+    <div class="size-item">
+      <div class="size-box" style="width:200px;height:200px;"><img src="logo-seed.svg" width="130" height="160"></div>
+      <span class="size-label">Display 160px</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:100px;height:100px;"><img src="logo-seed.svg" width="52" height="64"></div>
+      <span class="size-label">Medium 64px</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:60px;height:60px;"><img src="logo-seed.svg" width="26" height="32"></div>
+      <span class="size-label">Icon 32px</span>
+    </div>
+    <div class="size-item">
+      <div class="size-box" style="width:44px;height:44px;"><img src="logo-seed.svg" width="13" height="16"></div>
+      <span class="size-label">Favicon 16px</span>
+    </div>
+  </div>
+
+  <div class="lockups">
+    <div class="lockup">
+      <img src="logo-seed.svg" width="20" height="26">
+      <span class="lockup-text">offmind</span>
+    </div>
+    <div class="lockup lockup-light">
+      <img src="logo-seed.svg" width="20" height="26">
+      <span class="lockup-text">offmind</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIDE-BY-SIDE COMPARISON -->
+<div class="comparison">
+  <h2>Side-by-Side at 64px</h2>
+  <div class="comp-grid" style="grid-template-columns: repeat(4, 1fr);">
+    <div class="comp-card">
+      <img src="logo-open-loop.svg">
+      <span class="comp-name">1. Open Loop</span>
+      <span class="comp-meta">Release / Exhale<br>1 stroke</span>
+    </div>
+    <div class="comp-card">
+      <img src="logo-wordmark-loop.svg" style="width:auto;height:28px;">
+      <span class="comp-name">1B. Loop Wordmark</span>
+      <span class="comp-meta">Loop as the "o"<br>Mark + word unified</span>
+    </div>
+    <div class="comp-card">
+      <img src="logo-unboxed.svg">
+      <span class="comp-name">6. Unboxed</span>
+      <span class="comp-meta">Anti-Notion<br>Box dissolving</span>
+    </div>
+    <div class="comp-card">
+      <img src="logo-unboxed-off.svg" style="width:auto;height:28px;">
+      <span class="comp-name">6B. Unboxed "off"</span>
+      <span class="comp-meta">Box around "off"<br>"mind" is free</span>
+    </div>
+    <div class="comp-card">
+      <img src="logo-settling.svg">
+      <span class="comp-name">2. Settling</span>
+      <span class="comp-meta">Transition / Converge<br>5-6 elements</span>
+    </div>
+    <div class="comp-card">
+      <img src="logo-wordmark.svg" style="width:auto;height:28px;">
+      <span class="comp-name">3. Wordmark</span>
+      <span class="comp-meta">Open "o" in type<br>Pure typography</span>
+    </div>
+    <div class="comp-card">
+      <img src="logo-nest.svg">
+      <span class="comp-name">4. Nest</span>
+      <span class="comp-meta">Protection / Organic<br>2 strokes</span>
+    </div>
+    <div class="comp-card">
+      <img src="logo-seed.svg">
+      <span class="comp-name">5. Seed</span>
+      <span class="comp-meta">Growth / Compound<br>2 elements</span>
+    </div>
+  </div>
+</div>
+
+<!-- COLOR COMPARISON: Blue-Teal vs Warm Green-Teal -->
+<div class="comparison">
+  <h2>Color Comparison: Current vs Warm Teal</h2>
+  <p class="concept-desc" style="margin-bottom:32px;">Current palette (blue-teal: #2dd4bf, #5eead4, #0d9488) vs Warmer palette (green-teal: #2dd4a8, #5eebb8, #0d9478). Warmer shifts toward green, feels more organic and nurturing.</p>
+
+  <div style="display:flex;gap:16px;margin-bottom:12px;">
+    <div style="display:flex;gap:4px;align-items:center;">
+      <div style="width:16px;height:16px;background:#2dd4bf;border-radius:4px;"></div>
+      <div style="width:16px;height:16px;background:#5eead4;border-radius:4px;"></div>
+      <div style="width:16px;height:16px;background:#0d9488;border-radius:4px;"></div>
+      <span class="size-label" style="margin-left:4px;">Current (blue-teal)</span>
+    </div>
+    <div style="display:flex;gap:4px;align-items:center;">
+      <div style="width:16px;height:16px;background:#2dd4a8;border-radius:4px;"></div>
+      <div style="width:16px;height:16px;background:#5eebb8;border-radius:4px;"></div>
+      <div style="width:16px;height:16px;background:#0d9478;border-radius:4px;"></div>
+      <span class="size-label" style="margin-left:4px;">Warm (green-teal)</span>
+    </div>
+  </div>
+
+  <div class="comp-grid" style="grid-template-columns: repeat(2, 1fr); gap:32px;">
+
+    <!-- Open Loop -->
+    <div class="comp-card" style="flex-direction:row;gap:32px;padding:32px;">
+      <div style="text-align:center;">
+        <img src="logo-open-loop.svg" style="width:80px;height:80px;">
+        <div class="size-label" style="margin-top:8px;">Current</div>
+      </div>
+      <div style="text-align:center;">
+        <img src="logo-open-loop-warm.svg" style="width:80px;height:80px;">
+        <div class="size-label" style="margin-top:8px;">Warm</div>
+      </div>
+      <div style="align-self:center;"><span class="comp-name">Open Loop</span></div>
+    </div>
+
+    <!-- Unboxed -->
+    <div class="comp-card" style="flex-direction:row;gap:32px;padding:32px;">
+      <div style="text-align:center;">
+        <img src="logo-unboxed.svg" style="width:80px;height:80px;">
+        <div class="size-label" style="margin-top:8px;">Current</div>
+      </div>
+      <div style="text-align:center;">
+        <img src="logo-unboxed-warm.svg" style="width:80px;height:80px;">
+        <div class="size-label" style="margin-top:8px;">Warm</div>
+      </div>
+      <div style="align-self:center;"><span class="comp-name">Unboxed</span></div>
+    </div>
+
+    <!-- Unboxed "off" -->
+    <div class="comp-card" style="flex-direction:row;gap:24px;padding:32px;">
+      <div style="text-align:center;">
+        <img src="logo-unboxed-off.svg" style="width:auto;height:40px;">
+        <div class="size-label" style="margin-top:8px;">Current</div>
+      </div>
+      <div style="text-align:center;">
+        <img src="logo-unboxed-off-warm.svg" style="width:auto;height:40px;">
+        <div class="size-label" style="margin-top:8px;">Warm</div>
+      </div>
+      <div style="align-self:center;"><span class="comp-name">Unboxed "off"</span></div>
+    </div>
+
+    <!-- Loop Wordmark -->
+    <div class="comp-card" style="flex-direction:row;gap:24px;padding:32px;">
+      <div style="text-align:center;">
+        <img src="logo-wordmark-loop.svg" style="width:auto;height:32px;">
+        <div class="size-label" style="margin-top:8px;">Current</div>
+      </div>
+      <div style="text-align:center;">
+        <img src="logo-wordmark-loop-warm.svg" style="width:auto;height:32px;">
+        <div class="size-label" style="margin-top:8px;">Warm</div>
+      </div>
+      <div style="align-self:center;"><span class="comp-name">Loop Wordmark</span></div>
+    </div>
+
+    <!-- Settling -->
+    <div class="comp-card" style="flex-direction:row;gap:32px;padding:32px;">
+      <div style="text-align:center;">
+        <img src="logo-settling.svg" style="width:80px;height:80px;">
+        <div class="size-label" style="margin-top:8px;">Current</div>
+      </div>
+      <div style="text-align:center;">
+        <img src="logo-settling-warm.svg" style="width:80px;height:80px;">
+        <div class="size-label" style="margin-top:8px;">Warm</div>
+      </div>
+      <div style="align-self:center;"><span class="comp-name">Settling</span></div>
+    </div>
+
+    <!-- Nest -->
+    <div class="comp-card" style="flex-direction:row;gap:32px;padding:32px;">
+      <div style="text-align:center;">
+        <img src="logo-nest.svg" style="width:80px;height:80px;">
+        <div class="size-label" style="margin-top:8px;">Current</div>
+      </div>
+      <div style="text-align:center;">
+        <img src="logo-nest-warm.svg" style="width:80px;height:80px;">
+        <div class="size-label" style="margin-top:8px;">Warm</div>
+      </div>
+      <div style="align-self:center;"><span class="comp-name">Nest</span></div>
+    </div>
+
+    <!-- Seed -->
+    <div class="comp-card" style="flex-direction:row;gap:32px;padding:32px;">
+      <div style="text-align:center;">
+        <img src="logo-seed.svg" style="width:52px;height:64px;">
+        <div class="size-label" style="margin-top:8px;">Current</div>
+      </div>
+      <div style="text-align:center;">
+        <img src="logo-seed-warm.svg" style="width:52px;height:64px;">
+        <div class="size-label" style="margin-top:8px;">Warm</div>
+      </div>
+      <div style="align-self:center;"><span class="comp-name">Seed</span></div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

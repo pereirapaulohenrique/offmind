@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 100">
+  <defs>
+    <style>
+      @import url('https://api.fontshare.com/v2/css?f[]=satoshi@700&amp;display=swap');
+    </style>
+    <linearGradient id="o-v3d" gradientUnits="userSpaceOnUse" x1="14" y1="38" x2="40" y2="72">
+      <stop offset="0" stop-color="#5eebb8"/>
+      <stop offset="1" stop-color="#0d9478"/>
+    </linearGradient>
+  </defs>
+
+  <!--
+    V3 Full Bold — all Bold 700, no weight split
+    Like Focus where the whole word has presence
+    Differentiation comes ONLY from the loop symbol
+    Simpler, more unified, more confident
+  -->
+
+  <!-- Open loop "o" — bold weight, tight gap -->
+  <path
+    d="M 30 41
+       A 12 13.5 0 1 0 34.5 44"
+    fill="none"
+    stroke="url(#o-v3d)"
+    stroke-width="6.5"
+    stroke-linecap="round"
+  />
+
+  <!-- "ffmind" all Bold 700 -->
+  <text
+    x="40" y="68"
+    font-family="'Satoshi', 'Inter', 'Geist Sans', sans-serif"
+    font-weight="700"
+    font-size="48"
+    letter-spacing="0.5"
+    fill="#fafafa"
+  >ffmind</text>
+</svg>

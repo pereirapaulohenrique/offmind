@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="teal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <!-- Celtic-inspired single-stroke knot forming O and M -->
+  <!-- One continuous path: O loop on left, M loops on right, interlocking -->
+  <path
+    d="M 50,100
+       C 50,60 90,60 90,100
+       C 90,130 60,140 50,120
+       C 40,100 70,70 100,80
+       C 115,85 115,65 130,60
+       C 145,55 150,75 140,90
+       C 130,105 120,95 130,80
+       C 140,65 155,65 160,80
+       C 165,95 155,110 145,115
+       C 130,122 115,110 120,100"
+    fill="none"
+    stroke="url(#teal-grad)"
+    stroke-width="16"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

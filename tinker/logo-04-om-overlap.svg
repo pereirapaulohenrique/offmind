@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="teal-grad" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+    <linearGradient id="teal-light" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#5eead4" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0d9488" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+  <!-- O is a circle, M is a geometric chevron/zigzag inside. Linear-style clean overlap. -->
+  <!-- O circle -->
+  <circle cx="100" cy="100" r="70" fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round"/>
+  <!-- M as a chevron/zigzag inside the O -->
+  <path d="
+    M 55 135
+    L 55 80
+    L 100 115
+    L 145 80
+    L 145 135
+  " fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

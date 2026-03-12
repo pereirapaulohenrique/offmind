@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="teal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <!-- Three flowing arrows: capture (top-left in), organize (center rotate), commit (bottom-right out) -->
+  <!-- Arrow 1: Capture — enters from top-left, curves down to center -->
+  <path d="
+    M 25 45
+    Q 70 45, 85 80
+  " fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 72 72 L 85 80 L 78 92" fill="none" stroke="url(#teal-grad)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Arrow 2: Organize — circular arc in center -->
+  <path d="
+    M 125 80
+    A 30 30 0 1 1 120 74
+  " fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round"/>
+  <path d="M 110 66 L 120 74 L 128 66" fill="none" stroke="url(#teal-grad)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Arrow 3: Commit — flows from center down and out to bottom-right -->
+  <path d="
+    M 115 130
+    Q 130 155, 175 155
+  " fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 163 143 L 175 155 L 163 167" fill="none" stroke="url(#teal-grad)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

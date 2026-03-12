@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OffMind — Light & Precise UI Exploration</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #f0efed;
+    color: #1c1b1a;
+    font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===================== PAGE CHROME ===================== */
+
+  .page-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2.5rem;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1c1b1a;
+    margin-bottom: 0.35rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.9rem;
+    color: #8c8680;
+    margin-bottom: 3rem;
+  }
+
+  .section {
+    margin-bottom: 4rem;
+  }
+
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #a09890;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #1c1b1a;
+    margin-bottom: 1.75rem;
+  }
+
+  /* ===================== APP FRAME ===================== */
+
+  .app-frame {
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.04),
+      0 6px 16px rgba(0,0,0,0.06),
+      0 24px 60px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.06);
+    background: #faf9f7;
+    display: flex;
+    min-height: 580px;
+  }
+
+  .variant-label {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  /* ===================== SIDEBAR ===================== */
+
+  .sidebar {
+    width: 240px;
+    padding: 1.5rem 1rem;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(0,0,0,0.05);
+    background: #f4f3f1;
+  }
+
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .sidebar-logo .logo-mark {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1c1b1a;
+  }
+
+  .sidebar-logo .logo-mark svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .dark-frame .sidebar-logo .logo-mark { color: #ededec; }
+
+  /* Hero logo */
+  .hero-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .hero-logo svg {
+    height: 28px;
+    width: auto;
+  }
+  .hero-logo .hero-logo-text {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .dark-hero .hero-logo { color: #ededec; }
+  .dark-hero .hero-logo .hero-logo-text { color: #ededec; }
+
+  .sidebar-logo .logo-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1c1b1a;
+    letter-spacing: -0.01em;
+  }
+
+  .sidebar-section {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #a09890;
+    padding: 0 0.75rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
+    color: #6b6560;
+    cursor: default;
+    transition: background 0.15s;
+  }
+
+  .sidebar-item:hover {
+    background: rgba(0,0,0,0.03);
+  }
+
+  .sidebar-item.active {
+    font-weight: 600;
+    color: #1c1b1a;
+  }
+
+  .sidebar-item .icon {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+  }
+
+  .sidebar-item.active .icon {
+    opacity: 0.8;
+  }
+
+  .sidebar-item .count {
+    margin-left: auto;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.1rem 0.45rem;
+    border-radius: 1rem;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  .sidebar-spacer { flex: 1; }
+
+  .sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .sidebar-user .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #e0ddd8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #8c8680;
+  }
+
+  .sidebar-user .user-info {
+    flex: 1;
+  }
+
+  .sidebar-user .user-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1c1b1a;
+  }
+
+  .sidebar-user .user-plan {
+    font-size: 0.65rem;
+    color: #a09890;
+  }
+
+  /* ===================== MAIN CONTENT ===================== */
+
+  .main-content {
+    flex: 1;
+    background: #faf9f7;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Top bar */
+  .top-bar {
+    display: flex;
+    align-items: center;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    gap: 1rem;
+  }
+
+  .top-bar .page-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1c1b1a;
+  }
+
+  .top-bar .tab-row {
+    display: flex;
+    gap: 0;
+    margin-left: 1.5rem;
+  }
+
+  .top-bar .tab {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 0.4rem;
+    color: #8c8680;
+    font-weight: 500;
+    cursor: default;
+  }
+
+  .top-bar .tab.active {
+    background: rgba(0,0,0,0.04);
+    color: #1c1b1a;
+    font-weight: 600;
+  }
+
+  .top-bar .spacer { flex: 1; }
+
+  .top-bar .action-btn {
+    padding: 0.4rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .top-bar .icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 0.4rem;
+    border: 1px solid rgba(0,0,0,0.08);
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #8c8680;
+    font-size: 0.85rem;
+  }
+
+  /* Content area */
+  .content-area {
+    flex: 1;
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    overflow: auto;
+  }
+
+  /* Item cards */
+  .item-card {
+    background: #ffffff;
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    box-shadow:
+      0 1px 2px rgba(0,0,0,0.03),
+      0 2px 8px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.04);
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    transition: box-shadow 0.15s, border-color 0.15s;
+    cursor: default;
+  }
+
+  .item-card:hover {
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.04),
+      0 4px 12px rgba(0,0,0,0.05);
+    border-color: rgba(0,0,0,0.07);
+  }
+
+  .item-card .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 0.45rem;
+    flex-shrink: 0;
+  }
+
+  .item-card .item-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .item-card .item-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1c1b1a;
+    margin-bottom: 0.2rem;
+  }
+
+  .item-card .item-desc {
+    font-size: 0.8rem;
+    color: #8c8680;
+    margin-bottom: 0.6rem;
+    line-height: 1.4;
+  }
+
+  .item-card .item-tags {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+  }
+
+  .item-card .tag {
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 0.15rem 0.55rem;
+    border-radius: 0.35rem;
+    border: 1px solid rgba(0,0,0,0.06);
+    background: rgba(0,0,0,0.02);
+    color: #6b6560;
+  }
+
+  .item-card .tag.accent {
+    border-color: transparent;
+  }
+
+  .item-card .item-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .item-card .meta {
+    font-size: 0.7rem;
+    color: #a09890;
+  }
+
+  .item-card .item-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .item-card .time {
+    font-size: 0.7rem;
+    color: #a09890;
+    white-space: nowrap;
+  }
+
+  .item-card .ai-badge {
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 0.2rem 0.6rem;
+    border-radius: 2rem;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .item-card .ai-badge .sparkle {
+    font-size: 0.6rem;
+  }
+
+  /* Capture bar */
+  .capture-bar {
+    margin: 0 2rem 1.5rem;
+    padding: 0.85rem 1.25rem;
+    background: #ffffff;
+    border-radius: 0.75rem;
+    box-shadow:
+      0 1px 2px rgba(0,0,0,0.03),
+      0 4px 12px rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .capture-bar:hover {
+    border-color: rgba(0,0,0,0.1);
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.04),
+      0 6px 16px rgba(0,0,0,0.06);
+  }
+
+  .capture-bar .capture-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.3;
+    font-size: 1.1rem;
+  }
+
+  .capture-bar .capture-text {
+    flex: 1;
+    font-size: 0.85rem;
+    color: #a09890;
+  }
+
+  .capture-bar .shortcut-key {
+    font-size: 0.65rem;
+    font-family: 'DM Sans', monospace;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.3rem;
+    background: #f4f3f1;
+    border: 1px solid rgba(0,0,0,0.06);
+    color: #a09890;
+    font-weight: 500;
+  }
+
+  /* ===================== EMPTY STATE / REVIEW CARD ===================== */
+
+  .review-prompt {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    box-shadow:
+      0 1px 2px rgba(0,0,0,0.03),
+      0 2px 8px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.04);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .review-prompt .review-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .review-prompt .review-body {
+    flex: 1;
+  }
+
+  .review-prompt .review-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1c1b1a;
+    margin-bottom: 0.15rem;
+  }
+
+  .review-prompt .review-desc {
+    font-size: 0.78rem;
+    color: #8c8680;
+  }
+
+  .review-prompt .review-btn {
+    padding: 0.4rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    flex-shrink: 0;
+  }
+
+  /* ===================== LAYOUT HELPERS ===================== */
+
+  .mockup-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .mockup-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ===================== HERO SECTION ===================== */
+
+  .hero-frame {
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.04),
+      0 6px 16px rgba(0,0,0,0.06),
+      0 24px 60px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .hero-content {
+    padding: 5rem 3rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .hero-content .hero-pill {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.35rem 1rem;
+    border-radius: 2rem;
+    border: 1px solid rgba(0,0,0,0.08);
+    background: white;
+    color: #6b6560;
+  }
+
+  .hero-content .hero-headline {
+    font-size: 3.25rem;
+    font-weight: 700;
+    line-height: 1.08;
+    max-width: 620px;
+    color: #1c1b1a;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-content .hero-sub {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    max-width: 480px;
+    color: #6b6560;
+  }
+
+  .hero-content .cta-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .hero-content .hero-cta {
+    padding: 0.75rem 1.75rem;
+    border-radius: 0.6rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .hero-content .hero-cta-secondary {
+    padding: 0.75rem 1.75rem;
+    border-radius: 0.6rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid rgba(0,0,0,0.1);
+    cursor: pointer;
+    background: white;
+    color: #1c1b1a;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .hero-content .hero-note {
+    font-size: 0.75rem;
+    color: #a09890;
+    margin-top: 0.25rem;
+  }
+
+  /* ===================== DARK MODE VARIANTS ===================== */
+
+  .dark-frame {
+    background: #1a1918;
+    color: #ededec;
+  }
+
+  .dark-frame .sidebar {
+    background: #141312;
+    border-right-color: rgba(255,255,255,0.04);
+  }
+
+  .dark-frame .sidebar-logo .logo-text { color: #ededec; }
+  .dark-frame .sidebar-section { color: #5a5550; }
+  .dark-frame .sidebar-item { color: #8c8680; }
+  .dark-frame .sidebar-item:hover { background: rgba(255,255,255,0.03); }
+  .dark-frame .sidebar-item.active { color: #ededec; }
+  .dark-frame .sidebar-user .avatar { background: #2a2928; color: #8c8680; }
+  .dark-frame .sidebar-user .user-name { color: #ededec; }
+  .dark-frame .sidebar-user .user-plan { color: #5a5550; }
+
+  .dark-frame .main-content { background: #1a1918; }
+  .dark-frame .top-bar { border-bottom-color: rgba(255,255,255,0.04); }
+  .dark-frame .top-bar .page-name { color: #ededec; }
+  .dark-frame .top-bar .tab { color: #5a5550; }
+  .dark-frame .top-bar .tab.active { background: rgba(255,255,255,0.05); color: #ededec; }
+  .dark-frame .top-bar .icon-btn { background: #1f1e1d; border-color: rgba(255,255,255,0.06); color: #8c8680; }
+
+  .dark-frame .item-card {
+    background: #1f1e1d;
+    border-color: rgba(255,255,255,0.04);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .dark-frame .item-card:hover {
+    border-color: rgba(255,255,255,0.07);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .dark-frame .item-card .item-title { color: #ededec; }
+  .dark-frame .item-card .item-desc { color: #6b6560; }
+  .dark-frame .item-card .tag { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.06); color: #8c8680; }
+  .dark-frame .item-card .time { color: #5a5550; }
+
+  .dark-frame .review-prompt {
+    background: #1f1e1d;
+    border-color: rgba(255,255,255,0.04);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .dark-frame .review-prompt .review-title { color: #ededec; }
+  .dark-frame .review-prompt .review-desc { color: #6b6560; }
+
+  .dark-frame .capture-bar {
+    background: #1f1e1d;
+    border-color: rgba(255,255,255,0.06);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .dark-frame .capture-bar:hover {
+    border-color: rgba(255,255,255,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .dark-frame .capture-bar .capture-text { color: #5a5550; }
+  .dark-frame .capture-bar .shortcut-key {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.06);
+    color: #5a5550;
+  }
+
+  .dark-hero {
+    background: #1a1918;
+  }
+  .dark-hero .hero-pill {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.08);
+    color: #8c8680;
+  }
+  .dark-hero .hero-headline { color: #ededec; }
+  .dark-hero .hero-sub { color: #6b6560; }
+  .dark-hero .hero-cta-secondary {
+    background: transparent;
+    border-color: rgba(255,255,255,0.1);
+    color: #ededec;
+  }
+  .dark-hero .hero-note { color: #5a5550; }
+
+</style>
+</head>
+<body>
+
+<!-- OffMind Logo SVG Definitions -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Mark only (open loop) -->
+  <symbol id="offmind-mark" viewBox="93 90 115 110">
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M474.797 319.77C497.772 314.39 523.307 314.534 546.389 319.773C549.936 320.578 554.796 322.231 557.772 324.086C565.2 328.715 552.997 340.439 547.959 341.606C545.995 341.791 543.146 341.344 541.196 341.088C516.556 337.723 497.731 338.101 473.967 344.284C461.173 348.561 453.105 351.547 441.105 357.885C423.44 370.201 403.716 383.392 391.032 401.11C384.644 411.671 369.749 436.89 369.869 448.881C370.017 463.661 368.41 490.556 372.173 504.241C393.414 581.47 481.958 624.79 557.684 607.002C572.207 603.606 586.468 594.843 599.826 588.334C623.18 570.886 630.224 567.807 646.674 541.857C649.458 536.151 653.379 528.318 655.823 522.48C661.391 509.182 661.455 478.283 658.804 464.286C653.815 442.688 639.714 421.144 624.165 405.773C611.026 392.786 597.825 391.453 607.55 371.131C617.822 343.336 628.388 358.101 644.054 371.513C652.135 376.319 682.893 409.837 682.876 418.291C700.89 440.815 702.155 479.496 701.703 506.618C702.435 525.48 696.73 546.516 687.595 563.018C685.019 576.373 665.784 598.355 656.38 607.837C583.356 681.466 447.485 674.078 377.319 600.045C353.543 574.959 332.566 540.837 332.878 505.113C329.291 502.154 331.044 491.007 330.618 485.895C328.268 457.718 337.474 425.246 352.271 400.758C378.674 357.063 419.367 332.98 468.047 321.19C470.164 320.605 472.618 320.193 474.797 319.77Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M332.878 505.113C333.41 505.551 334.057 506.082 334.818 506.708C335.96 513.628 339.705 529.618 342.477 535.685C348.221 548.253 354.947 563.414 362.755 574.521C383.673 603.771 413.977 627.363 447.145 641.142C459.955 646.464 473.846 648.581 487.072 651.402C518.789 658.167 544.24 655.106 575.19 647.707C612.254 638.846 639.327 624.205 663.212 594.096C670.402 585.342 677.212 573.366 683.827 563.773C685.293 563.479 686.549 563.228 687.595 563.018C685.019 576.373 665.784 598.355 656.38 607.837C583.356 681.466 447.485 674.078 377.319 600.045C353.543 574.959 332.566 540.837 332.878 505.113Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M391.032 401.11C391.886 387.792 425.996 353.41 441.105 357.885C423.44 370.201 403.716 383.392 391.032 401.11Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M646.674 541.857C647.576 555.883 616.559 586.126 603.007 591.124C600.487 590.124 601.354 590.817 599.826 588.334C623.18 570.886 630.224 567.807 646.674 541.857Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M473.967 344.284L473.7 342.923C484.92 335.562 532.848 331.217 541.131 338.522L541.196 341.088C516.556 337.723 497.731 338.101 473.967 344.284Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M607.55 371.131C617.822 343.336 628.388 358.101 644.054 371.513C634.211 371.534 631.329 364.081 622.099 361.18C614.831 358.897 617.18 365.732 607.929 370.922L607.55 371.131Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M474.797 319.77C479.011 320.196 479.11 319.509 481.805 321.782C479.979 325.899 473.458 325.709 469.718 324.595C468.828 323.28 468.341 322.778 468.047 321.19C470.164 320.605 472.618 320.193 474.797 319.77Z"/>
+  </symbol>
+  <!-- Full logo (mark + wordmark) -->
+  <symbol id="offmind-full" viewBox="0 0 630 298">
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M474.797 319.77C497.772 314.39 523.307 314.534 546.389 319.773C549.936 320.578 554.796 322.231 557.772 324.086C565.2 328.715 552.997 340.439 547.959 341.606C545.995 341.791 543.146 341.344 541.196 341.088C516.556 337.723 497.731 338.101 473.967 344.284C461.173 348.561 453.105 351.547 441.105 357.885C423.44 370.201 403.716 383.392 391.032 401.11C384.644 411.671 369.749 436.89 369.869 448.881C370.017 463.661 368.41 490.556 372.173 504.241C393.414 581.47 481.958 624.79 557.684 607.002C572.207 603.606 586.468 594.843 599.826 588.334C623.18 570.886 630.224 567.807 646.674 541.857C649.458 536.151 653.379 528.318 655.823 522.48C661.391 509.182 661.455 478.283 658.804 464.286C653.815 442.688 639.714 421.144 624.165 405.773C611.026 392.786 597.825 391.453 607.55 371.131C617.822 343.336 628.388 358.101 644.054 371.513C652.135 376.319 682.893 409.837 682.876 418.291C700.89 440.815 702.155 479.496 701.703 506.618C702.435 525.48 696.73 546.516 687.595 563.018C685.019 576.373 665.784 598.355 656.38 607.837C583.356 681.466 447.485 674.078 377.319 600.045C353.543 574.959 332.566 540.837 332.878 505.113C329.291 502.154 331.044 491.007 330.618 485.895C328.268 457.718 337.474 425.246 352.271 400.758C378.674 357.063 419.367 332.98 468.047 321.19C470.164 320.605 472.618 320.193 474.797 319.77Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M332.878 505.113C333.41 505.551 334.057 506.082 334.818 506.708C335.96 513.628 339.705 529.618 342.477 535.685C348.221 548.253 354.947 563.414 362.755 574.521C383.673 603.771 413.977 627.363 447.145 641.142C459.955 646.464 473.846 648.581 487.072 651.402C518.789 658.167 544.24 655.106 575.19 647.707C612.254 638.846 639.327 624.205 663.212 594.096C670.402 585.342 677.212 573.366 683.827 563.773C685.293 563.479 686.549 563.228 687.595 563.018C685.019 576.373 665.784 598.355 656.38 607.837C583.356 681.466 447.485 674.078 377.319 600.045C353.543 574.959 332.566 540.837 332.878 505.113Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M391.032 401.11C391.886 387.792 425.996 353.41 441.105 357.885C423.44 370.201 403.716 383.392 391.032 401.11Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M646.674 541.857C647.576 555.883 616.559 586.126 603.007 591.124C600.487 590.124 601.354 590.817 599.826 588.334C623.18 570.886 630.224 567.807 646.674 541.857Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M473.967 344.284L473.7 342.923C484.92 335.562 532.848 331.217 541.131 338.522L541.196 341.088C516.556 337.723 497.731 338.101 473.967 344.284Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M607.55 371.131C617.822 343.336 628.388 358.101 644.054 371.513C634.211 371.534 631.329 364.081 622.099 361.18C614.831 358.897 617.18 365.732 607.929 370.922L607.55 371.131Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M474.797 319.77C479.011 320.196 479.11 319.509 481.805 321.782C479.979 325.899 473.458 325.709 469.718 324.595C468.828 323.28 468.341 322.778 468.047 321.19C470.164 320.605 472.618 320.193 474.797 319.77Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1803.83 401.16C1810.87 401.028 1829.81 399.882 1835.19 402.816C1837.3 409.787 1836.67 472.25 1836.44 482.499C1835.62 519.279 1836.88 559.311 1835.43 595.908C1825.35 596.098 1815.26 596.146 1805.17 596.049C1805.17 591.663 1805.02 586.211 1805.23 581.924C1804.17 580.929 1803.48 580.904 1802.08 580.563L1799.1 582.606C1792.9 587.954 1790.93 589.063 1783.88 593.106C1778.29 595.939 1776.83 596.468 1770.71 597.814C1744.74 604.509 1710.29 589.34 1697.3 565.606C1686.71 546.24 1688.35 527.117 1691.36 506.096C1691.49 504.284 1694.16 498.66 1695.05 496.644C1695.82 494.54 1697.11 492.123 1698.3 490.237C1707.36 475.652 1721.94 465.364 1738.71 461.725C1773.67 450.22 1795.79 475.855 1803.24 475.391C1803.46 451.524 1804.31 424.797 1803.83 401.16ZM1722.01 514.645C1720.65 535.887 1719.43 547.284 1735.83 563.192L1736.7 563.596C1739.2 564.785 1742.22 567.381 1744.98 568.816C1754.48 573.671 1765.56 574.413 1775.62 570.867C1781.39 568.888 1785.69 566.258 1790.69 562.865C1800.12 553.039 1798.13 549.64 1802.89 543.902L1802.31 542.537C1803.34 537.705 1803.25 522.864 1803.34 517.175C1802.35 508.264 1792.3 496.596 1784.95 492.093C1774.27 485.555 1764.22 484.131 1752.15 486.761C1735.62 491.236 1728.73 499.276 1722.01 514.645Z"/>
+    <path fill="currentColor" opacity="0.92" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1803.83 401.16C1810.87 401.028 1829.81 399.882 1835.19 402.816C1837.3 409.787 1836.67 472.25 1836.44 482.499C1835.62 519.279 1836.88 559.311 1835.43 595.908C1825.35 596.098 1815.26 596.146 1805.17 596.049C1805.17 591.663 1805.02 586.211 1805.23 581.924L1806.97 581.383C1809.73 584.098 1806.3 584.608 1808.95 588.563C1813.58 590.453 1824.45 590.792 1828.33 587.55C1828.41 578.528 1830.99 568.912 1831.04 560.325L1830.82 490.194C1830.63 475.467 1829.57 465.861 1831.37 451.421C1832.46 442.709 1832.31 417.723 1830.52 410.005C1826.64 407.759 1813.93 408.163 1809.11 408.196C1804.31 419.261 1811.43 468.867 1807.56 478.866L1806.19 479.434C1804.78 476.899 1804.82 473.421 1804.56 470.403L1803.24 475.391C1803.46 451.524 1804.31 424.797 1803.83 401.16Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1691.36 506.096C1695.47 506.634 1694.71 505.888 1697 508.408C1694.59 515.378 1693.03 507.9 1693.19 519.785C1693.22 538.222 1695.05 560.116 1707.98 574.445C1710 576.684 1716.23 577.768 1717.82 579.252C1730.67 591.248 1730.92 591.067 1749.06 592.107C1750.46 591.282 1752.2 590.183 1753.65 589.579C1756.94 592.338 1756.82 593.106 1761.46 593.24C1764.69 593.333 1774.17 591.149 1775.93 593.945L1770.71 597.814C1744.74 604.509 1710.29 589.34 1697.3 565.606C1686.71 546.24 1688.35 527.117 1691.36 506.096Z"/>
+    <path fill="currentColor" opacity="0.92" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1738.71 461.725L1739.64 461.881C1746.47 463 1748.44 461.487 1755.52 463.164L1755.39 463.995C1736.45 468.169 1719.07 472.164 1704.27 488.966C1701.54 492.065 1703.79 500.32 1697.8 502.914C1695.31 500.473 1695.98 500.604 1695.05 496.644C1695.82 494.54 1697.11 492.123 1698.3 490.237C1707.36 475.652 1721.94 465.364 1738.71 461.725Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1783.88 593.106C1780.72 593.024 1779.88 593.599 1777.93 591.922C1778.88 590.119 1795.13 578.062 1796.73 577.687C1799.02 579.729 1798.28 578.817 1799.1 582.606C1792.9 587.954 1790.93 589.063 1783.88 593.106Z"/>
+    <path fill="currentColor" opacity="0.92" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1735.83 563.192C1734.75 566.119 1735.47 565.232 1733.29 566.99C1724.31 565.021 1718.84 548.841 1719.06 540.605L1717.73 541.811L1717.89 546.565C1714.38 544.144 1714.79 539.388 1711.03 535.607L1705.54 535.957L1705.25 535.234L1709.36 534.808L1709.9 533.513L1706.44 532.13C1709.6 530.711 1711.16 531.645 1712.96 528.222C1715.91 522.639 1715.64 517.455 1722.01 514.645C1720.65 535.887 1719.43 547.284 1735.83 563.192Z"/>
+    <path fill="currentColor" opacity="0.92" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1752.15 486.761L1749.66 486.516L1748.64 485.203L1748 485.364L1747.97 485.123C1751.03 484.553 1754.98 484.11 1757.51 482.508C1756.4 482.115 1755.28 481.742 1754.16 481.389C1755.13 480.748 1758.27 480.434 1760.41 479.406C1768.94 481.503 1777.21 483.333 1785.33 486.764C1791.35 489.307 1789.86 492.174 1794.84 493.004C1796.24 491.345 1796.82 490.558 1798.52 489.232C1801.46 490.494 1800.49 489.617 1802.03 492.688L1801.52 494.402L1798.2 494.926C1795.13 502.566 1807.82 505.587 1805.56 512.884C1805.06 514.511 1803.83 515.74 1803.34 517.175C1802.35 508.264 1792.3 496.596 1784.95 492.093C1774.27 485.555 1764.22 484.131 1752.15 486.761Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1802.89 543.902C1806.91 539.365 1804.98 527.124 1806.52 518.823C1808.76 521.833 1809.71 522.738 1810.41 526.446C1808 531.792 1808.56 538.502 1808.11 544.347C1807.48 552.488 1796.82 569.973 1788.17 570.729C1787.99 566.101 1790.58 569.271 1790.69 562.865C1800.12 553.039 1798.13 549.64 1802.89 543.902Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1827.88 554.728L1829.36 556.63C1827.28 565.155 1830.54 563.147 1828.86 569.351C1826.81 567.695 1823.58 563.877 1822.85 561.272C1823.77 557.327 1824.23 557.987 1827.88 554.728Z"/>
+    <path fill="currentColor" opacity="0.92" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M799.376 501.448C800.762 491.209 812.455 479.161 820.812 473.083C845.7 454.982 903.208 455.35 921.867 482.695C923.799 484.68 929.705 491.364 929.652 493.912C935.572 501.494 937.967 512.275 939.208 521.794C949.135 597.97 851.304 624.907 806.695 572.129C805.019 570.146 801.785 564.754 801.859 562.07C800.102 560.197 796.147 550.146 795.443 547.383C791.571 532.2 791.552 515.303 799.376 501.448ZM836.032 559.697C853.077 569.904 849.644 571.923 872.041 572.596C906.831 566.063 918.793 532.88 902.412 503.75C889.343 482.189 863.1 481.448 842.933 493.495C833.082 499.38 833.625 501.345 827.812 511.11L827.729 511.699C824.313 534.44 820.654 537.245 836.032 559.697Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M929.652 493.912C935.572 501.494 937.967 512.275 939.208 521.794C949.135 597.97 851.304 624.907 806.695 572.129C805.019 570.146 801.785 564.754 801.859 562.07C806.162 562.791 820.611 579.787 827.269 583.636C875.824 611.697 949.468 580.431 933.751 517.78C932.391 512.357 929.433 499.268 929.652 493.912Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M799.376 501.448C800.762 491.209 812.455 479.161 820.812 473.083C845.7 454.982 903.208 455.35 921.867 482.695C915.369 482.589 901.102 471.874 892.139 468.842C867.653 460.557 832.596 467.189 813.271 484.684C807.837 489.604 808.758 498.383 799.376 501.448Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M902.412 503.75C908.794 506.298 908.427 505.498 911.603 512.016C916.923 522.934 916.074 535.308 911.848 546.448C907.439 558.072 900.56 563.048 892.329 571.159L893.551 573.089L892.05 574.267C890.664 573.539 890.758 573.576 889.766 572.355C880.758 574.343 866.299 583.837 853.22 577.276L852.099 575.501C854.443 572.855 866.413 575.252 871.469 574.079L872.041 572.596C906.831 566.063 918.793 532.88 902.412 503.75Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M836.032 559.697L833.704 560.579C821.309 553.626 826.652 546.051 818.053 536.428C818.031 530.514 819.463 511.475 826.105 509.529L827.812 511.11L827.729 511.699C824.313 534.44 820.654 537.245 836.032 559.697Z"/>
+    <path fill="currentColor" opacity="0.95" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M828.185 491.657C828.452 492.461 828.823 496.557 829.262 497.097C830.239 498.302 825.998 501.712 825.925 502.499C825.741 504.483 825.594 506.067 825.43 507.829C822.106 507.48 823.112 508.054 821.237 506.021C820.453 498.401 826.341 498.783 828.185 491.657Z"/>
+    <path fill="currentColor" opacity="0.92" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1325.86 466.119C1355.62 454.402 1390.15 456.447 1402.94 490.507C1410.76 511.345 1408.14 546.439 1407.89 568.934L1408.08 596.027C1398.58 596.726 1385.55 596.342 1375.79 596.333C1375.95 575.233 1377.16 518.949 1371.17 501.629C1359.32 486.713 1351.93 485.91 1333.72 489.314C1321.37 494.514 1309.95 501.643 1308.89 516.692C1309.25 525.848 1310.18 592.968 1307.37 596.229C1299.07 595.972 1281.16 598.284 1275.97 593.957L1275.83 589.193C1275.52 576.674 1277.66 510.734 1274.04 504.754C1268.09 494.927 1260.53 490.054 1249.71 487.098C1245.89 487.039 1242.04 486.891 1238.23 487.304C1229.7 488.666 1219.82 493.739 1214.09 500.128C1207.03 507.999 1209.1 526.07 1209.04 536.435C1208.87 556.315 1208.86 576.196 1209 596.076C1198.42 596.449 1186.04 596.188 1175.33 596.209C1175.19 582.708 1174.19 468.162 1176.06 464.366C1180.92 460.791 1200.5 460.359 1204.95 464.651C1206.75 468.311 1205.65 476.512 1205.5 481.324C1215.19 476.594 1222.72 468.199 1232.36 464.401C1250.25 457.353 1272.85 456.549 1287.46 471.054C1291.23 474.795 1297.63 483.336 1301.52 484.889C1304.9 483.814 1304.37 483.472 1307.1 480.421C1314.34 473.204 1317.33 471.397 1325.86 466.119Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1308.89 516.692C1303.46 523.061 1310.44 534.08 1304.13 536.996C1300.77 535.584 1301.89 536.503 1299.84 533.56C1299.34 531.045 1299.44 528.195 1300.35 525.839C1306.96 507.117 1312.08 492.457 1331.63 483.589C1337.8 480.786 1347.01 481.852 1353.15 484.623L1352.54 485.448L1348.44 485.483C1341.68 485.567 1338.3 484.624 1333.72 489.314C1321.37 494.514 1309.95 501.643 1308.89 516.692Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1275.83 589.193C1281.64 587.538 1279.27 588.91 1284.7 589.401C1289.28 589.814 1303.64 592.072 1305.47 586.538C1307.13 589.506 1307.08 592.806 1307.37 596.229C1299.07 595.972 1281.16 598.284 1275.97 593.957L1275.83 589.193Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1325.86 466.119L1331.52 466.477L1332.45 467.664C1331.82 468.393 1311.62 483.24 1309.54 484.607C1307.78 483.018 1307.82 482.773 1307.1 480.421C1314.34 473.204 1317.33 471.397 1325.86 466.119Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1238.23 487.304C1236.03 486.933 1233.85 486.486 1231.68 485.965L1231.12 484.697L1230.3 484.785C1237.14 483.217 1250.66 481.802 1257.28 484.363L1257.69 485.615C1255.2 487.195 1252.75 486.958 1249.71 487.098C1245.89 487.039 1242.04 486.891 1238.23 487.304Z"/>
+    <path fill="currentColor" opacity="0.95" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1300.92 497.385C1303.27 499.049 1305.32 503.559 1305.54 506.405C1304.53 509.094 1304.43 509.708 1302.13 511.365L1300.41 511.056C1299.37 508.477 1299.55 509.521 1300.84 506.199C1299.26 504.599 1297.95 505.814 1294.13 505.153C1293.39 502.875 1293.49 502.557 1294.14 500.237C1295.85 500.44 1297.26 501.599 1298.74 502.573L1300.39 501.857L1300.92 497.385Z"/>
+    <path fill="currentColor" opacity="0.95" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1584.86 461.972C1602.58 457.683 1622.61 457.44 1637.62 469.662C1661.52 488.398 1657.49 500.451 1657.84 527.681C1658 550.432 1658.41 573.18 1659.07 595.922L1626.18 595.898C1626.09 583.903 1624.47 523.766 1626.6 516.318C1625.38 512.961 1624.8 511.771 1624.62 508.174C1620.48 495.66 1613.51 492.345 1601.8 488.379C1581.33 485.692 1583.66 490.612 1568.89 496.042C1563.64 501.128 1559.84 504.792 1556.75 511.694C1555.27 517.355 1555.99 587.501 1556.67 596.299L1522.52 596.243L1522.84 503.161C1522.86 495.644 1522.39 467.894 1523.75 462.87C1528.41 461.828 1550.41 460.804 1553.49 463.485C1553.56 468.251 1553.54 474.289 1554.07 478.964C1558.41 477.76 1559.17 477.072 1562.77 474.269C1568.33 468.251 1577.42 464.861 1584.86 461.972Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1637.62 469.662C1661.52 488.398 1657.49 500.451 1657.84 527.681C1658 550.432 1658.41 573.18 1659.07 595.922L1626.18 595.898C1626.09 583.903 1624.47 523.766 1626.6 516.318C1627.21 515.035 1627.56 514.489 1628.3 513.313C1630.85 515.567 1627.56 517.454 1628.19 520.118C1631.63 534.648 1626.85 579.122 1631.88 589.872C1638.95 591.355 1641.91 589.296 1650.81 591.162C1653.72 571.861 1651.28 564.359 1650.96 545.428C1651.05 531.053 1652.81 516.495 1652.81 502.148C1652.8 488.666 1641.63 481.264 1635.56 471.723L1637.62 469.662Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1523.75 462.87C1528.41 461.828 1550.41 460.804 1553.49 463.485C1553.56 468.251 1553.54 474.289 1554.07 478.964C1546.82 480.964 1549.11 472.673 1545.99 469.174C1540.29 468.777 1529.8 467.528 1526.23 472.8C1525.66 476.046 1525.91 476.895 1526.6 480.08L1526.81 481.011C1522.68 475.439 1523.92 469.744 1523.75 462.87Z"/>
+    <path fill="currentColor" opacity="0.92" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1584.86 461.972C1591.56 462.343 1595.35 461.624 1601.01 464.534L1601.68 466.007C1599.64 467.124 1597.29 466.775 1595.13 466.134C1586.76 463.655 1566.65 481.423 1561.98 481.254C1560.98 478.126 1561.68 478.05 1562.77 474.269C1568.33 468.251 1577.42 464.861 1584.86 461.972Z"/>
+    <path fill="currentColor" opacity="0.92" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1601.8 488.379L1601.24 486.82C1596.55 485.189 1593.44 485.931 1587.19 483.817C1592.51 481.459 1609.17 484.162 1614.22 486.86C1615.2 485.864 1616.05 484.997 1616.77 484.258L1618.52 486.041L1618.4 486.494C1617.95 488.337 1617.92 488.521 1617.96 490.388C1622.59 496.663 1630.18 499.875 1624.62 508.174C1620.48 495.66 1613.51 492.345 1601.8 488.379Z"/>
+    <path fill="currentColor" opacity="0.92" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1556.75 511.694C1553.81 506.124 1559.45 496.644 1564.69 493.915C1567.86 494.579 1566.82 493.959 1568.89 496.042C1563.64 501.128 1559.84 504.792 1556.75 511.694Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1528.22 581.626C1529.78 585.212 1527.59 586.71 1530.03 589.969C1535.44 591.28 1544.84 589.303 1551.88 589.639L1552.98 590.912L1552.81 592.891L1550.27 593.537C1546.29 593.592 1527.36 594.489 1525.04 592.811C1525.95 587.058 1527.66 588.71 1528.22 581.626Z"/>
+    <path fill="currentColor" opacity="0.92" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1081.84 463.303C1083.36 443.243 1078.8 431.196 1093.21 412.816C1104.45 398.482 1145.74 393.495 1158.75 405.278C1150.33 445.989 1139.22 413.091 1115.89 431.748C1110.41 440.701 1111.72 452.456 1111.86 463.05C1119.67 462.974 1140.94 462.062 1147.35 464.459C1150.24 468.597 1149.77 481.841 1148.39 486.656C1139.92 493.549 1117.7 485.386 1114.02 491.72C1111.95 495.294 1113.07 543.526 1113.02 549.224L1112.7 596.173L1080.26 596.131C1080.16 563.893 1079.46 529.474 1080.25 497.408C1080.18 496.176 1079.92 492.501 1079.21 491.738C1075.51 487.724 1063.14 489.177 1057.28 489.284L1057.39 463.765C1065.84 463.842 1073.37 463.935 1081.84 463.303Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1080.25 497.408L1083.08 495.41C1086.21 496.522 1085.19 495.668 1086.84 498.656C1084.08 521.3 1083.36 546.673 1086.3 569.537C1089.1 591.311 1078.2 587.46 1104.45 590.401C1111.6 585.718 1103.8 556.747 1109.2 548.286C1110.96 547.955 1111.42 548.399 1113.02 549.224L1112.7 596.173L1080.26 596.131C1080.16 563.893 1079.46 529.474 1080.25 497.408Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1115.89 431.748C1120.26 415.647 1137.04 424.19 1147.07 421.136C1150.74 420.017 1151.81 410.723 1152.5 406.498C1151.12 406.09 1151.12 406.196 1150.15 405.173L1158.75 405.278C1150.33 445.989 1139.22 413.091 1115.89 431.748Z"/>
+    <path fill="currentColor" opacity="0.85" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1147.35 464.459C1150.24 468.597 1149.77 481.841 1148.39 486.656C1147.5 482.89 1147.07 477.206 1146.19 473.571C1143.1 460.785 1126.71 474.532 1114.28 468.129L1114.3 467.298C1120.98 463.814 1137.65 465.694 1146.42 464.583L1147.35 464.459Z"/>
+    <path fill="currentColor" opacity="0.92" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M980.092 462.088C978.09 452.294 981.291 427.709 987.646 418.033C1000.05 399.247 1033.79 394.298 1052.87 404.263C1061.31 408.676 1053.34 419.605 1049.88 425.875C1047.19 430.749 1022.74 420.749 1015.58 430.67C1008.62 440.331 1010.92 452.698 1010.71 462.867C1022.11 464.129 1036.16 462.559 1046.19 464.362C1047.42 467.681 1046.84 483.141 1046.94 488.249C1040.09 489.738 1020.1 489.294 1011.71 489.371C1011.6 499.825 1011.94 517.609 1011.09 527.481C1011.72 531.504 1011.47 547.435 1011.48 551.838C1011.48 566.59 1011.59 581.343 1011.82 596.094L978.792 596.119L978.917 530.272C978.964 519.031 979.472 503.1 978.463 492.442C974.148 488.569 962.25 489.812 956.012 489.936L956.354 464.703C962.822 461.642 970.401 465.7 980.092 462.088Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M956.354 464.703L957.188 464.868C965.935 466.511 975.193 463.26 979.818 468.367L979.309 470.733L977.57 471.741C975.362 470.465 974.439 469.823 972.448 468.228C969.325 469.107 964.759 471.334 961.649 472.734C959.652 478.992 964.368 472.72 961.06 482.472C965.817 487.388 979.628 481.943 981.691 486.929C988.33 502.974 985.51 531.614 986.341 548.914C986.786 558.188 981.325 583.387 985.616 589.317C990.516 590.409 998.931 591.755 1003.85 590.657C1008.52 584.954 1003.53 520.06 1006.46 508.63C1007.28 505.458 1004.38 494.996 1006.88 491.336C1011.92 493.775 1007.07 519.198 1011.09 527.481C1011.72 531.504 1011.47 547.435 1011.48 551.838C1011.48 566.59 1011.59 581.343 1011.82 596.094L978.792 596.119L978.917 530.272C978.964 519.031 979.472 503.1 978.463 492.442C974.148 488.569 962.25 489.812 956.012 489.936L956.354 464.703Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M980.092 462.088C978.09 452.294 981.291 427.709 987.646 418.033C1000.05 399.247 1033.79 394.298 1052.87 404.263C1061.31 408.676 1053.34 419.605 1049.88 425.875C1047.19 430.749 1022.74 420.749 1015.58 430.67C1008.62 440.331 1010.92 452.698 1010.71 462.867L1008.01 462.741C1001.25 457.574 1005.15 450.131 1005.74 444.408C1005.87 443.173 1003.58 443.906 1002.41 440.594C1007.93 434.332 1013.72 427.186 1019.94 421.724C1020.12 421.565 1025.2 421.409 1028.56 418.672L1045.62 421.218C1050.55 419.113 1051.49 412.948 1050.51 408.139C1044.44 401.243 1017.74 406.307 1009.09 408.577C988.337 414.02 991.765 426.021 984.232 441.96C984.188 442.053 984.882 459.081 983.736 463.411L982.149 464.261L980.092 462.088Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1046.19 464.362C1047.42 467.681 1046.84 483.141 1046.94 488.249C1040.14 485.178 1020.78 488.233 1013.39 486.455L1013.08 485.258C1019.43 482.923 1036.57 485.648 1042.96 482.864L1043.56 481.042L1041.47 477.396C1042.08 475.73 1042.58 474.53 1043.32 472.918L1042.02 471.202C1036.19 469.295 1028.86 468.945 1022.66 468.362C1027.36 468.242 1037.55 468.664 1041 466.066L1037.48 467.019C1040.05 464.843 1042.83 464.821 1046.19 464.362Z"/>
+    <path fill="currentColor" opacity="0.95" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1448.47 462.373C1461.66 462.045 1481.35 456.129 1481.21 473.657C1481.19 475.691 1481.14 477.725 1481.08 479.758C1481.8 518.1 1481.23 558.018 1481.06 596.417C1469.73 596.795 1459.54 596.641 1448.23 596.404C1448.02 556.247 1448.07 516.089 1448.39 475.932L1448.47 462.373Z"/>
+    <path fill="currentColor" opacity="0.92" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1448.47 462.373C1461.66 462.045 1481.35 456.129 1481.21 473.657C1481.19 475.691 1481.14 477.725 1481.08 479.758C1473.1 482.56 1476.45 472.987 1471.48 468.122C1466.96 466.724 1463.55 467.114 1459.23 469.02C1454.09 471.286 1454.95 474.231 1452.44 478.29L1450.73 478.402L1448.39 475.932L1448.47 462.373Z"/>
+    <path fill="currentColor" opacity="0.95" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1445.45 411.375C1452.92 402.619 1457.37 400.924 1468.64 399.807L1478.56 404.251C1492.24 421.483 1478.91 443.206 1460.58 437.152L1459.84 437.031C1444.14 433.885 1445.44 424.895 1445.45 411.375Z"/>
+    <path fill="currentColor" opacity="0.92" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1445.45 411.375C1452.92 402.619 1457.37 400.924 1468.64 399.807L1478.56 404.251C1492.24 421.483 1478.91 443.206 1460.58 437.152C1464.3 436.427 1466.92 436.105 1470.31 434.385C1471.98 433.485 1474.55 430.947 1476.05 429.578C1479.88 426.238 1477.71 423.701 1479.35 418.327C1478.51 416.344 1474.01 406.691 1472.14 406.46C1460 404.961 1439.26 415.423 1452.19 429.398C1455.08 432.569 1458.65 433.881 1459.84 437.031C1444.14 433.885 1445.44 424.895 1445.45 411.375Z"/>
+    <path fill="currentColor" transform="matrix(0.291128 0 0 0.291016 6.10352e-05 0)" d="M1470.31 434.385C1464.69 433.922 1463.74 436.543 1460.25 431.568C1459.71 430.786 1454.84 430.422 1452.8 429.631L1452.69 427.599C1454.45 424.679 1453.42 425.442 1456.45 424.584C1460.84 425.328 1462.03 426.482 1464.58 430.064C1470.17 430.138 1474.44 422.479 1476.05 429.578C1474.55 430.947 1471.98 433.485 1470.31 434.385Z"/>
+  </symbol>
+</svg>
+
+<div class="page-wrapper">
+
+<div class="page-title">OffMind — Light & Precise</div>
+<p class="page-subtitle">Inspired by warm minimal productivity tools. DM Sans. Two accent options: Olive Green vs Terracotta.</p>
+
+<!-- ===================== SECTION A: OLIVE GREEN - LIGHT ===================== -->
+
+<div class="section">
+  <div class="section-label">Variant A</div>
+  <div class="section-title">Olive Green on warm cream — Light Mode</div>
+
+  <div class="variant-label" style="background: rgba(124,140,86,0.1); color: #6b7a42; border: 1px solid rgba(124,140,86,0.15);">Accent: Olive #7c8c56</div>
+
+  <div class="app-frame" style="margin-bottom: 2.5rem;">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">
+          <svg><use href="#offmind-mark"/></svg>
+        </div>
+        <span class="logo-text">offmind</span>
+      </div>
+
+      <div class="sidebar-section">Capture</div>
+      <div class="sidebar-item active" style="background: rgba(124,140,86,0.08);">
+        <span class="icon">&#9776;</span>
+        <span>Inbox</span>
+        <span class="count" style="background: rgba(124,140,86,0.12); color: #6b7a42;">7</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon">&#9889;</span>
+        <span>Quick Capture</span>
+      </div>
+
+      <div class="sidebar-section">Route</div>
+      <div class="sidebar-item">
+        <span class="icon">&#9744;</span>
+        <span>Backlog</span>
+        <span class="count" style="background: rgba(0,0,0,0.04); color: #a09890;">14</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon">&#9733;</span>
+        <span>Ideas</span>
+        <span class="count" style="background: rgba(0,0,0,0.04); color: #a09890;">23</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon">&#10067;</span>
+        <span>Questions</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon">&#128197;</span>
+        <span>Schedule</span>
+      </div>
+
+      <div class="sidebar-section">Compound</div>
+      <div class="sidebar-item">
+        <span class="icon">&#128196;</span>
+        <span>Pages</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon">&#128193;</span>
+        <span>Projects</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon">&#128260;</span>
+        <span>Weekly Review</span>
+      </div>
+
+      <div class="sidebar-spacer"></div>
+
+      <div class="sidebar-item">
+        <span class="icon">&#9881;</span>
+        <span>Settings</span>
+      </div>
+
+      <div class="sidebar-user">
+        <div class="avatar">P</div>
+        <div class="user-info">
+          <div class="user-name">Paulo H.</div>
+          <div class="user-plan">Founding Builder</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="top-bar">
+        <div class="page-name">Inbox</div>
+        <div class="tab-row">
+          <div class="tab active">All</div>
+          <div class="tab">Unrouted</div>
+          <div class="tab">Routed</div>
+        </div>
+        <div class="spacer"></div>
+        <div class="icon-btn">&#128269;</div>
+        <div class="icon-btn">&#9783;</div>
+        <div class="action-btn" style="background: #7c8c56; color: white;">+ Capture</div>
+      </div>
+
+      <div class="content-area">
+        <!-- Review prompt -->
+        <div class="review-prompt">
+          <div class="review-icon" style="background: rgba(124,140,86,0.08);">&#128260;</div>
+          <div class="review-body">
+            <div class="review-title">Weekly Review ready</div>
+            <div class="review-desc">3 items unrouted for 7+ days. 5 stale items to revisit.</div>
+          </div>
+          <div class="review-btn" style="background: rgba(124,140,86,0.08); color: #6b7a42;">Start Review</div>
+        </div>
+
+        <!-- Item cards -->
+        <div class="item-card">
+          <div class="status-dot" style="background: #7c8c56;"></div>
+          <div class="item-body">
+            <div class="item-title">Research Tauri vs Electron for desktop capture</div>
+            <div class="item-desc">System-level keyboard shortcut needs native app. Compare bundle size, startup time, and auto-update.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(124,140,86,0.08); color: #6b7a42;">Research</span>
+              <span class="tag">Desktop</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">2 min ago</div>
+            <div class="ai-badge" style="background: rgba(124,140,86,0.08); color: #6b7a42;"><span class="sparkle">&#10024;</span> Route to Backlog</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #e8c95a;"></div>
+          <div class="item-body">
+            <div class="item-title">Weekly email digest of compounded thoughts</div>
+            <div class="item-desc">Every Friday, send a summary of what grew this week. Surface connections between items.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(124,140,86,0.08); color: #6b7a42;">Feature</span>
+              <span class="tag">Email</span>
+              <span class="tag">Engagement</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">15 min ago</div>
+            <div class="ai-badge" style="background: rgba(124,140,86,0.08); color: #6b7a42;"><span class="sparkle">&#10024;</span> Route to Ideas</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #c4bab0;"></div>
+          <div class="item-body">
+            <div class="item-title">Meeting note: Q2 hiring freeze confirmed</div>
+            <div class="item-desc">Diego's role stays contractor through June. Revisit headcount in July planning.</div>
+            <div class="item-tags">
+              <span class="tag">Work</span>
+              <span class="tag">Planning</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">1 hr ago</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #7c8c56;"></div>
+          <div class="item-body">
+            <div class="item-title">"Capture is the moat, not the editor"</div>
+            <div class="item-desc">From competition research. If capture UX is flawless, building power can grow over time.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(124,140,86,0.08); color: #6b7a42;">Insight</span>
+              <span class="tag">Strategy</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">3 hrs ago</div>
+            <div class="ai-badge" style="background: rgba(124,140,86,0.08); color: #6b7a42;"><span class="sparkle">&#10024;</span> Route to Pages</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #c4bab0;"></div>
+          <div class="item-body">
+            <div class="item-title">Call dentist for Thursday appointment</div>
+            <div class="item-meta-row">
+              <span class="meta">Quick capture from mobile</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">Yesterday</div>
+            <div class="ai-badge" style="background: rgba(124,140,86,0.08); color: #6b7a42;"><span class="sparkle">&#10024;</span> Route to Schedule</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="capture-bar">
+        <div class="capture-icon">+</div>
+        <div class="capture-text">What's on your mind?</div>
+        <div class="shortcut-key">&#8984;N</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SECTION B: TERRACOTTA - LIGHT ===================== -->
+
+<div class="section">
+  <div class="section-label">Variant B</div>
+  <div class="section-title">Terracotta on warm cream — Light Mode</div>
+
+  <div class="variant-label" style="background: rgba(194,122,90,0.1); color: #a65f3e; border: 1px solid rgba(194,122,90,0.15);">Accent: Terracotta #c27a5a</div>
+
+  <div class="app-frame" style="margin-bottom: 2.5rem;">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">
+          <svg><use href="#offmind-mark"/></svg>
+        </div>
+        <span class="logo-text">offmind</span>
+      </div>
+
+      <div class="sidebar-section">Capture</div>
+      <div class="sidebar-item active" style="background: rgba(194,122,90,0.06);">
+        <span class="icon">&#9776;</span>
+        <span>Inbox</span>
+        <span class="count" style="background: rgba(194,122,90,0.1); color: #a65f3e;">7</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon">&#9889;</span>
+        <span>Quick Capture</span>
+      </div>
+
+      <div class="sidebar-section">Route</div>
+      <div class="sidebar-item">
+        <span class="icon">&#9744;</span>
+        <span>Backlog</span>
+        <span class="count" style="background: rgba(0,0,0,0.04); color: #a09890;">14</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon">&#9733;</span>
+        <span>Ideas</span>
+        <span class="count" style="background: rgba(0,0,0,0.04); color: #a09890;">23</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon">&#10067;</span>
+        <span>Questions</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon">&#128197;</span>
+        <span>Schedule</span>
+      </div>
+
+      <div class="sidebar-section">Compound</div>
+      <div class="sidebar-item">
+        <span class="icon">&#128196;</span>
+        <span>Pages</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon">&#128193;</span>
+        <span>Projects</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon">&#128260;</span>
+        <span>Weekly Review</span>
+      </div>
+
+      <div class="sidebar-spacer"></div>
+
+      <div class="sidebar-item">
+        <span class="icon">&#9881;</span>
+        <span>Settings</span>
+      </div>
+
+      <div class="sidebar-user">
+        <div class="avatar">P</div>
+        <div class="user-info">
+          <div class="user-name">Paulo H.</div>
+          <div class="user-plan">Founding Builder</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="top-bar">
+        <div class="page-name">Inbox</div>
+        <div class="tab-row">
+          <div class="tab active">All</div>
+          <div class="tab">Unrouted</div>
+          <div class="tab">Routed</div>
+        </div>
+        <div class="spacer"></div>
+        <div class="icon-btn">&#128269;</div>
+        <div class="icon-btn">&#9783;</div>
+        <div class="action-btn" style="background: #c27a5a; color: white;">+ Capture</div>
+      </div>
+
+      <div class="content-area">
+        <!-- Review prompt -->
+        <div class="review-prompt">
+          <div class="review-icon" style="background: rgba(194,122,90,0.08);">&#128260;</div>
+          <div class="review-body">
+            <div class="review-title">Weekly Review ready</div>
+            <div class="review-desc">3 items unrouted for 7+ days. 5 stale items to revisit.</div>
+          </div>
+          <div class="review-btn" style="background: rgba(194,122,90,0.08); color: #a65f3e;">Start Review</div>
+        </div>
+
+        <!-- Item cards -->
+        <div class="item-card">
+          <div class="status-dot" style="background: #c27a5a;"></div>
+          <div class="item-body">
+            <div class="item-title">Research Tauri vs Electron for desktop capture</div>
+            <div class="item-desc">System-level keyboard shortcut needs native app. Compare bundle size, startup time, and auto-update.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(194,122,90,0.08); color: #a65f3e;">Research</span>
+              <span class="tag">Desktop</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">2 min ago</div>
+            <div class="ai-badge" style="background: rgba(194,122,90,0.08); color: #a65f3e;"><span class="sparkle">&#10024;</span> Route to Backlog</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #e8c95a;"></div>
+          <div class="item-body">
+            <div class="item-title">Weekly email digest of compounded thoughts</div>
+            <div class="item-desc">Every Friday, send a summary of what grew this week. Surface connections between items.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(194,122,90,0.08); color: #a65f3e;">Feature</span>
+              <span class="tag">Email</span>
+              <span class="tag">Engagement</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">15 min ago</div>
+            <div class="ai-badge" style="background: rgba(194,122,90,0.08); color: #a65f3e;"><span class="sparkle">&#10024;</span> Route to Ideas</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #c4bab0;"></div>
+          <div class="item-body">
+            <div class="item-title">Meeting note: Q2 hiring freeze confirmed</div>
+            <div class="item-desc">Diego's role stays contractor through June. Revisit headcount in July planning.</div>
+            <div class="item-tags">
+              <span class="tag">Work</span>
+              <span class="tag">Planning</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">1 hr ago</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #c27a5a;"></div>
+          <div class="item-body">
+            <div class="item-title">"Capture is the moat, not the editor"</div>
+            <div class="item-desc">From competition research. If capture UX is flawless, building power can grow over time.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(194,122,90,0.08); color: #a65f3e;">Insight</span>
+              <span class="tag">Strategy</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">3 hrs ago</div>
+            <div class="ai-badge" style="background: rgba(194,122,90,0.08); color: #a65f3e;"><span class="sparkle">&#10024;</span> Route to Pages</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #c4bab0;"></div>
+          <div class="item-body">
+            <div class="item-title">Call dentist for Thursday appointment</div>
+            <div class="item-meta-row">
+              <span class="meta">Quick capture from mobile</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">Yesterday</div>
+            <div class="ai-badge" style="background: rgba(194,122,90,0.08); color: #a65f3e;"><span class="sparkle">&#10024;</span> Route to Schedule</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="capture-bar">
+        <div class="capture-icon">+</div>
+        <div class="capture-text">What's on your mind?</div>
+        <div class="shortcut-key">&#8984;N</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SECTION C: OLIVE GREEN - DARK ===================== -->
+
+<div class="section">
+  <div class="section-label">Variant C</div>
+  <div class="section-title">Olive Green on warm charcoal — Dark Mode</div>
+
+  <div class="app-frame dark-frame" style="margin-bottom: 2.5rem;">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">
+          <svg><use href="#offmind-mark"/></svg>
+        </div>
+        <span class="logo-text">offmind</span>
+      </div>
+
+      <div class="sidebar-section">Capture</div>
+      <div class="sidebar-item active" style="background: rgba(124,140,86,0.1);">
+        <span class="icon">&#9776;</span>
+        <span>Inbox</span>
+        <span class="count" style="background: rgba(124,140,86,0.15); color: #a3b878;">7</span>
+      </div>
+      <div class="sidebar-item"><span class="icon">&#9889;</span><span>Quick Capture</span></div>
+
+      <div class="sidebar-section">Route</div>
+      <div class="sidebar-item"><span class="icon">&#9744;</span><span>Backlog</span><span class="count" style="background: rgba(255,255,255,0.04); color: #5a5550;">14</span></div>
+      <div class="sidebar-item"><span class="icon">&#9733;</span><span>Ideas</span><span class="count" style="background: rgba(255,255,255,0.04); color: #5a5550;">23</span></div>
+      <div class="sidebar-item"><span class="icon">&#10067;</span><span>Questions</span></div>
+      <div class="sidebar-item"><span class="icon">&#128197;</span><span>Schedule</span></div>
+
+      <div class="sidebar-section">Compound</div>
+      <div class="sidebar-item"><span class="icon">&#128196;</span><span>Pages</span></div>
+      <div class="sidebar-item"><span class="icon">&#128193;</span><span>Projects</span></div>
+      <div class="sidebar-item"><span class="icon">&#128260;</span><span>Weekly Review</span></div>
+
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-item"><span class="icon">&#9881;</span><span>Settings</span></div>
+      <div class="sidebar-user">
+        <div class="avatar">P</div>
+        <div class="user-info">
+          <div class="user-name">Paulo H.</div>
+          <div class="user-plan">Founding Builder</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="top-bar">
+        <div class="page-name">Inbox</div>
+        <div class="tab-row">
+          <div class="tab active">All</div>
+          <div class="tab">Unrouted</div>
+          <div class="tab">Routed</div>
+        </div>
+        <div class="spacer"></div>
+        <div class="icon-btn">&#128269;</div>
+        <div class="icon-btn">&#9783;</div>
+        <div class="action-btn" style="background: #7c8c56; color: white;">+ Capture</div>
+      </div>
+
+      <div class="content-area">
+        <div class="review-prompt">
+          <div class="review-icon" style="background: rgba(124,140,86,0.1);">&#128260;</div>
+          <div class="review-body">
+            <div class="review-title">Weekly Review ready</div>
+            <div class="review-desc">3 items unrouted for 7+ days. 5 stale items to revisit.</div>
+          </div>
+          <div class="review-btn" style="background: rgba(124,140,86,0.1); color: #a3b878;">Start Review</div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #7c8c56;"></div>
+          <div class="item-body">
+            <div class="item-title">Research Tauri vs Electron for desktop capture</div>
+            <div class="item-desc">System-level keyboard shortcut needs native app. Compare bundle size, startup time, and auto-update.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(124,140,86,0.1); border-color: transparent; color: #a3b878;">Research</span>
+              <span class="tag">Desktop</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">2 min ago</div>
+            <div class="ai-badge" style="background: rgba(124,140,86,0.1); color: #a3b878;"><span class="sparkle">&#10024;</span> Route to Backlog</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #e8c95a;"></div>
+          <div class="item-body">
+            <div class="item-title">Weekly email digest of compounded thoughts</div>
+            <div class="item-desc">Every Friday, send a summary of what grew this week. Surface connections between items.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(124,140,86,0.1); border-color: transparent; color: #a3b878;">Feature</span>
+              <span class="tag">Email</span>
+              <span class="tag">Engagement</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">15 min ago</div>
+            <div class="ai-badge" style="background: rgba(124,140,86,0.1); color: #a3b878;"><span class="sparkle">&#10024;</span> Route to Ideas</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #5a5550;"></div>
+          <div class="item-body">
+            <div class="item-title">Meeting note: Q2 hiring freeze confirmed</div>
+            <div class="item-desc">Diego's role stays contractor through June. Revisit headcount in July planning.</div>
+            <div class="item-tags"><span class="tag">Work</span><span class="tag">Planning</span></div>
+          </div>
+          <div class="item-right"><div class="time">1 hr ago</div></div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #7c8c56;"></div>
+          <div class="item-body">
+            <div class="item-title">"Capture is the moat, not the editor"</div>
+            <div class="item-desc">From competition research. If capture UX is flawless, building power can grow over time.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(124,140,86,0.1); border-color: transparent; color: #a3b878;">Insight</span>
+              <span class="tag">Strategy</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">3 hrs ago</div>
+            <div class="ai-badge" style="background: rgba(124,140,86,0.1); color: #a3b878;"><span class="sparkle">&#10024;</span> Route to Pages</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="capture-bar">
+        <div class="capture-icon">+</div>
+        <div class="capture-text">What's on your mind?</div>
+        <div class="shortcut-key">&#8984;N</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SECTION D: TERRACOTTA - DARK ===================== -->
+
+<div class="section">
+  <div class="section-label">Variant D</div>
+  <div class="section-title">Terracotta on warm charcoal — Dark Mode</div>
+
+  <div class="app-frame dark-frame" style="margin-bottom: 2.5rem;">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">
+          <svg><use href="#offmind-mark"/></svg>
+        </div>
+        <span class="logo-text">offmind</span>
+      </div>
+
+      <div class="sidebar-section">Capture</div>
+      <div class="sidebar-item active" style="background: rgba(194,122,90,0.08);">
+        <span class="icon">&#9776;</span>
+        <span>Inbox</span>
+        <span class="count" style="background: rgba(194,122,90,0.12); color: #d4a088;">7</span>
+      </div>
+      <div class="sidebar-item"><span class="icon">&#9889;</span><span>Quick Capture</span></div>
+
+      <div class="sidebar-section">Route</div>
+      <div class="sidebar-item"><span class="icon">&#9744;</span><span>Backlog</span><span class="count" style="background: rgba(255,255,255,0.04); color: #5a5550;">14</span></div>
+      <div class="sidebar-item"><span class="icon">&#9733;</span><span>Ideas</span><span class="count" style="background: rgba(255,255,255,0.04); color: #5a5550;">23</span></div>
+      <div class="sidebar-item"><span class="icon">&#10067;</span><span>Questions</span></div>
+      <div class="sidebar-item"><span class="icon">&#128197;</span><span>Schedule</span></div>
+
+      <div class="sidebar-section">Compound</div>
+      <div class="sidebar-item"><span class="icon">&#128196;</span><span>Pages</span></div>
+      <div class="sidebar-item"><span class="icon">&#128193;</span><span>Projects</span></div>
+      <div class="sidebar-item"><span class="icon">&#128260;</span><span>Weekly Review</span></div>
+
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-item"><span class="icon">&#9881;</span><span>Settings</span></div>
+      <div class="sidebar-user">
+        <div class="avatar">P</div>
+        <div class="user-info">
+          <div class="user-name">Paulo H.</div>
+          <div class="user-plan">Founding Builder</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="top-bar">
+        <div class="page-name">Inbox</div>
+        <div class="tab-row">
+          <div class="tab active">All</div>
+          <div class="tab">Unrouted</div>
+          <div class="tab">Routed</div>
+        </div>
+        <div class="spacer"></div>
+        <div class="icon-btn">&#128269;</div>
+        <div class="icon-btn">&#9783;</div>
+        <div class="action-btn" style="background: #c27a5a; color: white;">+ Capture</div>
+      </div>
+
+      <div class="content-area">
+        <div class="review-prompt">
+          <div class="review-icon" style="background: rgba(194,122,90,0.08);">&#128260;</div>
+          <div class="review-body">
+            <div class="review-title">Weekly Review ready</div>
+            <div class="review-desc">3 items unrouted for 7+ days. 5 stale items to revisit.</div>
+          </div>
+          <div class="review-btn" style="background: rgba(194,122,90,0.08); color: #d4a088;">Start Review</div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #c27a5a;"></div>
+          <div class="item-body">
+            <div class="item-title">Research Tauri vs Electron for desktop capture</div>
+            <div class="item-desc">System-level keyboard shortcut needs native app. Compare bundle size, startup time, and auto-update.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(194,122,90,0.08); border-color: transparent; color: #d4a088;">Research</span>
+              <span class="tag">Desktop</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">2 min ago</div>
+            <div class="ai-badge" style="background: rgba(194,122,90,0.08); color: #d4a088;"><span class="sparkle">&#10024;</span> Route to Backlog</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #e8c95a;"></div>
+          <div class="item-body">
+            <div class="item-title">Weekly email digest of compounded thoughts</div>
+            <div class="item-desc">Every Friday, send a summary of what grew this week. Surface connections between items.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(194,122,90,0.08); border-color: transparent; color: #d4a088;">Feature</span>
+              <span class="tag">Email</span>
+              <span class="tag">Engagement</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">15 min ago</div>
+            <div class="ai-badge" style="background: rgba(194,122,90,0.08); color: #d4a088;"><span class="sparkle">&#10024;</span> Route to Ideas</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #5a5550;"></div>
+          <div class="item-body">
+            <div class="item-title">Meeting note: Q2 hiring freeze confirmed</div>
+            <div class="item-desc">Diego's role stays contractor through June. Revisit headcount in July planning.</div>
+            <div class="item-tags"><span class="tag">Work</span><span class="tag">Planning</span></div>
+          </div>
+          <div class="item-right"><div class="time">1 hr ago</div></div>
+        </div>
+
+        <div class="item-card">
+          <div class="status-dot" style="background: #c27a5a;"></div>
+          <div class="item-body">
+            <div class="item-title">"Capture is the moat, not the editor"</div>
+            <div class="item-desc">From competition research. If capture UX is flawless, building power can grow over time.</div>
+            <div class="item-tags">
+              <span class="tag accent" style="background: rgba(194,122,90,0.08); border-color: transparent; color: #d4a088;">Insight</span>
+              <span class="tag">Strategy</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="time">3 hrs ago</div>
+            <div class="ai-badge" style="background: rgba(194,122,90,0.08); color: #d4a088;"><span class="sparkle">&#10024;</span> Route to Pages</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="capture-bar">
+        <div class="capture-icon">+</div>
+        <div class="capture-text">What's on your mind?</div>
+        <div class="shortcut-key">&#8984;N</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SECTION E: LANDING HEROES ===================== -->
+
+<div class="section">
+  <div class="section-label">Landing Page Heroes</div>
+  <div class="section-title">Both accents on light and dark backgrounds</div>
+
+  <div class="mockup-row">
+    <!-- Olive Light Hero -->
+    <div class="mockup-wrapper">
+      <div class="variant-label" style="background: rgba(124,140,86,0.1); color: #6b7a42; border: 1px solid rgba(124,140,86,0.15);">Olive — Light</div>
+      <div class="hero-frame">
+        <div class="hero-content" style="background: #faf9f7;">
+          <div class="hero-logo" style="color: #1c1b1a;">
+            <svg style="height: 24px; width: auto;"><use href="#offmind-mark"/></svg>
+            <span class="hero-logo-text">offmind</span>
+          </div>
+          <div class="hero-pill">A personal workspace that captures first</div>
+          <div class="hero-headline">Finally. One place for everything in your head.</div>
+          <div class="hero-sub" style="color: #6b6560;">Capture any thought in seconds. Route it when ready. Watch it grow into pages, projects, and knowledge. No system to build first.</div>
+          <div class="cta-row">
+            <div class="hero-cta" style="background: #7c8c56; color: white;">Get Founding Access</div>
+            <div class="hero-cta-secondary">See How It Works</div>
+          </div>
+          <div class="hero-note">One-time payment. Yours forever. 127 founders already in.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Terracotta Light Hero -->
+    <div class="mockup-wrapper">
+      <div class="variant-label" style="background: rgba(194,122,90,0.1); color: #a65f3e; border: 1px solid rgba(194,122,90,0.15);">Terracotta — Light</div>
+      <div class="hero-frame">
+        <div class="hero-content" style="background: #faf9f7;">
+          <div class="hero-logo" style="color: #1c1b1a;">
+            <svg style="height: 24px; width: auto;"><use href="#offmind-mark"/></svg>
+            <span class="hero-logo-text">offmind</span>
+          </div>
+          <div class="hero-pill">A personal workspace that captures first</div>
+          <div class="hero-headline">Finally. One place for everything in your head.</div>
+          <div class="hero-sub" style="color: #6b6560;">Capture any thought in seconds. Route it when ready. Watch it grow into pages, projects, and knowledge. No system to build first.</div>
+          <div class="cta-row">
+            <div class="hero-cta" style="background: #c27a5a; color: white;">Get Founding Access</div>
+            <div class="hero-cta-secondary">See How It Works</div>
+          </div>
+          <div class="hero-note">One-time payment. Yours forever. 127 founders already in.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup-row">
+    <!-- Olive Dark Hero -->
+    <div class="mockup-wrapper">
+      <div class="variant-label" style="background: rgba(124,140,86,0.1); color: #6b7a42; border: 1px solid rgba(124,140,86,0.15);">Olive — Dark</div>
+      <div class="hero-frame">
+        <div class="hero-content dark-hero" style="background: radial-gradient(ellipse at 50% 0%, rgba(124,140,86,0.06) 0%, #1a1918 70%);">
+          <div class="hero-logo" style="color: #ededec;">
+            <svg style="height: 24px; width: auto;"><use href="#offmind-mark"/></svg>
+            <span class="hero-logo-text">offmind</span>
+          </div>
+          <div class="hero-pill">A personal workspace that captures first</div>
+          <div class="hero-headline">Finally. One place for everything in your head.</div>
+          <div class="hero-sub">Capture any thought in seconds. Route it when ready. Watch it grow into pages, projects, and knowledge. No system to build first.</div>
+          <div class="cta-row">
+            <div class="hero-cta" style="background: #7c8c56; color: white;">Get Founding Access</div>
+            <div class="hero-cta-secondary" style="background: transparent; border-color: rgba(124,140,86,0.2); color: #a3b878;">See How It Works</div>
+          </div>
+          <div class="hero-note">One-time payment. Yours forever. 127 founders already in.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Terracotta Dark Hero -->
+    <div class="mockup-wrapper">
+      <div class="variant-label" style="background: rgba(194,122,90,0.1); color: #a65f3e; border: 1px solid rgba(194,122,90,0.15);">Terracotta — Dark</div>
+      <div class="hero-frame">
+        <div class="hero-content dark-hero" style="background: radial-gradient(ellipse at 50% 0%, rgba(194,122,90,0.06) 0%, #1a1918 70%);">
+          <div class="hero-logo" style="color: #ededec;">
+            <svg style="height: 24px; width: auto;"><use href="#offmind-mark"/></svg>
+            <span class="hero-logo-text">offmind</span>
+          </div>
+          <div class="hero-pill">A personal workspace that captures first</div>
+          <div class="hero-headline">Finally. One place for everything in your head.</div>
+          <div class="hero-sub">Capture any thought in seconds. Route it when ready. Watch it grow into pages, projects, and knowledge. No system to build first.</div>
+          <div class="cta-row">
+            <div class="hero-cta" style="background: #c27a5a; color: white;">Get Founding Access</div>
+            <div class="hero-cta-secondary" style="background: transparent; border-color: rgba(194,122,90,0.2); color: #d4a088;">See How It Works</div>
+          </div>
+          <div class="hero-note">One-time payment. Yours forever. 127 founders already in.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align: center; padding: 2rem 0 3rem; color: #a09890; font-size: 0.85rem;">
+  <p>DM Sans &middot; Warm cream #faf9f7 / warm charcoal #1a1918 &middot; White cards with soft shadows</p>
+  <p style="margin-top: 0.25rem;">The "light but precise" feeling comes from shadows, spacing, and surface hierarchy, not color.</p>
+</div>
+
+</div>
+</body>
+</html>

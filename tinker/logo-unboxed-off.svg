@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 100">
+  <defs>
+    <style>
+      @import url('https://api.fontshare.com/v2/css?f[]=satoshi@500&amp;display=swap');
+    </style>
+    <linearGradient id="box-grad" gradientUnits="userSpaceOnUse" x1="8" y1="90" x2="90" y2="8">
+      <stop offset="0" stop-color="#0d9488"/>
+      <stop offset="1" stop-color="#5eead4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Dissolving box around "off" -->
+  <!-- Box area: roughly x=6 to x=96, y=8 to y=92 -->
+
+  <!-- Top-left corner -->
+  <path
+    d="M 10 36 L 10 22 C 10 14, 14 10, 22 10 L 36 10"
+    fill="none" stroke="url(#box-grad)" stroke-width="4.5" stroke-linecap="round"
+  />
+
+  <!-- Top-right corner -->
+  <path
+    d="M 66 10 L 80 10 C 88 10, 92 14, 92 22 L 92 36"
+    fill="none" stroke="url(#box-grad)" stroke-width="4.5" stroke-linecap="round"
+  />
+
+  <!-- Bottom-right corner -->
+  <path
+    d="M 92 64 L 92 78 C 92 86, 88 90, 80 90 L 66 90"
+    fill="none" stroke="url(#box-grad)" stroke-width="4.5" stroke-linecap="round"
+  />
+
+  <!-- Bottom-left corner -->
+  <path
+    d="M 36 90 L 22 90 C 14 90, 10 86, 10 78 L 10 64"
+    fill="none" stroke="url(#box-grad)" stroke-width="4.5" stroke-linecap="round"
+  />
+
+  <!-- "off" text inside the dissolving box -->
+  <text
+    x="51" y="66"
+    font-family="'Satoshi', 'Inter', 'Geist Sans', sans-serif"
+    font-weight="500"
+    font-size="46"
+    letter-spacing="1"
+    fill="#fafafa"
+    text-anchor="middle"
+  >off</text>
+
+  <!-- "mind" text outside the box, free -->
+  <text
+    x="108" y="66"
+    font-family="'Satoshi', 'Inter', 'Geist Sans', sans-serif"
+    font-weight="500"
+    font-size="46"
+    letter-spacing="1"
+    fill="#fafafa"
+  >mind</text>
+</svg>

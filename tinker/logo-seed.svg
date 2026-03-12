@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120">
+  <defs>
+    <linearGradient id="seed-body" gradientUnits="userSpaceOnUse" x1="50" y1="50" x2="50" y2="100">
+      <stop offset="0" stop-color="#14b8a6"/>
+      <stop offset="1" stop-color="#0d9488"/>
+    </linearGradient>
+    <linearGradient id="seed-shoot" gradientUnits="userSpaceOnUse" x1="50" y1="52" x2="58" y2="10">
+      <stop offset="0" stop-color="#14b8a6"/>
+      <stop offset="1" stop-color="#5eead4"/>
+    </linearGradient>
+  </defs>
+  <!-- Seed body: teardrop shape, wider at bottom, pointed at top -->
+  <path
+    d="M 50 52
+       C 32 56, 20 72, 20 84
+       C 20 100, 34 110, 50 110
+       C 66 110, 80 100, 80 84
+       C 80 72, 68 56, 50 52Z"
+    fill="url(#seed-body)"
+  />
+  <!-- Shoot: single organic S-curve emerging upward from seed -->
+  <path
+    d="M 50 54
+       C 50 42, 44 32, 48 22
+       C 51 14, 58 8, 62 4"
+    fill="none"
+    stroke="url(#seed-shoot)"
+    stroke-width="5"
+    stroke-linecap="round"
+  />
+</svg>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 100">
+  <defs>
+    <style>
+      @import url('https://api.fontshare.com/v2/css?f[]=satoshi@500,700&amp;display=swap');
+    </style>
+    <linearGradient id="o-v3c" gradientUnits="userSpaceOnUse" x1="14" y1="38" x2="40" y2="72">
+      <stop offset="0" stop-color="#5eebb8"/>
+      <stop offset="1" stop-color="#0d9478"/>
+    </linearGradient>
+  </defs>
+
+  <!--
+    V3 Color Split — "off" is teal (the concept), "mind" is white (the result)
+    Both in the same weight (Medium 500) — differentiation through color only
+    The teal "ff" connects visually to the teal loop, creating unity
+  -->
+
+  <!-- Open loop "o" — teal gradient -->
+  <path
+    d="M 32 42
+       A 13 14.5 0 1 0 36 45.5"
+    fill="none"
+    stroke="url(#o-v3c)"
+    stroke-width="5"
+    stroke-linecap="round"
+  />
+
+  <!-- "ff" in teal to match the loop — "off" as one visual unit -->
+  <text
+    x="42" y="70"
+    font-family="'Satoshi', 'Inter', 'Geist Sans', sans-serif"
+    font-weight="500"
+    font-size="52"
+    letter-spacing="0.5"
+    fill="#14b892"
+  >ff</text>
+
+  <!-- "mind" in white -->
+  <text
+    x="86" y="70"
+    font-family="'Satoshi', 'Inter', 'Geist Sans', sans-serif"
+    font-weight="500"
+    font-size="52"
+    letter-spacing="0.5"
+    fill="#fafafa"
+  >mind</text>
+</svg>

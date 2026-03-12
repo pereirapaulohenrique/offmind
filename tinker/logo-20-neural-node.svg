@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="teal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <!-- Three nodes forming a triangle with connecting lines -->
+  <!-- Node positions: top-center (100,46), bottom-left (52,146), bottom-right (148,146) -->
+
+  <!-- Connection: top to bottom-left (solid) -->
+  <line x1="100" y1="46" x2="52" y2="146" stroke="url(#teal-grad)" stroke-width="12" stroke-linecap="round"/>
+
+  <!-- Connection: bottom-left to bottom-right (solid) -->
+  <line x1="52" y1="146" x2="148" y2="146" stroke="url(#teal-grad)" stroke-width="12" stroke-linecap="round"/>
+
+  <!-- Connection: top to bottom-right (dashed/disconnecting) -->
+  <line x1="100" y1="46" x2="148" y2="146" stroke="url(#teal-grad)" stroke-width="12" stroke-linecap="round" stroke-dasharray="8 12" opacity="0.45"/>
+
+  <!-- Node: top center -->
+  <circle cx="100" cy="46" r="18" fill="url(#teal-grad)"/>
+
+  <!-- Node: bottom-left -->
+  <circle cx="52" cy="146" r="18" fill="url(#teal-grad)"/>
+
+  <!-- Node: bottom-right (disconnecting - hollow) -->
+  <circle cx="148" cy="146" r="18" fill="none" stroke="url(#teal-grad)" stroke-width="12" opacity="0.5"/>
+</svg>

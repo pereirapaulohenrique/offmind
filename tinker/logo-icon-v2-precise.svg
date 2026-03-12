@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="icon-v2" gradientUnits="userSpaceOnUse" x1="20" y1="18" x2="80" y2="82">
+      <stop offset="0" stop-color="#5eebb8"/>
+      <stop offset="1" stop-color="#0d9478"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Standalone open loop icon — same proportions as wordmark "o" scaled up -->
+  <!-- Gap at upper-right (~30° opening), suggesting openness and forward movement -->
+  <path
+    d="M 72 28
+       A 36 38 0 1 0 80 40"
+    fill="none"
+    stroke="url(#icon-v2)"
+    stroke-width="11"
+    stroke-linecap="round"
+  />
+</svg>

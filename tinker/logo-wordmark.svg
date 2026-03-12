@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 100">
+  <defs>
+    <style>
+      @import url('https://api.fontshare.com/v2/css?f[]=satoshi@500&amp;display=swap');
+    </style>
+  </defs>
+  <!-- "offmind" wordmark in Satoshi Medium -->
+  <!-- The "o" is rendered as an open loop path (gap at top) -->
+  <!-- Remaining letters are standard Satoshi text -->
+
+  <!-- Open "o" — custom path: circle with gap at top (~20° break) -->
+  <path
+    d="M 29 66
+       A 18 18 0 1 0 17.5 34.5"
+    fill="none"
+    stroke="#2dd4bf"
+    stroke-width="5.5"
+    stroke-linecap="round"
+  />
+
+  <!-- "ffmind" text following the "o" -->
+  <text
+    x="52" y="70"
+    font-family="'Satoshi', 'Inter', 'Geist Sans', sans-serif"
+    font-weight="500"
+    font-size="52"
+    letter-spacing="1"
+    fill="#fafafa"
+  >ffmind</text>
+</svg>

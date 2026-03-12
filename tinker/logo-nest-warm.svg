@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="nest-grad1-w" gradientUnits="userSpaceOnUse" x1="10" y1="30" x2="90" y2="70">
+      <stop offset="0" stop-color="#2dd4a8"/>
+      <stop offset="1" stop-color="#0d9478"/>
+    </linearGradient>
+    <linearGradient id="nest-grad2-w" gradientUnits="userSpaceOnUse" x1="90" y1="30" x2="10" y2="70">
+      <stop offset="0" stop-color="#5eebb8"/>
+      <stop offset="1" stop-color="#14b892"/>
+    </linearGradient>
+  </defs>
+  <path d="M 14 28 C 14 28, 18 72, 50 72 C 70 72, 78 56, 82 44" fill="none" stroke="url(#nest-grad1-w)" stroke-width="7" stroke-linecap="round"/>
+  <path d="M 86 28 C 86 28, 82 72, 50 72 C 30 72, 22 56, 18 44" fill="none" stroke="url(#nest-grad2-w)" stroke-width="7" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="loop-grad" gradientUnits="userSpaceOnUse" x1="82" y1="20" x2="20" y2="80">
+      <stop offset="0" stop-color="#5eead4"/>
+      <stop offset="1" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <!-- Open Loop: ~300° arc with gap at upper-right -->
+  <!-- Ellipse center (50,50), rx=38, ry=34 (wider than tall, ~1.12:1) -->
+  <!-- Gap from ~350° to ~50° (upper-right quadrant) -->
+  <!-- Start at ~50° (end of gap), arc counter-clockwise to ~350° (start of gap) -->
+  <path
+    d="M 74.4 32.6
+       A 38 34 0 1 0 87.4 44.1"
+    fill="none"
+    stroke="url(#loop-grad)"
+    stroke-width="9"
+    stroke-linecap="round"
+  />
+</svg>

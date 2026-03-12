@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="teal-grad" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded square container (app icon shape) with break at top-right corner -->
+  <!-- O is implied by the container, M is the interior mark -->
+  <!-- Rounded square with gap at top-right corner -->
+  <path d="
+    M 140 25
+    L 55 25
+    Q 25 25, 25 55
+    L 25 145
+    Q 25 175, 55 175
+    L 145 175
+    Q 175 175, 175 145
+    L 175 55
+    Q 175 25, 155 25
+  " fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- M monogram inside -->
+  <path d="
+    M 60 140
+    L 60 80
+    L 100 110
+    L 140 80
+    L 140 140
+  " fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

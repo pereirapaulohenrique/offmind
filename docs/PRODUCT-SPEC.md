@@ -59,7 +59,7 @@ Stripe prices created (Starter $49, Builder $79, Believer $149). All one-time pa
 **Type:** Design + Code | **Owner:** Claude | **Effort:** 8-12 hours
 **Status:** Done ✓
 
-Complete rewrite using "Precision Void" design. Zinc-950 + teal accents. 3-tier founding member pricing. Builder credibility section. OG image + Twitter card auto-generation.
+Complete landing page rewrite. 3-tier founding member pricing. Builder credibility section. OG image + Twitter card auto-generation. (Note: Landing page design direction updated Mar 12 — see 01-DESIGN-SYSTEM.md for current tokens.)
 
 ### OM-006: Deploy to Vercel (Production)
 **Type:** Infrastructure | **Owner:** Both | **Effort:** 30 min
@@ -118,18 +118,20 @@ These are Paulo-led items required before going live:
 
 ## Design System Migration (T1 — Launch Visual Identity)
 
-Migrated from warm charcoal (#1a1614) + terracotta (#c2410c) to zinc-950 + teal-only. Required for demo videos and final brand consistency with landing page.
+**History:** Original warm charcoal + terracotta v1 → intermediate zinc-950 + teal (DSN-001 through DSN-008, all done) → **FINAL (Mar 12): warm cream/charcoal + terracotta `#c27a5a` + DM Sans + open loop monochrome logo.**
+
+The DSN-001 through DSN-008 migration to zinc+teal is complete but will be superseded by the design revamp applying the final locked direction. See `01-DESIGN-SYSTEM.md` for current tokens.
 
 | ID | Title | Owner | Status |
 |----|-------|-------|--------|
-| DSN-001 | Migrate dark mode tokens (Zinc palette) | Claude | Done ✓ |
-| DSN-002 | Migrate light mode tokens | Claude | Done ✓ |
-| DSN-003 | Update shadcn + Tailwind theme blocks | Claude | Done ✓ |
-| DSN-004 | Fix hardcoded warm colors in components | Claude | Done ✓ |
-| DSN-005 | Replace terracotta with teal-only CTAs | Claude | Done ✓ |
-| DSN-006 | Update OffMindLogo gradients | Claude | Done ✓ |
-| DSN-007 | Update email templates | Claude | Done ✓ |
-| DSN-008 | Update manifest/SW/Electron assets | Claude | Done ✓ |
+| DSN-001 | Migrate dark mode tokens (Zinc palette) | Claude | Done ✓ (to be updated in design revamp) |
+| DSN-002 | Migrate light mode tokens | Claude | Done ✓ (to be updated in design revamp) |
+| DSN-003 | Update shadcn + Tailwind theme blocks | Claude | Done ✓ (to be updated in design revamp) |
+| DSN-004 | Fix hardcoded warm colors in components | Claude | Done ✓ (to be updated in design revamp) |
+| DSN-005 | Replace terracotta with teal-only CTAs | Claude | Done ✓ (reverting: terracotta `#c27a5a` is the final accent) |
+| DSN-006 | Update OffMindLogo | Claude | Done ✓ (to be replaced with open loop mark + DM Sans wordmark) |
+| DSN-007 | Update email templates | Claude | Done ✓ (to be updated in design revamp) |
+| DSN-008 | Update manifest/SW/Electron assets | Claude | Done ✓ (to be updated in design revamp) |
 
 ---
 
@@ -580,6 +582,28 @@ Items that generate others. "Ask Rajat about X → if yes → create follow-up t
 **Status:** Deferred (may merge with OM-060 Morning Ritual)
 
 Today view "Plan" mode with drag-and-drop reordering of committed items. May become part of Morning Planning Ritual.
+
+---
+
+## T4.5 — Compound Intelligence (Vision)
+
+*The system that creates structure from behavior. This is OffMind's long-term differentiator — the shift from "user organizes manually" to "system learns and proposes structure."*
+
+**Status:** Vision defined. Not yet specified. See `docs/VISION.md` for full direction.
+
+**Levels:**
+- **Level 1 — Pattern Recognition:** Auto-clustering items into suggested projects, learned routing confidence, proactive stale surfacing, suggested destinations from usage patterns.
+- **Level 2 — Structure Generation:** Auto-generated dashboards, page scaffolding from accumulated context, adaptive weekly reviews, suggested space/project templates from behavior.
+- **Level 3 — Compound Intelligence:** Cross-item synthesis, temporal pattern detection, knowledge map generation, review-as-thinking-partner.
+
+**Depends on:** T3 retention systems (analytics data, review infrastructure), T4 AI reflection (OM-023 confidence routing, OM-081 self-knowledge insights).
+
+**Open questions:** Exact UX flows, trigger mechanisms, privacy implications, opt-in/opt-out controls. Requires dedicated product session before any items are created.
+
+**Reference items (existing, will be absorbed or extended):**
+- OM-023: AI Confidence Routing → becomes part of Level 1
+- OM-081: AI Self-Knowledge Insights → becomes part of Level 2/3
+- OM-015: Organize Page Rethink → becomes the canvas for auto-dashboards
 
 ---
 

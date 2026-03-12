@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 100">
+  <defs>
+    <style>
+      @import url('https://api.fontshare.com/v2/css?f[]=satoshi@500&amp;display=swap');
+    </style>
+    <linearGradient id="o-zinc" gradientUnits="userSpaceOnUse" x1="14" y1="38" x2="40" y2="72">
+      <stop offset="0" stop-color="#5eebb8"/>
+      <stop offset="1" stop-color="#0d9478"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Teal loop + zinc grey text — modern, less contrast -->
+  <path
+    d="M 33.5 41.5 A 13.5 15.5 0 1 0 37 46"
+    fill="none" stroke="url(#o-zinc)" stroke-width="5" stroke-linecap="round"
+  />
+  <text x="44" y="70"
+    font-family="'Satoshi', 'Inter', 'Geist Sans', sans-serif"
+    font-weight="500" font-size="52" letter-spacing="0.5"
+    fill="#d4d4d8"
+  >ffmind</text>
+</svg>

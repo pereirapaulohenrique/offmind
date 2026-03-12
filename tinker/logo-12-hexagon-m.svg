@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="teal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <!-- Hexagon outline with M formed by bottom edges + central chevron -->
+  <!-- Hexagon: flat-top orientation -->
+  <!-- Points: top-left(55,45) top-right(145,45) right(170,100) bottom-right(145,155) bottom-left(55,155) left(30,100) -->
+  <path
+    d="M 55,45 L 145,45 L 170,100 L 145,155 L 55,155 L 30,100 Z"
+    fill="none"
+    stroke="url(#teal-grad)"
+    stroke-width="12"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <!-- M shape: from bottom-left up, chevron to center, up to right -->
+  <path
+    d="M 55,155 L 55,80 L 100,120 L 145,80 L 145,155"
+    fill="none"
+    stroke="url(#teal-grad)"
+    stroke-width="12"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

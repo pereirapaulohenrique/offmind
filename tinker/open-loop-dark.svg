@@ -1,0 +1,25 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradient flows along the stroke: light teal at gap start → deep teal at gap end -->
+    <linearGradient id="ol-grad" x1="145" y1="35" x2="55" y2="165" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="40%" stop-color="#2dd4bf"/>
+      <stop offset="75%" stop-color="#14b8a6"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <!--
+    Open Loop: ellipse centered at (100,104), rx=72, ry=68 (wider than tall).
+    Gap at upper-right (~50° arc removed, from ~330° to ~20°).
+    Single arc command for smooth, mathematically perfect curve.
+    Stroke: 22px, round caps for confident, warm feel.
+  -->
+  <path
+    d="M 130.36,41.42
+       A 72,68 0 1 0 137.78,52.82"
+    stroke="url(#ol-grad)"
+    stroke-width="22"
+    stroke-linecap="round"
+    fill="none"
+  />
+</svg>

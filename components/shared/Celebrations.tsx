@@ -35,7 +35,7 @@ export function CelebrationProvider({ children }: { children: React.ReactNode })
   const [confetti, setConfetti] = useState<ConfettiPiece[]>([]);
 
   const generateConfetti = useCallback(() => {
-    const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#2dd4bf', '#ec4899'];
+    const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#c27a5a', '#ec4899'];
     const pieces: ConfettiPiece[] = [];
 
     for (let i = 0; i < 50; i++) {

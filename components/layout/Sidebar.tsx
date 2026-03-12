@@ -126,8 +126,8 @@ function getLayerStyle(pathname: string): LayerStyle {
   if (pathname.startsWith('/organize')) {
     return {
       bg: 'rgba(251,191,36,0.10)',
-      text: 'var(--layer-process, #fbbf24)',
-      pill: 'var(--layer-process, #fbbf24)',
+      text: 'var(--layer-route, #fbbf24)',
+      pill: 'var(--layer-route, #fbbf24)',
     };
   }
   if (
@@ -137,13 +137,13 @@ function getLayerStyle(pathname: string): LayerStyle {
   ) {
     return {
       bg: 'rgba(52,211,153,0.10)',
-      text: 'var(--layer-commit, #34d399)',
-      pill: 'var(--layer-commit, #34d399)',
+      text: 'var(--layer-compound, #34d399)',
+      pill: 'var(--layer-compound, #34d399)',
     };
   }
   if (pathname.startsWith('/review')) {
     return {
-      bg: 'rgba(45,212,191,0.10)',
+      bg: 'rgba(194,122,90,0.10)',
       text: 'var(--accent-base)',
       pill: 'var(--accent-base)',
     };
@@ -162,9 +162,9 @@ function getLayerStyle(pathname: string): LayerStyle {
       pill: '#a855f7',
     };
   }
-  // Default: teal accent
+  // Default: terracotta accent
   return {
-    bg: 'rgba(45,212,191,0.10)',
+    bg: 'rgba(194,122,90,0.10)',
     text: 'var(--accent-base)',
     pill: 'var(--accent-base)',
   };
@@ -180,7 +180,7 @@ function WarmSeparator({ className }: { className?: string }) {
       className={cn('mx-3 h-[1.5px] rounded-full', className)}
       style={{
         background:
-          'linear-gradient(to right, transparent, rgba(45,212,191,0.14), rgba(20,184,166,0.08), transparent)',
+          'linear-gradient(to right, transparent, rgba(194,122,90,0.10), rgba(194,122,90,0.05), transparent)',
       }}
     />
   );
@@ -259,7 +259,7 @@ function NavItem({
         />
         {/* Badge — collapsed: absolute dot */}
         {isCollapsed && badge !== undefined && badge > 0 && (
-          <span className="absolute -top-2 -right-2.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[var(--accent-base)] px-1 text-[9px] font-bold text-white shadow-[0_2px_6px_rgba(45,212,191,0.3)]">
+          <span className="absolute -top-2 -right-2.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[var(--accent-base)] px-1 text-[9px] font-bold text-white shadow-[0_2px_6px_rgba(194,122,90,0.3)]">
             {badge > 99 ? '99+' : badge}
           </span>
         )}

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OffMind Logo — Grey Loop Explorations</title>
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Satoshi', 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #fafafa;
+      padding: 40px;
+    }
+    h1 { font-size: 28px; font-weight: 500; margin-bottom: 8px; }
+    h2 {
+      font-size: 20px; font-weight: 500; margin: 48px 0 20px;
+      color: #a0a0a0; border-bottom: 1px solid #222; padding-bottom: 8px;
+    }
+    .subtitle { font-size: 15px; color: #666; margin-bottom: 40px; }
+
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+    .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+
+    .card {
+      background: #111; border: 1px solid #222; border-radius: 12px; overflow: hidden;
+    }
+    .card-display {
+      background: #0a0a0a; padding: 32px;
+      display: flex; align-items: center; justify-content: center; min-height: 100px;
+    }
+    .card-display img { max-height: 56px; width: auto; }
+    .card-info { padding: 16px 20px; }
+    .card-name { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+    .card-desc { font-size: 12px; color: #888; line-height: 1.5; }
+    .card-tag {
+      display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px;
+      margin-top: 8px;
+    }
+    .tag-rec { background: #14b89220; color: #14b892; }
+    .tag-warn { background: #aa880020; color: #aa8800; }
+    .tag-no { background: #88444420; color: #884444; }
+    .tag-wild { background: #6644aa20; color: #8866cc; }
+
+    .vs-bar {
+      display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: stretch;
+      background: #222; border-radius: 12px; overflow: hidden; margin-bottom: 32px;
+    }
+    .vs-cell {
+      background: #0a0a0a; padding: 32px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    }
+    .vs-cell img { max-height: 52px; width: auto; }
+    .vs-cell span { font-size: 12px; color: #555; }
+    .vs-divider {
+      background: #111; display: flex; align-items: center; justify-content: center;
+      padding: 0 16px; font-size: 13px; color: #444;
+    }
+
+    .icon-test {
+      display: flex; gap: 24px; align-items: flex-end; padding: 16px 0;
+    }
+    .icon-frame {
+      background: #0a0a0a; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .icon-label { font-size: 11px; color: #555; text-align: center; margin-top: 4px; }
+
+    .notes {
+      background: #111; border: 1px solid #222; border-radius: 12px;
+      padding: 24px; margin-top: 24px;
+    }
+    .notes h3 {
+      font-size: 14px; color: #14b892; text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 12px;
+    }
+    .notes ul { list-style: none; padding: 0; }
+    .notes li {
+      font-size: 14px; color: #999; padding: 6px 0;
+      border-bottom: 1px solid #1a1a1a; line-height: 1.5;
+    }
+    .notes li:last-child { border-bottom: none; }
+    .notes li strong { color: #ccc; }
+  </style>
+</head>
+<body>
+
+  <h1>Grey Loop — Does It Work?</h1>
+  <p class="subtitle">What happens when we move color off the mark? Six options tested.</p>
+
+  <!-- Direct A/B: teal loop vs grey loop -->
+  <h2>Head-to-Head: Teal Loop vs Grey Loop</h2>
+  <div class="vs-bar">
+    <div class="vs-cell">
+      <img src="logo-v2p-sand.svg">
+      <span>Teal loop + sand text</span>
+    </div>
+    <div class="vs-divider">vs</div>
+    <div class="vs-cell">
+      <img src="logo-v2p-greyloop-sand.svg">
+      <span>Warm grey loop + sand text</span>
+    </div>
+  </div>
+
+  <!-- All grey-loop options -->
+  <h2>Grey Loop Variants</h2>
+  <div class="row">
+
+    <div class="card">
+      <div class="card-display">
+        <img src="logo-v2p-greyloop-white.svg">
+      </div>
+      <div class="card-info">
+        <div class="card-name">Zinc Loop + White</div>
+        <div class="card-desc">Cool grey loop, white text. Minimal but cold. The loop recedes — becomes structural, not expressive.</div>
+        <div class="card-tag tag-no">cold</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-display">
+        <img src="logo-v2p-greyloop-sand.svg">
+      </div>
+      <div class="card-info">
+        <div class="card-name">Warm Grey Loop + Sand</div>
+        <div class="card-desc">All warm neutrals. Quiet, premium, no brand color. The shape does all the talking. Like a luxury house mark.</div>
+        <div class="card-tag tag-warn">premium but invisible</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-display">
+        <img src="logo-v2p-warmgreyloop-sand.svg">
+      </div>
+      <div class="card-info">
+        <div class="card-name">Warm Grey Gradient Loop + Sand</div>
+        <div class="card-desc">Gradient adds depth to the grey loop. More refined than flat. Still all-neutral. The most "premium" option.</div>
+        <div class="card-tag tag-warn">elegant but quiet</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-display">
+        <img src="logo-v2p-greyloop-tealtext.svg">
+      </div>
+      <div class="card-info">
+        <div class="card-name">Grey Loop + Teal Text</div>
+        <div class="card-desc">INVERTED — color moves to the word. The name carries the brand, the mark is understated. Unusual. Makes "ffmind" pop.</div>
+        <div class="card-tag tag-wild">inverted logic</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-display">
+        <img src="logo-v2p-greyloop-split.svg">
+      </div>
+      <div class="card-info">
+        <div class="card-name">Grey Loop + Teal "ff" + Sand "mind"</div>
+        <div class="card-desc">The "ff" bridges grey loop and sand text. Three-tone. Complex but meaningful: grey origin → teal action → sand result.</div>
+        <div class="card-tag tag-wild">narrative color</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-display">
+        <img src="logo-v2p-sandloop-tealtext.svg">
+      </div>
+      <div class="card-info">
+        <div class="card-name">Sand Loop + Teal Text</div>
+        <div class="card-desc">Warm mark, cool text. Interesting tension — the personal (sand circle) holding the product (teal word). Unexpected.</div>
+        <div class="card-tag tag-wild">warm mark, cool name</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Favicon test — this is the real problem -->
+  <h2>The Favicon Test (Where Grey Loops Die)</h2>
+  <p style="font-size:13px;color:#888;margin-bottom:16px;">The standalone loop at small sizes. Can you even see the grey ones?</p>
+  <div style="background:#111;border:1px solid #222;border-radius:12px;padding:24px;">
+    <div style="display:flex;gap:40px;align-items:flex-start;flex-wrap:wrap;">
+
+      <div>
+        <div style="font-size:12px;color:#14b892;margin-bottom:12px;">Teal loop</div>
+        <div class="icon-test">
+          <div>
+            <div class="icon-frame" style="width:48px;height:48px;"><img src="logo-icon-v2-precise.svg" width="36" height="36"></div>
+            <div class="icon-label">48px</div>
+          </div>
+          <div>
+            <div class="icon-frame" style="width:32px;height:32px;"><img src="logo-icon-v2-precise.svg" width="24" height="24"></div>
+            <div class="icon-label">32px</div>
+          </div>
+          <div>
+            <div class="icon-frame" style="width:16px;height:16px;"><img src="logo-icon-v2-precise.svg" width="14" height="14"></div>
+            <div class="icon-label">16px</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:12px;color:#888;margin-bottom:12px;">Grey loop (zinc)</div>
+        <div class="icon-test">
+          <div>
+            <div class="icon-frame" style="width:48px;height:48px;">
+              <svg width="36" height="36" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 72 28 A 36 38 0 1 0 80 40" fill="none" stroke="#a1a1aa" stroke-width="11" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="icon-label">48px</div>
+          </div>
+          <div>
+            <div class="icon-frame" style="width:32px;height:32px;">
+              <svg width="24" height="24" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 72 28 A 36 38 0 1 0 80 40" fill="none" stroke="#a1a1aa" stroke-width="11" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="icon-label">32px</div>
+          </div>
+          <div>
+            <div class="icon-frame" style="width:16px;height:16px;">
+              <svg width="14" height="14" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 72 28 A 36 38 0 1 0 80 40" fill="none" stroke="#a1a1aa" stroke-width="11" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="icon-label">16px</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:12px;color:#b8b0a4;margin-bottom:12px;">Grey loop (warm)</div>
+        <div class="icon-test">
+          <div>
+            <div class="icon-frame" style="width:48px;height:48px;">
+              <svg width="36" height="36" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 72 28 A 36 38 0 1 0 80 40" fill="none" stroke="#b8b0a4" stroke-width="11" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="icon-label">48px</div>
+          </div>
+          <div>
+            <div class="icon-frame" style="width:32px;height:32px;">
+              <svg width="24" height="24" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 72 28 A 36 38 0 1 0 80 40" fill="none" stroke="#b8b0a4" stroke-width="11" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="icon-label">32px</div>
+          </div>
+          <div>
+            <div class="icon-frame" style="width:16px;height:16px;">
+              <svg width="14" height="14" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 72 28 A 36 38 0 1 0 80 40" fill="none" stroke="#b8b0a4" stroke-width="11" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="icon-label">16px</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Best of both worlds -->
+  <h2>Best Combinations (Teal Loop Kept)</h2>
+  <p style="font-size:13px;color:#888;margin-bottom:16px;">For reference — the top picks from the previous color session, which keep the teal mark.</p>
+  <div class="row3">
+    <div class="card">
+      <div class="card-display"><img src="logo-v2p-sand.svg"></div>
+      <div class="card-info">
+        <div class="card-name">Teal Loop + Sand</div>
+        <div class="card-tag tag-rec">recommended</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-display"><img src="logo-v2p-cream.svg"></div>
+      <div class="card-info">
+        <div class="card-name">Teal Loop + Cream</div>
+        <div class="card-tag tag-rec">safe pick</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-display"><img src="logo-v2p-sand-split.svg"></div>
+      <div class="card-info">
+        <div class="card-name">Teal "off" + Sand "mind"</div>
+        <div class="card-tag tag-rec">meaningful</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Verdict -->
+  <div class="notes" style="margin-top:48px;">
+    <h3>Honest Assessment</h3>
+    <ul>
+      <li><strong>Grey loop looks sophisticated in the wordmark</strong> — at display size, on dark bg, the warm grey + sand combo has a quiet luxury feel. It works.</li>
+      <li><strong>Grey loop FAILS the favicon test.</strong> At 16px on a dark background, the grey loop nearly disappears. The teal loop stays visible. This alone is a dealbreaker for a brand mark.</li>
+      <li><strong>The "medical" problem is in the text, not the loop.</strong> Swapping white → sand text already kills the clinical feel, even with a teal loop. You don't need to sacrifice the mark's visibility to fix the palette.</li>
+      <li><strong>If you still want grey energy:</strong> The "grey loop + teal ff + sand mind" is the most interesting hybrid. But it has 3 colors in one wordmark — complex to maintain across contexts.</li>
+      <li><strong>Bottom line:</strong> Keep teal loop (it's your 16px identity). Fix the medical feel with sand/cream text. The problem was never the teal — it was teal + pure white together.</li>
+    </ul>
+  </div>
+
+</body>
+</html>

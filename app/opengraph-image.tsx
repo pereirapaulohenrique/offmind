@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'OffMind — Your mind captures everything. OffMind organizes it.';
+export const alt = 'OffMind — Where scattered thoughts become real things.';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -14,7 +14,7 @@ export default async function Image() {
           flexDirection: 'column',
           width: '100%',
           height: '100%',
-          backgroundColor: '#09090b',
+          backgroundColor: '#faf9f7',
           padding: '60px 80px',
           fontFamily: 'system-ui, sans-serif',
           position: 'relative',
@@ -30,7 +30,7 @@ export default async function Image() {
             width: '600px',
             height: '600px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(45,212,191,0.08) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(194,122,90,0.06) 0%, transparent 70%)',
             display: 'flex',
           }}
         />
@@ -44,28 +44,31 @@ export default async function Image() {
             marginBottom: '40px',
           }}
         >
-          {/* Logo mark: infinity symbol */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          {/* Logo mark: open loop */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <svg
-              width="48"
-              height="28"
-              viewBox="0 0 48 28"
+              width="40"
+              height="40"
+              viewBox="0 0 100 100"
               fill="none"
             >
               <path
-                d="M14 4C8.48 4 4 8.48 4 14s4.48 10 10 10c3.51 0 6.58-1.81 8.35-4.55l1.65-2.7 1.65 2.7C27.42 22.19 30.49 24 34 24c5.52 0 10-4.48 10-10S39.52 4 34 4c-3.51 0-6.58 1.81-8.35 4.55L24 11.25l-1.65-2.7C20.58 5.81 17.51 4 14 4zm0 4c2.21 0 4.16 1.14 5.28 2.86L24 17.75l4.72-6.89C29.84 9.14 31.79 8 34 8c3.31 0 6 2.69 6 6s-2.69 6-6 6c-2.21 0-4.16-1.14-5.28-2.86L24 10.25l-4.72 6.89C18.16 18.86 16.21 20 14 20c-3.31 0-6-2.69-6-6s2.69-6 6-6z"
-                fill="#2dd4bf"
+                d="M 72 28 A 36 38 0 1 0 80 40"
+                fill="none"
+                stroke="#333332"
+                strokeWidth="11"
+                strokeLinecap="round"
               />
             </svg>
             <span
               style={{
                 fontSize: '28px',
                 fontWeight: 700,
-                color: '#fafafa',
+                color: '#1c1b1a',
                 letterSpacing: '-0.02em',
               }}
             >
-              OffMind
+              offmind
             </span>
           </div>
 
@@ -76,11 +79,11 @@ export default async function Image() {
               alignItems: 'center',
               padding: '8px 20px',
               borderRadius: '9999px',
-              border: '1px solid rgba(45,212,191,0.3)',
-              backgroundColor: 'rgba(45,212,191,0.08)',
+              border: '1px solid rgba(194,122,90,0.3)',
+              backgroundColor: 'rgba(194,122,90,0.08)',
             }}
           >
-            <span style={{ fontSize: '14px', color: '#2dd4bf', fontWeight: 500 }}>
+            <span style={{ fontSize: '14px', color: '#c27a5a', fontWeight: 500 }}>
               Founding Member Access Open
             </span>
           </div>
@@ -100,29 +103,29 @@ export default async function Image() {
             style={{
               fontSize: '56px',
               fontWeight: 700,
-              color: '#fafafa',
+              color: '#1c1b1a',
               lineHeight: 1.15,
               letterSpacing: '-0.03em',
               margin: 0,
               maxWidth: '900px',
             }}
           >
-            Your mind captures everything.
+            Where scattered thoughts
             <br />
-            <span style={{ color: '#2dd4bf' }}>OffMind organizes it.</span>
+            <span style={{ color: '#c27a5a' }}>become real things.</span>
           </h1>
 
           <p
             style={{
               fontSize: '22px',
-              color: '#a1a1aa',
+              color: '#6b6560',
               lineHeight: 1.5,
               margin: 0,
               maxWidth: '700px',
             }}
           >
-            AI-powered productivity for overthinkers. Capture from anywhere,
-            let AI organize, commit to today.
+            A personal workspace for minds with too many tabs open.
+            Capture from anywhere, route with AI, compound into action.
           </p>
         </div>
 
@@ -132,22 +135,22 @@ export default async function Image() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            borderTop: '1px solid #27272a',
+            borderTop: '1px solid rgba(0,0,0,0.06)',
             paddingTop: '24px',
           }}
         >
-          <span style={{ fontSize: '16px', color: '#71717a' }}>
+          <span style={{ fontSize: '16px', color: '#8c8680' }}>
             getoffmind.com
           </span>
           <div style={{ display: 'flex', gap: '24px' }}>
-            <span style={{ fontSize: '14px', color: '#52525b' }}>
-              Next.js
+            <span style={{ fontSize: '14px', color: '#a09890' }}>
+              Capture
             </span>
-            <span style={{ fontSize: '14px', color: '#52525b' }}>
-              Supabase
+            <span style={{ fontSize: '14px', color: '#a09890' }}>
+              Route
             </span>
-            <span style={{ fontSize: '14px', color: '#52525b' }}>
-              AI-Powered
+            <span style={{ fontSize: '14px', color: '#a09890' }}>
+              Compound
             </span>
           </div>
         </div>

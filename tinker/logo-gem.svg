@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="310 -10 1430 3870">
+<defs>
+  <linearGradient id="grad" gradientUnits="userSpaceOnUse" x1="-0.199558" y1="0" x2="0.898624" y2="0" gradientTransform="matrix(-1204.22, -2877.88, -2877.88, 1204.22, 1830.73, 3118.99)">
+    <stop offset="0" stop-color="#0d9488"/>
+    <stop offset="0.5" stop-color="#14b8a6"/>
+    <stop offset="1" stop-color="#2dd4bf"/>
+  </linearGradient>
+</defs>
+
+<!-- Crystal body (darkest teal — visible as left facet) -->
+<path fill="#134e4a" d="M1311.81 0L621.54 673.23L340.32 1747L766.41 3476.94L1371.47 3843.39L1482.26 3451.38L1712.34 1014.11Z"/>
+
+<!-- Right facet (teal gradient, largest surface) -->
+<path fill="url(#grad)" d="M1712.34 1014.11L1286.25 553.93L698.23 1372.03L1371.47 3843.39L1482.26 3451.38Z"/>
+
+<!-- Top-right highlight facet -->
+<path fill="#5eead4" d="M1712.34 1014.11L1311.81 0L1286.25 553.93Z"/>
+
+<!-- Upper-left facet -->
+<path fill="#0d9488" d="M1286.25 553.93L1311.81 0L621.54 673.23L698.23 1372.03Z"/>
+
+<!-- Lower-left facet -->
+<path fill="#0d9488" d="M698.23 1372.03L766.41 3476.94L1371.47 3843.39Z"/>
+</svg>

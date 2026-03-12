@@ -314,18 +314,27 @@ export async function POST(request: NextRequest) {
 
 ## Design System Summary
 
-Full spec: `docs/01-DESIGN-SYSTEM.md`
+Full spec: `docs/01-DESIGN-SYSTEM.md` | Visual reference: `tinker/design-reference.html`
 
-**Dark mode (primary):**
-- Background: 7-level warm charcoal (`#1a1614` → `#564f48`)
-- Text: Warm cream whites (`#f5efe8` primary, `#a89e93` secondary)
-- Accent: Teal (`#2dd4bf` base, surgical precision)
-- CTA: Terracotta (`#c2410c` for marketing only)
-- Borders: Warm translucent (`rgba(196, 145, 100, 0.10-0.28)`)
+**Light mode (flagship):**
+- Surfaces: warm cream (`#faf9f7` page, `#f4f3f1` sidebar, `#ffffff` cards)
+- Text: warm dark (`#1c1b1a` primary, `#6b6560` secondary, `#a09890` tertiary)
+- Accent: Terracotta `#c27a5a` (buttons, badges, status, CTAs)
+- Borders: subtle translucent (`rgba(0,0,0,0.04-0.1)`)
+- Cards: white with soft layered shadows for depth hierarchy
 
-**Typography:** Geist Sans (body) + Geist Mono (code). Scale: 0.64rem to 3.052rem.
+**Dark mode:**
+- Surfaces: warm charcoal (`#1a1918` page, `#141312` sidebar, `#1f1e1d` cards)
+- Text: warm light (`#ededec` primary, `#8c8680` secondary, `#5a5550` tertiary)
+- Accent: same terracotta, text shifts to `#d4a088` on dark backgrounds
 
-**Components:** All shadcn/ui primitives customized via CSS variables for dark-first design.
+**Typography:** DM Sans (body + display + logo wordmark). Single font family.
+
+**Icons:** Lucide (stroke-based, 16px, stroke-width 1.75).
+
+**Logo:** Open loop mark (monochrome) + "offmind" DM Sans Bold lowercase wordmark.
+
+**Components:** All shadcn/ui primitives customized via CSS variables. Light-first design.
 
 ---
 
@@ -358,10 +367,10 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
 STRIPE_WEBHOOK_SECRET=
 NEXT_PUBLIC_APP_URL=
 
-# Required for production
-NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID=
-NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID=
-NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID=
+# Required for production (Stripe founding tiers — one-time payments)
+STRIPE_PRICE_STARTER=       # $49 Starter tier
+STRIPE_PRICE_BUILDER=       # $79 Builder tier
+STRIPE_PRICE_BELIEVER=      # $149 Believer tier
 SENTRY_ORG=
 SENTRY_PROJECT=
 NEXT_PUBLIC_POSTHOG_KEY=

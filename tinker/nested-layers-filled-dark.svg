@@ -1,0 +1,22 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="nlf-inner" x1="60" y1="60" x2="190" y2="190" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2dd4bf"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+  </defs>
+  <!--
+    Nested Layers variant B: filled rectangles instead of stroked.
+    Progressive opacity through fill-opacity.
+    More visual weight, better presence at small sizes.
+  -->
+  <!-- Outermost — whisper fill -->
+  <rect x="10" y="10" width="120" height="120" rx="24" ry="24"
+        fill="#2dd4bf" fill-opacity="0.08"/>
+  <!-- Middle — medium fill -->
+  <rect x="40" y="40" width="120" height="120" rx="24" ry="24"
+        fill="#2dd4bf" fill-opacity="0.20"/>
+  <!-- Innermost — solid fill -->
+  <rect x="70" y="70" width="120" height="120" rx="24" ry="24"
+        fill="url(#nlf-inner)"/>
+</svg>

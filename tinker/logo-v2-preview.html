@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OffMind Logo v2 — Execution Refinement</title>
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Satoshi', 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #fafafa;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #fafafa;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 500;
+      margin: 48px 0 20px;
+      color: #a0a0a0;
+      border-bottom: 1px solid #222;
+      padding-bottom: 8px;
+    }
+
+    h3 {
+      font-size: 15px;
+      font-weight: 500;
+      color: #666;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: #666;
+      margin-bottom: 40px;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 32px;
+    }
+
+    .card-label {
+      font-size: 13px;
+      color: #14b892;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 4px;
+    }
+
+    .card-name {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .logo-display {
+      background: #0a0a0a;
+      border-radius: 8px;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 80px;
+      margin-bottom: 16px;
+    }
+
+    .logo-display img {
+      max-height: 60px;
+      width: auto;
+    }
+
+    .logo-display.large img {
+      max-height: 80px;
+    }
+
+    .size-row {
+      display: flex;
+      gap: 24px;
+      align-items: flex-end;
+      margin-top: 12px;
+    }
+
+    .size-item {
+      text-align: center;
+    }
+
+    .size-item span {
+      font-size: 11px;
+      color: #555;
+      display: block;
+      margin-top: 4px;
+    }
+
+    .size-item img {
+      display: block;
+    }
+
+    .before-after {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .ba-card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .ba-card.old {
+      border-color: #331111;
+    }
+
+    .ba-card.new {
+      border-color: #113322;
+    }
+
+    .ba-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+    }
+
+    .ba-card.old .ba-label { color: #884444; }
+    .ba-card.new .ba-label { color: #14b892; }
+
+    .ba-card img {
+      max-height: 60px;
+      width: auto;
+    }
+
+    .icon-grid {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .icon-box {
+      text-align: center;
+    }
+
+    .icon-box .icon-frame {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+    }
+
+    .icon-box span {
+      font-size: 11px;
+      color: #555;
+    }
+
+    .icon-box img {
+      display: block;
+    }
+
+    .light-bg {
+      background: #f5f5f5 !important;
+      border-color: #ddd !important;
+    }
+
+    .notes {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 32px;
+    }
+
+    .notes h3 {
+      color: #14b892;
+      margin-bottom: 16px;
+    }
+
+    .notes ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .notes li {
+      font-size: 14px;
+      color: #999;
+      padding: 6px 0;
+      border-bottom: 1px solid #1a1a1a;
+      line-height: 1.5;
+    }
+
+    .notes li:last-child {
+      border-bottom: none;
+    }
+
+    .notes li strong {
+      color: #ccc;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>OffMind Logo v2 — Execution Refinement</h1>
+  <p class="subtitle">Open Loop Wordmark: four approaches to professional integration</p>
+
+  <!-- Before / After -->
+  <h2>Before / After</h2>
+  <div class="before-after">
+    <div class="ba-card old">
+      <div class="ba-label">v1 — Current (amateur)</div>
+      <img src="logo-wordmark-loop-warm.svg" alt="v1 wordmark">
+    </div>
+    <div class="ba-card new">
+      <div class="ba-label">v2 Precise — Recommended</div>
+      <img src="logo-wm-v2-precise.svg" alt="v2 precise">
+    </div>
+  </div>
+
+  <!-- All four variants -->
+  <h2>Wordmark Variants</h2>
+  <div class="comparison-grid">
+
+    <div class="card">
+      <div class="card-label">Variant A</div>
+      <div class="card-name">Precise</div>
+      <div class="card-desc">
+        Loop sized to match Satoshi Medium's actual "o" proportions.
+        Stroke weight matches stem width. Gap at upper-right — forward movement.
+        Tight kerning to "ff". The typographically correct version.
+      </div>
+      <div class="logo-display">
+        <img src="logo-wm-v2-precise.svg" alt="Precise">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Variant B</div>
+      <div class="card-name">Bold</div>
+      <div class="card-desc">
+        Satoshi Bold 700. Heavier stroke, more presence.
+        Inspired by "Forest" reference — the modification is bold,
+        geometric, immediately noticeable. Commits fully.
+      </div>
+      <div class="logo-display">
+        <img src="logo-wm-v2-bold.svg" alt="Bold">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Variant C</div>
+      <div class="card-name">Flow</div>
+      <div class="card-desc">
+        Gap positioned at 3 o'clock (right side). The terminal
+        points toward "ff", creating directional flow from symbol
+        into text. Inspired by "progress" reference — seamless transition.
+      </div>
+      <div class="logo-display">
+        <img src="logo-wm-v2-flow.svg" alt="Flow">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Variant D</div>
+      <div class="card-name">Wide</div>
+      <div class="card-desc">
+        Wider gap (~120°). The loop becomes a confident "C" shape.
+        Unmistakably "open" — no subtlety. The most conceptually
+        clear version. The gap IS the design.
+      </div>
+      <div class="logo-display">
+        <img src="logo-wm-v2-wide.svg" alt="Wide">
+      </div>
+    </div>
+  </div>
+
+  <!-- Standalone icons -->
+  <h2>Standalone Icons (for favicons, avatars, small spaces)</h2>
+  <div class="comparison-grid">
+    <div class="card">
+      <div class="card-label">Icon</div>
+      <div class="card-name">Precise / Standard Gap</div>
+      <div class="icon-grid">
+        <div class="icon-box">
+          <div class="icon-frame" style="width:80px;height:80px;"><img src="logo-icon-v2-precise.svg" width="60" height="60"></div>
+          <span>80px</span>
+        </div>
+        <div class="icon-box">
+          <div class="icon-frame" style="width:48px;height:48px;"><img src="logo-icon-v2-precise.svg" width="36" height="36"></div>
+          <span>48px</span>
+        </div>
+        <div class="icon-box">
+          <div class="icon-frame" style="width:32px;height:32px;"><img src="logo-icon-v2-precise.svg" width="24" height="24"></div>
+          <span>32px</span>
+        </div>
+        <div class="icon-box">
+          <div class="icon-frame" style="width:16px;height:16px;"><img src="logo-icon-v2-precise.svg" width="14" height="14"></div>
+          <span>16px</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Icon</div>
+      <div class="card-name">Wide Gap</div>
+      <div class="icon-grid">
+        <div class="icon-box">
+          <div class="icon-frame" style="width:80px;height:80px;"><img src="logo-icon-v2-wide.svg" width="60" height="60"></div>
+          <span>80px</span>
+        </div>
+        <div class="icon-box">
+          <div class="icon-frame" style="width:48px;height:48px;"><img src="logo-icon-v2-wide.svg" width="36" height="36"></div>
+          <span>48px</span>
+        </div>
+        <div class="icon-box">
+          <div class="icon-frame" style="width:32px;height:32px;"><img src="logo-icon-v2-wide.svg" width="24" height="24"></div>
+          <span>32px</span>
+        </div>
+        <div class="icon-box">
+          <div class="icon-frame" style="width:16px;height:16px;"><img src="logo-icon-v2-wide.svg" width="14" height="14"></div>
+          <span>16px</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Size comparison of wordmarks -->
+  <h2>Wordmark Size Test</h2>
+  <div class="card full-width">
+    <div style="display:flex; flex-direction:column; gap:24px;">
+      <div>
+        <h3 style="margin-bottom:8px;">Display (hero, full size)</h3>
+        <div class="logo-display large" style="justify-content:flex-start;">
+          <img src="logo-wm-v2-precise.svg" style="max-height:100px;">
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:8px;">Navigation (sidebar header)</h3>
+        <div class="logo-display" style="justify-content:flex-start;">
+          <img src="logo-wm-v2-precise.svg" style="max-height:32px;">
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:8px;">Small (footer, badge)</h3>
+        <div class="logo-display" style="justify-content:flex-start;">
+          <img src="logo-wm-v2-precise.svg" style="max-height:20px;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Light background test -->
+  <h2>Light Background Test</h2>
+  <div class="comparison-grid">
+    <div class="card light-bg" style="text-align:center;">
+      <div style="font-size:12px;color:#666;margin-bottom:12px;">LIGHT BACKGROUND (text won't show — icon only)</div>
+      <img src="logo-icon-v2-precise.svg" width="64" height="64">
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:12px;color:#666;margin-bottom:12px;">DARK BACKGROUND</div>
+      <img src="logo-wm-v2-precise.svg" style="max-height:48px;">
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div class="notes">
+    <h3>What changed from v1</h3>
+    <ul>
+      <li><strong>Stroke weight:</strong> 5.5px → 5px (matches Satoshi Medium stem width at 52px)</li>
+      <li><strong>Arc proportions:</strong> rx=19/ry=18 → rx=13.5/ry=15.5 (matches Satoshi's actual "o" dimensions)</li>
+      <li><strong>ViewBox:</strong> 520 → 280 (tighter, no wasted space, better scaling)</li>
+      <li><strong>Baseline alignment:</strong> Arc bottom now sits on y=70 baseline, same as text</li>
+      <li><strong>Kerning:</strong> Gap between loop and "ff" tightened (52px → 44px start)</li>
+      <li><strong>Letter-spacing:</strong> Reduced from 1 to 0.5 for tighter typography</li>
+      <li><strong>Gap angle:</strong> Each variant explores a different gap position for different effects</li>
+    </ul>
+  </div>
+
+  <div class="notes" style="margin-top:16px;">
+    <h3>Recommendation</h3>
+    <ul>
+      <li><strong>Precise (A)</strong> is the safest, most typographically correct choice. The gap at upper-right reads as "forward, upward" — growth.</li>
+      <li><strong>Flow (C)</strong> has the best integration — the gap faces right, leading the eye into the text. Most like the "progress" reference.</li>
+      <li><strong>Wide (D)</strong> is the boldest statement — if you want "open" to be the first thing people see.</li>
+      <li><strong>Bold (B)</strong> trades warmth for authority. Works if OffMind leans more professional.</li>
+      <li>These are still limited by SVG text rendering. Final polish requires converting "ffmind" to paths (traced from the actual font) for pixel-perfect control over the symbol-to-text transition.</li>
+    </ul>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="teal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded checkbox -->
+  <rect x="36" y="48" width="108" height="108" rx="22" ry="22"
+        fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Checkmark that transforms into a brain wave exiting the checkbox -->
+  <!-- Check starts inside, the upstroke exits the right boundary and becomes a wave -->
+  <path d="M 62 104
+           L 86 130
+           L 118 78
+           C 126 62, 134 72, 140 64
+           C 146 56, 152 66, 158 58
+           C 164 50, 170 60, 176 52"
+        fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="icon-v2w" gradientUnits="userSpaceOnUse" x1="20" y1="18" x2="80" y2="82">
+      <stop offset="0" stop-color="#5eebb8"/>
+      <stop offset="1" stop-color="#0d9478"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Wide gap version — more C-shaped, unmistakably "open" -->
+  <path
+    d="M 56 17
+       A 36 38 0 1 0 80 38"
+    fill="none"
+    stroke="url(#icon-v2w)"
+    stroke-width="11"
+    stroke-linecap="round"
+  />
+</svg>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="teal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <!-- Orbit circle with gap at ~2 o'clock where dot exits -->
+  <!-- Arc from ~60deg around to ~330deg (gap from 330 to 60 at top-right) -->
+  <!-- Circle center: 100,100, radius: 65 -->
+  <!-- 330deg = (100+65*cos(-30), 100+65*sin(-30)) = (156.3, 67.5) -->
+  <!-- 60deg = (100+65*cos(-60), 100+65*sin(-60)) = (132.5, 43.7) -->
+  <!-- Going clockwise from 60deg to 330deg (the long way, ~270deg arc) -->
+  <path
+    d="M 132.5,43.7
+       A 65,65 0 1,1 156.3,67.5"
+    fill="none"
+    stroke="url(#teal-grad)"
+    stroke-width="12"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <!-- Dot exiting orbit at 2 o'clock position, slightly outside the orbit -->
+  <circle
+    cx="152"
+    cy="48"
+    r="10"
+    fill="url(#teal-grad)"
+  />
+</svg>

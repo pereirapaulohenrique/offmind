@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="teal-grad" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <!-- Circle with gap (C-shape) representing release/freedom, angular M nestled inside -->
+  <!-- Broken circle: arc from ~30deg to ~330deg (gap on the right side) -->
+  <path d="
+    M 157 60
+    A 70 70 0 1 0 157 140
+  " fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round"/>
+  <!-- Angular M inside -->
+  <path d="
+    M 62 140
+    L 62 78
+    L 100 108
+    L 138 78
+    L 138 140
+  " fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

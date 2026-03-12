@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 100">
+  <defs>
+    <style>
+      @import url('https://api.fontshare.com/v2/css?f[]=satoshi@500&amp;display=swap');
+    </style>
+    <linearGradient id="o-v2" gradientUnits="userSpaceOnUse" x1="16" y1="40" x2="38" y2="68">
+      <stop offset="0" stop-color="#5eebb8"/>
+      <stop offset="1" stop-color="#0d9478"/>
+    </linearGradient>
+  </defs>
+
+  <!--
+    Satoshi Medium 500 at 52px:
+    - Baseline: y=70
+    - x-height: ~31px (top of lowercase at y≈39)
+    - Stem width: ~5px
+    - "o" width: ~28px, height: ~31px
+
+    Arc center: (27, 54.5) → bottom at y=70, top at y=39
+    rx=13.5, ry=15.5 to match "o" proportions
+    Gap at 1 o'clock position (~330° to 30°) — upward-right opening
+  -->
+
+  <!-- Open loop "o" — gap at upper-right, suggesting forward movement -->
+  <path
+    d="M 33.5 41.5
+       A 13.5 15.5 0 1 0 37 46"
+    fill="none"
+    stroke="url(#o-v2)"
+    stroke-width="5"
+    stroke-linecap="round"
+  />
+
+  <!-- "ffmind" positioned to continue naturally from the loop -->
+  <text
+    x="44" y="70"
+    font-family="'Satoshi', 'Inter', 'Geist Sans', sans-serif"
+    font-weight="500"
+    font-size="52"
+    letter-spacing="0.5"
+    fill="#fafafa"
+  >ffmind</text>
+</svg>

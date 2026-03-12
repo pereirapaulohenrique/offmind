@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="teal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <!-- Camera aperture / iris with 6 blades forming M in negative space -->
+  <!-- Outer circle for framing -->
+  <circle
+    cx="100" cy="100" r="75"
+    fill="none"
+    stroke="url(#teal-grad)"
+    stroke-width="12"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <!-- Six aperture blades — curved lines from outer edge inward -->
+  <!-- Blade 1: top-left -->
+  <line x1="47" y1="45" x2="85" y2="90"
+    stroke="url(#teal-grad)" stroke-width="12" stroke-linecap="round"/>
+  <!-- Blade 2: top-right -->
+  <line x1="153" y1="45" x2="115" y2="90"
+    stroke="url(#teal-grad)" stroke-width="12" stroke-linecap="round"/>
+  <!-- Blade 3: right -->
+  <line x1="170" y1="110" x2="115" y2="100"
+    stroke="url(#teal-grad)" stroke-width="12" stroke-linecap="round"/>
+  <!-- Blade 4: bottom-right -->
+  <line x1="145" y1="160" x2="110" y2="110"
+    stroke="url(#teal-grad)" stroke-width="12" stroke-linecap="round"/>
+  <!-- Blade 5: bottom-left -->
+  <line x1="55" y1="160" x2="90" y2="110"
+    stroke="url(#teal-grad)" stroke-width="12" stroke-linecap="round"/>
+  <!-- Blade 6: left -->
+  <line x1="30" y1="110" x2="85" y2="100"
+    stroke="url(#teal-grad)" stroke-width="12" stroke-linecap="round"/>
+</svg>

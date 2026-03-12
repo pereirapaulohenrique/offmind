@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 100">
+  <defs>
+    <style>
+      @import url('https://api.fontshare.com/v2/css?f[]=satoshi@500&amp;display=swap');
+    </style>
+    <linearGradient id="o-wide" gradientUnits="userSpaceOnUse" x1="14" y1="38" x2="40" y2="72">
+      <stop offset="0" stop-color="#5eebb8"/>
+      <stop offset="1" stop-color="#0d9478"/>
+    </linearGradient>
+  </defs>
+
+  <!--
+    Wide gap variant — the opening is wider and more deliberate.
+    ~120° gap at upper-right. Makes the "open" concept unmistakable.
+    The loop becomes more of a "C" shape — a container that doesn't close.
+    This is the most conceptually clear version.
+
+    Like the "Forest" reference: bold modification, immediately noticeable,
+    no subtlety — it commits fully to the concept.
+  -->
+
+  <!-- Open loop "o" — wide confident gap, unmistakably open -->
+  <path
+    d="M 27 42
+       A 13.5 15.5 0 1 0 38 46"
+    fill="none"
+    stroke="url(#o-wide)"
+    stroke-width="5"
+    stroke-linecap="round"
+  />
+
+  <text
+    x="44" y="70"
+    font-family="'Satoshi', 'Inter', 'Geist Sans', sans-serif"
+    font-weight="500"
+    font-size="52"
+    letter-spacing="0.5"
+    fill="#fafafa"
+  >ffmind</text>
+</svg>

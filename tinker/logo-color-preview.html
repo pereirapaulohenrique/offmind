@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OffMind Logo — Color Explorations</title>
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Satoshi', 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #fafafa;
+      padding: 40px;
+    }
+    h1 { font-size: 28px; font-weight: 500; margin-bottom: 8px; }
+    h2 {
+      font-size: 20px; font-weight: 500; margin: 48px 0 20px;
+      color: #a0a0a0; border-bottom: 1px solid #222; padding-bottom: 8px;
+    }
+    .subtitle { font-size: 15px; color: #666; margin-bottom: 40px; }
+
+    .swatch-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .swatch {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .swatch:hover { border-color: #333; }
+
+    .swatch-display {
+      background: #0a0a0a;
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+    }
+    .swatch-display img { max-height: 56px; width: auto; }
+
+    .swatch-info { padding: 16px 20px; }
+    .swatch-name { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+    .swatch-desc { font-size: 12px; color: #888; line-height: 1.5; margin-bottom: 8px; }
+    .swatch-colors { display: flex; gap: 8px; align-items: center; }
+    .swatch-dot {
+      width: 14px; height: 14px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .swatch-hex { font-size: 11px; color: #555; font-family: monospace; }
+
+    .big-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: #222;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+    .big-cell {
+      background: #0a0a0a;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .big-cell img { max-height: 64px; width: auto; }
+    .big-cell span { font-size: 12px; color: #555; }
+
+    .warm-bg-test {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: #222;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+    .warm-bg-cell {
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+    }
+    .warm-bg-cell img { max-height: 48px; width: auto; }
+
+    .notes {
+      background: #111; border: 1px solid #222; border-radius: 12px;
+      padding: 24px; margin-top: 24px;
+    }
+    .notes h3 {
+      font-size: 14px; color: #14b892; text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 12px;
+    }
+    .notes ul { list-style: none; padding: 0; }
+    .notes li {
+      font-size: 14px; color: #999; padding: 6px 0;
+      border-bottom: 1px solid #1a1a1a; line-height: 1.5;
+    }
+    .notes li:last-child { border-bottom: none; }
+    .notes li strong { color: #ccc; }
+  </style>
+</head>
+<body>
+
+  <h1>OffMind Logo — Color Explorations</h1>
+  <p class="subtitle">v2 Precise base. Same loop, same weight. Testing text color to kill the "medical" feel.</p>
+
+  <!-- The problem -->
+  <h2>The Problem: Teal + White = Clinical</h2>
+  <div class="big-compare">
+    <div class="big-cell">
+      <img src="logo-wm-v2-precise.svg">
+      <span>Current: pure white #fafafa — reads medical/clinical</span>
+    </div>
+    <div class="big-cell">
+      <img src="logo-v2p-sand.svg">
+      <span>Sand #e8dcc8 — immediately warmer</span>
+    </div>
+  </div>
+
+  <!-- All color swatches -->
+  <h2>Text Color Options</h2>
+  <div class="swatch-row">
+
+    <div class="swatch">
+      <div class="swatch-display">
+        <img src="logo-wm-v2-precise.svg">
+      </div>
+      <div class="swatch-info">
+        <div class="swatch-name">Pure White (current)</div>
+        <div class="swatch-desc">Maximum contrast. Clean but cold. Reads healthcare/medical on dark backgrounds.</div>
+        <div class="swatch-colors">
+          <div class="swatch-dot" style="background:#fafafa;"></div>
+          <span class="swatch-hex">#fafafa</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="swatch">
+      <div class="swatch-display">
+        <img src="logo-v2p-cream.svg">
+      </div>
+      <div class="swatch-info">
+        <div class="swatch-name">Cream</div>
+        <div class="swatch-desc">Subtle warmth. Just enough to break the clinical edge without being obviously tinted. The safe choice.</div>
+        <div class="swatch-colors">
+          <div class="swatch-dot" style="background:#f0ebe3;"></div>
+          <span class="swatch-hex">#f0ebe3</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="swatch">
+      <div class="swatch-display">
+        <img src="logo-v2p-sand.svg">
+      </div>
+      <div class="swatch-info">
+        <div class="swatch-name">Sand</div>
+        <div class="swatch-desc">Warm and grounded. Pairs with teal like earth and water. Feels organic, lived-in, personal. Caregiver territory.</div>
+        <div class="swatch-colors">
+          <div class="swatch-dot" style="background:#e8dcc8;"></div>
+          <span class="swatch-hex">#e8dcc8</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="swatch">
+      <div class="swatch-display">
+        <img src="logo-v2p-warmgrey.svg">
+      </div>
+      <div class="swatch-info">
+        <div class="swatch-name">Warm Grey</div>
+        <div class="swatch-desc">Between sand and zinc. Neutral warmth without obvious color cast. Professional but not cold.</div>
+        <div class="swatch-colors">
+          <div class="swatch-dot" style="background:#dbd5cb;"></div>
+          <span class="swatch-hex">#dbd5cb</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="swatch">
+      <div class="swatch-display">
+        <img src="logo-v2p-stone.svg">
+      </div>
+      <div class="swatch-info">
+        <div class="swatch-name">Stone</div>
+        <div class="swatch-desc">Tailwind stone-300. Slightly warm grey. Modern, minimal. The "I'm not white but not obviously tinted" option.</div>
+        <div class="swatch-colors">
+          <div class="swatch-dot" style="background:#d6d3d1;"></div>
+          <span class="swatch-hex">#d6d3d1</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="swatch">
+      <div class="swatch-display">
+        <img src="logo-v2p-zinc.svg">
+      </div>
+      <div class="swatch-info">
+        <div class="swatch-name">Zinc</div>
+        <div class="swatch-desc">Cool grey. Reduces contrast without adding warmth. More tech/modern. Less personal.</div>
+        <div class="swatch-colors">
+          <div class="swatch-dot" style="background:#d4d4d8;"></div>
+          <span class="swatch-hex">#d4d4d8</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="swatch">
+      <div class="swatch-display">
+        <img src="logo-v2p-teal-mono.svg">
+      </div>
+      <div class="swatch-info">
+        <div class="swatch-name">Teal Mono</div>
+        <div class="swatch-desc">Monochromatic — all in the teal family. Unified but lower contrast. Works for accent contexts, maybe not primary.</div>
+        <div class="swatch-colors">
+          <div class="swatch-dot" style="background:#c2efe0;"></div>
+          <span class="swatch-hex">#c2efe0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="swatch">
+      <div class="swatch-display">
+        <img src="logo-v2p-sand-split.svg">
+      </div>
+      <div class="swatch-info">
+        <div class="swatch-name">Teal "ff" + Sand "mind"</div>
+        <div class="swatch-desc">Color split: "off" unified in teal (loop + ff), "mind" in sand. Encodes meaning through color AND warmth.</div>
+        <div class="swatch-colors">
+          <div class="swatch-dot" style="background:#14b892;"></div>
+          <div class="swatch-dot" style="background:#e8dcc8;"></div>
+          <span class="swatch-hex">#14b892 + #e8dcc8</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- On warm dark backgrounds -->
+  <h2>Background Warmth Test</h2>
+  <p style="font-size:13px;color:#666;margin-bottom:16px;">Same logo (sand text) on different dark backgrounds — maybe the bg also needs warming?</p>
+  <div class="warm-bg-test">
+    <div class="warm-bg-cell" style="background:#0a0a0a;">
+      <img src="logo-v2p-sand.svg">
+    </div>
+    <div class="warm-bg-cell" style="background:#0f0e0c;">
+      <img src="logo-v2p-sand.svg">
+    </div>
+    <div class="warm-bg-cell" style="background:#12110e;">
+      <img src="logo-v2p-sand.svg">
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:32px;">
+    <div style="text-align:center;font-size:11px;color:#555;padding:8px;">Neutral dark #0a0a0a</div>
+    <div style="text-align:center;font-size:11px;color:#555;padding:8px;">Warm dark #0f0e0c</div>
+    <div style="text-align:center;font-size:11px;color:#555;padding:8px;">Warmer dark #12110e</div>
+  </div>
+
+  <!-- Stacked comparison at small sizes -->
+  <h2>Small Size Readability</h2>
+  <div style="background:#111;border:1px solid #222;border-radius:12px;padding:24px;">
+    <div style="display:flex;gap:40px;align-items:center;flex-wrap:wrap;">
+      <div style="text-align:center;">
+        <img src="logo-v2p-sand.svg" style="height:32px;">
+        <div style="font-size:11px;color:#555;margin-top:6px;">Sand 32px</div>
+      </div>
+      <div style="text-align:center;">
+        <img src="logo-v2p-cream.svg" style="height:32px;">
+        <div style="font-size:11px;color:#555;margin-top:6px;">Cream 32px</div>
+      </div>
+      <div style="text-align:center;">
+        <img src="logo-v2p-warmgrey.svg" style="height:32px;">
+        <div style="font-size:11px;color:#555;margin-top:6px;">Warm grey 32px</div>
+      </div>
+      <div style="text-align:center;">
+        <img src="logo-wm-v2-precise.svg" style="height:32px;">
+        <div style="font-size:11px;color:#555;margin-top:6px;">White 32px</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div class="notes" style="margin-top:48px;">
+    <h3>Why it looks medical</h3>
+    <ul>
+      <li><strong>Teal + pure white + dark bg</strong> = hospital signage palette. It's the same color scheme as health apps (Calm, Headspace, medical dashboards).</li>
+      <li><strong>Fixing the text alone</strong> may be enough — sand or warm grey breaks the clinical association immediately.</li>
+      <li><strong>Alternatively</strong>, warming the background (#0f0e0c instead of #0a0a0a) also helps. The two combined (warm text + warm bg) move it fully into "personal workspace" territory.</li>
+    </ul>
+  </div>
+
+  <div class="notes" style="margin-top:16px;">
+    <h3>Top Picks</h3>
+    <ul>
+      <li><strong>Sand (#e8dcc8)</strong> — Most warmth. Teal + sand = earth + water. Feels personal, organic, Caregiver. My top recommendation.</li>
+      <li><strong>Cream (#f0ebe3)</strong> — Safest. Barely tinted but enough to kill the clinical edge. If sand feels "too warm", this is the fallback.</li>
+      <li><strong>Teal ff + Sand mind</strong> — If you liked the v3 color-split idea but want it on v2 Precise base. Encodes meaning.</li>
+      <li><strong>Zinc/Stone</strong> — Modern but still slightly cold. Better than white, but doesn't solve the warmth problem as decisively.</li>
+      <li><strong>Teal Mono</strong> — Beautiful for accents but may lack contrast for primary logo use.</li>
+    </ul>
+  </div>
+
+</body>
+</html>

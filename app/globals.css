@@ -9,11 +9,11 @@ html {
 
 /* Waitlist form button styling override */
 #waitlist form button[type="submit"] {
-  background: var(--gradient-cta) !important;
+  background: var(--accent-base) !important;
   border: none !important;
-  border-radius: 0.75rem !important;
+  border-radius: 0.5rem !important;
   font-weight: 600 !important;
-  box-shadow: 0 4px 16px rgba(20,184,166,0.20) !important;
+  box-shadow: 0 4px 16px rgba(194, 122, 90, 0.20) !important;
 }
 
 #waitlist form button[type="submit"]:hover {
@@ -21,71 +21,234 @@ html {
 }
 
 #waitlist form input {
-  border-radius: 0.75rem !important;
+  border-radius: 0.5rem !important;
 }
 
 /* =============================================================================
-   OffMind Design System — Zinc + Teal
-   Clean, focused, professional. Zinc-neutral backgrounds with teal accents.
-   Inspired by modern SaaS aesthetics: Linear, Vercel, Raycast.
+   OffMind Design System — Warm Cream + Terracotta
+   Light but precise. Warm, calm, and crafted.
+   Inspired by mymind, Craft — NOT Linear, Vercel.
 
-   Accent (Teal #2dd4bf / #14b8a6): All interactive elements — navigation,
-   AI indicators, focus states, CTAs, buttons, progress.
-   Secondary: Sage green (#65a30d), Lavender (#7c3aed)
-   Layer colors: Blue (capture), Golden amber (process), Emerald (commit)
-   Backgrounds: Zinc-950 progression — cool, neutral, never warm
+   Accent (Terracotta #c27a5a): All interactive elements — buttons, badges,
+   CTAs, focus states, active nav, AI indicators.
+   Layer colors: Blue (capture), Amber (route), Green (compound)
+   Backgrounds: Warm cream progression (light) / Warm charcoal (dark)
+   Typography: DM Sans — single font family
 ============================================================================= */
 
 :root {
-  /* OffMind Design Tokens */
+  /* OffMind Design Tokens — Light Mode (Flagship) */
 
-  /* Background Layers - Dark Mode (Default)
-     7-level depth system — zinc-neutral progression */
-  --bg-base: #09090b;
-  --bg-inset: #141417;
-  --bg-surface: #18181b;
-  --bg-elevated: #1f1f23;
-  --bg-hover: #27272a;
-  --bg-active: #3f3f46;
-  --bg-overlay: #52525b;
+  /* Background Layers — warm cream progression
+     sidebar < page background < elevated cards */
+  --bg-base: #faf9f7;
+  --bg-inset: #f4f3f1;
+  --bg-surface: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-hover: rgba(0, 0, 0, 0.03);
+  --bg-active: rgba(0, 0, 0, 0.05);
+  --bg-overlay: rgba(0, 0, 0, 0.4);
+  --bg-page: #f0efed;
 
-  /* Borders — cool zinc, visible but neutral */
-  --border-subtle: rgba(161, 161, 170, 0.10);
-  --border-default: rgba(161, 161, 170, 0.18);
-  --border-emphasis: rgba(161, 161, 170, 0.28);
-  --border-focus: rgba(45, 212, 191, 0.45);
+  /* Borders — translucent for warmth */
+  --border-subtle: rgba(0, 0, 0, 0.04);
+  --border-default: rgba(0, 0, 0, 0.06);
+  --border-emphasis: rgba(0, 0, 0, 0.1);
+  --border-focus: rgba(194, 122, 90, 0.45);
 
-  /* Text — zinc-neutral whites */
-  --text-primary: #fafafa;
-  --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
-  --text-disabled: #52525b;
+  /* Text — warm darks */
+  --text-primary: #1c1b1a;
+  --text-secondary: #6b6560;
+  --text-muted: #8c8680;
+  --text-tertiary: #a09890;
 
-  /* Accent (Teal — product UI interactive personality)
-     Navigation, AI indicators, focus states, interactive controls */
-  --accent-base: #2dd4bf;
-  --accent-hover: #5eead4;
-  --accent-active: #14b8a6;
-  --accent-subtle: rgba(45, 212, 191, 0.10);
-  --accent-border: rgba(45, 212, 191, 0.25);
-  --accent-glow: rgba(45, 212, 191, 0.08);
-
-  /* CTA (Teal — unified with accent, no more terracotta)
-     CTA buttons, landing page, pricing, email templates */
-  --cta-base: #14b8a6;
-  --cta-hover: #2dd4bf;
-  --cta-active: #0d9488;
-  --cta-subtle: rgba(20, 184, 166, 0.10);
-  --cta-border: rgba(20, 184, 166, 0.25);
-  --cta-glow: rgba(20, 184, 166, 0.08);
-
-  /* Secondary accents */
-  --sage: #65a30d;
-  --sage-subtle: rgba(101, 163, 13, 0.10);
-  --lavender: #7c3aed;
-  --lavender-subtle: rgba(124, 58, 237, 0.10);
+  /* Accent (Terracotta — brand accent, unique in competitive space)
+     Buttons, badges, CTAs, focus states, active nav, AI indicators */
+  --accent-base: #c27a5a;
+  --accent-hover: #b06d4f;
+  --accent-active: #a65f3e;
+  --accent-subtle: rgba(194, 122, 90, 0.08);
+  --accent-border: rgba(194, 122, 90, 0.15);
+  --accent-glow: rgba(194, 122, 90, 0.06);
+  --accent-text: #a65f3e;
 
   /* Semantic Colors */
+  --success: #34d399;
+  --success-subtle: rgba(52, 211, 153, 0.08);
+  --warning: #fbbf24;
+  --warning-subtle: rgba(251, 191, 36, 0.08);
+  --error: #f87171;
+  --error-subtle: rgba(248, 113, 113, 0.08);
+  --info: #60a5fa;
+  --info-subtle: rgba(96, 165, 250, 0.08);
+
+  /* Destination Colors — functional, not brand */
+  --destination-backlog: #60a5fa;
+  --destination-reference: #a78bfa;
+  --destination-incubating: #fbbf24;
+  --destination-someday: #6b7280;
+  --destination-questions: #f472b6;
+  --destination-waiting: #fb923c;
+  --destination-trash: #f87171;
+
+  /* Layer Colors — workflow context indicators
+     Capture: Blue, Route: Amber, Compound: Green */
+  --layer-capture: #60a5fa;
+  --layer-capture-bg: rgba(96, 165, 250, 0.07);
+  --layer-capture-border: rgba(96, 165, 250, 0.20);
+  --layer-capture-glow: rgba(96, 165, 250, 0.10);
+  --layer-route: #fbbf24;
+  --layer-route-bg: rgba(251, 191, 36, 0.07);
+  --layer-route-border: rgba(251, 191, 36, 0.20);
+  --layer-route-glow: rgba(251, 191, 36, 0.10);
+  --layer-compound: #34d399;
+  --layer-compound-bg: rgba(52, 211, 153, 0.07);
+  --layer-compound-border: rgba(52, 211, 153, 0.20);
+  --layer-compound-glow: rgba(52, 211, 153, 0.10);
+
+  /* Legacy aliases for components still using old names */
+  --layer-process: var(--layer-route);
+  --layer-process-bg: var(--layer-route-bg);
+  --layer-process-border: var(--layer-route-border);
+  --layer-process-glow: var(--layer-route-glow);
+  --layer-commit: var(--layer-compound);
+  --layer-commit-bg: var(--layer-compound-bg);
+  --layer-commit-border: var(--layer-compound-border);
+  --layer-commit-glow: var(--layer-compound-glow);
+
+  /* Typography Scale */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.0625rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.625rem;
+  --text-3xl: 2.125rem;
+  --text-4xl: 2.75rem;
+  --text-display: 3.25rem;
+
+  /* Letter Spacing */
+  --tracking-tighter: -0.02em;
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.04em;
+  --tracking-widest: 0.08em;
+
+  /* Spacing Scale — 4px base grid */
+  --space-page-x: 2rem;
+  --space-page-y: 1.75rem;
+  --space-section: 1.5rem;
+  --space-card: 1rem;
+  --space-stack: 0.5rem;
+
+  /* Animation Durations */
+  --duration-instant: 60ms;
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --duration-slower: 500ms;
+
+  /* Layout */
+  --sidebar-width: 240px;
+  --sidebar-collapsed: 68px;
+  --header-height: 52px;
+  --capture-bar-height: 68px;
+  --content-max-width: 1400px;
+
+  /* Radius — graduated scale */
+  --radius: 0.5rem;
+
+  /* Shadow System — layered soft shadows for "light but precise" */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.06), 0 12px 32px rgba(0, 0, 0, 0.06);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.08), 0 20px 48px rgba(0, 0, 0, 0.06);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.03), 0 2px 8px rgba(0, 0, 0, 0.03);
+  --shadow-card-hover: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-float: 0 1px 3px rgba(0, 0, 0, 0.04), 0 6px 16px rgba(0, 0, 0, 0.06), 0 24px 60px rgba(0, 0, 0, 0.06);
+  --shadow-glow: 0 0 0 3px rgba(194, 122, 90, 0.10), 0 4px 16px rgba(194, 122, 90, 0.05);
+  --shadow-capture: 0 1px 2px rgba(0, 0, 0, 0.03), 0 4px 12px rgba(0, 0, 0, 0.04);
+
+  /* Gradients — warm terracotta accents */
+  --gradient-accent: linear-gradient(135deg, #c27a5a, #d4a088);
+  --gradient-warm: linear-gradient(180deg, rgba(194, 122, 90, 0.03), transparent);
+  --gradient-surface: linear-gradient(180deg, #ffffff, #faf9f7);
+  --gradient-subtle: linear-gradient(180deg, rgba(194, 122, 90, 0.04), transparent);
+
+  /* shadcn/ui Variables — Light Mode (Default) */
+  --background: #faf9f7;
+  --foreground: #1c1b1a;
+  --card: #ffffff;
+  --card-foreground: #1c1b1a;
+  --popover: #ffffff;
+  --popover-foreground: #1c1b1a;
+  --primary: #c27a5a;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f3f1;
+  --secondary-foreground: #1c1b1a;
+  --muted: #f4f3f1;
+  --muted-foreground: #6b6560;
+  --accent: #f4f3f1;
+  --accent-foreground: #1c1b1a;
+  --destructive: #f87171;
+  --destructive-foreground: #ffffff;
+  --border: rgba(0, 0, 0, 0.06);
+  --input: #f4f3f1;
+  --ring: #c27a5a;
+
+  /* Chart Colors */
+  --chart-1: #c27a5a;
+  --chart-2: #60a5fa;
+  --chart-3: #fbbf24;
+  --chart-4: #34d399;
+  --chart-5: #a78bfa;
+
+  /* Sidebar — warm cream inset */
+  --sidebar: #f4f3f1;
+  --sidebar-foreground: #1c1b1a;
+  --sidebar-primary: #c27a5a;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(0, 0, 0, 0.03);
+  --sidebar-accent-foreground: #1c1b1a;
+  --sidebar-border: rgba(0, 0, 0, 0.06);
+  --sidebar-ring: #c27a5a;
+}
+
+/* Dark Mode — Warm Charcoal (2% warm shift, not cool zinc) */
+.dark {
+  /* Background Layers */
+  --bg-base: #1a1918;
+  --bg-inset: #141312;
+  --bg-surface: #1f1e1d;
+  --bg-elevated: #252423;
+  --bg-hover: rgba(255, 255, 255, 0.03);
+  --bg-active: rgba(255, 255, 255, 0.05);
+  --bg-overlay: rgba(0, 0, 0, 0.6);
+  --bg-page: #151413;
+
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-default: rgba(255, 255, 255, 0.06);
+  --border-emphasis: rgba(255, 255, 255, 0.1);
+  --border-focus: rgba(212, 160, 136, 0.45);
+
+  /* Text */
+  --text-primary: #ededec;
+  --text-secondary: #8c8680;
+  --text-muted: #6b6560;
+  --text-tertiary: #5a5550;
+
+  /* Accent — terracotta shifts lighter on dark */
+  --accent-base: #c27a5a;
+  --accent-hover: #d4a088;
+  --accent-active: #b06d4f;
+  --accent-subtle: rgba(194, 122, 90, 0.08);
+  --accent-border: rgba(194, 122, 90, 0.15);
+  --accent-glow: rgba(194, 122, 90, 0.06);
+  --accent-text: #d4a088;
+
+  /* Semantic Colors — brighter for dark bg */
   --success: #34d399;
   --success-subtle: rgba(52, 211, 153, 0.12);
   --warning: #fbbf24;
@@ -95,283 +258,85 @@ html {
   --info: #60a5fa;
   --info-subtle: rgba(96, 165, 250, 0.12);
 
-  /* Destination Colors — untouched, these are functional */
-  --destination-backlog: #60a5fa;
-  --destination-reference: #a78bfa;
-  --destination-incubating: #fbbf24;
-  --destination-someday: #6b7280;
-  --destination-questions: #f472b6;
-  --destination-waiting: #fb923c;
-  --destination-trash: #f87171;
+  /* Layer Colors — slightly brighter for dark bg */
+  --layer-capture: #60a5fa;
+  --layer-capture-bg: rgba(96, 165, 250, 0.08);
+  --layer-capture-border: rgba(96, 165, 250, 0.22);
+  --layer-capture-glow: rgba(96, 165, 250, 0.15);
+  --layer-route: #fbbf24;
+  --layer-route-bg: rgba(251, 191, 36, 0.08);
+  --layer-route-border: rgba(251, 191, 36, 0.22);
+  --layer-route-glow: rgba(251, 191, 36, 0.15);
+  --layer-compound: #34d399;
+  --layer-compound-bg: rgba(52, 211, 153, 0.08);
+  --layer-compound-border: rgba(52, 211, 153, 0.22);
+  --layer-compound-glow: rgba(52, 211, 153, 0.15);
 
-  /* Layer Colors — softened with warmth
-     Capture: warmer blue, Process: golden amber, Commit: warm emerald */
-  --layer-capture: #6daef7;
-  --layer-capture-bg: rgba(109, 174, 247, 0.07);
-  --layer-capture-border: rgba(109, 174, 247, 0.22);
-  --layer-capture-glow: rgba(109, 174, 247, 0.15);
-  --layer-process: #f0b429;
-  --layer-process-bg: rgba(240, 180, 41, 0.07);
-  --layer-process-border: rgba(240, 180, 41, 0.22);
-  --layer-process-glow: rgba(240, 180, 41, 0.15);
-  --layer-commit: #3dd68c;
-  --layer-commit-bg: rgba(61, 214, 140, 0.07);
-  --layer-commit-border: rgba(61, 214, 140, 0.22);
-  --layer-commit-glow: rgba(61, 214, 140, 0.15);
+  /* Legacy aliases */
+  --layer-process: var(--layer-route);
+  --layer-process-bg: var(--layer-route-bg);
+  --layer-process-border: var(--layer-route-border);
+  --layer-process-glow: var(--layer-route-glow);
+  --layer-commit: var(--layer-compound);
+  --layer-commit-bg: var(--layer-compound-bg);
+  --layer-commit-border: var(--layer-compound-border);
+  --layer-commit-glow: var(--layer-compound-glow);
 
-  /* Typography Scale — slightly larger for warmth/readability */
-  --text-xs: 0.8125rem;
-  --text-sm: 0.875rem;
-  --text-base: 0.9375rem;
-  --text-lg: 1.0625rem;
-  --text-xl: 1.3125rem;
-  --text-2xl: 1.625rem;
-  --text-3xl: 2.125rem;
-  --text-4xl: 2.75rem;
-  --text-display: 3.75rem;
+  /* Shadow System — darker for dark mode */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.25), 0 6px 16px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.25);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.35), 0 20px 48px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-card-hover: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-float: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 0 3px rgba(194, 122, 90, 0.12), 0 4px 16px rgba(194, 122, 90, 0.06);
+  --shadow-capture: 0 1px 3px rgba(0, 0, 0, 0.2);
 
-  /* Letter Spacing — softer, less aggressive */
-  --tracking-tighter: -0.03em;
-  --tracking-tight: -0.02em;
-  --tracking-normal: -0.008em;
-  --tracking-wide: 0.04em;
-  --tracking-widest: 0.08em;
-
-  /* Spacing Scale — generous for organic feel */
-  --space-page-x: 1.75rem;
-  --space-page-y: 1.75rem;
-  --space-section: 3rem;
-  --space-card: 1.5rem;
-  --space-stack: 0.5rem;
-
-  /* Animation Durations — slightly slower for organic feel */
-  --duration-instant: 60ms;
-  --duration-fast: 120ms;
-  --duration-normal: 200ms;
-  --duration-slow: 300ms;
-  --duration-slower: 500ms;
-
-  /* Layout */
-  --sidebar-width: 252px;
-  --sidebar-collapsed: 68px;
-  --header-height: 52px;
-  --capture-bar-height: 68px;
-  --content-max-width: 1200px;
-
-  /* Radius — LARGE everywhere, organic & soft */
-  --radius: 1rem;
-
-  /* Shadow System — neutral black tint, clean and professional */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.12);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.10), 0 2px 6px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.12), 0 6px 16px rgba(0, 0, 0, 0.10);
-  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.14), 0 12px 32px rgba(0, 0, 0, 0.12);
-  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.16), 0 20px 48px rgba(0, 0, 0, 0.14);
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.10), 0 4px 12px rgba(0, 0, 0, 0.10);
-  --shadow-card-hover: 0 2px 8px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(161, 161, 170, 0.06);
-  --shadow-float: 0 8px 32px rgba(0, 0, 0, 0.20), 0 2px 8px rgba(0, 0, 0, 0.12);
-  --shadow-glow: 0 0 0 3px rgba(45, 212, 191, 0.12), 0 4px 16px rgba(45, 212, 191, 0.06);
-
-  /* Gradients — teal-only, no terracotta */
-  --gradient-accent: linear-gradient(135deg, #2dd4bf, #5eead4);
-  --gradient-cta: linear-gradient(135deg, #14b8a6, #2dd4bf);
-  --gradient-warm: linear-gradient(180deg, rgba(45, 212, 191, 0.04), transparent);
+  /* Gradients */
+  --gradient-accent: linear-gradient(135deg, #c27a5a, #d4a088);
+  --gradient-warm: linear-gradient(180deg, rgba(194, 122, 90, 0.04), transparent);
   --gradient-surface: linear-gradient(180deg, var(--bg-surface), var(--bg-base));
-  --gradient-subtle: linear-gradient(180deg, rgba(45, 212, 191, 0.06), transparent);
-  --shadow-cta-glow: 0 0 0 3px rgba(20, 184, 166, 0.12), 0 4px 16px rgba(20, 184, 166, 0.06);
+  --gradient-subtle: linear-gradient(180deg, rgba(194, 122, 90, 0.06), transparent);
 
-  /* shadcn/ui Variables - Dark Mode Default */
-  --background: #09090b;
-  --foreground: #fafafa;
-  --card: #18181b;
-  --card-foreground: #fafafa;
-  --popover: #1f1f23;
-  --popover-foreground: #fafafa;
-  --primary: #2dd4bf;
-  --primary-foreground: #042f2e;
-  --secondary: #27272a;
-  --secondary-foreground: #fafafa;
-  --muted: #27272a;
-  --muted-foreground: #a1a1aa;
-  --accent: #27272a;
-  --accent-foreground: #fafafa;
-  --destructive: #f87171;
-  --destructive-foreground: #ffffff;
-  --border: rgba(161, 161, 170, 0.18);
-  --input: #27272a;
-  --ring: #2dd4bf;
-
-  /* Chart Colors */
-  --chart-1: #2dd4bf;
-  --chart-2: #65a30d;
-  --chart-3: #f0b429;
-  --chart-4: #f472b6;
-  --chart-5: #7c3aed;
-
-  /* Sidebar */
-  --sidebar: #0a0a0c;
-  --sidebar-foreground: #fafafa;
-  --sidebar-primary: #2dd4bf;
-  --sidebar-primary-foreground: #042f2e;
-  --sidebar-accent: #18181b;
-  --sidebar-accent-foreground: #fafafa;
-  --sidebar-border: rgba(161, 161, 170, 0.10);
-  --sidebar-ring: #2dd4bf;
-}
-
-/* Light Mode — Clean neutral white/gray, WCAG AA compliant
-   Designed for clarity: white base, zinc-gray insets,
-   neutral sidebar, clean borders + subtle shadows */
-.light {
-  /* Background Layers — neutral white/gray progression */
-  --bg-base: #ffffff;
-  --bg-inset: #f4f4f5;
-  --bg-surface: #ffffff;
-  --bg-elevated: #ffffff;
-  --bg-hover: #e4e4e7;
-  --bg-active: #d4d4d8;
-  --bg-overlay: #a1a1aa;
-
-  /* Borders — neutral zinc, clean and visible */
-  --border-subtle: #e4e4e7;
-  --border-default: #d4d4d8;
-  --border-emphasis: #a1a1aa;
-  --border-focus: rgba(13, 148, 136, 0.45);
-
-  /* Text — WCAG AA contrast ratios on white backgrounds */
-  --text-primary: #09090b;
-  --text-secondary: #52525b;
-  --text-muted: #71717a;
-  --text-disabled: #a1a1aa;
-
-  /* Accent (Teal — product UI, boosted for light backgrounds) */
-  --accent-base: #0d9488;
-  --accent-hover: #14b8a6;
-  --accent-active: #0f766e;
-  --accent-subtle: rgba(13, 148, 136, 0.06);
-  --accent-border: rgba(13, 148, 136, 0.22);
-  --accent-glow: rgba(13, 148, 136, 0.08);
-
-  /* CTA (Teal — unified with accent, boosted for light backgrounds) */
-  --cta-base: #0d9488;
-  --cta-hover: #0f766e;
-  --cta-active: #115e59;
-  --cta-subtle: rgba(13, 148, 136, 0.06);
-  --cta-border: rgba(13, 148, 136, 0.22);
-  --cta-glow: rgba(13, 148, 136, 0.08);
-
-  /* Layer colors — deeper for visibility on light bg */
-  --layer-capture: #3b82f6;
-  --layer-capture-bg: rgba(59, 130, 246, 0.07);
-  --layer-capture-border: rgba(59, 130, 246, 0.20);
-  --layer-capture-glow: rgba(59, 130, 246, 0.10);
-  --layer-process: #d97706;
-  --layer-process-bg: rgba(217, 119, 6, 0.07);
-  --layer-process-border: rgba(217, 119, 6, 0.20);
-  --layer-process-glow: rgba(217, 119, 6, 0.10);
-  --layer-commit: #059669;
-  --layer-commit-bg: rgba(5, 150, 105, 0.07);
-  --layer-commit-border: rgba(5, 150, 105, 0.20);
-  --layer-commit-glow: rgba(5, 150, 105, 0.10);
-
-  /* Semantic Colors — deeper for light bg contrast */
-  --success: #059669;
-  --success-subtle: rgba(5, 150, 105, 0.08);
-  --warning: #d97706;
-  --warning-subtle: rgba(217, 119, 6, 0.08);
-  --error: #dc2626;
-  --error-subtle: rgba(220, 38, 38, 0.08);
-  --info: #2563eb;
-  --info-subtle: rgba(37, 99, 235, 0.08);
-
-  /* Shadow System — neutral, clean on white cards */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.06), 0 6px 16px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.08), 0 12px 32px rgba(0, 0, 0, 0.06);
-  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.10), 0 20px 48px rgba(0, 0, 0, 0.08);
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.06);
-  --shadow-card-hover: 0 2px 8px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.10);
-  --shadow-float: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
-  --shadow-glow: 0 0 0 3px rgba(13, 148, 136, 0.10), 0 4px 16px rgba(13, 148, 136, 0.05);
-
-  /* Gradients — teal-only */
-  --gradient-accent: linear-gradient(135deg, #0d9488, #14b8a6);
-  --gradient-cta: linear-gradient(135deg, #0d9488, #14b8a6);
-  --gradient-warm: linear-gradient(180deg, rgba(13, 148, 136, 0.03), transparent);
-  --gradient-surface: linear-gradient(180deg, #ffffff, #f4f4f5);
-  --gradient-subtle: linear-gradient(180deg, rgba(13, 148, 136, 0.04), transparent);
-  --shadow-cta-glow: 0 0 0 3px rgba(13, 148, 136, 0.10), 0 4px 16px rgba(13, 148, 136, 0.05);
-
-  /* shadcn/ui Variables - Light Mode */
-  --background: #ffffff;
-  --foreground: #09090b;
-  --card: #ffffff;
-  --card-foreground: #09090b;
-  --popover: #ffffff;
-  --popover-foreground: #09090b;
-  --primary: #0d9488;
+  /* shadcn/ui Variables — Dark Mode */
+  --background: #1a1918;
+  --foreground: #ededec;
+  --card: #1f1e1d;
+  --card-foreground: #ededec;
+  --popover: #252423;
+  --popover-foreground: #ededec;
+  --primary: #c27a5a;
   --primary-foreground: #ffffff;
-  --secondary: #f4f4f5;
-  --secondary-foreground: #09090b;
-  --muted: #f4f4f5;
-  --muted-foreground: #52525b;
-  --accent: #f4f4f5;
-  --accent-foreground: #09090b;
-  --destructive: #dc2626;
-  --destructive-foreground: #ffffff;
-  --border: #d4d4d8;
-  --input: #f4f4f5;
-  --ring: #0d9488;
-
-  /* Chart Colors - Light */
-  --chart-1: #0d9488;
-  --chart-2: #4d7c0f;
-  --chart-3: #d97706;
-  --chart-4: #db2777;
-  --chart-5: #6d28d9;
-
-  /* Sidebar Light — neutral zinc inset */
-  --sidebar: #f4f4f5;
-  --sidebar-foreground: #09090b;
-  --sidebar-primary: #0d9488;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e4e4e7;
-  --sidebar-accent-foreground: #09090b;
-  --sidebar-border: #d4d4d8;
-  --sidebar-ring: #0d9488;
-}
-
-/* Keep .dark class for shadcn compatibility (mirrors :root dark values) */
-.dark {
-  --background: #09090b;
-  --foreground: #fafafa;
-  --card: #18181b;
-  --card-foreground: #fafafa;
-  --popover: #1f1f23;
-  --popover-foreground: #fafafa;
-  --primary: #2dd4bf;
-  --primary-foreground: #042f2e;
-  --secondary: #27272a;
-  --secondary-foreground: #fafafa;
-  --muted: #27272a;
-  --muted-foreground: #a1a1aa;
-  --accent: #27272a;
-  --accent-foreground: #fafafa;
+  --secondary: #252423;
+  --secondary-foreground: #ededec;
+  --muted: #252423;
+  --muted-foreground: #8c8680;
+  --accent: #252423;
+  --accent-foreground: #ededec;
   --destructive: #f87171;
   --destructive-foreground: #ffffff;
-  --border: rgba(161, 161, 170, 0.18);
-  --input: #27272a;
-  --ring: #2dd4bf;
+  --border: rgba(255, 255, 255, 0.06);
+  --input: #252423;
+  --ring: #c27a5a;
 
-  --sidebar: #0a0a0c;
-  --sidebar-foreground: #fafafa;
-  --sidebar-primary: #2dd4bf;
-  --sidebar-primary-foreground: #042f2e;
-  --sidebar-accent: #18181b;
-  --sidebar-accent-foreground: #fafafa;
-  --sidebar-border: rgba(161, 161, 170, 0.10);
-  --sidebar-ring: #2dd4bf;
+  /* Chart Colors — Dark */
+  --chart-1: #d4a088;
+  --chart-2: #60a5fa;
+  --chart-3: #fbbf24;
+  --chart-4: #34d399;
+  --chart-5: #a78bfa;
+
+  /* Sidebar Dark — warm charcoal inset */
+  --sidebar: #141312;
+  --sidebar-foreground: #ededec;
+  --sidebar-primary: #c27a5a;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(255, 255, 255, 0.03);
+  --sidebar-accent-foreground: #ededec;
+  --sidebar-border: rgba(255, 255, 255, 0.04);
+  --sidebar-ring: #c27a5a;
 }
 
 /* Tailwind v4 Theme Extensions */
@@ -391,17 +356,12 @@ html {
   --color-primary-text: var(--text-primary);
   --color-secondary-text: var(--text-secondary);
   --color-muted-text: var(--text-muted);
-  --color-disabled-text: var(--text-disabled);
+  --color-tertiary-text: var(--text-tertiary);
 
   --color-accent-base: var(--accent-base);
   --color-accent-hover: var(--accent-hover);
   --color-accent-active: var(--accent-active);
   --color-accent-subtle: var(--accent-subtle);
-
-  --color-cta-base: var(--cta-base);
-  --color-cta-hover: var(--cta-hover);
-  --color-cta-active: var(--cta-active);
-  --color-cta-subtle: var(--cta-subtle);
 
   --color-success: var(--success);
   --color-success-subtle: var(--success-subtle);
@@ -421,9 +381,9 @@ html {
   --color-waiting: var(--destination-waiting);
   --color-trash: var(--destination-trash);
 
-  /* Fonts - Geist with warm, round feel */
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, 'Fira Code', monospace;
+  /* Fonts — DM Sans, single family */
+  --font-sans: var(--font-dm-sans), 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'Fira Code', 'Cascadia Code', monospace;
 
   /* shadcn compatibility */
   --color-background: var(--background);
@@ -459,12 +419,12 @@ html {
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* Radius */
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  /* Radius — graduated scale */
+  --radius-sm: 0.35rem;
+  --radius-md: 0.6rem;
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
 }
 
 /* =============================================================================
@@ -472,11 +432,11 @@ html {
 ============================================================================= */
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
-html.light {
-  color-scheme: light;
+html.dark {
+  color-scheme: dark;
 }
 
 body {
@@ -510,35 +470,43 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(161, 161, 170, 0.18);
+  background: rgba(0, 0, 0, 0.12);
   border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(161, 161, 170, 0.30);
+  background: rgba(0, 0, 0, 0.20);
 }
 
-/* Selection — teal tint */
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.20);
+}
+
+/* Selection — terracotta tint */
 ::selection {
-  background-color: rgba(45, 212, 191, 0.15);
+  background-color: rgba(194, 122, 90, 0.15);
   color: var(--text-primary);
 }
 
 /* Container defaults */
 .container {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1400px;
 }
 
 /* =============================================================================
-   Bloom Utility Classes — Warm Organic Craft
+   Utility Classes — Warm Minimal Craft
 ============================================================================= */
 
-/* Bloom Card — large radius, warm border, thick shadow */
+/* Card — white with soft layered shadows on warm cream */
 .bloom-card {
   background: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  border-radius: 1.25rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.75rem;
   box-shadow: var(--shadow-card);
   transition:
     transform var(--duration-slow) cubic-bezier(0.34, 1.56, 0.64, 1),
@@ -547,12 +515,12 @@ body {
 }
 
 .bloom-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: var(--shadow-card-hover);
   border-color: var(--border-emphasis);
 }
 
-/* Bloom Surface — subtle warm texture/grain overlay */
+/* Surface — subtle warm texture/grain overlay */
 .bloom-surface {
   position: relative;
 }
@@ -562,34 +530,34 @@ body {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  opacity: 0.018;
+  opacity: 0.012;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   pointer-events: none;
   z-index: 0;
 }
 
-/* Bloom Accent — teal gradient background for CTA badges/pills */
+/* Accent pill — terracotta for badges/pills */
 .bloom-accent {
-  background: var(--gradient-cta);
-  color: #042f2e;
+  background: var(--accent-base);
+  color: #ffffff;
   border-radius: 9999px;
   font-weight: 600;
 }
 
-/* Bloom Warm — warm ambient glow effect */
+/* Warm ambient glow */
 .bloom-warm {
   box-shadow:
-    0 0 40px rgba(45, 212, 191, 0.06),
-    0 0 80px rgba(45, 212, 191, 0.03);
+    0 0 40px rgba(194, 122, 90, 0.04),
+    0 0 80px rgba(194, 122, 90, 0.02);
 }
 
-/* Organic Border — soft, warm-toned border */
+/* Organic Border */
 .organic-border {
   border: 1px solid var(--border-default);
-  border-radius: 1.25rem;
+  border-radius: 0.75rem;
 }
 
-/* Tactile Press — active state that feels like pressing a physical button */
+/* Tactile Press — active state */
 .tactile-press {
   transition:
     transform var(--duration-fast) cubic-bezier(0.34, 1.56, 0.64, 1),
@@ -601,7 +569,7 @@ body {
   box-shadow: var(--shadow-xs);
 }
 
-/* Confetti Burst — particle celebration animation trigger */
+/* Confetti Burst — celebration animation trigger */
 .confetti-burst {
   position: relative;
 }
@@ -616,24 +584,28 @@ body {
   pointer-events: none;
 }
 
-/* Garden Grow — growth animation for progress/completion */
+/* Garden Grow — growth animation */
 .garden-grow {
   animation: grow 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Glass morphism — zinc-tinted */
+/* Glass morphism — warm tinted */
 .warm-glass {
-  background: rgba(9, 9, 11, 0.78);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
   border: 1px solid var(--border-subtle);
+}
+
+.dark .warm-glass {
+  background: rgba(26, 25, 24, 0.85);
 }
 
 /* =============================================================================
    Keyframe Animations
 ============================================================================= */
 
-/* Bloom In — scale up from 0.95 with slight bounce overshoot */
+/* Bloom In — scale up with slight bounce */
 @keyframes bloom-in {
   0% {
     opacity: 0;
@@ -656,7 +628,7 @@ body {
   animation: bloom-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Bounce Complete — bouncy completion animation */
+/* Bounce Complete */
 @keyframes bounce-complete {
   0% { transform: scale(0.6); opacity: 0.5; }
   30% { transform: scale(1.15); opacity: 1; }
@@ -670,7 +642,7 @@ body {
   animation: bounce-complete 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Grow — plant/garden growth metaphor */
+/* Grow — growth metaphor */
 @keyframes grow {
   0% {
     transform: scaleY(0) translateY(10px);
@@ -688,13 +660,13 @@ body {
   }
 }
 
-/* Warm Pulse — soft warm glow pulse */
+/* Warm Pulse — soft terracotta glow pulse */
 @keyframes warm-pulse {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.15);
+    box-shadow: 0 0 0 0 rgba(194, 122, 90, 0.12);
   }
   50% {
-    box-shadow: 0 0 20px 4px rgba(45, 212, 191, 0.08);
+    box-shadow: 0 0 20px 4px rgba(194, 122, 90, 0.06);
   }
 }
 
@@ -702,29 +674,29 @@ body {
   animation: warm-pulse 3s ease-in-out infinite;
 }
 
-/* Confetti — particle burst for celebrations */
+/* Confetti — particle burst */
 @keyframes confetti {
   0% {
     box-shadow:
-      0 0 0 0 rgba(20, 184, 166, 0.3),
-      0 0 0 0 rgba(101, 163, 13, 0.3),
-      0 0 0 0 rgba(240, 180, 41, 0.3);
+      0 0 0 0 rgba(194, 122, 90, 0.3),
+      0 0 0 0 rgba(52, 211, 153, 0.3),
+      0 0 0 0 rgba(251, 191, 36, 0.3);
   }
   40% {
     box-shadow:
-      -8px -12px 0 -2px rgba(20, 184, 166, 0.6),
-      12px -8px 0 -2px rgba(101, 163, 13, 0.6),
-      4px -16px 0 -2px rgba(240, 180, 41, 0.6);
+      -8px -12px 0 -2px rgba(194, 122, 90, 0.6),
+      12px -8px 0 -2px rgba(52, 211, 153, 0.6),
+      4px -16px 0 -2px rgba(251, 191, 36, 0.6);
   }
   100% {
     box-shadow:
-      -16px -24px 0 -4px rgba(20, 184, 166, 0),
-      24px -16px 0 -4px rgba(101, 163, 13, 0),
-      8px -32px 0 -4px rgba(240, 180, 41, 0);
+      -16px -24px 0 -4px rgba(194, 122, 90, 0),
+      24px -16px 0 -4px rgba(52, 211, 153, 0),
+      8px -32px 0 -4px rgba(251, 191, 36, 0);
   }
 }
 
-/* Petal Fall — subtle floating petal effect */
+/* Petal Fall — subtle floating effect */
 @keyframes petal-fall {
   0% {
     transform: translateY(-10px) rotate(0deg);
@@ -747,8 +719,6 @@ body {
   animation: petal-fall 4s ease-in-out infinite;
 }
 
-/* Preserved animations from original design system */
-
 /* Subtle pulse for inbox badge */
 @keyframes pulse-subtle {
   0%, 100% { opacity: 1; }
@@ -769,17 +739,17 @@ body {
   animation: check-bounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Completion flash — warm emerald ripple on item when checked */
+/* Completion flash — green ripple on item when checked */
 @keyframes completion-flash {
-  0% { box-shadow: 0 0 0 0 rgba(61, 214, 140, 0.3); }
-  50% { box-shadow: 0 0 0 8px rgba(61, 214, 140, 0.08); }
-  100% { box-shadow: 0 0 0 16px rgba(61, 214, 140, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.3); }
+  50% { box-shadow: 0 0 0 8px rgba(52, 211, 153, 0.08); }
+  100% { box-shadow: 0 0 0 16px rgba(52, 211, 153, 0); }
 }
 .animate-completion-flash {
   animation: completion-flash 0.6s ease-out;
 }
 
-/* Item slide-out when moving between layers */
+/* Item slide-out */
 @keyframes slide-out-right {
   0% { transform: translateX(0); opacity: 1; }
   100% { transform: translateX(20px); opacity: 0; }
@@ -788,7 +758,7 @@ body {
   animation: slide-out-right 0.25s ease-in forwards;
 }
 
-/* Item slide-in when appearing in new layer */
+/* Item slide-in */
 @keyframes slide-in-left {
   0% { transform: translateX(-20px); opacity: 0; }
   100% { transform: translateX(0); opacity: 1; }
@@ -797,7 +767,7 @@ body {
   animation: slide-in-left 0.25s ease-out;
 }
 
-/* Strikethrough animation for completed text */
+/* Strikethrough animation */
 @keyframes strike {
   0% { text-decoration-color: transparent; }
   100% { text-decoration-color: var(--text-muted); }
@@ -818,26 +788,30 @@ body {
 }
 
 /* =============================================================================
-   Glow Effects — teal accents
+   Glow Effects — terracotta accents
 ============================================================================= */
 
 .glow-primary {
-  box-shadow: 0 0 24px rgba(45, 212, 191, 0.10), 0 0 60px rgba(45, 212, 191, 0.04);
+  box-shadow: 0 0 20px rgba(194, 122, 90, 0.06), 0 0 40px rgba(194, 122, 90, 0.03);
 }
 
 .glow-capture {
-  box-shadow: 0 0 20px var(--layer-capture-glow), 0 0 60px rgba(109, 174, 247, 0.04);
+  box-shadow: 0 0 20px var(--layer-capture-glow), 0 0 60px rgba(96, 165, 250, 0.04);
 }
 
-.glow-process {
-  box-shadow: 0 0 20px var(--layer-process-glow), 0 0 60px rgba(240, 180, 41, 0.04);
+.glow-route {
+  box-shadow: 0 0 20px var(--layer-route-glow), 0 0 60px rgba(251, 191, 36, 0.04);
 }
 
-.glow-commit {
-  box-shadow: 0 0 20px var(--layer-commit-glow), 0 0 60px rgba(61, 214, 140, 0.04);
+.glow-compound {
+  box-shadow: 0 0 20px var(--layer-compound-glow), 0 0 60px rgba(52, 211, 153, 0.04);
 }
 
-/* Capture input focus ring — teal glow */
+/* Legacy aliases */
+.glow-process { box-shadow: 0 0 20px var(--layer-route-glow), 0 0 60px rgba(251, 191, 36, 0.04); }
+.glow-commit { box-shadow: 0 0 20px var(--layer-compound-glow), 0 0 60px rgba(52, 211, 153, 0.04); }
+
+/* Capture input focus ring — terracotta glow */
 .capture-input {
   transition: box-shadow var(--duration-slow) cubic-bezier(0.4, 0, 0.2, 1), border-color var(--duration-slow) ease;
 }
@@ -845,9 +819,8 @@ body {
 .capture-input:focus-within {
   border-color: var(--accent-border);
   box-shadow:
-    0 0 0 3px rgba(45, 212, 191, 0.10),
-    0 8px 32px rgba(45, 212, 191, 0.06),
-    inset 0 1px 0 rgba(45, 212, 191, 0.04);
+    0 0 0 3px rgba(194, 122, 90, 0.08),
+    0 4px 16px rgba(194, 122, 90, 0.04);
 }
 
 /* Noise texture overlay for depth */
@@ -861,16 +834,15 @@ body {
   z-index: 0;
 }
 
-/* Gradient mesh for hero sections — teal + sage + lavender */
+/* Gradient mesh for sections */
 .gradient-mesh {
   background-image:
-    radial-gradient(at 0% 0%, rgba(45, 212, 191, 0.08) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(101, 163, 13, 0.05) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(240, 180, 41, 0.04) 0px, transparent 50%),
-    radial-gradient(at 80% 60%, rgba(124, 58, 237, 0.025) 0px, transparent 40%);
+    radial-gradient(at 0% 0%, rgba(194, 122, 90, 0.04) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(96, 165, 250, 0.03) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(251, 191, 36, 0.03) 0px, transparent 50%);
 }
 
-/* Card hover effect — warm elevation with lift and bounce */
+/* Card hover effect */
 .card-hover {
   transition:
     border-color var(--duration-normal) ease,
@@ -880,24 +852,36 @@ body {
 .card-hover:hover {
   border-color: var(--border-emphasis);
   box-shadow: var(--shadow-card-hover);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
-/* Glass effect — zinc tinted */
+/* Glass effect */
 .glass {
-  background: rgba(9, 9, 11, 0.80);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
 }
 
-/* Inner light — top-edge highlight for dimensional surfaces */
-.inner-light {
-  box-shadow: inset 0 1px 0 rgba(250, 250, 250, 0.04);
+.dark .glass {
+  background: rgba(26, 25, 24, 0.80);
 }
 
-/* Title glow — ambient teal glow behind headings */
+/* Inner light — top-edge highlight for dimensional surfaces */
+.inner-light {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.dark .inner-light {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Title glow — no glow in light mode, subtle in dark */
 .title-glow {
-  text-shadow: 0 0 40px rgba(45, 212, 191, 0.15);
+  text-shadow: none;
+}
+
+.dark .title-glow {
+  text-shadow: 0 0 40px rgba(194, 122, 90, 0.12);
 }
 
 /* Smooth line-through for completed items */
@@ -908,112 +892,26 @@ body {
   color: var(--text-muted);
 }
 
-/* Gradient border technique — teal gradient */
+/* Gradient border — terracotta */
 .gradient-border {
   background: linear-gradient(var(--bg-surface), var(--bg-surface)) padding-box,
               var(--gradient-accent) border-box;
   border: 1.5px solid transparent;
-  border-radius: 1.25rem;
+  border-radius: 0.75rem;
 }
 
-/* Subtle dot grid pattern for backgrounds */
+/* Subtle dot grid pattern */
 .dot-grid {
-  background-image: radial-gradient(circle, rgba(161, 161, 170, 0.12) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
   background-size: 28px 28px;
 }
 
-/* =============================================================================
-   Light Mode Overrides for Bloom Utilities
-============================================================================= */
-
-.light .gradient-mesh {
-  background-image:
-    radial-gradient(at 0% 0%, rgba(13, 148, 136, 0.05) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(77, 124, 15, 0.04) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(217, 119, 6, 0.03) 0px, transparent 50%),
-    radial-gradient(at 80% 60%, rgba(109, 40, 217, 0.02) 0px, transparent 40%);
-}
-
-.light .glass,
-.light .warm-glass {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border-color: var(--border-default);
-}
-
-.light .card-hover:hover {
-  border-color: var(--border-emphasis);
-  box-shadow: var(--shadow-card-hover);
-  transform: translateY(-2px);
-}
-
-.light .bloom-card {
-  border-color: var(--border-default);
-  box-shadow: var(--shadow-card);
-}
-
-.light .bloom-card:hover {
-  border-color: var(--border-emphasis);
-}
-
-.light .inner-light {
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
-}
-
-.light .glow-primary {
-  box-shadow: 0 0 20px rgba(13, 148, 136, 0.06), 0 0 40px rgba(13, 148, 136, 0.03);
-}
-
-.light .capture-input {
-  border-color: var(--border-default);
-  box-shadow: var(--shadow-card);
-}
-
-.light .capture-input:focus-within {
-  border-color: rgba(13, 148, 136, 0.35);
-  box-shadow:
-    0 0 0 3px rgba(13, 148, 136, 0.08),
-    0 4px 16px rgba(13, 148, 136, 0.04);
-}
-
-.light .title-glow {
-  text-shadow: none;
-}
-
-.light .gradient-border {
-  background: linear-gradient(var(--bg-surface), var(--bg-surface)) padding-box,
-              linear-gradient(135deg, #0d9488, #14b8a6) border-box;
-  border: 1.5px solid transparent;
-  border-radius: 1.25rem;
-}
-
-.light .dot-grid {
-  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
-  background-size: 28px 28px;
-}
-
-.light .bloom-surface::before {
-  opacity: 0.008;
-}
-
-/* Light mode scrollbar */
-.light ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.12);
-}
-
-.light ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.20);
-}
-
-/* Light mode selection */
-.light ::selection {
-  background-color: rgba(13, 148, 136, 0.12);
+.dark .dot-grid {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
 }
 
 /* =============================================================================
    TiptapEditor / ProseMirror Content Styles
-   Replaces @tailwindcss/typography prose classes with direct styling
 ============================================================================= */
 
 .tiptap-content {
@@ -1025,7 +923,7 @@ body {
 /* Headings */
 .tiptap-content h1 {
   font-size: var(--text-2xl);
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.3;
   margin-top: 1.5em;
   margin-bottom: 0.5em;
@@ -1204,11 +1102,29 @@ body {
 
 /* Placeholder */
 .tiptap-content p.is-editor-empty:first-child::before {
-  color: var(--text-disabled);
+  color: var(--text-tertiary);
   content: attr(data-placeholder);
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+/* Ripple Field — expanding ring animation (landing page) */
+@keyframes ripple-expand {
+  0% {
+    transform: scale(0.15);
+    opacity: 0.18;
+  }
+  30% {
+    opacity: 0.12;
+  }
+  70% {
+    opacity: 0.06;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
 }
 
 /* shadcn base layer */

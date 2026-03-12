@@ -1,0 +1,33 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="nl-outer" x1="10" y1="10" x2="150" y2="150" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#5eead4" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#2dd4bf" stop-opacity="0.12"/>
+    </linearGradient>
+    <linearGradient id="nl-mid" x1="35" y1="35" x2="170" y2="170" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#5eead4" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#2dd4bf" stop-opacity="0.35"/>
+    </linearGradient>
+    <linearGradient id="nl-inner" x1="60" y1="60" x2="190" y2="190" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="50%" stop-color="#2dd4bf"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+  </defs>
+  <!--
+    Nested Layers: 3 rounded rectangles, each offset 25px down-right.
+    Sizes: 120x120, 120x120, 120x120 — same size, different positions.
+    Corner radius: 24px (proportional to 1rem at this scale).
+    Progressive opacity via gradient stops.
+    The cascade creates depth without changing shape size.
+  -->
+  <!-- Outermost layer — whisper -->
+  <rect x="10" y="10" width="120" height="120" rx="24" ry="24"
+        stroke="url(#nl-outer)" stroke-width="3.5" fill="none"/>
+  <!-- Middle layer -->
+  <rect x="40" y="40" width="120" height="120" rx="24" ry="24"
+        stroke="url(#nl-mid)" stroke-width="3.5" fill="none"/>
+  <!-- Innermost layer — solid, the compound result -->
+  <rect x="70" y="70" width="120" height="120" rx="24" ry="24"
+        stroke="url(#nl-inner)" stroke-width="4" fill="none"/>
+</svg>

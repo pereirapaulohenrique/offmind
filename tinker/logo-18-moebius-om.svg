@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="teal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <!-- Moebius strip forming O and M: a continuous twisted band -->
+  <!-- The O is the outer loop, the M is formed by the twist crossing in the center -->
+  <path d="M 56 100
+           C 56 62, 88 42, 100 42
+           C 112 42, 144 62, 144 100
+           C 144 118, 132 134, 118 142
+           L 100 158
+           L 82 142
+           C 68 134, 56 118, 56 100 Z"
+        fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>
+  <!-- Moebius strip: outer ellipse path with a twist that creates O shape -->
+  <path d="M 40 100
+           C 40 56, 72 32, 100 32
+           C 128 32, 160 56, 160 100
+           C 160 144, 128 168, 100 168
+           C 72 168, 40 144, 40 100 Z"
+        fill="none" stroke="url(#teal-grad)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Inner twist crossing: creates the M shape via two diagonal strokes meeting at center -->
+  <path d="M 72 138
+           L 88 72
+           L 100 118
+           L 112 72
+           L 128 138"
+        fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Connecting twist lines from outer O to inner M -->
+  <path d="M 72 138 C 60 150, 48 140, 40 128"
+        fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 128 138 C 140 150, 152 140, 160 128"
+        fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

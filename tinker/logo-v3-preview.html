@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OffMind Logo v3 — Weight &amp; Hierarchy</title>
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Satoshi', 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #fafafa;
+      padding: 40px;
+    }
+    h1 { font-size: 28px; font-weight: 500; margin-bottom: 8px; }
+    h2 {
+      font-size: 20px; font-weight: 500; margin: 48px 0 20px;
+      color: #a0a0a0; border-bottom: 1px solid #222; padding-bottom: 8px;
+    }
+    .subtitle { font-size: 15px; color: #666; margin-bottom: 40px; }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px; }
+    .card {
+      background: #111; border: 1px solid #222; border-radius: 12px; padding: 32px;
+    }
+    .card-label {
+      font-size: 13px; color: #14b892; text-transform: uppercase;
+      letter-spacing: 1.5px; margin-bottom: 4px;
+    }
+    .card-name { font-size: 18px; font-weight: 500; margin-bottom: 8px; }
+    .card-desc { font-size: 13px; color: #888; margin-bottom: 20px; line-height: 1.5; }
+    .logo-box {
+      background: #0a0a0a; border-radius: 8px; padding: 28px;
+      display: flex; align-items: center; justify-content: center; min-height: 90px;
+    }
+    .logo-box img { max-height: 70px; width: auto; }
+    .logo-box.sm img { max-height: 40px; }
+    .logo-box.xs img { max-height: 24px; }
+
+    .full { grid-column: 1 / -1; }
+
+    .size-strip {
+      display: flex; gap: 40px; align-items: flex-end; padding: 20px 0;
+    }
+    .size-strip > div { text-align: center; }
+    .size-strip span { font-size: 11px; color: #555; display: block; margin-top: 6px; }
+
+    .notes {
+      background: #111; border: 1px solid #222; border-radius: 12px;
+      padding: 24px; margin-top: 24px;
+    }
+    .notes h3 {
+      font-size: 14px; color: #14b892; text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 12px;
+    }
+    .notes ul { list-style: none; padding: 0; }
+    .notes li {
+      font-size: 14px; color: #999; padding: 6px 0;
+      border-bottom: 1px solid #1a1a1a; line-height: 1.5;
+    }
+    .notes li:last-child { border-bottom: none; }
+    .notes li strong { color: #ccc; }
+
+    .vs-row {
+      display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px;
+      align-items: center; margin-bottom: 24px;
+    }
+    .vs-label {
+      font-size: 14px; color: #555; text-align: center; padding: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>OffMind Logo v3 — Weight &amp; Hierarchy</h1>
+  <p class="subtitle">Lessons from Focus: bold "off", integrated loop, visual hierarchy between concept and result</p>
+
+  <!-- Evolution -->
+  <h2>Evolution: v1 → v2 → v3</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; margin-bottom:32px;">
+    <div class="card" style="border-color:#331111;">
+      <div class="card-label" style="color:#884444;">V1 — Original</div>
+      <div class="card-desc">Disconnected arc + text. Wrong proportions. Amateur.</div>
+      <div class="logo-box"><img src="logo-wordmark-loop-warm.svg"></div>
+    </div>
+    <div class="card" style="border-color:#222;">
+      <div class="card-label" style="color:#666;">V2 — Precise</div>
+      <div class="card-desc">Correct proportions. Matched weight. Better kerning.</div>
+      <div class="logo-box"><img src="logo-wm-v2-precise.svg"></div>
+    </div>
+    <div class="card" style="border-color:#113322;">
+      <div class="card-label">V3 — Weight Contrast</div>
+      <div class="card-desc">Bold "off" + medium "mind". Hierarchy. Meaning.</div>
+      <div class="logo-box"><img src="logo-wm-v3-weight.svg"></div>
+    </div>
+  </div>
+
+  <!-- All v3 variants -->
+  <h2>V3 Variants</h2>
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-label">V3-A</div>
+      <div class="card-name">Weight Contrast</div>
+      <div class="card-desc">
+        Bold loop + bold "ff" + medium "mind".
+        The weight shift creates natural reading hierarchy:
+        <strong>off</strong> (concept) → mind (result).
+        Like Focus where "fo" has more presence than "cus".
+      </div>
+      <div class="logo-box"><img src="logo-wm-v3-weight.svg"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">V3-B</div>
+      <div class="card-name">Weight + Opacity</div>
+      <div class="card-desc">
+        Same weight split, but "mind" also at 55% opacity.
+        Stronger fade effect — "mind" recedes further.
+        More dramatic hierarchy, closer to Focus's treatment.
+      </div>
+      <div class="logo-box"><img src="logo-wm-v3-weight-opacity.svg"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">V3-C</div>
+      <div class="card-name">Color Split</div>
+      <div class="card-desc">
+        Same weight throughout (Medium 500), but "off" is teal
+        and "mind" is white. The loop and "ff" become one visual
+        unit through shared color. Clean, minimal differentiation.
+      </div>
+      <div class="logo-box"><img src="logo-wm-v3-color-split.svg"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">V3-D</div>
+      <div class="card-name">Full Bold</div>
+      <div class="card-desc">
+        All Bold 700, no split. The ONLY differentiation is the
+        loop replacing "o". Simpler, more unified, more confident.
+        The loop does all the conceptual work alone.
+      </div>
+      <div class="logo-box"><img src="logo-wm-v3-full-bold.svg"></div>
+    </div>
+
+  </div>
+
+  <!-- Size test for the recommended variant -->
+  <h2>Size Test — V3-A (Weight Contrast)</h2>
+  <div class="card full">
+    <div class="size-strip">
+      <div>
+        <img src="logo-wm-v3-weight.svg" style="height:80px;width:auto;">
+        <span>Display</span>
+      </div>
+      <div>
+        <img src="logo-wm-v3-weight.svg" style="height:48px;width:auto;">
+        <span>Header</span>
+      </div>
+      <div>
+        <img src="logo-wm-v3-weight.svg" style="height:32px;width:auto;">
+        <span>Nav</span>
+      </div>
+      <div>
+        <img src="logo-wm-v3-weight.svg" style="height:20px;width:auto;">
+        <span>Small</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Side by side: Color Split vs Weight Contrast -->
+  <h2>Head-to-Head: Weight vs Color</h2>
+  <div class="vs-row">
+    <div class="card">
+      <div class="card-label">Weight Contrast</div>
+      <div class="logo-box"><img src="logo-wm-v3-weight.svg"></div>
+    </div>
+    <div class="vs-label">vs</div>
+    <div class="card">
+      <div class="card-label">Color Split</div>
+      <div class="logo-box"><img src="logo-wm-v3-color-split.svg"></div>
+    </div>
+  </div>
+
+  <!-- Standalone icon reminder -->
+  <h2>Icon (unchanged from v2)</h2>
+  <div class="card" style="max-width:400px;">
+    <div class="card-desc">The standalone loop icon works at all sizes regardless of wordmark weight.</div>
+    <div style="display:flex; gap:24px; align-items:center; padding:16px 0;">
+      <div style="text-align:center;">
+        <div style="background:#0a0a0a;border-radius:8px;width:64px;height:64px;display:flex;align-items:center;justify-content:center;">
+          <img src="logo-icon-v2-precise.svg" width="48" height="48">
+        </div>
+        <span style="font-size:11px;color:#555;">64px</span>
+      </div>
+      <div style="text-align:center;">
+        <div style="background:#0a0a0a;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;">
+          <img src="logo-icon-v2-precise.svg" width="24" height="24">
+        </div>
+        <span style="font-size:11px;color:#555;">32px</span>
+      </div>
+      <div style="text-align:center;">
+        <div style="background:#0a0a0a;border-radius:8px;width:16px;height:16px;display:flex;align-items:center;justify-content:center;">
+          <img src="logo-icon-v2-precise.svg" width="14" height="14">
+        </div>
+        <span style="font-size:11px;color:#555;">16px</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analysis -->
+  <div class="notes" style="margin-top:48px;">
+    <h3>Focus Logo Lessons Applied</h3>
+    <ul>
+      <li><strong>Symbol IS the letter:</strong> Loop sized to exact bold "o" dimensions — same baseline, x-height, and weight as Satoshi Bold.</li>
+      <li><strong>Weight hierarchy:</strong> Bold "off" (concept carrier) vs Medium "mind" (the result). Eye reads the concept first.</li>
+      <li><strong>Connected unit:</strong> Loop + "ff" share the same Bold weight, reading as one word fragment: "off".</li>
+      <li><strong>Meaning encoded:</strong> "off" = what you do (offload). "mind" = what you get back (clarity). The weight shift mirrors this.</li>
+    </ul>
+  </div>
+
+  <div class="notes" style="margin-top:16px;">
+    <h3>Variant Recommendation</h3>
+    <ul>
+      <li><strong>V3-A (Weight Contrast)</strong> — Best balance. Bold "off" creates presence without being heavy-handed. Medium "mind" stays readable.</li>
+      <li><strong>V3-C (Color Split)</strong> — Cleanest approach if you want same weight throughout. The teal "off" + white "mind" is elegant. But may not work in monochrome.</li>
+      <li><strong>V3-B (Weight + Opacity)</strong> — Most dramatic. Works for hero sections but "mind" may be too faded for small sizes.</li>
+      <li><strong>V3-D (Full Bold)</strong> — Simplest. If the loop alone carries enough meaning, you don't need weight/color splits. This is the "less is more" option.</li>
+      <li><strong>Next step:</strong> Once you pick a direction, converting the text to outlined paths gives us full control over kerning, spacing, and the loop-to-letter transition.</li>
+    </ul>
+  </div>
+
+</body>
+</html>

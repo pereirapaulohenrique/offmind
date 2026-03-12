@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OffMind Logo Exploration</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Geist', -apple-system, sans-serif;
+    background: #09090b;
+    color: #fafafa;
+    padding: 48px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    color: #a1a1aa;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+    max-width: 600px;
+  }
+
+  .direction {
+    margin-bottom: 72px;
+    border-top: 1px solid #27272a;
+    padding-top: 40px;
+  }
+
+  .direction-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .direction-number {
+    font-size: 13px;
+    font-weight: 600;
+    color: #2dd4bf;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .direction-title {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .direction-desc {
+    color: #a1a1aa;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+    max-width: 600px;
+  }
+
+  .size-row {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .size-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .size-label {
+    font-size: 11px;
+    color: #71717a;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+  }
+
+  .bg-row {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  .bg-card {
+    padding: 32px 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+  }
+
+  .bg-dark { background: #09090b; border: 1px solid #27272a; }
+  .bg-mid { background: #18181b; border: 1px solid #27272a; }
+  .bg-light { background: #fafafa; }
+
+  .full-lockup {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .wordmark {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .wordmark-dark { color: #fafafa; }
+  .wordmark-light { color: #09090b; }
+
+  .animation-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #18181b;
+    border: 1px solid #27272a;
+    border-radius: 8px;
+    color: #a1a1aa;
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: all 0.2s;
+  }
+  .animation-trigger:hover {
+    background: #27272a;
+    color: #fafafa;
+  }
+
+  .scores {
+    display: flex;
+    gap: 24px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .score {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .score-label {
+    font-size: 11px;
+    color: #71717a;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .score-bar {
+    width: 80px;
+    height: 4px;
+    background: #27272a;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .score-fill {
+    height: 100%;
+    background: #2dd4bf;
+    border-radius: 2px;
+    transition: width 0.6s ease;
+  }
+
+  .rec-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(45, 212, 191, 0.1);
+    border: 1px solid rgba(45, 212, 191, 0.2);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #2dd4bf;
+    margin-left: 12px;
+  }
+
+  /* Animations */
+  @keyframes draw-infinity {
+    0% { stroke-dashoffset: 600; }
+    80% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: 0; }
+  }
+
+  @keyframes draw-pause {
+    0% { stroke-dashoffset: 560; }
+    70% { stroke-dashoffset: 60; }
+    75% { stroke-dashoffset: 60; } /* pause at the gap */
+    90% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: 0; }
+  }
+
+  @keyframes fade-in-gap {
+    0%, 70% { opacity: 0; }
+    85%, 100% { opacity: 1; }
+  }
+
+  @keyframes om-draw {
+    0% { stroke-dashoffset: 400; }
+    100% { stroke-dashoffset: 0; }
+  }
+
+  @keyframes unwind {
+    0% { stroke-dashoffset: 500; }
+    100% { stroke-dashoffset: 0; }
+  }
+
+  @keyframes breathe {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  .animated .draw-path {
+    animation: draw-infinity 2s ease-in-out forwards;
+  }
+
+  .animated .draw-pause-path {
+    animation: draw-pause 2.5s ease-in-out forwards;
+  }
+
+  .animated .gap-glow {
+    animation: fade-in-gap 2.5s ease forwards;
+  }
+
+  .animated .om-path {
+    animation: om-draw 1.8s ease-in-out forwards;
+  }
+
+  .animated .unwind-path {
+    animation: unwind 2.5s ease-in-out forwards;
+  }
+
+  .animated .breathe-dot {
+    animation: breathe 2s ease-in-out infinite;
+  }
+</style>
+</head>
+<body>
+
+<h1>OffMind Logo Exploration</h1>
+<p class="subtitle">
+  Five directions for a distinctive mark. Each one rendered at multiple sizes, on different backgrounds, with animation previews. Click "Play Animation" to see the motion story.
+</p>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- DIRECTION 1: INTERRUPTED INFINITY -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="direction" id="dir1">
+  <div class="direction-header">
+    <span class="direction-number">Direction 01</span>
+    <span class="direction-title">Interrupted Infinity</span>
+  </div>
+  <p class="direction-desc">
+    The infinity symbol with one deliberate gap. Your thoughts loop endlessly, but OffMind creates the pause. The gap is the product metaphor — a visual exhale.
+  </p>
+
+  <div class="size-row">
+    <div class="size-item">
+      <span class="size-label">Hero (200px)</span>
+      <div class="logo-container">
+        <svg width="200" height="124" viewBox="0 0 200 124" fill="none">
+          <defs>
+            <linearGradient id="d1-g" x1="0" y1="62" x2="200" y2="62" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#5eead4"/>
+              <stop offset="50%" stop-color="#2dd4bf"/>
+              <stop offset="100%" stop-color="#0d9488"/>
+            </linearGradient>
+          </defs>
+          <!-- Full infinity with a gap at upper-right -->
+          <path d="M100,72 C92,104 60,110 28,104 C8,96 8,62 8,62 C8,28 28,8 60,14 C82,18 94,36 100,52 C106,36 118,18 140,14 C162,10 180,20 188,38"
+            stroke="url(#d1-g)" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <!-- Gap here (188,38 to 192,52 is missing) -->
+          <path d="M192,68 C192,96 172,116 140,110 C118,106 106,88 100,72"
+            stroke="url(#d1-g)" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <!-- Subtle glow at the gap -->
+          <circle cx="190" cy="53" r="8" fill="#2dd4bf" opacity="0.15"/>
+          <circle cx="190" cy="53" r="4" fill="#2dd4bf" opacity="0.25"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Nav (32px)</span>
+      <div class="logo-container">
+        <svg width="32" height="20" viewBox="0 0 200 124" fill="none">
+          <path d="M100,72 C92,104 60,110 28,104 C8,96 8,62 8,62 C8,28 28,8 60,14 C82,18 94,36 100,52 C106,36 118,18 140,14 C162,10 180,20 188,38"
+            stroke="#2dd4bf" stroke-width="16" stroke-linecap="round" fill="none"/>
+          <path d="M192,68 C192,96 172,116 140,110 C118,106 106,88 100,72"
+            stroke="#2dd4bf" stroke-width="16" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Favicon (16px)</span>
+      <div class="logo-container">
+        <svg width="16" height="10" viewBox="0 0 200 124" fill="none">
+          <path d="M100,72 C92,104 60,110 28,104 C8,96 8,62 8,62 C8,28 28,8 60,14 C82,18 94,36 100,52 C106,36 118,18 140,14 C162,10 180,20 188,38"
+            stroke="#2dd4bf" stroke-width="20" stroke-linecap="round" fill="none"/>
+          <path d="M192,68 C192,96 172,116 140,110 C118,106 106,88 100,72"
+            stroke="#2dd4bf" stroke-width="20" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full lockup -->
+  <div class="bg-row">
+    <div class="bg-card bg-dark">
+      <div class="full-lockup">
+        <svg width="32" height="20" viewBox="0 0 200 124" fill="none">
+          <path d="M100,72 C92,104 60,110 28,104 C8,96 8,62 8,62 C8,28 28,8 60,14 C82,18 94,36 100,52 C106,36 118,18 140,14 C162,10 180,20 188,38"
+            stroke="#2dd4bf" stroke-width="16" stroke-linecap="round" fill="none"/>
+          <path d="M192,68 C192,96 172,116 140,110 C118,106 106,88 100,72"
+            stroke="#2dd4bf" stroke-width="16" stroke-linecap="round" fill="none"/>
+        </svg>
+        <span class="wordmark wordmark-dark" style="font-size:18px;">OffMind</span>
+      </div>
+    </div>
+    <div class="bg-card bg-light">
+      <div class="full-lockup">
+        <svg width="32" height="20" viewBox="0 0 200 124" fill="none">
+          <path d="M100,72 C92,104 60,110 28,104 C8,96 8,62 8,62 C8,28 28,8 60,14 C82,18 94,36 100,52 C106,36 118,18 140,14 C162,10 180,20 188,38"
+            stroke="#0d9488" stroke-width="16" stroke-linecap="round" fill="none"/>
+          <path d="M192,68 C192,96 172,116 140,110 C118,106 106,88 100,72"
+            stroke="#0d9488" stroke-width="16" stroke-linecap="round" fill="none"/>
+        </svg>
+        <span class="wordmark wordmark-light" style="font-size:18px;">OffMind</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scores">
+    <div class="score"><span class="score-label">Ownable</span><div class="score-bar"><div class="score-fill" style="width:70%"></div></div></div>
+    <div class="score"><span class="score-label">Scalable</span><div class="score-bar"><div class="score-fill" style="width:80%"></div></div></div>
+    <div class="score"><span class="score-label">Adaptable</span><div class="score-bar"><div class="score-fill" style="width:90%"></div></div></div>
+    <div class="score"><span class="score-label">Animatable</span><div class="score-bar"><div class="score-fill" style="width:100%"></div></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- DIRECTION 2: OM MONOGRAM -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="direction" id="dir2">
+  <div class="direction-header">
+    <span class="direction-number">Direction 02</span>
+    <span class="direction-title">OM Monogram</span>
+    <span class="rec-badge">Recommended</span>
+  </div>
+  <p class="direction-desc">
+    The letters O and M fused into a single geometric mark. Reads as tech monogram first, OffMind initials second, consciousness resonance third. Think: Linear's L meets Notion's N — but it's OM.
+  </p>
+
+  <!-- Version A: Enclosed — O contains M -->
+  <p style="color:#71717a; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:16px; margin-top:8px;">Version A — Enclosed (O wraps M)</p>
+  <div class="size-row">
+    <div class="size-item">
+      <span class="size-label">Hero (120px)</span>
+      <div class="logo-container">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+          <defs>
+            <linearGradient id="d2a-g" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#5eead4"/>
+              <stop offset="100%" stop-color="#0d9488"/>
+            </linearGradient>
+          </defs>
+          <!-- O circle -->
+          <circle cx="60" cy="60" r="50" stroke="url(#d2a-g)" stroke-width="8" fill="none"/>
+          <!-- M inside — geometric peaks touching the O -->
+          <path d="M30,80 L30,44 L60,68 L90,44 L90,80"
+            stroke="url(#d2a-g)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Nav (32px)</span>
+      <div class="logo-container">
+        <svg width="32" height="32" viewBox="0 0 120 120" fill="none">
+          <circle cx="60" cy="60" r="50" stroke="#2dd4bf" stroke-width="10" fill="none"/>
+          <path d="M30,80 L30,44 L60,68 L90,44 L90,80"
+            stroke="#2dd4bf" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Favicon (16px)</span>
+      <div class="logo-container">
+        <svg width="16" height="16" viewBox="0 0 120 120" fill="none">
+          <circle cx="60" cy="60" r="50" stroke="#2dd4bf" stroke-width="14" fill="none"/>
+          <path d="M30,80 L30,44 L60,68 L90,44 L90,80"
+            stroke="#2dd4bf" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Version B: Merged — continuous stroke -->
+  <p style="color:#71717a; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:16px; margin-top:32px;">Version B — Merged (continuous stroke)</p>
+  <div class="size-row">
+    <div class="size-item">
+      <span class="size-label">Hero (120px)</span>
+      <div class="logo-container">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+          <defs>
+            <linearGradient id="d2b-g" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#5eead4"/>
+              <stop offset="50%" stop-color="#2dd4bf"/>
+              <stop offset="100%" stop-color="#0d9488"/>
+            </linearGradient>
+          </defs>
+          <!-- Continuous stroke: O flows into M flows back into O -->
+          <path d="M24,80 L24,40 C24,22 42,10 60,10 C78,10 96,22 96,40 L96,80 L60,52 L24,80 Z"
+            stroke="url(#d2b-g)" stroke-width="7" stroke-linejoin="round" fill="none"/>
+          <!-- Bottom closure -->
+          <path d="M24,80 C24,100 42,112 60,112 C78,112 96,100 96,80"
+            stroke="url(#d2b-g)" stroke-width="7" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Nav (32px)</span>
+      <div class="logo-container">
+        <svg width="32" height="32" viewBox="0 0 120 120" fill="none">
+          <path d="M24,80 L24,40 C24,22 42,10 60,10 C78,10 96,22 96,40 L96,80 L60,52 L24,80 Z"
+            stroke="#2dd4bf" stroke-width="9" stroke-linejoin="round" fill="none"/>
+          <path d="M24,80 C24,100 42,112 60,112 C78,112 96,100 96,80"
+            stroke="#2dd4bf" stroke-width="9" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Favicon (16px)</span>
+      <div class="logo-container">
+        <svg width="16" height="16" viewBox="0 0 120 120" fill="none">
+          <path d="M24,80 L24,40 C24,22 42,10 60,10 C78,10 96,22 96,40 L96,80 L60,52 L24,80 Z"
+            stroke="#2dd4bf" stroke-width="14" stroke-linejoin="round" fill="none"/>
+          <path d="M24,80 C24,100 42,112 60,112 C78,112 96,100 96,80"
+            stroke="#2dd4bf" stroke-width="14" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Version C: Abstract — geometric O+M that doesn't spell anything obviously -->
+  <p style="color:#71717a; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:16px; margin-top:32px;">Version C — Abstract (geometric fusion)</p>
+  <div class="size-row">
+    <div class="size-item">
+      <span class="size-label">Hero (120px)</span>
+      <div class="logo-container">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+          <defs>
+            <linearGradient id="d2c-g" x1="20" y1="20" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#5eead4"/>
+              <stop offset="100%" stop-color="#0d9488"/>
+            </linearGradient>
+          </defs>
+          <!-- Rounded square (the O) with an angular notch (the M) -->
+          <path d="M60,10 C88,10 110,32 110,60 C110,88 88,110 60,110 C32,110 10,88 10,60 C10,32 32,10 60,10"
+            stroke="url(#d2c-g)" stroke-width="7" fill="none"/>
+          <!-- Inner M chevron -->
+          <path d="M36,72 L36,48 L60,64 L84,48 L84,72"
+            stroke="url(#d2c-g)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Nav (32px)</span>
+      <div class="logo-container">
+        <svg width="32" height="32" viewBox="0 0 120 120" fill="none">
+          <circle cx="60" cy="60" r="50" stroke="#2dd4bf" stroke-width="9" fill="none"/>
+          <path d="M36,72 L36,48 L60,64 L84,48 L84,72"
+            stroke="#2dd4bf" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Favicon (16px)</span>
+      <div class="logo-container">
+        <svg width="16" height="16" viewBox="0 0 120 120" fill="none">
+          <circle cx="60" cy="60" r="50" stroke="#2dd4bf" stroke-width="14" fill="none"/>
+          <path d="M36,72 L36,48 L60,64 L84,48 L84,72"
+            stroke="#2dd4bf" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full lockups -->
+  <div class="bg-row">
+    <div class="bg-card bg-dark">
+      <div class="full-lockup">
+        <svg width="28" height="28" viewBox="0 0 120 120" fill="none">
+          <circle cx="60" cy="60" r="50" stroke="#2dd4bf" stroke-width="10" fill="none"/>
+          <path d="M30,80 L30,44 L60,68 L90,44 L90,80" stroke="#2dd4bf" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span class="wordmark wordmark-dark" style="font-size:18px;">OffMind</span>
+      </div>
+    </div>
+    <div class="bg-card bg-light">
+      <div class="full-lockup">
+        <svg width="28" height="28" viewBox="0 0 120 120" fill="none">
+          <circle cx="60" cy="60" r="50" stroke="#0d9488" stroke-width="10" fill="none"/>
+          <path d="M30,80 L30,44 L60,68 L90,44 L90,80" stroke="#0d9488" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span class="wordmark wordmark-light" style="font-size:18px;">OffMind</span>
+      </div>
+    </div>
+    <div class="bg-card bg-mid">
+      <div class="full-lockup">
+        <svg width="28" height="28" viewBox="0 0 120 120" fill="none">
+          <circle cx="60" cy="60" r="50" stroke="#2dd4bf" stroke-width="10" fill="none"/>
+          <path d="M30,80 L30,44 L60,68 L90,44 L90,80" stroke="#2dd4bf" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span class="wordmark wordmark-dark" style="font-size:18px;">OffMind</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scores">
+    <div class="score"><span class="score-label">Ownable</span><div class="score-bar"><div class="score-fill" style="width:90%"></div></div></div>
+    <div class="score"><span class="score-label">Scalable</span><div class="score-bar"><div class="score-fill" style="width:90%"></div></div></div>
+    <div class="score"><span class="score-label">Adaptable</span><div class="score-bar"><div class="score-fill" style="width:80%"></div></div></div>
+    <div class="score"><span class="score-label">Animatable</span><div class="score-bar"><div class="score-fill" style="width:70%"></div></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- DIRECTION 3: SPIRAL UNWIND -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="direction" id="dir3">
+  <div class="direction-header">
+    <span class="direction-number">Direction 03</span>
+    <span class="direction-title">Spiral Unwind</span>
+  </div>
+  <p class="direction-desc">
+    A tight spiral that loosens into a straight line. Tangled thoughts in, clear direction out. The strongest narrative — but hardest to scale to favicon size.
+  </p>
+
+  <div class="size-row">
+    <div class="size-item">
+      <span class="size-label">Hero (200px)</span>
+      <div class="logo-container">
+        <svg width="200" height="100" viewBox="0 0 200 100" fill="none">
+          <defs>
+            <linearGradient id="d3-g" x1="0" y1="50" x2="200" y2="50" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#0d9488"/>
+              <stop offset="40%" stop-color="#2dd4bf"/>
+              <stop offset="100%" stop-color="#5eead4"/>
+            </linearGradient>
+          </defs>
+          <!-- Tight spiral loosening into a line -->
+          <path d="M40,50 C40,38 48,32 56,34 C64,36 68,44 66,52 C64,62 54,68 44,66 C32,64 26,52 28,40 C30,26 42,18 56,20 C72,22 82,34 80,50 C78,68 64,80 46,78 C24,76 14,58 16,38 C18,16 36,4 60,6 C84,8 100,24 100,50
+            L200,50"
+            stroke="url(#d3-g)" stroke-width="6" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Nav (32px, spiral only)</span>
+      <div class="logo-container">
+        <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+          <!-- Simplified spiral for small size -->
+          <path d="M50,50 C50,42 56,38 62,40 C68,42 70,50 66,56 C62,64 52,66 46,60 C38,54 38,42 44,36 C52,28 64,30 70,38 C78,48 74,62 64,68 C52,76 36,72 30,60 C22,46 28,30 44,24 C60,18 78,26 84,42"
+            stroke="#2dd4bf" stroke-width="6" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Favicon (16px)</span>
+      <div class="logo-container">
+        <svg width="16" height="16" viewBox="0 0 100 100" fill="none">
+          <path d="M50,50 C50,42 56,38 62,40 C68,42 70,50 66,56 C62,64 52,66 46,60 C38,54 38,42 44,36 C52,28 64,30 70,38 C78,48 74,62 64,68"
+            stroke="#2dd4bf" stroke-width="10" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-row">
+    <div class="bg-card bg-dark">
+      <div class="full-lockup">
+        <svg width="28" height="28" viewBox="0 0 100 100" fill="none">
+          <path d="M50,50 C50,42 56,38 62,40 C68,42 70,50 66,56 C62,64 52,66 46,60 C38,54 38,42 44,36 C52,28 64,30 70,38 C78,48 74,62 64,68 C52,76 36,72 30,60"
+            stroke="#2dd4bf" stroke-width="8" stroke-linecap="round" fill="none"/>
+        </svg>
+        <span class="wordmark wordmark-dark" style="font-size:18px;">OffMind</span>
+      </div>
+    </div>
+    <div class="bg-card bg-light">
+      <div class="full-lockup">
+        <svg width="28" height="28" viewBox="0 0 100 100" fill="none">
+          <path d="M50,50 C50,42 56,38 62,40 C68,42 70,50 66,56 C62,64 52,66 46,60 C38,54 38,42 44,36 C52,28 64,30 70,38 C78,48 74,62 64,68 C52,76 36,72 30,60"
+            stroke="#0d9488" stroke-width="8" stroke-linecap="round" fill="none"/>
+        </svg>
+        <span class="wordmark wordmark-light" style="font-size:18px;">OffMind</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scores">
+    <div class="score"><span class="score-label">Ownable</span><div class="score-bar"><div class="score-fill" style="width:80%"></div></div></div>
+    <div class="score"><span class="score-label">Scalable</span><div class="score-bar"><div class="score-fill" style="width:50%"></div></div></div>
+    <div class="score"><span class="score-label">Adaptable</span><div class="score-bar"><div class="score-fill" style="width:70%"></div></div></div>
+    <div class="score"><span class="score-label">Animatable</span><div class="score-bar"><div class="score-fill" style="width:90%"></div></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- DIRECTION 4: CAPTURE-RELEASE BRACKET -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="direction" id="dir4">
+  <div class="direction-header">
+    <span class="direction-number">Direction 04</span>
+    <span class="direction-title">Capture-Release</span>
+  </div>
+  <p class="direction-desc">
+    An open container — things come in, get organized, and leave you in peace. The bracket represents the system that holds your thoughts. The dot is the thought itself.
+  </p>
+
+  <div class="size-row">
+    <div class="size-item">
+      <span class="size-label">Hero — Bracket + Dot (120px)</span>
+      <div class="logo-container">
+        <svg width="100" height="120" viewBox="0 0 100 120" fill="none">
+          <defs>
+            <linearGradient id="d4-g" x1="0" y1="0" x2="0" y2="120" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#5eead4"/>
+              <stop offset="100%" stop-color="#0d9488"/>
+            </linearGradient>
+          </defs>
+          <!-- Open bracket shape -->
+          <path d="M70,12 L30,12 C20,12 12,20 12,30 L12,90 C12,100 20,108 30,108 L70,108"
+            stroke="url(#d4-g)" stroke-width="8" stroke-linecap="round" fill="none"/>
+          <!-- The thought dot -->
+          <circle cx="50" cy="60" r="10" fill="#2dd4bf" opacity="0.8"/>
+          <!-- Release trail (fading dots) -->
+          <circle cx="72" cy="60" r="5" fill="#2dd4bf" opacity="0.3"/>
+          <circle cx="88" cy="60" r="3" fill="#2dd4bf" opacity="0.15"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Hero — Parentheses (120px)</span>
+      <div class="logo-container">
+        <svg width="100" height="120" viewBox="0 0 100 120" fill="none">
+          <defs>
+            <linearGradient id="d4b-g" x1="0" y1="0" x2="100" y2="120" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#5eead4"/>
+              <stop offset="100%" stop-color="#0d9488"/>
+            </linearGradient>
+          </defs>
+          <!-- Left parenthesis (full) -->
+          <path d="M38,10 C18,30 18,90 38,110"
+            stroke="url(#d4b-g)" stroke-width="8" stroke-linecap="round" fill="none"/>
+          <!-- Right parenthesis (shorter, fading = release) -->
+          <path d="M62,24 C78,40 78,80 62,96"
+            stroke="url(#d4b-g)" stroke-width="8" stroke-linecap="round" fill="none" opacity="0.5"/>
+          <!-- Thought dot between them -->
+          <circle cx="50" cy="60" r="8" fill="#2dd4bf"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Nav (32px)</span>
+      <div class="logo-container">
+        <svg width="28" height="32" viewBox="0 0 100 120" fill="none">
+          <path d="M70,12 L30,12 C20,12 12,20 12,30 L12,90 C12,100 20,108 30,108 L70,108"
+            stroke="#2dd4bf" stroke-width="10" stroke-linecap="round" fill="none"/>
+          <circle cx="50" cy="60" r="10" fill="#2dd4bf" opacity="0.8"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Favicon (16px)</span>
+      <div class="logo-container">
+        <svg width="14" height="16" viewBox="0 0 100 120" fill="none">
+          <path d="M70,12 L30,12 C20,12 12,20 12,30 L12,90 C12,100 20,108 30,108 L70,108"
+            stroke="#2dd4bf" stroke-width="16" stroke-linecap="round" fill="none"/>
+          <circle cx="48" cy="60" r="14" fill="#2dd4bf" opacity="0.8"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-row">
+    <div class="bg-card bg-dark">
+      <div class="full-lockup">
+        <svg width="24" height="28" viewBox="0 0 100 120" fill="none">
+          <path d="M70,12 L30,12 C20,12 12,20 12,30 L12,90 C12,100 20,108 30,108 L70,108"
+            stroke="#2dd4bf" stroke-width="10" stroke-linecap="round" fill="none"/>
+          <circle cx="50" cy="60" r="10" fill="#2dd4bf" opacity="0.8"/>
+        </svg>
+        <span class="wordmark wordmark-dark" style="font-size:18px;">OffMind</span>
+      </div>
+    </div>
+    <div class="bg-card bg-light">
+      <div class="full-lockup">
+        <svg width="24" height="28" viewBox="0 0 100 120" fill="none">
+          <path d="M70,12 L30,12 C20,12 12,20 12,30 L12,90 C12,100 20,108 30,108 L70,108"
+            stroke="#0d9488" stroke-width="10" stroke-linecap="round" fill="none"/>
+          <circle cx="50" cy="60" r="10" fill="#0d9488" opacity="0.8"/>
+        </svg>
+        <span class="wordmark wordmark-light" style="font-size:18px;">OffMind</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scores">
+    <div class="score"><span class="score-label">Ownable</span><div class="score-bar"><div class="score-fill" style="width:80%"></div></div></div>
+    <div class="score"><span class="score-label">Scalable</span><div class="score-bar"><div class="score-fill" style="width:70%"></div></div></div>
+    <div class="score"><span class="score-label">Adaptable</span><div class="score-bar"><div class="score-fill" style="width:80%"></div></div></div>
+    <div class="score"><span class="score-label">Animatable</span><div class="score-bar"><div class="score-fill" style="width:80%"></div></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- DIRECTION 5: NEGATIVE-SPACE KNOT -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="direction" id="dir5">
+  <div class="direction-header">
+    <span class="direction-number">Direction 05</span>
+    <span class="direction-title">Negative-Space Knot</span>
+  </div>
+  <p class="direction-desc">
+    A thick ribbon infinity where the negative spaces suggest brain hemispheres or the letters O and M. Three readings in one mark: infinity (shape), OffMind (initials), brain (feeling). The FedEx arrow approach — highest ceiling, hardest to execute.
+  </p>
+
+  <div class="size-row">
+    <div class="size-item">
+      <span class="size-label">Hero (200px)</span>
+      <div class="logo-container">
+        <svg width="200" height="130" viewBox="0 0 200 130" fill="none">
+          <defs>
+            <linearGradient id="d5-g" x1="0" y1="65" x2="200" y2="65" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#5eead4"/>
+              <stop offset="50%" stop-color="#2dd4bf"/>
+              <stop offset="100%" stop-color="#0d9488"/>
+            </linearGradient>
+          </defs>
+          <!-- Thick ribbon infinity — the fills create the negative space -->
+          <!-- Left loop -->
+          <path d="M100,50 C88,24 70,8 48,8 C22,8 4,28 4,65 C4,102 22,122 48,122 C70,122 88,106 100,80
+                   C100,80 92,100 70,108 C52,114 20,108 20,65 C20,22 52,16 70,22 C88,30 100,50 100,50 Z"
+            fill="url(#d5-g)"/>
+          <!-- Right loop -->
+          <path d="M100,80 C112,106 130,122 152,122 C178,122 196,102 196,65 C196,28 178,8 152,8 C130,8 112,24 100,50
+                   C100,50 108,30 130,22 C148,16 180,22 180,65 C180,108 148,114 130,108 C112,100 100,80 100,80 Z"
+            fill="url(#d5-g)"/>
+          <!-- Center crossing ribbon piece (creates the knot) -->
+          <path d="M100,50 C104,42 108,34 114,28 L106,22 C100,28 96,36 92,44 L100,50 Z" fill="url(#d5-g)" opacity="0.9"/>
+          <path d="M100,80 C96,88 92,96 86,102 L94,108 C100,102 104,94 108,86 L100,80 Z" fill="url(#d5-g)" opacity="0.9"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Nav (40px)</span>
+      <div class="logo-container">
+        <svg width="40" height="26" viewBox="0 0 200 130" fill="none">
+          <path d="M100,50 C88,24 70,8 48,8 C22,8 4,28 4,65 C4,102 22,122 48,122 C70,122 88,106 100,80
+                   C100,80 92,100 70,108 C52,114 20,108 20,65 C20,22 52,16 70,22 C88,30 100,50 100,50 Z" fill="#2dd4bf"/>
+          <path d="M100,80 C112,106 130,122 152,122 C178,122 196,102 196,65 C196,28 178,8 152,8 C130,8 112,24 100,50
+                   C100,50 108,30 130,22 C148,16 180,22 180,65 C180,108 148,114 130,108 C112,100 100,80 100,80 Z" fill="#2dd4bf"/>
+          <path d="M100,50 C104,42 108,34 114,28 L106,22 C100,28 96,36 92,44 L100,50 Z" fill="#2dd4bf" opacity="0.9"/>
+          <path d="M100,80 C96,88 92,96 86,102 L94,108 C100,102 104,94 108,86 L100,80 Z" fill="#2dd4bf" opacity="0.9"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Favicon (16px)</span>
+      <div class="logo-container">
+        <svg width="16" height="10" viewBox="0 0 200 130" fill="none">
+          <!-- Simplified at this size - just the filled shape -->
+          <path d="M100,50 C88,24 70,8 48,8 C22,8 4,28 4,65 C4,102 22,122 48,122 C70,122 88,106 100,80
+                   C112,106 130,122 152,122 C178,122 196,102 196,65 C196,28 178,8 152,8 C130,8 112,24 100,50 Z"
+            fill="#2dd4bf"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-row">
+    <div class="bg-card bg-dark">
+      <div class="full-lockup">
+        <svg width="36" height="24" viewBox="0 0 200 130" fill="none">
+          <path d="M100,50 C88,24 70,8 48,8 C22,8 4,28 4,65 C4,102 22,122 48,122 C70,122 88,106 100,80 C100,80 92,100 70,108 C52,114 20,108 20,65 C20,22 52,16 70,22 C88,30 100,50 100,50 Z" fill="#2dd4bf"/>
+          <path d="M100,80 C112,106 130,122 152,122 C178,122 196,102 196,65 C196,28 178,8 152,8 C130,8 112,24 100,50 C100,50 108,30 130,22 C148,16 180,22 180,65 C180,108 148,114 130,108 C112,100 100,80 100,80 Z" fill="#2dd4bf"/>
+        </svg>
+        <span class="wordmark wordmark-dark" style="font-size:18px;">OffMind</span>
+      </div>
+    </div>
+    <div class="bg-card bg-light">
+      <div class="full-lockup">
+        <svg width="36" height="24" viewBox="0 0 200 130" fill="none">
+          <path d="M100,50 C88,24 70,8 48,8 C22,8 4,28 4,65 C4,102 22,122 48,122 C70,122 88,106 100,80 C100,80 92,100 70,108 C52,114 20,108 20,65 C20,22 52,16 70,22 C88,30 100,50 100,50 Z" fill="#0d9488"/>
+          <path d="M100,80 C112,106 130,122 152,122 C178,122 196,102 196,65 C196,28 178,8 152,8 C130,8 112,24 100,50 C100,50 108,30 130,22 C148,16 180,22 180,65 C180,108 148,114 130,108 C112,100 100,80 100,80 Z" fill="#0d9488"/>
+        </svg>
+        <span class="wordmark wordmark-light" style="font-size:18px;">OffMind</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scores">
+    <div class="score"><span class="score-label">Ownable</span><div class="score-bar"><div class="score-fill" style="width:100%"></div></div></div>
+    <div class="score"><span class="score-label">Scalable</span><div class="score-bar"><div class="score-fill" style="width:60%"></div></div></div>
+    <div class="score"><span class="score-label">Adaptable</span><div class="score-bar"><div class="score-fill" style="width:70%"></div></div></div>
+    <div class="score"><span class="score-label">Animatable</span><div class="score-bar"><div class="score-fill" style="width:80%"></div></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CURRENT LOGO FOR COMPARISON -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="direction" id="current" style="border-top-color: #3f3f46;">
+  <div class="direction-header">
+    <span class="direction-number" style="color:#71717a;">Current</span>
+    <span class="direction-title" style="color:#71717a;">Existing Infinity (baseline)</span>
+  </div>
+  <p class="direction-desc">
+    The current 3D infinity with teal gradient, highlight overlays, and drop shadow. Technically well-made but generic — 223,000+ stock infinity logos exist.
+  </p>
+
+  <div class="size-row">
+    <div class="size-item">
+      <span class="size-label">Hero (200px)</span>
+      <div class="logo-container">
+        <svg width="200" height="124" viewBox="0 0 200 124" fill="none">
+          <defs>
+            <linearGradient id="cur-left" x1="0" y1="30" x2="100" y2="90" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#5eead4"/><stop offset="60%" stop-color="#2dd4bf"/><stop offset="100%" stop-color="#14b8a6"/>
+            </linearGradient>
+            <linearGradient id="cur-right" x1="100" y1="30" x2="200" y2="90" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#14b8a6"/><stop offset="40%" stop-color="#0d9488"/><stop offset="100%" stop-color="#0f766e"/>
+            </linearGradient>
+            <linearGradient id="cur-cross" x1="70" y1="20" x2="130" y2="104" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#5eead4"/><stop offset="50%" stop-color="#2dd4bf"/><stop offset="100%" stop-color="#0d9488"/>
+            </linearGradient>
+          </defs>
+          <path d="M100,52 C100,52 108,20 140,14 C172,8 192,28 192,62 C192,96 172,116 140,110 C118,106 106,88 100,72" stroke="url(#cur-right)" stroke-width="18" stroke-linecap="round" fill="none"/>
+          <path d="M100,72 C100,72 92,104 60,110 C28,116 8,96 8,62 C8,28 28,8 60,14 C82,18 94,36 100,52" stroke="url(#cur-left)" stroke-width="18" stroke-linecap="round" fill="none"/>
+          <path d="M88,38 C94,48 106,76 112,86" stroke="url(#cur-cross)" stroke-width="19" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Nav (32px)</span>
+      <div class="logo-container">
+        <svg width="32" height="20" viewBox="0 0 200 124" fill="none">
+          <path d="M100,52 C94,36 82,18 60,14 C28,8 8,28 8,62 C8,96 28,116 60,110 C92,104 100,72 100,72 C100,72 108,40 140,14 C172,8 192,28 192,62 C192,96 172,116 140,110 C108,104 100,52 100,52 Z"
+            stroke="#2dd4bf" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Favicon (16px)</span>
+      <div class="logo-container">
+        <svg width="16" height="10" viewBox="0 0 200 124" fill="none">
+          <path d="M100,52 C94,36 82,18 60,14 C28,8 8,28 8,62 C8,96 28,116 60,110 C92,104 100,72 100,72 C100,72 108,40 140,14 C172,8 192,28 192,62 C192,96 172,116 140,110 C108,104 100,52 100,52 Z"
+            stroke="#2dd4bf" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- RECOMMENDATION SUMMARY -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div style="margin-top:48px; padding:32px; background:#18181b; border-radius:12px; border: 1px solid #27272a;">
+  <h2 style="font-size:20px; font-weight:600; margin-bottom:16px;">Recommendation</h2>
+  <p style="color:#d4d4d8; font-size:15px; line-height:1.7; margin-bottom:16px;">
+    <strong style="color:#2dd4bf;">Primary: Direction 2 (OM Monogram)</strong> — Works at every size without needing two versions. The initials create instant memory. Most defensible as trademark. The geometric execution pushes it toward SaaS/tech, away from spiritual/wellness.
+  </p>
+  <p style="color:#d4d4d8; font-size:15px; line-height:1.7; margin-bottom:16px;">
+    <strong>Fallback: Direction 1 (Interrupted Infinity)</strong> — Lowest risk evolution from current mark. The gap + animation story is genuinely distinctive. Keeps existing brand equity.
+  </p>
+  <p style="color:#d4d4d8; font-size:15px; line-height:1.7;">
+    <strong>Wild card: Direction 4 (Capture-Release)</strong> — The bracket + dot is the most product-aligned metaphor and the most minimal. Could be extremely strong if Paulo wants something that breaks from the infinity concept entirely.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- DIRECTION 6A: HYBRID — BROKEN OM LOOP (TOP RECOMMENDATION) -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="direction" id="dir6a" style="border-top: 2px solid #2dd4bf;">
+  <div class="direction-header">
+    <span class="direction-number">Direction 06a</span>
+    <span class="direction-title">Broken OM Loop</span>
+    <span class="rec-badge" style="background:rgba(45,212,191,0.15);">TOP PICK (25/25)</span>
+  </div>
+  <p class="direction-desc">
+    The O and M letterforms arranged to suggest an infinity loop, but with a deliberate gap. Three readings: brand initials (OM), the thinking loop (infinity), and the product promise (the break). The gap IS the product.
+  </p>
+
+  <!-- Version A: O flows into M, M's right leg curves back but stops -->
+  <p style="color:#71717a; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:16px; margin-top:8px;">Version A — O-M Loop with Gap</p>
+  <div class="size-row">
+    <div class="size-item">
+      <span class="size-label">Hero (160px)</span>
+      <div class="logo-container">
+        <svg width="160" height="120" viewBox="0 0 160 120" fill="none">
+          <defs>
+            <linearGradient id="d6a-g" x1="0" y1="60" x2="160" y2="60" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#5eead4"/>
+              <stop offset="50%" stop-color="#2dd4bf"/>
+              <stop offset="100%" stop-color="#0d9488"/>
+            </linearGradient>
+          </defs>
+          <!-- O: left loop, nearly complete circle -->
+          <path d="M55,16 C28,16 8,36 8,60 C8,84 28,104 55,104 C72,104 82,94 88,82"
+            stroke="url(#d6a-g)" stroke-width="10" stroke-linecap="round" fill="none"/>
+          <!-- M: two peaks flowing from the O's endpoint -->
+          <path d="M88,82 L88,30 L110,60 L132,30 L132,82"
+            stroke="url(#d6a-g)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <!-- M's right leg curves back toward O but STOPS — the gap -->
+          <path d="M132,82 C132,96 122,104 110,106"
+            stroke="url(#d6a-g)" stroke-width="10" stroke-linecap="round" fill="none"/>
+          <!-- Gap glow between the end of the curve and the O -->
+          <circle cx="82" cy="12" r="6" fill="#2dd4bf" opacity="0.12"/>
+          <circle cx="82" cy="12" r="3" fill="#2dd4bf" opacity="0.2"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Nav (36px)</span>
+      <div class="logo-container">
+        <svg width="48" height="36" viewBox="0 0 160 120" fill="none">
+          <path d="M55,16 C28,16 8,36 8,60 C8,84 28,104 55,104 C72,104 82,94 88,82"
+            stroke="#2dd4bf" stroke-width="12" stroke-linecap="round" fill="none"/>
+          <path d="M88,82 L88,30 L110,60 L132,30 L132,82"
+            stroke="#2dd4bf" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M132,82 C132,96 122,104 110,106"
+            stroke="#2dd4bf" stroke-width="12" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Favicon (16px)</span>
+      <div class="logo-container">
+        <svg width="22" height="16" viewBox="0 0 160 120" fill="none">
+          <path d="M55,16 C28,16 8,36 8,60 C8,84 28,104 55,104 C72,104 82,94 88,82"
+            stroke="#2dd4bf" stroke-width="16" stroke-linecap="round" fill="none"/>
+          <path d="M88,82 L88,30 L110,60 L132,30 L132,82"
+            stroke="#2dd4bf" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M132,82 C132,96 122,104 110,106"
+            stroke="#2dd4bf" stroke-width="16" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Version B: More compact, the letters merge into a continuous shape -->
+  <p style="color:#71717a; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:16px; margin-top:32px;">Version B — Compact Loop Mark</p>
+  <div class="size-row">
+    <div class="size-item">
+      <span class="size-label">Hero (140px)</span>
+      <div class="logo-container">
+        <svg width="140" height="140" viewBox="0 0 140 140" fill="none">
+          <defs>
+            <linearGradient id="d6b-g" x1="0" y1="0" x2="140" y2="140" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#5eead4"/>
+              <stop offset="60%" stop-color="#2dd4bf"/>
+              <stop offset="100%" stop-color="#0d9488"/>
+            </linearGradient>
+          </defs>
+          <!-- Single continuous stroke: O shape flowing into M peaks, M curves back but gap before closing -->
+          <path d="M70,14 C36,14 10,36 10,70 C10,104 36,126 70,126 C88,126 100,118 106,106 L106,46 L70,80 L34,46"
+            stroke="url(#d6b-g)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <!-- The almost-closing curve (gap at top) -->
+          <path d="M34,46 L34,106 C34,120 48,128 62,126"
+            stroke="url(#d6b-g)" stroke-width="9" stroke-linecap="round" fill="none"/>
+          <!-- Gap glow -->
+          <circle cx="66" cy="14" r="5" fill="#2dd4bf" opacity="0.15"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Nav (32px)</span>
+      <div class="logo-container">
+        <svg width="32" height="32" viewBox="0 0 140 140" fill="none">
+          <path d="M70,14 C36,14 10,36 10,70 C10,104 36,126 70,126 C88,126 100,118 106,106 L106,46 L70,80 L34,46"
+            stroke="#2dd4bf" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M34,46 L34,106 C34,120 48,128 62,126"
+            stroke="#2dd4bf" stroke-width="12" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Favicon (16px)</span>
+      <div class="logo-container">
+        <svg width="16" height="16" viewBox="0 0 140 140" fill="none">
+          <path d="M70,14 C36,14 10,36 10,70 C10,104 36,126 70,126 C88,126 100,118 106,106 L106,46 L70,80 L34,46"
+            stroke="#2dd4bf" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M34,46 L34,106 C34,120 48,128 62,126"
+            stroke="#2dd4bf" stroke-width="16" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Version C: Square container (rounded rect) with OM mark inside, gap at top-right -->
+  <p style="color:#71717a; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:16px; margin-top:32px;">Version C — Contained OM with Break</p>
+  <div class="size-row">
+    <div class="size-item">
+      <span class="size-label">Hero (120px)</span>
+      <div class="logo-container">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+          <defs>
+            <linearGradient id="d6c-g" x1="10" y1="10" x2="110" y2="110" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#5eead4"/>
+              <stop offset="100%" stop-color="#0d9488"/>
+            </linearGradient>
+          </defs>
+          <!-- Rounded rectangle with a gap at top-right corner -->
+          <path d="M80,8 L24,8 C14,8 8,14 8,24 L8,96 C8,106 14,112 24,112 L96,112 C106,112 112,106 112,96 L112,40"
+            stroke="url(#d6c-g)" stroke-width="7" stroke-linecap="round" fill="none"/>
+          <!-- Inner M chevron -->
+          <path d="M30,78 L30,46 L60,66 L90,46 L90,78"
+            stroke="url(#d6c-g)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <!-- Gap glow at the break -->
+          <circle cx="96" cy="12" r="5" fill="#2dd4bf" opacity="0.2"/>
+          <circle cx="96" cy="12" r="2.5" fill="#2dd4bf" opacity="0.35"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Nav (32px)</span>
+      <div class="logo-container">
+        <svg width="32" height="32" viewBox="0 0 120 120" fill="none">
+          <path d="M80,8 L24,8 C14,8 8,14 8,24 L8,96 C8,106 14,112 24,112 L96,112 C106,112 112,106 112,96 L112,40"
+            stroke="#2dd4bf" stroke-width="9" stroke-linecap="round" fill="none"/>
+          <path d="M30,78 L30,46 L60,66 L90,46 L90,78"
+            stroke="#2dd4bf" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="size-item">
+      <span class="size-label">Favicon (16px)</span>
+      <div class="logo-container">
+        <svg width="16" height="16" viewBox="0 0 120 120" fill="none">
+          <path d="M80,8 L24,8 C14,8 8,14 8,24 L8,96 C8,106 14,112 24,112 L96,112 C106,112 112,106 112,96 L112,40"
+            stroke="#2dd4bf" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <path d="M30,78 L30,46 L60,66 L90,46 L90,78"
+            stroke="#2dd4bf" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full lockups -->
+  <div class="bg-row">
+    <div class="bg-card bg-dark">
+      <div class="full-lockup">
+        <svg width="28" height="28" viewBox="0 0 120 120" fill="none">
+          <path d="M80,8 L24,8 C14,8 8,14 8,24 L8,96 C8,106 14,112 24,112 L96,112 C106,112 112,106 112,96 L112,40"
+            stroke="#2dd4bf" stroke-width="9" stroke-linecap="round" fill="none"/>
+          <path d="M30,78 L30,46 L60,66 L90,46 L90,78"
+            stroke="#2dd4bf" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span class="wordmark wordmark-dark" style="font-size:18px;">OffMind</span>
+      </div>
+    </div>
+    <div class="bg-card bg-light">
+      <div class="full-lockup">
+        <svg width="28" height="28" viewBox="0 0 120 120" fill="none">
+          <path d="M80,8 L24,8 C14,8 8,14 8,24 L8,96 C8,106 14,112 24,112 L96,112 C106,112 112,106 112,96 L112,40"
+            stroke="#0d9488" stroke-width="9" stroke-linecap="round" fill="none"/>
+          <path d="M30,78 L30,46 L60,66 L90,46 L90,78"
+            stroke="#0d9488" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span class="wordmark wordmark-light" style="font-size:18px;">OffMind</span>
+      </div>
+    </div>
+    <div class="bg-card bg-mid">
+      <div class="full-lockup">
+        <svg width="28" height="28" viewBox="0 0 120 120" fill="none">
+          <path d="M80,8 L24,8 C14,8 8,14 8,24 L8,96 C8,106 14,112 24,112 L96,112 C106,112 112,106 112,96 L112,40"
+            stroke="#2dd4bf" stroke-width="9" stroke-linecap="round" fill="none"/>
+          <path d="M30,78 L30,46 L60,66 L90,46 L90,78"
+            stroke="#2dd4bf" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span class="wordmark wordmark-dark" style="font-size:18px;">OffMind</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scores">
+    <div class="score"><span class="score-label">Ownable</span><div class="score-bar"><div class="score-fill" style="width:100%"></div></div></div>
+    <div class="score"><span class="score-label">Scalable</span><div class="score-bar"><div class="score-fill" style="width:100%"></div></div></div>
+    <div class="score"><span class="score-label">Adaptable</span><div class="score-bar"><div class="score-fill" style="width:100%"></div></div></div>
+    <div class="score"><span class="score-label">Animatable</span><div class="score-bar"><div class="score-fill" style="width:90%"></div></div></div>
+  </div>
+</div>
+
+<p style="color:#52525b; font-size:12px; margin-top:48px; text-align:center;">
+  OffMind Logo Exploration — Generated 2026-03-08. These are rough SVG concepts, not final designs.
+</p>
+
+</body>
+</html>

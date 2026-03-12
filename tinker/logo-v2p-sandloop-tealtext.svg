@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 100">
+  <defs>
+    <style>
+      @import url('https://api.fontshare.com/v2/css?f[]=satoshi@500&amp;display=swap');
+    </style>
+    <linearGradient id="o-sandl" gradientUnits="userSpaceOnUse" x1="14" y1="38" x2="40" y2="72">
+      <stop offset="0" stop-color="#e8dcc8"/>
+      <stop offset="1" stop-color="#c8bca8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sand loop + teal text — warmth in the mark, brand color in the word -->
+  <path
+    d="M 33.5 41.5 A 13.5 15.5 0 1 0 37 46"
+    fill="none" stroke="url(#o-sandl)" stroke-width="5" stroke-linecap="round"
+  />
+  <text x="44" y="70"
+    font-family="'Satoshi', 'Inter', 'Geist Sans', sans-serif"
+    font-weight="500" font-size="52" letter-spacing="0.5"
+    fill="#2dd4a8"
+  >ffmind</text>
+</svg>

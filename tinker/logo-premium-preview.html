@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Crystal Premium — Before / After</title>
+<style>
+  body { margin: 0; font-family: system-ui; background: #09090b; color: #a1a1aa; padding: 48px; display: flex; flex-direction: column; align-items: center; gap: 48px; }
+  h1 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: #52525b; margin: 0; }
+  h2 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: #52525b; margin: 0 0 12px; }
+  .row { display: flex; gap: 32px; align-items: end; flex-wrap: wrap; justify-content: center; }
+  .card { padding: 20px; border-radius: 14px; text-align: center; }
+  .dark { background: #09090b; border: 1px solid #27272a; }
+  .light { background: #fafafa; border: 1px solid #e4e4e7; }
+  .s span { font-size: 8px; display: block; margin-top: 5px; color: #3f3f46; }
+  .section { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .versus { display: flex; gap: 80px; align-items: start; flex-wrap: wrap; justify-content: center; }
+  .col { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .col-label { font-size: 13px; font-weight: 600; color: #a1a1aa; letter-spacing: 0.05em; }
+  .nav { width: 540px; height: 46px; background: #09090b; border: 1px solid #27272a; border-radius: 10px; display: flex; align-items: center; padding: 0 16px; }
+  .nav img { width: 24px; height: 24px; margin-right: 8px; }
+  .nav .name { font-size: 14px; font-weight: 600; color: #fafafa; letter-spacing: -0.02em; }
+  .nav .links { margin-left: auto; display: flex; align-items: center; gap: 16px; font-size: 12px; color: #71717a; }
+  .nav .cta { background: #14b8a6; color: #09090b; padding: 4px 10px; border-radius: 5px; font-weight: 500; }
+  .nav-label { text-align: center; font-size: 9px; color: #3f3f46; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+  <h1>Crystal — Before vs Premium</h1>
+
+  <!-- Display size comparison -->
+  <div class="section">
+    <h2>Display — Dark</h2>
+    <div class="versus">
+      <div class="col">
+        <span class="col-label">Before</span>
+        <div class="card dark"><img src="logo-polished.svg" width="180" height="180"></div>
+      </div>
+      <div class="col">
+        <span class="col-label">Premium</span>
+        <div class="card dark"><img src="logo-premium.svg" width="180" height="180"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- On light -->
+  <div class="section">
+    <h2>Display — Light</h2>
+    <div class="versus">
+      <div class="col">
+        <div class="card light"><img src="logo-polished.svg" width="180" height="180"></div>
+      </div>
+      <div class="col">
+        <div class="card light"><img src="logo-premium.svg" width="180" height="180"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Premium solo at all sizes -->
+  <div class="section">
+    <h2>Premium — Size Scale Dark</h2>
+    <div class="row">
+      <div class="card dark s"><img src="logo-premium.svg" width="180" height="180"><span>180</span></div>
+      <div class="card dark s"><img src="logo-premium.svg" width="96" height="96"><span>96</span></div>
+      <div class="card dark s"><img src="logo-premium.svg" width="48" height="48"><span>48</span></div>
+      <div class="card dark s"><img src="logo-premium.svg" width="32" height="32"><span>32</span></div>
+      <div class="card dark s"><img src="logo-premium.svg" width="20" height="20"><span>20</span></div>
+      <div class="card dark s"><img src="logo-premium.svg" width="16" height="16"><span>16</span></div>
+    </div>
+  </div>
+
+  <!-- On light sizes -->
+  <div class="section">
+    <h2>Premium — Size Scale Light</h2>
+    <div class="row">
+      <div class="card light s"><img src="logo-premium.svg" width="180" height="180"><span>180</span></div>
+      <div class="card light s"><img src="logo-premium.svg" width="48" height="48"><span>48</span></div>
+      <div class="card light s"><img src="logo-premium.svg" width="16" height="16"><span>16</span></div>
+    </div>
+  </div>
+
+  <!-- Wordmark -->
+  <div class="section">
+    <h2>Wordmark</h2>
+    <div class="versus">
+      <div class="col">
+        <span class="col-label">Before</span>
+        <div class="card dark" style="display:flex;align-items:center;gap:10px;">
+          <img src="logo-polished.svg" width="28" height="28">
+          <span style="font-size:18px;font-weight:600;color:#fafafa;letter-spacing:-0.02em;">OffMind</span>
+        </div>
+      </div>
+      <div class="col">
+        <span class="col-label">Premium</span>
+        <div class="card dark" style="display:flex;align-items:center;gap:10px;">
+          <img src="logo-premium.svg" width="28" height="28">
+          <span style="font-size:18px;font-weight:600;color:#fafafa;letter-spacing:-0.02em;">OffMind</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="section">
+    <h2>Navigation</h2>
+    <div class="nav-label">Before</div>
+    <div class="nav">
+      <img src="logo-polished.svg">
+      <span class="name">OffMind</span>
+      <div class="links">How it works &nbsp; Pricing &nbsp; FAQ <span class="cta">Get Access</span></div>
+    </div>
+    <div class="nav-label">Premium</div>
+    <div class="nav">
+      <img src="logo-premium.svg">
+      <span class="name">OffMind</span>
+      <div class="links">How it works &nbsp; Pricing &nbsp; FAQ <span class="cta">Get Access</span></div>
+    </div>
+  </div>
+
+</body>
+</html>

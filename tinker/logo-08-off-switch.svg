@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="teal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <!-- Power button symbol with "off" embedded. Circle with gap at top (universal power symbol). -->
+  <!-- The vertical line at top is the power symbol stem -->
+  <!-- Power button circle (gap at top) -->
+  <path d="
+    M 82 52
+    A 62 62 0 1 0 118 52
+  " fill="none" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round"/>
+  <!-- Power stem / vertical line -->
+  <line x1="100" y1="30" x2="100" y2="85" stroke="url(#teal-grad)" stroke-width="14" stroke-linecap="round"/>
+  <!-- Two small "ff" strokes on either side of the stem to suggest "off" -->
+  <!-- Left f crossbar -->
+  <line x1="78" y1="70" x2="90" y2="70" stroke="url(#teal-grad)" stroke-width="8" stroke-linecap="round"/>
+  <!-- Right f crossbar -->
+  <line x1="110" y1="70" x2="122" y2="70" stroke="url(#teal-grad)" stroke-width="8" stroke-linecap="round"/>
+</svg>

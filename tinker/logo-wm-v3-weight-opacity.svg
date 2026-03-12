@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 100">
+  <defs>
+    <style>
+      @import url('https://api.fontshare.com/v2/css?f[]=satoshi@500,700&amp;display=swap');
+    </style>
+    <linearGradient id="o-v3b" gradientUnits="userSpaceOnUse" x1="14" y1="38" x2="40" y2="72">
+      <stop offset="0" stop-color="#5eebb8"/>
+      <stop offset="1" stop-color="#0d9478"/>
+    </linearGradient>
+  </defs>
+
+  <!--
+    V3 Weight + Opacity — like Focus: bold section + faded section
+    "off" bold white + "mind" medium at 60% opacity
+    Creates stronger visual hierarchy
+  -->
+
+  <!-- Open loop "o" — bold weight -->
+  <path
+    d="M 30 41
+       A 12 13.5 0 1 0 34.5 44"
+    fill="none"
+    stroke="url(#o-v3b)"
+    stroke-width="6.5"
+    stroke-linecap="round"
+  />
+
+  <!-- "ff" in Bold -->
+  <text
+    x="40" y="68"
+    font-family="'Satoshi', 'Inter', 'Geist Sans', sans-serif"
+    font-weight="700"
+    font-size="48"
+    letter-spacing="0.5"
+    fill="#fafafa"
+  >ff</text>
+
+  <!-- "mind" in Medium, reduced opacity -->
+  <text
+    x="82" y="68"
+    font-family="'Satoshi', 'Inter', 'Geist Sans', sans-serif"
+    font-weight="500"
+    font-size="48"
+    letter-spacing="0.5"
+    fill="#fafafa"
+    opacity="0.55"
+  >mind</text>
+</svg>
