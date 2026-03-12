@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import { TodayPageClient } from './client';
 import type { Item, Destination } from '@/types/database';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Today',
 };
@@ -169,6 +171,7 @@ export default async function TodayPage() {
       somedayItems={(somedayItems || []) as Item[]}
       allActiveItems={(allActiveItems || []) as Item[]}
       staleItems={(staleItems || []) as Item[]}
+      destinations={(destinations || []) as Destination[]}
     />
   );
 }

@@ -23,13 +23,14 @@ import {
   Lightbulb,
   AlertCircle,
   TrendingUp,
+  FileText,
 } from 'lucide-react';
 import { useUIStore } from '@/stores/ui';
 import { cn } from '@/lib/utils';
-import { format, formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow, differenceInDays } from 'date-fns';
 import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
 import { createClient } from '@/lib/supabase/client';
-import type { Item, Profile } from '@/types/database';
+import type { Item, Destination } from '@/types/database';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -49,6 +50,7 @@ interface TodayPageClientProps {
   somedayItems: Item[];
   allActiveItems: Item[];
   staleItems: Item[];
+  destinations: Destination[];
 }
 
 // ---------------------------------------------------------------------------
@@ -60,14 +62,14 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.06,
-      delayChildren: 0.04,
+      staggerChildren: 0.04,
+      delayChildren: 0.02,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 12 },
+  hidden: { opacity: 0, y: 8 },
   visible: {
     opacity: 1,
     y: 0,
@@ -76,7 +78,7 @@ const itemVariants = {
 };
 
 const listItemVariants = {
-  hidden: { opacity: 0, x: -10 },
+  hidden: { opacity: 0, x: -6 },
   visible: {
     opacity: 1,
     x: 0,
@@ -105,46 +107,73 @@ function formatOverdueDistance(scheduledAt: string): string {
   return formatDistanceToNow(new Date(scheduledAt), { addSuffix: true });
 }
 
+function formatAge(createdAt: string): string {
+  const days = differenceInDays(new Date(), new Date(createdAt));
+  if (days === 0) return 'today';
+  if (days === 1) return '1d';
+  if (days < 7) return `${days}d`;
+  if (days < 30) return `${Math.floor(days / 7)}w`;
+  return `${Math.floor(days / 30)}mo`;
+}
+
+function getDestinationName(
+  destinationId: string | null,
+  destinations: Destination[],
+): string | null {
+  if (!destinationId) return null;
+  const dest = destinations.find((d) => d.id === destinationId);
+  return dest?.name || null;
+}
+
 // ---------------------------------------------------------------------------
 // Sub-components
 // ---------------------------------------------------------------------------
 
-function SummaryCard({
-  count,
-  label,
-  icon: Icon,
-  onClick,
+/** Compact status bar replacing the 3 big cards */
+function StatusBar({
+  counts,
+  onNavigate,
 }: {
-  count: number;
-  label: string;
-  icon: typeof Inbox;
-  onClick: () => void;
+  counts: { inbox: number; backlog: number; waiting: number };
+  onNavigate: (path: string) => void;
 }) {
+  const segments = [
+    { key: 'inbox', label: 'Inbox', count: counts.inbox, path: '/inbox', icon: Inbox },
+    { key: 'backlog', label: 'Backlog', count: counts.backlog, path: '/backlog', icon: ListTodo },
+    { key: 'waiting', label: 'Waiting', count: counts.waiting, path: '/waiting-for', icon: Clock },
+  ];
+
   return (
-    <motion.button
+    <motion.div
       variants={itemVariants}
-      onClick={onClick}
-      className={cn(
-        'group relative w-full overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 text-left',
-        'transition-all duration-300',
-        'hover:scale-[1.02] hover:shadow-[var(--shadow-card-hover)]',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]',
-      )}
+      className="flex items-center gap-1 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-1"
     >
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--bg-hover)]">
-          <Icon className="h-5 w-5 text-[var(--text-secondary)]" />
-        </div>
-        <div className="min-w-0">
-          <p className="text-2xl font-bold tabular-nums tracking-tight text-[var(--text-primary)]">
-            {count}
-          </p>
-          <p className="text-xs font-medium uppercase tracking-wide text-[var(--text-muted)]">
-            {label}
-          </p>
-        </div>
-      </div>
-    </motion.button>
+      {segments.map((seg) => (
+        <button
+          key={seg.key}
+          onClick={() => onNavigate(seg.path)}
+          className={cn(
+            'group flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2.5',
+            'transition-all duration-200',
+            'hover:bg-[var(--bg-hover)]',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
+          )}
+        >
+          <seg.icon className="h-3.5 w-3.5 text-[var(--text-muted)]" />
+          <span className="text-xs font-medium text-[var(--text-muted)]">{seg.label}</span>
+          <span
+            className={cn(
+              'min-w-[20px] rounded-md px-1.5 py-0.5 text-center text-xs font-bold tabular-nums',
+              seg.count > 0
+                ? 'bg-[var(--accent-subtle)] text-[var(--accent-base)]'
+                : 'text-[var(--text-disabled)]',
+            )}
+          >
+            {seg.count}
+          </span>
+        </button>
+      ))}
+    </motion.div>
   );
 }
 
@@ -152,38 +181,66 @@ function ItemRow({
   item,
   trailing,
   muted = false,
+  destinations,
+  showAge = false,
   onClick,
 }: {
   item: Item;
   trailing?: React.ReactNode;
   muted?: boolean;
+  destinations?: Destination[];
+  showAge?: boolean;
   onClick: () => void;
 }) {
+  const destName = destinations ? getDestinationName(item.destination_id, destinations) : null;
+  const hasNotes = !!item.notes;
+  const age = showAge ? formatAge(item.created_at) : null;
+
   return (
     <motion.button
       variants={listItemVariants}
       onClick={onClick}
       className={cn(
-        'group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left',
-        'transition-all duration-200',
+        'group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left',
+        'transition-all duration-150',
         'hover:bg-[var(--bg-hover)]',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
-        muted && 'opacity-60',
+        muted && 'opacity-50',
       )}
     >
-      <span
-        className={cn(
-          'flex-1 truncate text-sm font-medium',
-          muted
-            ? 'text-[var(--text-muted)] line-through decoration-[var(--text-disabled)]'
-            : 'text-[var(--text-primary)]',
+      {/* Title + metadata */}
+      <div className="flex min-w-0 flex-1 items-center gap-2">
+        <span
+          className={cn(
+            'truncate text-sm',
+            muted
+              ? 'text-[var(--text-muted)] line-through decoration-[var(--text-disabled)]'
+              : 'text-[var(--text-primary)]',
+          )}
+        >
+          {item.title}
+        </span>
+        {hasNotes && !muted && (
+          <FileText className="h-3 w-3 shrink-0 text-[var(--text-disabled)]" />
         )}
-      >
-        {item.title}
-      </span>
-      {trailing && (
-        <span className="shrink-0 text-xs text-[var(--text-muted)]">{trailing}</span>
-      )}
+      </div>
+
+      {/* Metadata pills */}
+      <div className="flex shrink-0 items-center gap-1.5">
+        {destName && !muted && (
+          <span className="rounded px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[var(--text-muted)] bg-[var(--bg-hover)]">
+            {destName}
+          </span>
+        )}
+        {age && !muted && age !== 'today' && (
+          <span className="text-[10px] font-medium tabular-nums text-[var(--text-disabled)]">
+            {age}
+          </span>
+        )}
+        {trailing && (
+          <span className="text-xs tabular-nums text-[var(--text-muted)]">{trailing}</span>
+        )}
+      </div>
     </motion.button>
   );
 }
@@ -283,7 +340,6 @@ function AIInsightsCard({
     ? insights.promotions.length + insights.clusters.length + insights.stale.length
     : 0;
 
-  // Helper to find item title by id
   const findItemTitle = (itemId: string): string => {
     const all = [...somedayItems, ...allActiveItems, ...staleItems];
     return all.find(i => i.id === itemId)?.title || 'Unknown item';
@@ -291,17 +347,17 @@ function AIInsightsCard({
 
   return (
     <motion.section variants={itemVariants}>
-      <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[var(--shadow-card)]">
+      <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
         {/* Header */}
-        <div className="flex items-center gap-3 px-6 py-4">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--bg-hover)]">
-            <Brain className="h-5 w-5 text-[var(--accent-base)]" />
+        <div className="flex items-center gap-2.5 px-4 py-3">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--bg-hover)]">
+            <Brain className="h-4 w-4 text-[var(--accent-base)]" />
           </div>
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--text-primary)]">
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
             AI Insights
           </h2>
           {insights && totalInsights > 0 && (
-            <span className="rounded-full bg-[var(--accent-subtle)] px-2.5 py-0.5 text-xs font-semibold tabular-nums text-[var(--accent-base)]">
+            <span className="rounded-full bg-[var(--accent-subtle)] px-2 py-0.5 text-[10px] font-bold tabular-nums text-[var(--accent-base)]">
               {totalInsights}
             </span>
           )}
@@ -309,7 +365,7 @@ function AIInsightsCard({
             onClick={fetchInsights}
             disabled={loading}
             className={cn(
-              'ml-auto flex items-center gap-2 rounded-xl border px-3 py-1.5 text-xs font-medium',
+              'ml-auto flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[11px] font-medium',
               'transition-all duration-200',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
               loading
@@ -318,28 +374,28 @@ function AIInsightsCard({
             )}
           >
             {loading ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              <Loader2 className="h-3 w-3 animate-spin" />
             ) : insights ? (
-              <RefreshCw className="h-3.5 w-3.5" />
+              <RefreshCw className="h-3 w-3" />
             ) : (
-              <Sparkles className="h-3.5 w-3.5" />
+              <Sparkles className="h-3 w-3" />
             )}
-            {loading ? 'Analyzing...' : insights ? 'Refresh' : 'Generate Insights'}
+            {loading ? 'Analyzing...' : insights ? 'Refresh' : 'Generate'}
           </button>
         </div>
 
         {/* Loading state */}
         {loading && (
           <>
-            <div className="mx-6 h-px bg-[var(--accent-subtle)]" />
-            <div className="flex flex-col items-center justify-center px-6 py-10 text-center">
+            <div className="mx-4 h-px bg-[var(--border-subtle)]" />
+            <div className="flex flex-col items-center justify-center px-4 py-8 text-center">
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
               >
-                <Brain className="h-8 w-8 text-[var(--accent-base)] opacity-40" />
+                <Brain className="h-6 w-6 text-[var(--accent-base)] opacity-40" />
               </motion.div>
-              <p className="mt-4 text-sm text-[var(--text-muted)]">
+              <p className="mt-3 text-xs text-[var(--text-muted)]">
                 Analyzing your items...
               </p>
             </div>
@@ -349,10 +405,10 @@ function AIInsightsCard({
         {/* Error state */}
         {error && !loading && (
           <>
-            <div className="mx-6 h-px bg-[var(--accent-subtle)]" />
-            <div className="flex flex-col items-center justify-center px-6 py-8 text-center">
-              <AlertCircle className="h-6 w-6 text-red-400 opacity-60" />
-              <p className="mt-3 text-sm text-[var(--text-muted)]">
+            <div className="mx-4 h-px bg-[var(--border-subtle)]" />
+            <div className="flex flex-col items-center justify-center px-4 py-6 text-center">
+              <AlertCircle className="h-5 w-5 text-red-400 opacity-60" />
+              <p className="mt-2 text-xs text-[var(--text-muted)]">
                 Something went wrong. Try again.
               </p>
             </div>
@@ -362,62 +418,62 @@ function AIInsightsCard({
         {/* Insights loaded */}
         {insights && !loading && !error && (
           <>
-            <div className="mx-6 h-px bg-[var(--accent-subtle)]" />
+            <div className="mx-4 h-px bg-[var(--border-subtle)]" />
 
             {totalInsights === 0 ? (
-              <div className="flex flex-col items-center justify-center px-6 py-10 text-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--bg-hover)]">
-                  <CheckCircle2 className="h-5 w-5 text-[var(--text-muted)]" />
+              <div className="flex flex-col items-center justify-center px-4 py-8 text-center">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--bg-hover)]">
+                  <CheckCircle2 className="h-4 w-4 text-[var(--text-muted)]" />
                 </div>
-                <p className="mt-4 text-sm text-[var(--text-muted)]">
+                <p className="mt-3 text-xs text-[var(--text-muted)]">
                   Your system looks healthy, nothing to flag right now.
                 </p>
               </div>
             ) : (
-              <div className="p-4 space-y-4">
+              <div className="p-3 space-y-3">
                 {/* Promotion suggestions */}
                 {insights.promotions.length > 0 && (
                   <motion.div
-                    initial={{ opacity: 0, y: 8 }}
+                    initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                    className="space-y-1"
+                    className="space-y-0.5"
                   >
-                    <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                    <p className="mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
                       Ready to Promote
                     </p>
                     {insights.promotions.map((promo) => (
                       <motion.div
                         key={promo.item_id}
-                        initial={{ opacity: 0, x: -8 }}
+                        initial={{ opacity: 0, x: -6 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                        className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors duration-200 hover:bg-[var(--bg-hover)]"
+                        className="group flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors duration-150 hover:bg-[var(--bg-hover)]"
                       >
-                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-hover)]">
-                          <Lightbulb className="h-3.5 w-3.5 text-[var(--text-secondary)]" />
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[var(--bg-hover)]">
+                          <Lightbulb className="h-3 w-3 text-[var(--text-secondary)]" />
                         </div>
                         <div className="min-w-0 flex-1">
                           <button
                             onClick={() => onItemClick(promo.item_id)}
-                            className="block truncate text-sm font-medium text-[var(--text-primary)] hover:underline"
+                            className="block truncate text-sm text-[var(--text-primary)] hover:underline"
                           >
                             {findItemTitle(promo.item_id)}
                           </button>
-                          <p className="truncate text-xs italic text-[var(--text-muted)]">
+                          <p className="truncate text-[10px] italic text-[var(--text-muted)]">
                             {promo.reasoning}
                           </p>
                         </div>
                         <button
                           onClick={() => onItemClick(promo.item_id)}
                           className={cn(
-                            'flex shrink-0 items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium',
+                            'flex shrink-0 items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-medium',
                             'border border-[var(--accent-border)] text-[var(--accent-base)]',
-                            'transition-colors duration-200 hover:bg-[var(--accent-glow)]',
+                            'transition-colors duration-150 hover:bg-[var(--accent-glow)]',
                           )}
                         >
                           Promote
-                          <ArrowUpRight className="h-3 w-3" />
+                          <ArrowUpRight className="h-2.5 w-2.5" />
                         </button>
                       </motion.div>
                     ))}
@@ -427,42 +483,42 @@ function AIInsightsCard({
                 {/* Clusters */}
                 {insights.clusters.length > 0 && (
                   <motion.div
-                    initial={{ opacity: 0, y: 8 }}
+                    initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ type: 'spring', stiffness: 320, damping: 28, delay: 0.05 }}
-                    className="space-y-1"
+                    className="space-y-0.5"
                   >
-                    <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                    <p className="mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
                       Related Items
                     </p>
                     {insights.clusters.map((cluster, idx) => (
                       <motion.div
                         key={idx}
-                        initial={{ opacity: 0, x: -8 }}
+                        initial={{ opacity: 0, x: -6 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                        className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-base)] transition-colors duration-200"
+                        className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)] transition-colors duration-150"
                       >
                         <button
                           onClick={() => setExpandedCluster(expandedCluster === idx ? null : idx)}
-                          className="flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors duration-200 hover:bg-[var(--bg-hover)] rounded-xl"
+                          className="flex w-full items-center gap-2.5 px-2.5 py-2 text-left transition-colors duration-150 hover:bg-[var(--bg-hover)] rounded-lg"
                         >
-                          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-hover)]">
-                            <TrendingUp className="h-3.5 w-3.5 text-[var(--text-secondary)]" />
+                          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[var(--bg-hover)]">
+                            <TrendingUp className="h-3 w-3 text-[var(--text-secondary)]" />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <span className="block truncate text-sm font-medium text-[var(--text-primary)]">
+                            <span className="block truncate text-sm text-[var(--text-primary)]">
                               {cluster.theme}
                             </span>
-                            <span className="text-xs text-[var(--text-muted)]">
-                              {cluster.item_ids.length} items &middot; Suggested project: {cluster.suggested_project_name}
+                            <span className="text-[10px] text-[var(--text-muted)]">
+                              {cluster.item_ids.length} items
                             </span>
                           </div>
                           <span className="text-[var(--text-muted)]">
                             {expandedCluster === idx ? (
-                              <ChevronUp className="h-4 w-4" />
+                              <ChevronUp className="h-3.5 w-3.5" />
                             ) : (
-                              <ChevronDown className="h-4 w-4" />
+                              <ChevronDown className="h-3.5 w-3.5" />
                             )}
                           </span>
                         </button>
@@ -471,17 +527,17 @@ function AIInsightsCard({
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                            className="border-t border-[var(--border-subtle)] px-3 py-2"
+                            className="border-t border-[var(--border-subtle)] px-2.5 py-1.5"
                           >
-                            <p className="mb-2 text-xs italic text-[var(--text-muted)]">
+                            <p className="mb-1.5 text-[10px] italic text-[var(--text-muted)]">
                               {cluster.reasoning}
                             </p>
-                            <div className="space-y-1">
+                            <div className="space-y-0.5">
                               {cluster.item_ids.map((itemId) => (
                                 <button
                                   key={itemId}
                                   onClick={() => onItemClick(itemId)}
-                                  className="block w-full truncate rounded-lg px-2 py-1 text-left text-xs font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--bg-hover)]"
+                                  className="block w-full truncate rounded-md px-2 py-1 text-left text-xs text-[var(--text-primary)] transition-colors hover:bg-[var(--bg-hover)]"
                                 >
                                   {findItemTitle(itemId)}
                                 </button>
@@ -497,38 +553,38 @@ function AIInsightsCard({
                 {/* Stale items */}
                 {insights.stale.length > 0 && (
                   <motion.div
-                    initial={{ opacity: 0, y: 8 }}
+                    initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ type: 'spring', stiffness: 320, damping: 28, delay: 0.1 }}
-                    className="space-y-1"
+                    className="space-y-0.5"
                   >
-                    <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                    <p className="mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
                       Needs Attention
                     </p>
                     {insights.stale.map((staleItem) => (
                       <motion.div
                         key={staleItem.item_id}
-                        initial={{ opacity: 0, x: -8 }}
+                        initial={{ opacity: 0, x: -6 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                        className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors duration-200 hover:bg-[var(--bg-hover)]"
+                        className="group flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors duration-150 hover:bg-[var(--bg-hover)]"
                       >
-                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-hover)]">
-                          <AlertCircle className="h-3.5 w-3.5 text-[var(--text-secondary)]" />
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[var(--bg-hover)]">
+                          <AlertCircle className="h-3 w-3 text-[var(--text-secondary)]" />
                         </div>
                         <div className="min-w-0 flex-1">
                           <button
                             onClick={() => onItemClick(staleItem.item_id)}
-                            className="block truncate text-sm font-medium text-[var(--text-primary)] hover:underline"
+                            className="block truncate text-sm text-[var(--text-primary)] hover:underline"
                           >
                             {findItemTitle(staleItem.item_id)}
                           </button>
-                          <p className="truncate text-xs italic text-[var(--text-muted)]">
+                          <p className="truncate text-[10px] italic text-[var(--text-muted)]">
                             {staleItem.reasoning}
                           </p>
                         </div>
                         <span
-                          className="shrink-0 rounded-lg bg-[var(--bg-hover)] px-2.5 py-1 text-xs font-medium text-[var(--text-secondary)]"
+                          className="shrink-0 rounded-md bg-[var(--bg-hover)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-secondary)]"
                         >
                           {staleItem.action}
                         </span>
@@ -544,13 +600,13 @@ function AIInsightsCard({
         {/* Initial state (no insights yet, not loading) */}
         {!insights && !loading && !error && (
           <>
-            <div className="mx-6 h-px bg-[var(--accent-subtle)]" />
-            <div className="flex flex-col items-center justify-center px-6 py-8 text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--accent-glow)]">
-                <Sparkles className="h-5 w-5 text-[var(--accent-base)] opacity-50" />
+            <div className="mx-4 h-px bg-[var(--border-subtle)]" />
+            <div className="flex flex-col items-center justify-center px-4 py-6 text-center">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent-glow)]">
+                <Sparkles className="h-4 w-4 text-[var(--accent-base)] opacity-50" />
               </div>
-              <p className="mt-4 max-w-xs text-sm text-[var(--text-muted)]">
-                Get AI-powered suggestions to promote ideas, group related items, and clean up stale tasks.
+              <p className="mt-3 max-w-xs text-xs text-[var(--text-muted)]">
+                AI-powered suggestions to promote ideas, group related items, and clean up stale tasks.
               </p>
             </div>
           </>
@@ -574,6 +630,7 @@ export function TodayPageClient({
   somedayItems,
   allActiveItems,
   staleItems,
+  destinations,
 }: TodayPageClientProps) {
   const router = useRouter();
   const openProcessingPanel = useUIStore((s) => s.openProcessingPanel);
@@ -582,15 +639,18 @@ export function TodayPageClient({
   const [completedExpanded, setCompletedExpanded] = useState(false);
 
   const userName = profile?.full_name?.split(' ')[0] || 'there';
-  const { text: greetingText, Icon: GreetingIcon } = getGreeting();
-  const todayFormatted = format(new Date(), 'MMMM d, yyyy');
+  const { text: greetingText } = getGreeting();
+  const todayFormatted = format(new Date(), 'EEEE, MMM d');
 
   const hasOverdue = overdueItems.length > 0;
   const hasToday = todayItems.length > 0;
   const hasCompleted = completedToday.length > 0;
   const isEverythingEmpty = !hasOverdue && !hasToday && !hasCompleted;
 
-  // Onboarding complete handler
+  // Progress: completed vs total today tasks
+  const totalTodayTasks = todayItems.length + completedToday.length;
+  const completedPercent = totalTodayTasks > 0 ? (completedToday.length / totalTodayTasks) * 100 : 0;
+
   const handleOnboardingComplete = async () => {
     setOnboardingVisible(false);
     try {
@@ -618,68 +678,52 @@ export function TodayPageClient({
         />
       )}
 
-      {/* Header */}
-      <div className="px-8 py-7">
+      {/* Compact header */}
+      <div className="px-6 pt-5 pb-1">
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: 'spring' as const, stiffness: 300, damping: 25 }}
+          className="flex items-baseline justify-between"
         >
-          {/* Accent bar */}
-          <div className="mb-4 h-1 w-16 rounded-full bg-gradient-to-r from-[var(--accent-base)] to-[var(--accent-hover)] opacity-60" />
-
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-3">
-              <GreetingIcon className="h-6 w-6 text-[var(--accent-base)] opacity-70" />
-              <h1 className="text-3xl font-semibold tracking-tight text-[var(--text-primary)]">
-                {greetingText}, {userName}
-              </h1>
-            </div>
-            <p className="mt-1.5 text-sm tabular-nums text-[var(--text-muted)]">
-              {todayFormatted}
-            </p>
-          </div>
+          <h1 className="text-lg font-semibold text-[var(--text-primary)]">
+            {greetingText}, {userName}
+          </h1>
+          <span className="text-xs tabular-nums text-[var(--text-muted)]">
+            {todayFormatted}
+          </span>
         </motion.div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-auto px-8 pb-8">
+      <div className="flex-1 overflow-auto px-6 pb-6 pt-3">
         <motion.div
-          className="mx-auto max-w-3xl space-y-8"
+          className="mx-auto max-w-2xl space-y-4"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          {/* ---------------------------------------------------------------- */}
-          {/* Summary cards                                                    */}
-          {/* ---------------------------------------------------------------- */}
-          <motion.div
-            variants={containerVariants}
-            className="grid grid-cols-3 gap-4"
-          >
-            <SummaryCard
-              count={counts.inbox}
-              label="Inbox"
-              icon={Inbox}
-              onClick={() => router.push('/inbox')}
-            />
-            <SummaryCard
-              count={counts.backlog}
-              label="Backlog"
-              icon={ListTodo}
-              onClick={() => router.push('/backlog')}
-            />
-            <SummaryCard
-              count={counts.waiting}
-              label="Waiting"
-              icon={Clock}
-              onClick={() => router.push('/waiting-for')}
-            />
-          </motion.div>
+          {/* Status bar */}
+          <StatusBar counts={counts} onNavigate={(path) => router.push(path)} />
 
-          {/* ---------------------------------------------------------------- */}
-          {/* AI Insights                                                      */}
-          {/* ---------------------------------------------------------------- */}
+          {/* Progress bar (when there are today tasks) */}
+          {totalTodayTasks > 0 && (
+            <motion.div variants={itemVariants} className="flex items-center gap-3 px-1">
+              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--bg-hover)]">
+                <motion.div
+                  className="h-full rounded-full bg-[var(--accent-base)]"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${completedPercent}%` }}
+                  transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.3 }}
+                />
+              </div>
+              <span className="text-[11px] font-medium tabular-nums text-[var(--text-muted)]">
+                {completedToday.length}/{totalTodayTasks}
+              </span>
+            </motion.div>
+          )}
+
+          {/* AI Insights */}
           <AIInsightsCard
             somedayItems={somedayItems}
             allActiveItems={allActiveItems}
@@ -687,50 +731,44 @@ export function TodayPageClient({
             onItemClick={handleItemClick}
           />
 
-          {/* ---------------------------------------------------------------- */}
-          {/* Everything-empty state                                           */}
-          {/* ---------------------------------------------------------------- */}
+          {/* Everything-empty state */}
           {isEverythingEmpty && (
             <motion.div
               variants={itemVariants}
-              className="flex flex-col items-center justify-center rounded-2xl border border-[var(--border-default)] bg-[var(--bg-surface)] px-6 py-16 text-center shadow-[var(--shadow-card)]"
+              className="flex flex-col items-center justify-center rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-6 py-12 text-center"
             >
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--accent-glow)]">
-                <Sun className="h-8 w-8 text-[var(--accent-base)] opacity-60" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--accent-glow)]">
+                <Sun className="h-6 w-6 text-[var(--accent-base)] opacity-60" />
               </div>
-              <p className="mt-6 max-w-xs text-base font-medium text-[var(--text-primary)]">
+              <p className="mt-4 text-sm font-medium text-[var(--text-primary)]">
                 Your mind is clear.
               </p>
-              <p className="mt-2 max-w-xs text-sm text-[var(--text-muted)]">
+              <p className="mt-1 text-xs text-[var(--text-muted)]">
                 Capture something when inspiration strikes.
               </p>
             </motion.div>
           )}
 
-          {/* ---------------------------------------------------------------- */}
-          {/* Overdue section                                                  */}
-          {/* ---------------------------------------------------------------- */}
+          {/* Overdue section */}
           {hasOverdue && (
             <motion.section variants={itemVariants}>
-              <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--bg-surface)] shadow-[var(--shadow-card)]">
-                {/* Section header */}
-                <div className="flex items-center gap-3 px-6 py-4">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[rgba(248,113,113,0.06)]">
-                    <AlertTriangle className="h-4 w-4 text-red-400/70" />
+              <div className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)]">
+                <div className="flex items-center gap-2.5 px-4 py-2.5">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[rgba(248,113,113,0.06)]">
+                    <AlertTriangle className="h-3.5 w-3.5 text-red-400/70" />
                   </div>
-                  <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--text-primary)]">
+                  <h2 className="text-xs font-semibold uppercase tracking-wide text-[var(--text-primary)]">
                     Overdue
                   </h2>
-                  <span className="ml-auto rounded-full bg-[rgba(248,113,113,0.06)] px-2.5 py-0.5 text-xs font-semibold tabular-nums text-red-400">
+                  <span className="ml-auto rounded-full bg-[rgba(248,113,113,0.06)] px-2 py-0.5 text-[10px] font-bold tabular-nums text-red-400">
                     {overdueItems.length}
                   </span>
                 </div>
 
-                <div className="mx-6 h-px bg-[var(--border-subtle)]" />
+                <div className="mx-4 h-px bg-[var(--border-subtle)]" />
 
-                {/* Items */}
                 <motion.div
-                  className="p-2"
+                  className="p-1"
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"
@@ -739,6 +777,8 @@ export function TodayPageClient({
                     <ItemRow
                       key={item.id}
                       item={item}
+                      destinations={destinations}
+                      showAge
                       trailing={
                         item.scheduled_at
                           ? formatOverdueDistance(item.scheduled_at)
@@ -752,33 +792,29 @@ export function TodayPageClient({
             </motion.section>
           )}
 
-          {/* ---------------------------------------------------------------- */}
-          {/* Scheduled today section                                          */}
-          {/* ---------------------------------------------------------------- */}
+          {/* Scheduled today section */}
           {!isEverythingEmpty && (
             <motion.section variants={itemVariants}>
-              <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--bg-surface)] shadow-[var(--shadow-card)]">
-                {/* Section header */}
-                <div className="flex items-center gap-3 px-6 py-4">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--bg-hover)]">
-                    <Calendar className="h-4 w-4 text-[var(--text-secondary)]" />
+              <div className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)]">
+                <div className="flex items-center gap-2.5 px-4 py-2.5">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--bg-hover)]">
+                    <Calendar className="h-3.5 w-3.5 text-[var(--text-secondary)]" />
                   </div>
-                  <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--text-primary)]">
-                    Scheduled Today
+                  <h2 className="text-xs font-semibold uppercase tracking-wide text-[var(--text-primary)]">
+                    Today
                   </h2>
                   {hasToday && (
-                    <span className="ml-auto rounded-full bg-[var(--bg-hover)] px-2.5 py-0.5 text-xs font-semibold tabular-nums text-[var(--text-secondary)]">
+                    <span className="ml-auto rounded-full bg-[var(--bg-hover)] px-2 py-0.5 text-[10px] font-bold tabular-nums text-[var(--text-secondary)]">
                       {todayItems.length}
                     </span>
                   )}
                 </div>
 
-                <div className="mx-6 h-px bg-[var(--border-subtle)]" />
+                <div className="mx-4 h-px bg-[var(--border-subtle)]" />
 
-                {/* Items or empty state */}
                 {hasToday ? (
                   <motion.div
-                    className="p-2"
+                    className="p-1"
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
@@ -787,6 +823,7 @@ export function TodayPageClient({
                       <ItemRow
                         key={item.id}
                         item={item}
+                        destinations={destinations}
                         trailing={
                           <span className="font-medium tabular-nums">
                             {formatScheduledTime(item)}
@@ -797,12 +834,12 @@ export function TodayPageClient({
                     ))}
                   </motion.div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center px-6 py-10 text-center">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--bg-hover)]">
-                      <Calendar className="h-5 w-5 text-[var(--text-disabled)]" />
+                  <div className="flex flex-col items-center justify-center px-4 py-8 text-center">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--bg-hover)]">
+                      <Calendar className="h-4 w-4 text-[var(--text-disabled)]" />
                     </div>
-                    <p className="mt-4 max-w-xs text-sm text-[var(--text-muted)]">
-                      Your day is clear. A perfect time to focus on what matters.
+                    <p className="mt-3 text-xs text-[var(--text-muted)]">
+                      Nothing scheduled. Focus on what matters.
                     </p>
                   </div>
                 )}
@@ -810,46 +847,41 @@ export function TodayPageClient({
             </motion.section>
           )}
 
-          {/* ---------------------------------------------------------------- */}
-          {/* Completed today section (collapsible)                            */}
-          {/* ---------------------------------------------------------------- */}
+          {/* Completed today (collapsible with progress) */}
           {hasCompleted && (
             <motion.section variants={itemVariants}>
-              <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--bg-surface)] shadow-[var(--shadow-card)]">
-                {/* Toggle header */}
+              <div className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)]">
                 <button
                   onClick={() => setCompletedExpanded((prev) => !prev)}
                   className={cn(
-                    'flex w-full items-center gap-3 px-6 py-4 text-left',
-                    'transition-colors duration-200 hover:bg-[var(--bg-hover)]',
-                    'rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
+                    'flex w-full items-center gap-2.5 px-4 py-2.5 text-left',
+                    'transition-colors duration-150 hover:bg-[var(--bg-hover)]',
+                    'rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                   )}
                 >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--bg-hover)]">
-                    <CheckCircle2 className="h-4 w-4 text-[var(--text-muted)]" />
+                  <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--bg-hover)]">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-[var(--text-muted)]" />
                   </div>
-                  <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--text-muted)]">
-                    Completed Today
+                  <h2 className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                    Done
                   </h2>
-                  <span className="ml-1 text-sm text-[var(--text-muted)]">
-                    &mdash; {completedToday.length}{' '}
-                    {completedToday.length === 1 ? 'item' : 'items'} completed
+                  <span className="text-[11px] tabular-nums text-[var(--text-muted)]">
+                    {completedToday.length} {completedToday.length === 1 ? 'item' : 'items'}
                   </span>
                   <span className="ml-auto text-[var(--text-muted)]">
                     {completedExpanded ? (
-                      <ChevronUp className="h-4 w-4" />
+                      <ChevronUp className="h-3.5 w-3.5" />
                     ) : (
-                      <ChevronDown className="h-4 w-4" />
+                      <ChevronDown className="h-3.5 w-3.5" />
                     )}
                   </span>
                 </button>
 
-                {/* Collapsible body */}
                 {completedExpanded && (
                   <>
-                    <div className="mx-6 h-px bg-[var(--border-subtle)]" />
+                    <div className="mx-4 h-px bg-[var(--border-subtle)]" />
                     <motion.div
-                      className="p-2"
+                      className="p-1"
                       variants={containerVariants}
                       initial="hidden"
                       animate="visible"
