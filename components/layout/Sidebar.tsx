@@ -543,13 +543,13 @@ export function Sidebar({ inboxCount: _inboxCountProp = 0, spaces = [] }: Sideba
         className="fixed left-0 top-0 z-40 flex h-screen flex-col rounded-r-2xl"
         style={{
           background: 'var(--bg-inset)',
-          boxShadow: '4px 0 20px rgba(0,0,0,0.12)',
+          boxShadow: '1px 0 8px rgba(0,0,0,0.04)',
         }}
       >
         {/* ---- Logo header ------------------------------------------------ */}
         <div className="flex h-16 flex-shrink-0 items-center justify-between px-4">
           <Link href="/today" className="flex items-center gap-3 overflow-hidden">
-            <OffMindLogo size={28} />
+            <OffMindLogo size={26} />
             <AnimatePresence>
               {!sidebarCollapsed && (
                 <motion.span
@@ -557,9 +557,9 @@ export function Sidebar({ inboxCount: _inboxCountProp = 0, spaces = [] }: Sideba
                   animate={{ opacity: 1, width: 'auto' }}
                   exit={{ opacity: 0, width: 0 }}
                   transition={spring}
-                  className="text-[15px] font-semibold tracking-tight text-sidebar-foreground overflow-hidden whitespace-nowrap"
+                  className="text-[15px] font-bold tracking-tight text-sidebar-foreground overflow-hidden whitespace-nowrap"
                 >
-                  OffMind
+                  offmind
                 </motion.span>
               )}
             </AnimatePresence>

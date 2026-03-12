@@ -113,19 +113,11 @@ function SummaryCard({
   count,
   label,
   icon: Icon,
-  colorClass,
-  bgClass,
-  borderClass,
-  hoverBgClass,
   onClick,
 }: {
   count: number;
   label: string;
   icon: typeof Inbox;
-  colorClass: string;
-  bgClass: string;
-  borderClass: string;
-  hoverBgClass: string;
   onClick: () => void;
 }) {
   return (
@@ -133,21 +125,18 @@ function SummaryCard({
       variants={itemVariants}
       onClick={onClick}
       className={cn(
-        'group relative w-full overflow-hidden rounded-2xl border p-5 text-left',
+        'group relative w-full overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 text-left',
         'transition-all duration-300',
         'hover:scale-[1.02] hover:shadow-[var(--shadow-card-hover)]',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]',
-        borderClass,
-        bgClass,
-        hoverBgClass,
       )}
     >
       <div className="flex items-center gap-3">
-        <div className={cn('flex h-10 w-10 items-center justify-center rounded-2xl', bgClass)}>
-          <Icon className={cn('h-5 w-5', colorClass)} />
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--bg-hover)]">
+          <Icon className="h-5 w-5 text-[var(--text-secondary)]" />
         </div>
         <div className="min-w-0">
-          <p className={cn('text-2xl font-bold tabular-nums tracking-tight', colorClass)}>
+          <p className="text-2xl font-bold tabular-nums tracking-tight text-[var(--text-primary)]">
             {count}
           </p>
           <p className="text-xs font-medium uppercase tracking-wide text-[var(--text-muted)]">
@@ -302,10 +291,10 @@ function AIInsightsCard({
 
   return (
     <motion.section variants={itemVariants}>
-      <div className="rounded-2xl border border-[var(--accent-border)] bg-[var(--bg-surface)] shadow-[var(--shadow-card)]">
+      <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[var(--shadow-card)]">
         {/* Header */}
         <div className="flex items-center gap-3 px-6 py-4">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--accent-subtle)]">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--bg-hover)]">
             <Brain className="h-5 w-5 text-[var(--accent-base)]" />
           </div>
           <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--text-primary)]">
@@ -377,8 +366,8 @@ function AIInsightsCard({
 
             {totalInsights === 0 ? (
               <div className="flex flex-col items-center justify-center px-6 py-10 text-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(52,211,153,0.08)]">
-                  <CheckCircle2 className="h-5 w-5 text-[var(--layer-commit)] opacity-60" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--bg-hover)]">
+                  <CheckCircle2 className="h-5 w-5 text-[var(--text-muted)]" />
                 </div>
                 <p className="mt-4 text-sm text-[var(--text-muted)]">
                   Your system looks healthy, nothing to flag right now.
@@ -405,8 +394,8 @@ function AIInsightsCard({
                         transition={{ type: 'spring', stiffness: 320, damping: 28 }}
                         className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors duration-200 hover:bg-[var(--bg-hover)]"
                       >
-                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(251,191,36,0.1)]">
-                          <Lightbulb className="h-3.5 w-3.5 text-amber-500" />
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-hover)]">
+                          <Lightbulb className="h-3.5 w-3.5 text-[var(--text-secondary)]" />
                         </div>
                         <div className="min-w-0 flex-1">
                           <button
@@ -423,8 +412,8 @@ function AIInsightsCard({
                           onClick={() => onItemClick(promo.item_id)}
                           className={cn(
                             'flex shrink-0 items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium',
-                            'border border-[rgba(52,211,153,0.3)] text-[var(--layer-commit)]',
-                            'transition-colors duration-200 hover:bg-[rgba(52,211,153,0.08)]',
+                            'border border-[var(--accent-border)] text-[var(--accent-base)]',
+                            'transition-colors duration-200 hover:bg-[var(--accent-glow)]',
                           )}
                         >
                           Promote
@@ -458,8 +447,8 @@ function AIInsightsCard({
                           onClick={() => setExpandedCluster(expandedCluster === idx ? null : idx)}
                           className="flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors duration-200 hover:bg-[var(--bg-hover)] rounded-xl"
                         >
-                          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(96,165,250,0.1)]">
-                            <TrendingUp className="h-3.5 w-3.5 text-blue-400" />
+                          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-hover)]">
+                            <TrendingUp className="h-3.5 w-3.5 text-[var(--text-secondary)]" />
                           </div>
                           <div className="min-w-0 flex-1">
                             <span className="block truncate text-sm font-medium text-[var(--text-primary)]">
@@ -524,8 +513,8 @@ function AIInsightsCard({
                         transition={{ type: 'spring', stiffness: 320, damping: 28 }}
                         className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors duration-200 hover:bg-[var(--bg-hover)]"
                       >
-                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(239,68,68,0.1)]">
-                          <AlertCircle className="h-3.5 w-3.5 text-red-400" />
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-hover)]">
+                          <AlertCircle className="h-3.5 w-3.5 text-[var(--text-secondary)]" />
                         </div>
                         <div className="min-w-0 flex-1">
                           <button
@@ -539,14 +528,7 @@ function AIInsightsCard({
                           </p>
                         </div>
                         <span
-                          className={cn(
-                            'shrink-0 rounded-lg px-2.5 py-1 text-xs font-medium',
-                            staleItem.action.toLowerCase().includes('archive')
-                              ? 'bg-[rgba(239,68,68,0.08)] text-red-400'
-                              : staleItem.action.toLowerCase().includes('schedule')
-                                ? 'bg-[rgba(52,211,153,0.08)] text-[var(--layer-commit)]'
-                                : 'bg-[rgba(251,191,36,0.08)] text-amber-500',
-                          )}
+                          className="shrink-0 rounded-lg bg-[var(--bg-hover)] px-2.5 py-1 text-xs font-medium text-[var(--text-secondary)]"
                         >
                           {staleItem.action}
                         </span>
@@ -679,30 +661,18 @@ export function TodayPageClient({
               count={counts.inbox}
               label="Inbox"
               icon={Inbox}
-              colorClass="text-[var(--layer-capture)]"
-              bgClass="bg-[rgba(96,165,250,0.10)]"
-              borderClass="border-[rgba(96,165,250,0.18)]"
-              hoverBgClass="hover:bg-[rgba(96,165,250,0.14)]"
               onClick={() => router.push('/inbox')}
             />
             <SummaryCard
               count={counts.backlog}
               label="Backlog"
               icon={ListTodo}
-              colorClass="text-[var(--layer-process)]"
-              bgClass="bg-[rgba(251,191,36,0.10)]"
-              borderClass="border-[rgba(251,191,36,0.18)]"
-              hoverBgClass="hover:bg-[rgba(251,191,36,0.14)]"
               onClick={() => router.push('/backlog')}
             />
             <SummaryCard
               count={counts.waiting}
               label="Waiting"
               icon={Clock}
-              colorClass="text-[var(--layer-commit)]"
-              bgClass="bg-[rgba(52,211,153,0.10)]"
-              borderClass="border-[rgba(52,211,153,0.18)]"
-              hoverBgClass="hover:bg-[rgba(52,211,153,0.14)]"
               onClick={() => router.push('/waiting-for')}
             />
           </motion.div>
@@ -742,21 +712,21 @@ export function TodayPageClient({
           {/* ---------------------------------------------------------------- */}
           {hasOverdue && (
             <motion.section variants={itemVariants}>
-              <div className="rounded-2xl border border-red-500/20 bg-[var(--bg-surface)] shadow-[var(--shadow-card)]">
+              <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--bg-surface)] shadow-[var(--shadow-card)]">
                 {/* Section header */}
                 <div className="flex items-center gap-3 px-6 py-4">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-red-500/10">
-                    <AlertTriangle className="h-4 w-4 text-red-500" />
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[rgba(248,113,113,0.06)]">
+                    <AlertTriangle className="h-4 w-4 text-red-400/70" />
                   </div>
-                  <h2 className="text-sm font-semibold uppercase tracking-wide text-red-500">
+                  <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--text-primary)]">
                     Overdue
                   </h2>
-                  <span className="ml-auto rounded-full bg-red-500/10 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-red-500">
+                  <span className="ml-auto rounded-full bg-[rgba(248,113,113,0.06)] px-2.5 py-0.5 text-xs font-semibold tabular-nums text-red-400">
                     {overdueItems.length}
                   </span>
                 </div>
 
-                <div className="mx-6 h-px bg-red-500/10" />
+                <div className="mx-6 h-px bg-[var(--border-subtle)]" />
 
                 {/* Items */}
                 <motion.div
@@ -790,14 +760,14 @@ export function TodayPageClient({
               <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--bg-surface)] shadow-[var(--shadow-card)]">
                 {/* Section header */}
                 <div className="flex items-center gap-3 px-6 py-4">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--layer-commit-bg)]">
-                    <Calendar className="h-4 w-4 text-[var(--layer-commit)]" />
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--bg-hover)]">
+                    <Calendar className="h-4 w-4 text-[var(--text-secondary)]" />
                   </div>
                   <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--text-primary)]">
                     Scheduled Today
                   </h2>
                   {hasToday && (
-                    <span className="ml-auto rounded-full bg-[rgba(52,211,153,0.10)] px-2.5 py-0.5 text-xs font-semibold tabular-nums text-[var(--layer-commit)]">
+                    <span className="ml-auto rounded-full bg-[var(--bg-hover)] px-2.5 py-0.5 text-xs font-semibold tabular-nums text-[var(--text-secondary)]">
                       {todayItems.length}
                     </span>
                   )}
@@ -855,8 +825,8 @@ export function TodayPageClient({
                     'rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                   )}
                 >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[rgba(52,211,153,0.10)]">
-                    <CheckCircle2 className="h-4 w-4 text-[var(--layer-commit)]" />
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--bg-hover)]">
+                    <CheckCircle2 className="h-4 w-4 text-[var(--text-muted)]" />
                   </div>
                   <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--text-muted)]">
                     Completed Today
