@@ -1,12 +1,12 @@
 /**
- * OffMind Logo — Open loop mark + DM Sans Bold wordmark.
+ * OffMind Logo — Open loop mark with green gradient + DM Sans Bold wordmark.
  *
- * Monochrome open loop: a circle with a gap at the upper-right,
- * suggesting openness and forward movement. Uses currentColor
- * so it automatically adapts to light/dark mode.
- *
+ * The open loop uses the brand gradient (#5eebb8 → #0d9478),
+ * matching the finished SVG in tinker/logo-wm-v3-full-bold.svg.
  * Terracotta accent lives in UI (buttons, badges), NOT in the logo.
  */
+
+import { useId } from 'react';
 
 interface OffMindLogoProps {
   size?: number;
@@ -43,6 +43,8 @@ function OpenLoopMark({
   size: number;
   className?: string;
 }) {
+  const gradId = useId();
+
   return (
     <svg
       width={size}
@@ -53,11 +55,24 @@ function OpenLoopMark({
       className={className}
       aria-label="OffMind logo"
     >
+      <defs>
+        <linearGradient
+          id={gradId}
+          gradientUnits="userSpaceOnUse"
+          x1="20"
+          y1="18"
+          x2="80"
+          y2="82"
+        >
+          <stop offset="0" stopColor="#5eebb8" />
+          <stop offset="1" stopColor="#0d9478" />
+        </linearGradient>
+      </defs>
       {/* Open loop — circle arc with ~30° gap at upper-right */}
       <path
         d="M 72 28 A 36 38 0 1 0 80 40"
         fill="none"
-        stroke="currentColor"
+        stroke={`url(#${gradId})`}
         strokeWidth="11"
         strokeLinecap="round"
       />
@@ -66,7 +81,7 @@ function OpenLoopMark({
 }
 
 /**
- * Favicon-optimized version (same open loop, works down to 16px)
+ * Favicon-optimized version (same open loop with gradient)
  */
 export function OffMindIcon({
   size = 16,

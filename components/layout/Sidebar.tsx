@@ -540,10 +540,10 @@ export function Sidebar({ inboxCount: _inboxCountProp = 0, spaces = [] }: Sideba
         initial={false}
         animate={{ width: sidebarCollapsed ? 68 : 260 }}
         transition={spring}
-        className="fixed left-0 top-0 z-40 flex h-screen flex-col rounded-r-2xl"
+        className="fixed left-0 top-0 z-40 flex h-screen flex-col"
         style={{
-          background: 'var(--bg-inset)',
-          boxShadow: '1px 0 8px rgba(0,0,0,0.04)',
+          background: 'var(--bg-surface)',
+          borderRight: '1px solid var(--border-subtle)',
         }}
       >
         {/* ---- Logo header ------------------------------------------------ */}

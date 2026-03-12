@@ -146,7 +146,7 @@ function StatusBar({
   return (
     <motion.div
       variants={itemVariants}
-      className="flex items-center rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)]"
+      className="flex items-center rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
     >
       {segments.map((seg, i) => (
         <button
@@ -361,7 +361,7 @@ function AIInsightsCard({
 
   return (
     <motion.section variants={itemVariants}>
-      <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+      <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
         {/* Header */}
         <div className="flex items-center gap-2.5 px-4 py-3">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--bg-hover)]">
@@ -672,31 +672,24 @@ export function TodayPageClient({
         />
       )}
 
-      {/* Compact header */}
-      <div className="px-6 pt-5 pb-1">
-        <motion.div
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: 'spring' as const, stiffness: 300, damping: 25 }}
-          className="flex items-baseline justify-between"
-        >
-          <h1 className="text-lg font-semibold text-[var(--text-primary)]">
-            {greetingText}, {userName}
-          </h1>
-          <span className="text-xs tabular-nums text-[var(--text-muted)]">
-            {todayFormatted}
-          </span>
-        </motion.div>
-      </div>
-
       {/* Content */}
-      <div className="flex-1 overflow-auto px-6 pb-6 pt-3">
+      <div className="flex-1 overflow-auto px-6 pb-6 pt-5">
         <motion.div
           className="mx-auto max-w-2xl space-y-3"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
+          {/* Greeting + date inline */}
+          <motion.div variants={itemVariants} className="flex items-baseline justify-between px-0.5">
+            <p className="text-sm text-[var(--text-secondary)]">
+              {greetingText}, <span className="font-medium text-[var(--text-primary)]">{userName}</span>
+            </p>
+            <span className="text-[11px] tabular-nums text-[var(--text-muted)]">
+              {todayFormatted}
+            </span>
+          </motion.div>
+
           {/* Status bar */}
           <StatusBar counts={counts} onNavigate={(path) => router.push(path)} />
 
@@ -729,7 +722,7 @@ export function TodayPageClient({
           {isEverythingEmpty && (
             <motion.div
               variants={itemVariants}
-              className="flex items-center gap-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-5 py-5"
+              className="flex items-center gap-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] px-5 py-5"
             >
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--accent-glow)]">
                 <Sun className="h-4 w-4 text-[var(--accent-base)] opacity-60" />
@@ -748,7 +741,7 @@ export function TodayPageClient({
           {/* Overdue section */}
           {hasOverdue && (
             <motion.section variants={itemVariants}>
-              <div className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)]">
+              <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
                 <div className="flex items-center gap-2.5 px-4 py-2.5">
                   <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[rgba(248,113,113,0.06)]">
                     <AlertTriangle className="h-3.5 w-3.5 text-red-400/70" />
@@ -791,7 +784,7 @@ export function TodayPageClient({
           {/* Scheduled today section */}
           {!isEverythingEmpty && (
             <motion.section variants={itemVariants}>
-              <div className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)]">
+              <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
                 <div className="flex items-center gap-2.5 px-4 py-2.5">
                   <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--bg-hover)]">
                     <Calendar className="h-3.5 w-3.5 text-[var(--text-secondary)]" />
@@ -841,7 +834,7 @@ export function TodayPageClient({
           {/* Completed today (collapsible with progress) */}
           {hasCompleted && (
             <motion.section variants={itemVariants}>
-              <div className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)]">
+              <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
                 <button
                   onClick={() => setCompletedExpanded((prev) => !prev)}
                   className={cn(
