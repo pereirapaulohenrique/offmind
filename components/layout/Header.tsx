@@ -23,9 +23,12 @@ export function Header({ title, user, mobileSidebar }: HeaderProps) {
     <header className="sticky top-0 z-30 flex h-14 items-center justify-between px-6 bg-[var(--bg-base)]" style={{ borderBottom: '1px solid var(--border-default)' }}>
       <div className="flex items-center gap-4">
         {mobileSidebar}
-        {displayTitle && (
-          <h1 className="text-base font-bold tracking-tight text-[var(--text-primary)]">{displayTitle}</h1>
-        )}
+        <h1
+          className="text-base font-bold tracking-tight text-[var(--text-primary)] transition-opacity duration-200"
+          style={{ opacity: displayTitle ? 1 : 0 }}
+        >
+          {displayTitle || '\u00A0'}
+        </h1>
       </div>
 
       <div className="flex items-center gap-3">
