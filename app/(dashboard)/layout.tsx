@@ -100,7 +100,7 @@ export default async function DashboardLayout({
   return (
     <CelebrationProvider>
       <RealtimeProvider userId={user.id} initialInboxItems={inboxItems || []}>
-        <div className="flex min-h-screen bg-background">
+        <div className="flex min-h-screen bg-[var(--bg-base)]">
           {/* Desktop sidebar */}
           <div className="hidden md:block">
             <Sidebar {...sidebarProps} />

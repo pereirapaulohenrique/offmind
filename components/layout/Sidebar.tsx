@@ -177,11 +177,7 @@ function getLayerStyle(pathname: string): LayerStyle {
 function WarmSeparator({ className }: { className?: string }) {
   return (
     <div
-      className={cn('mx-3 h-[1.5px] rounded-full', className)}
-      style={{
-        background:
-          'linear-gradient(to right, transparent, rgba(194,122,90,0.10), rgba(194,122,90,0.05), transparent)',
-      }}
+      className={cn('mx-3 h-px bg-[var(--border-default)]', className)}
     />
   );
 }
@@ -227,7 +223,7 @@ function NavItem({
     <Link
       href={href}
       className={cn(
-        'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all duration-200',
+        'group relative flex items-center gap-3 rounded-sm px-3 py-2.5 text-[13px] font-medium transition-all duration-200',
         isActive
           ? ''
           : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]',
@@ -289,7 +285,7 @@ function NavItem({
       <div className="relative overflow-visible">
         <Tooltip>
           <TooltipTrigger asChild>{inner}</TooltipTrigger>
-          <TooltipContent side="right" className="flex items-center gap-2 rounded-xl">
+          <TooltipContent side="right" className="flex items-center gap-2 rounded-sm">
             <span>{label}</span>
             {badge !== undefined && badge > 0 && (
               <span className="rounded-full bg-[var(--accent-subtle)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--accent-base)]">
@@ -332,7 +328,7 @@ function SpaceTreeItem({ space, pathname, isExpanded, onToggle }: SpaceTreeItemP
         <button
           type="button"
           onClick={() => onToggle(space.id)}
-          className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-all duration-200"
+          className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-all duration-200"
           aria-label={isExpanded ? `Collapse ${space.name}` : `Expand ${space.name}`}
         >
           <motion.span
@@ -348,7 +344,7 @@ function SpaceTreeItem({ space, pathname, isExpanded, onToggle }: SpaceTreeItemP
         <Link
           href={`/spaces/${space.id}`}
           className={cn(
-            'flex flex-1 items-center gap-2.5 rounded-xl px-2 py-1.5 text-[13px] transition-all duration-200',
+            'flex flex-1 items-center gap-2.5 rounded-sm px-2 py-1.5 text-[13px] transition-all duration-200',
             isSpaceActive
               ? 'bg-[var(--accent-subtle)] text-[var(--text-primary)] font-medium'
               : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]'
@@ -356,7 +352,7 @@ function SpaceTreeItem({ space, pathname, isExpanded, onToggle }: SpaceTreeItemP
         >
           <div
             className={cn(
-              'flex h-5 w-5 items-center justify-center rounded-lg transition-colors duration-200',
+              'flex h-5 w-5 items-center justify-center rounded-sm transition-colors duration-200',
               colorOption?.bgSubtle || 'bg-[var(--accent-glow)]'
             )}
           >
@@ -420,7 +416,7 @@ function ProjectTreeItem({ project, pathname }: ProjectTreeItemProps) {
       <Link
         href={`/projects/${project.id}`}
         className={cn(
-          'flex items-center gap-2.5 rounded-xl px-2 py-1.5 text-[13px] transition-all duration-200',
+          'flex items-center gap-2.5 rounded-sm px-2 py-1.5 text-[13px] transition-all duration-200',
           isProjectActive
             ? 'bg-[var(--accent-subtle)] text-[var(--text-primary)] font-medium'
             : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]'
@@ -428,7 +424,7 @@ function ProjectTreeItem({ project, pathname }: ProjectTreeItemProps) {
       >
         <div
           className={cn(
-            'flex h-5 w-5 items-center justify-center rounded-lg transition-colors duration-200',
+            'flex h-5 w-5 items-center justify-center rounded-sm transition-colors duration-200',
             colorOption?.bgSubtle || 'bg-[var(--accent-glow)]'
           )}
         >
@@ -475,7 +471,7 @@ function PageTreeItem({ page, pathname }: PageTreeItemProps) {
     <Link
       href={`/pages/${page.id}`}
       className={cn(
-        'flex items-center gap-2 rounded-xl px-2 py-1 text-[12px] transition-all duration-200',
+        'flex items-center gap-2 rounded-sm px-2 py-1 text-[12px] transition-all duration-200',
         isPageActive
           ? 'bg-[var(--accent-glow)] text-[var(--text-primary)] font-medium'
           : 'text-[var(--text-muted)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-secondary)]'
@@ -542,25 +538,34 @@ export function Sidebar({ inboxCount: _inboxCountProp = 0, spaces = [] }: Sideba
         transition={spring}
         className="fixed left-0 top-0 z-40 flex h-screen flex-col"
         style={{
-          background: 'var(--bg-surface)',
-          borderRight: '1px solid var(--border-subtle)',
+          background: 'var(--bg-base)',
+          borderRight: '1px solid var(--border-default)',
         }}
       >
         {/* ---- Logo header ------------------------------------------------ */}
         <div className="flex h-16 flex-shrink-0 items-center justify-between px-4">
-          <Link href="/today" className="flex items-center gap-3 overflow-hidden">
-            <OffMindLogo size={26} />
-            <AnimatePresence>
-              {!sidebarCollapsed && (
-                <motion.span
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: 'auto' }}
-                  exit={{ opacity: 0, width: 0 }}
-                  transition={spring}
-                  className="text-[15px] font-bold tracking-tight text-sidebar-foreground overflow-hidden whitespace-nowrap"
+          <Link href="/today" className="flex items-center overflow-hidden">
+            <AnimatePresence mode="wait">
+              {sidebarCollapsed ? (
+                <motion.div
+                  key="mark"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={springFast}
                 >
-                  offmind
-                </motion.span>
+                  <OffMindLogo size={24} variant="mark" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="full"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={springFast}
+                >
+                  <OffMindLogo size={22} variant="full" />
+                </motion.div>
               )}
             </AnimatePresence>
           </Link>
@@ -576,7 +581,7 @@ export function Sidebar({ inboxCount: _inboxCountProp = 0, spaces = [] }: Sideba
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-7 w-7 rounded-xl text-[var(--text-muted)] hover:text-sidebar-foreground hover:bg-[var(--bg-hover)] transition-all duration-200"
+                  className="h-7 w-7 rounded-sm text-[var(--text-muted)] hover:text-sidebar-foreground hover:bg-[var(--bg-hover)] transition-all duration-200"
                   onClick={toggleSidebar}
                   aria-label="Collapse sidebar"
                 >
@@ -708,7 +713,7 @@ export function Sidebar({ inboxCount: _inboxCountProp = 0, spaces = [] }: Sideba
                   {/* Add space button */}
                   <Button
                     variant="ghost"
-                    className="w-full justify-start gap-2 text-[12px] text-[var(--text-disabled)] hover:text-[var(--accent-base)] hover:bg-[var(--accent-glow)] h-8 rounded-xl transition-all duration-200"
+                    className="w-full justify-start gap-2 text-[12px] text-[var(--text-disabled)] hover:text-[var(--accent-base)] hover:bg-[var(--accent-glow)] h-8 rounded-sm transition-all duration-200"
                     asChild
                   >
                     <Link href="/spaces">
@@ -728,7 +733,7 @@ export function Sidebar({ inboxCount: _inboxCountProp = 0, spaces = [] }: Sideba
                     <TooltipTrigger asChild>
                       <PopoverTrigger asChild>
                         <button
-                          className="flex w-full items-center justify-center rounded-xl py-2.5 text-[var(--text-muted)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] transition-all duration-200"
+                          className="flex w-full items-center justify-center rounded-sm py-2.5 text-[var(--text-muted)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] transition-all duration-200"
                         >
                           <Folder className="h-[18px] w-[18px]" />
                         </button>
@@ -741,7 +746,7 @@ export function Sidebar({ inboxCount: _inboxCountProp = 0, spaces = [] }: Sideba
                   side="right"
                   align="start"
                   sideOffset={8}
-                  className="w-64 p-2 rounded-2xl border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[var(--shadow-float)]"
+                  className="w-64 p-2 rounded-sm border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[var(--shadow-float)]"
                 >
                   <div className="space-y-0.5">
                     <h3 className="px-2 py-1 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
@@ -774,7 +779,7 @@ export function Sidebar({ inboxCount: _inboxCountProp = 0, spaces = [] }: Sideba
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="w-full h-9 mb-1.5 rounded-xl text-[var(--text-muted)] hover:text-sidebar-foreground hover:bg-[var(--bg-hover)] border border-transparent hover:border-[var(--accent-border)] transition-all duration-200"
+                  className="w-full h-9 mb-1.5 rounded-sm text-[var(--text-muted)] hover:text-sidebar-foreground hover:bg-[var(--bg-hover)] border border-transparent hover:border-[var(--accent-border)] transition-all duration-200"
                   onClick={toggleSidebar}
                   aria-label="Expand sidebar"
                 >

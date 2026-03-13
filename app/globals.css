@@ -204,8 +204,8 @@ html {
   --chart-4: #34d399;
   --chart-5: #a78bfa;
 
-  /* Sidebar — warm cream inset */
-  --sidebar: #f4f3f1;
+  /* Sidebar — same as page background */
+  --sidebar: #faf9f7;
   --sidebar-foreground: #1c1b1a;
   --sidebar-primary: #c27a5a;
   --sidebar-primary-foreground: #ffffff;

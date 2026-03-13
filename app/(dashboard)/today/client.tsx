@@ -146,7 +146,7 @@ function StatusBar({
   return (
     <motion.div
       variants={itemVariants}
-      className="flex items-center rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+      className="flex items-center rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]"
     >
       {segments.map((seg, i) => (
         <button
@@ -157,8 +157,6 @@ function StatusBar({
             'transition-all duration-150',
             'hover:bg-[var(--bg-hover)]',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
-            i === 0 && 'rounded-l-lg',
-            i === segments.length - 1 && 'rounded-r-lg',
             i < segments.length - 1 && 'border-r border-[var(--border-subtle)]',
           )}
         >
@@ -204,7 +202,7 @@ function ItemRow({
       variants={listItemVariants}
       onClick={onClick}
       className={cn(
-        'group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left',
+        'group flex w-full items-center gap-2.5 rounded-none px-3 py-2 text-left',
         'transition-all duration-150',
         'hover:bg-[var(--bg-hover)]',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
@@ -231,7 +229,7 @@ function ItemRow({
       {/* Metadata pills */}
       <div className="flex shrink-0 items-center gap-1.5">
         {destName && !muted && (
-          <span className="rounded px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[var(--text-muted)] bg-[var(--bg-hover)]">
+          <span className="px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[var(--text-muted)] bg-[var(--bg-hover)]">
             {destName}
           </span>
         )}
@@ -361,10 +359,10 @@ function AIInsightsCard({
 
   return (
     <motion.section variants={itemVariants}>
-      <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+      <div className="rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
         {/* Header */}
         <div className="flex items-center gap-2.5 px-4 py-3">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--bg-hover)]">
+          <div className="flex h-7 w-7 items-center justify-center rounded-none bg-[var(--bg-hover)]">
             <Brain className="h-4 w-4 text-[var(--accent-base)]" />
           </div>
           <h2 className="text-xs font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
@@ -379,7 +377,7 @@ function AIInsightsCard({
             onClick={fetchInsights}
             disabled={loading}
             className={cn(
-              'ml-auto flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[11px] font-medium',
+              'ml-auto flex items-center gap-1.5 rounded-none border px-2.5 py-1 text-[11px] font-medium',
               'transition-all duration-200',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
               loading
@@ -455,9 +453,9 @@ function AIInsightsCard({
                         initial={{ opacity: 0, x: -6 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                        className="group flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors duration-150 hover:bg-[var(--bg-hover)]"
+                        className="group flex items-center gap-2.5 rounded-none px-2.5 py-2 transition-colors duration-150 hover:bg-[var(--bg-hover)]"
                       >
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[var(--bg-hover)]">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)]">
                           <Lightbulb className="h-3 w-3 text-[var(--text-secondary)]" />
                         </div>
                         <div className="min-w-0 flex-1">
@@ -474,7 +472,7 @@ function AIInsightsCard({
                         <button
                           onClick={() => onItemClick(promo.item_id)}
                           className={cn(
-                            'flex shrink-0 items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-medium',
+                            'flex shrink-0 items-center gap-1 rounded-none px-2 py-0.5 text-[11px] font-medium',
                             'border border-[var(--accent-border)] text-[var(--accent-base)]',
                             'transition-colors duration-150 hover:bg-[var(--accent-glow)]',
                           )}
@@ -504,13 +502,13 @@ function AIInsightsCard({
                         initial={{ opacity: 0, x: -6 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                        className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)] transition-colors duration-150"
+                        className="rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)] transition-colors duration-150"
                       >
                         <button
                           onClick={() => setExpandedCluster(expandedCluster === idx ? null : idx)}
-                          className="flex w-full items-center gap-2.5 px-2.5 py-2 text-left transition-colors duration-150 hover:bg-[var(--bg-hover)] rounded-lg"
+                          className="flex w-full items-center gap-2.5 px-2.5 py-2 text-left transition-colors duration-150 hover:bg-[var(--bg-hover)] rounded-none"
                         >
-                          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[var(--bg-hover)]">
+                          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)]">
                             <TrendingUp className="h-3 w-3 text-[var(--text-secondary)]" />
                           </div>
                           <div className="min-w-0 flex-1">
@@ -544,7 +542,7 @@ function AIInsightsCard({
                                 <button
                                   key={itemId}
                                   onClick={() => onItemClick(itemId)}
-                                  className="block w-full truncate rounded-md px-2 py-1 text-left text-xs text-[var(--text-primary)] transition-colors hover:bg-[var(--bg-hover)]"
+                                  className="block w-full truncate rounded-none px-2 py-1 text-left text-xs text-[var(--text-primary)] transition-colors hover:bg-[var(--bg-hover)]"
                                 >
                                   {findItemTitle(itemId)}
                                 </button>
@@ -574,9 +572,9 @@ function AIInsightsCard({
                         initial={{ opacity: 0, x: -6 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                        className="group flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors duration-150 hover:bg-[var(--bg-hover)]"
+                        className="group flex items-center gap-2.5 rounded-none px-2.5 py-2 transition-colors duration-150 hover:bg-[var(--bg-hover)]"
                       >
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[var(--bg-hover)]">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)]">
                           <AlertCircle className="h-3 w-3 text-[var(--text-secondary)]" />
                         </div>
                         <div className="min-w-0 flex-1">
@@ -591,7 +589,7 @@ function AIInsightsCard({
                           </p>
                         </div>
                         <span
-                          className="shrink-0 rounded-md bg-[var(--bg-hover)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-secondary)]"
+                          className="shrink-0 rounded-none bg-[var(--bg-hover)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-secondary)]"
                         >
                           {staleItem.action}
                         </span>
@@ -722,9 +720,9 @@ export function TodayPageClient({
           {isEverythingEmpty && (
             <motion.div
               variants={itemVariants}
-              className="flex items-center gap-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] px-5 py-5"
+              className="flex items-center gap-3 rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-5 py-5"
             >
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--accent-glow)]">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-[var(--accent-glow)]">
                 <Sun className="h-4 w-4 text-[var(--accent-base)] opacity-60" />
               </div>
               <div>
@@ -741,9 +739,9 @@ export function TodayPageClient({
           {/* Overdue section */}
           {hasOverdue && (
             <motion.section variants={itemVariants}>
-              <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+              <div className="rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
                 <div className="flex items-center gap-2.5 px-4 py-2.5">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[rgba(248,113,113,0.06)]">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-none bg-[rgba(248,113,113,0.06)]">
                     <AlertTriangle className="h-3.5 w-3.5 text-red-400/70" />
                   </div>
                   <h2 className="text-xs font-semibold uppercase tracking-wide text-[var(--text-primary)]">
@@ -784,9 +782,9 @@ export function TodayPageClient({
           {/* Scheduled today section */}
           {!isEverythingEmpty && (
             <motion.section variants={itemVariants}>
-              <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+              <div className="rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
                 <div className="flex items-center gap-2.5 px-4 py-2.5">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--bg-hover)]">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-none bg-[var(--bg-hover)]">
                     <Calendar className="h-3.5 w-3.5 text-[var(--text-secondary)]" />
                   </div>
                   <h2 className="text-xs font-semibold uppercase tracking-wide text-[var(--text-primary)]">
@@ -834,16 +832,16 @@ export function TodayPageClient({
           {/* Completed today (collapsible with progress) */}
           {hasCompleted && (
             <motion.section variants={itemVariants}>
-              <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+              <div className="rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
                 <button
                   onClick={() => setCompletedExpanded((prev) => !prev)}
                   className={cn(
                     'flex w-full items-center gap-2.5 px-4 py-2.5 text-left',
                     'transition-colors duration-150 hover:bg-[var(--bg-hover)]',
-                    'rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
+                    'rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                   )}
                 >
-                  <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--bg-hover)]">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-none bg-[var(--bg-hover)]">
                     <CheckCircle2 className="h-3.5 w-3.5 text-[var(--text-muted)]" />
                   </div>
                   <h2 className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
