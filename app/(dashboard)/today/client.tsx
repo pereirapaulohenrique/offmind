@@ -153,18 +153,18 @@ function StatusBar({
           key={seg.key}
           onClick={() => onNavigate(seg.path)}
           className={cn(
-            'group flex flex-1 items-center justify-center gap-2 py-2.5',
+            'group flex flex-1 items-center justify-center gap-2.5 py-3',
             'transition-all duration-150',
             'hover:bg-[var(--bg-hover)]',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
             i < segments.length - 1 && 'border-r border-[var(--border-subtle)]',
           )}
         >
-          <seg.icon className="h-3.5 w-3.5 text-[var(--text-disabled)]" />
-          <span className="text-xs text-[var(--text-muted)]">{seg.label}</span>
+          <seg.icon className="h-4 w-4 text-[var(--text-disabled)]" />
+          <span className="text-sm text-[var(--text-muted)]">{seg.label}</span>
           <span
             className={cn(
-              'text-xs tabular-nums',
+              'text-sm tabular-nums',
               seg.count > 0
                 ? 'font-bold text-[var(--text-primary)]'
                 : 'text-[var(--text-disabled)]',
@@ -202,7 +202,7 @@ function ItemRow({
       variants={listItemVariants}
       onClick={onClick}
       className={cn(
-        'group flex w-full items-center gap-2.5 rounded-none px-3.5 py-2.5 text-left',
+        'group flex w-full items-center gap-3 rounded-none px-4 py-3 text-left',
         'border-l-2 border-l-transparent transition-all duration-150',
         'hover:bg-[var(--bg-hover)] hover:border-l-[var(--accent-base)]',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
@@ -213,7 +213,7 @@ function ItemRow({
       <div className="flex min-w-0 flex-1 items-center gap-2">
         <span
           className={cn(
-            'truncate text-[13px]',
+            'truncate text-sm',
             muted
               ? 'text-[var(--text-muted)] line-through decoration-[var(--text-disabled)]'
               : 'font-medium text-[var(--text-primary)]',
@@ -222,19 +222,19 @@ function ItemRow({
           {item.title}
         </span>
         {hasNotes && !muted && (
-          <FileText className="h-3 w-3 shrink-0 text-[var(--text-disabled)]" />
+          <FileText className="h-3.5 w-3.5 shrink-0 text-[var(--text-disabled)]" />
         )}
       </div>
 
       {/* Metadata pills */}
-      <div className="flex shrink-0 items-center gap-1.5">
+      <div className="flex shrink-0 items-center gap-2">
         {destName && !muted && (
-          <span className="px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[var(--text-muted)] bg-[var(--bg-hover)]">
+          <span className="px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider text-[var(--text-muted)] bg-[var(--bg-hover)]">
             {destName}
           </span>
         )}
         {age && !muted && age !== 'today' && (
-          <span className="text-[10px] font-medium tabular-nums text-[var(--text-disabled)]">
+          <span className="text-[11px] font-medium tabular-nums text-[var(--text-disabled)]">
             {age}
           </span>
         )}
@@ -362,10 +362,10 @@ function AIInsightsCard({
       <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
         {/* Header */}
         <div className="flex items-center gap-2.5 px-4 py-3">
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)]">
-            <Brain className="h-4 w-4 text-[var(--accent-base)]" />
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)]">
+            <Brain className="h-[18px] w-[18px] text-[var(--accent-base)]" />
           </div>
-          <h2 className="text-[11px] font-bold uppercase tracking-wide text-[var(--text-secondary)]">
+          <h2 className="text-xs font-bold uppercase tracking-wide text-[var(--text-secondary)]">
             AI Insights
           </h2>
           {insights && totalInsights > 0 && (
@@ -572,27 +572,29 @@ function AIInsightsCard({
                         initial={{ opacity: 0, x: -6 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                        className="group flex items-center gap-2.5 rounded-none px-2.5 py-2 transition-colors duration-150 hover:bg-[var(--bg-hover)]"
+                        className="group flex items-start gap-2.5 rounded-none px-2.5 py-2 transition-colors duration-150 hover:bg-[var(--bg-hover)]"
                       >
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)]">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] mt-0.5">
                           <AlertCircle className="h-3 w-3 text-[var(--text-secondary)]" />
                         </div>
-                        <div className="min-w-0 flex-1">
-                          <button
-                            onClick={() => onItemClick(staleItem.item_id)}
-                            className="block truncate text-sm text-[var(--text-primary)] hover:underline"
-                          >
-                            {findItemTitle(staleItem.item_id)}
-                          </button>
+                        <div className="min-w-0 flex-1 overflow-hidden">
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => onItemClick(staleItem.item_id)}
+                              className="min-w-0 flex-1 truncate text-left text-sm text-[var(--text-primary)] hover:underline"
+                            >
+                              {findItemTitle(staleItem.item_id)}
+                            </button>
+                            <span
+                              className="shrink-0 rounded-none bg-[var(--bg-hover)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-secondary)]"
+                            >
+                              {staleItem.action}
+                            </span>
+                          </div>
                           <p className="truncate text-[10px] italic text-[var(--text-muted)]">
                             {staleItem.reasoning}
                           </p>
                         </div>
-                        <span
-                          className="shrink-0 rounded-none bg-[var(--bg-hover)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-secondary)]"
-                        >
-                          {staleItem.action}
-                        </span>
                       </motion.div>
                     ))}
                   </motion.div>
@@ -629,6 +631,12 @@ export function TodayPageClient({
 
   const [onboardingVisible, setOnboardingVisible] = useState(showOnboarding);
   const [completedExpanded, setCompletedExpanded] = useState(false);
+
+  const setPageTitle = useUIStore((s) => s.setPageTitle);
+  useEffect(() => {
+    setPageTitle('Today');
+    return () => setPageTitle('');
+  }, [setPageTitle]);
 
   const userName = profile?.full_name?.split(' ')[0] || 'there';
   const { text: greetingText } = getGreeting();
@@ -678,19 +686,14 @@ export function TodayPageClient({
           initial="hidden"
           animate="visible"
         >
-          {/* Page header — H1 + greeting + date */}
-          <motion.div variants={itemVariants} className="space-y-1 px-0.5">
-            <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">
-              Today
-            </h1>
-            <div className="flex items-baseline justify-between">
-              <p className="text-sm text-[var(--text-muted)]">
-                {greetingText}, <span className="font-medium text-[var(--text-secondary)]">{userName}</span>
-              </p>
-              <span className="text-[11px] tabular-nums text-[var(--text-muted)]">
-                {todayFormatted}
-              </span>
-            </div>
+          {/* Greeting + date (page title "Today" is in the header bar) */}
+          <motion.div variants={itemVariants} className="flex items-baseline justify-between px-0.5">
+            <h2 className="text-lg font-semibold text-[var(--text-primary)]">
+              {greetingText}, <span className="text-[var(--text-secondary)]">{userName}</span>
+            </h2>
+            <span className="text-xs tabular-nums text-[var(--text-muted)]">
+              {todayFormatted}
+            </span>
           </motion.div>
 
           {/* Status bar — full width */}
@@ -743,10 +746,10 @@ export function TodayPageClient({
                   <motion.section variants={itemVariants}>
                     <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
                       <div className="flex items-center gap-2.5 px-4 py-3">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-none bg-[rgba(248,113,113,0.06)]">
-                          <AlertTriangle className="h-3.5 w-3.5 text-red-400/70" />
+                        <div className="flex h-7 w-7 items-center justify-center rounded-none bg-[rgba(248,113,113,0.06)]">
+                          <AlertTriangle className="h-4 w-4 text-red-400/70" />
                         </div>
-                        <h2 className="text-[11px] font-bold uppercase tracking-wide text-[var(--text-primary)]">
+                        <h2 className="text-xs font-bold uppercase tracking-wide text-[var(--text-primary)]">
                           Overdue
                         </h2>
                         <span className="ml-auto rounded-full bg-[rgba(248,113,113,0.06)] px-2 py-0.5 text-[10px] font-bold tabular-nums text-red-400">
@@ -785,10 +788,10 @@ export function TodayPageClient({
                 <motion.section variants={itemVariants}>
                   <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
                     <div className="flex items-center gap-2.5 px-4 py-3">
-                      <div className="flex h-6 w-6 items-center justify-center rounded-none bg-[var(--bg-hover)]">
-                        <Calendar className="h-3.5 w-3.5 text-[var(--text-secondary)]" />
+                      <div className="flex h-7 w-7 items-center justify-center rounded-none bg-[var(--bg-hover)]">
+                        <Calendar className="h-4 w-4 text-[var(--text-secondary)]" />
                       </div>
-                      <h2 className="text-[11px] font-bold uppercase tracking-wide text-[var(--text-primary)]">
+                      <h2 className="text-xs font-bold uppercase tracking-wide text-[var(--text-primary)]">
                         Scheduled
                       </h2>
                       {hasToday && (
@@ -841,10 +844,10 @@ export function TodayPageClient({
                           'rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                         )}
                       >
-                        <div className="flex h-6 w-6 items-center justify-center rounded-none bg-[var(--bg-hover)]">
-                          <CheckCircle2 className="h-3.5 w-3.5 text-[var(--text-muted)]" />
+                        <div className="flex h-7 w-7 items-center justify-center rounded-none bg-[var(--bg-hover)]">
+                          <CheckCircle2 className="h-4 w-4 text-[var(--text-muted)]" />
                         </div>
-                        <h2 className="text-[11px] font-bold uppercase tracking-wide text-[var(--text-muted)]">
+                        <h2 className="text-xs font-bold uppercase tracking-wide text-[var(--text-muted)]">
                           Done
                         </h2>
                         <span className="text-[11px] tabular-nums text-[var(--text-muted)]">

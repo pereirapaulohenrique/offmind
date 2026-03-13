@@ -332,8 +332,8 @@ export function CaptureBar({ userId, spaces = [], projects = [], pages = [] }: C
               : captureTarget
                 ? 'border-[var(--accent-border)] bg-[var(--bg-surface)] shadow-[0_0_0_1px_var(--accent-glow)]'
                 : isFocused
-                  ? 'border-[var(--accent-border)] bg-[var(--bg-surface)] shadow-[var(--shadow-glow)]'
-                  : 'border-[var(--border-default)] bg-[var(--bg-surface)]'
+                  ? 'border-[var(--accent-border)] bg-[var(--bg-surface)] shadow-[0_0_0_3px_rgba(194,122,90,0.10)]'
+                  : 'border-[var(--border-default)] bg-[var(--bg-surface)] shadow-[0_0_12px_rgba(194,122,90,0.06)]'
           }`}
         >
           <CaptureTargetPill spaces={spaces} projects={projects} pages={pages} />

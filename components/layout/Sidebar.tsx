@@ -554,7 +554,7 @@ export function Sidebar({ inboxCount: _inboxCountProp = 0, spaces = [] }: Sideba
                   exit={{ opacity: 0 }}
                   transition={springFast}
                 >
-                  <OffMindLogo size={24} variant="mark" />
+                  <OffMindLogo size={32} variant="mark" />
                 </motion.div>
               ) : (
                 <motion.div
@@ -564,7 +564,7 @@ export function Sidebar({ inboxCount: _inboxCountProp = 0, spaces = [] }: Sideba
                   exit={{ opacity: 0 }}
                   transition={springFast}
                 >
-                  <OffMindLogo size={22} variant="full" />
+                  <OffMindLogo size={28} variant="full" />
                 </motion.div>
               )}
             </AnimatePresence>

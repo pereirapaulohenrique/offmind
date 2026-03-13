@@ -25,10 +25,11 @@ export function OffMindLogo({
       <Image
         src="/offmind-logo-wordmark.png"
         alt="offmind"
-        width={size * 3.5}
+        width={Math.round(size * 3.5)}
         height={size}
         className={`dark:invert ${className}`}
         style={{ height: size, width: 'auto' }}
+        quality={100}
         priority
       />
     );
@@ -43,6 +44,7 @@ export function OffMindLogo({
         height={size}
         className={`dark:invert ${className}`}
         style={{ height: size, width: 'auto' }}
+        quality={100}
         priority
       />
     );
@@ -56,6 +58,7 @@ export function OffMindLogo({
       height={size}
       className={`dark:invert ${className}`}
       style={{ height: size, width: size }}
+      quality={100}
       priority
     />
   );

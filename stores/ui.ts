@@ -42,6 +42,10 @@ interface UIState {
   inboxViewType: 'list' | 'grid' | 'compact';
   setInboxViewType: (type: 'list' | 'grid' | 'compact') => void;
 
+  // Page title (shown in header)
+  pageTitle: string;
+  setPageTitle: (title: string) => void;
+
   // Theme (dark by default)
   theme: 'dark' | 'light';
   setTheme: (theme: 'dark' | 'light') => void;
@@ -103,6 +107,10 @@ export const useUIStore = create<UIState>((set) => ({
   // View type - List is default for Inbox
   inboxViewType: 'list',
   setInboxViewType: (type) => set({ inboxViewType: type }),
+
+  // Page title
+  pageTitle: '',
+  setPageTitle: (title) => set({ pageTitle: title }),
 
   // Theme
   theme: 'dark',
