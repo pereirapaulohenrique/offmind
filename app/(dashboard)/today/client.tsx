@@ -673,7 +673,7 @@ export function TodayPageClient({
       {/* Content */}
       <div className="flex-1 overflow-auto px-6 pb-6 pt-5">
         <motion.div
-          className="mx-auto max-w-2xl space-y-4"
+          className="mx-auto max-w-3xl space-y-4"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -694,9 +694,9 @@ export function TodayPageClient({
           {/* Progress bar (when there are today tasks) */}
           {totalTodayTasks > 0 && (
             <motion.div variants={itemVariants} className="flex items-center gap-3 px-1">
-              <div className="h-1 flex-1 overflow-hidden rounded-none bg-[var(--border-subtle)]">
+              <div className="h-1 flex-1 overflow-hidden rounded-sm bg-[var(--border-subtle)]">
                 <motion.div
-                  className="h-full rounded-none bg-[var(--accent-base)]"
+                  className="h-full rounded-sm bg-[var(--accent-base)]"
                   initial={{ width: 0 }}
                   animate={{ width: `${completedPercent}%` }}
                   transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.3 }}

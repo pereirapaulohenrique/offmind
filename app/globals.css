@@ -39,21 +39,21 @@ html {
 :root {
   /* OffMind Design Tokens — Light Mode (Flagship) */
 
-  /* Background Layers — warm cream progression
-     canvas (warm cream) < cards (white — pops against canvas) */
-  --bg-base: #f5f4f2;
-  --bg-inset: #efeeed;
+  /* Background Layers — "paper on wood" principle
+     canvas (warm linen) < cards (white — clearly pops) */
+  --bg-base: #efeeec;
+  --bg-inset: #e9e8e6;
   --bg-surface: #ffffff;
   --bg-elevated: #ffffff;
-  --bg-hover: rgba(0, 0, 0, 0.035);
-  --bg-active: rgba(0, 0, 0, 0.06);
+  --bg-hover: rgba(0, 0, 0, 0.04);
+  --bg-active: rgba(0, 0, 0, 0.07);
   --bg-overlay: rgba(0, 0, 0, 0.4);
-  --bg-page: #efeeed;
+  --bg-page: #e9e8e6;
 
-  /* Borders — visible but not heavy */
-  --border-subtle: rgba(0, 0, 0, 0.07);
-  --border-default: rgba(0, 0, 0, 0.10);
-  --border-emphasis: rgba(0, 0, 0, 0.14);
+  /* Borders — solid hex for precision, not fuzzy rgba */
+  --border-subtle: #e5e3df;
+  --border-default: #dbd9d5;
+  --border-emphasis: #ccc9c4;
   --border-focus: rgba(194, 122, 90, 0.45);
 
   /* Text — warm darks */
@@ -173,11 +173,11 @@ html {
   /* Gradients — warm terracotta accents */
   --gradient-accent: linear-gradient(135deg, #c27a5a, #d4a088);
   --gradient-warm: linear-gradient(180deg, rgba(194, 122, 90, 0.03), transparent);
-  --gradient-surface: linear-gradient(180deg, #ffffff, #f5f4f2);
+  --gradient-surface: linear-gradient(180deg, #ffffff, #efeeec);
   --gradient-subtle: linear-gradient(180deg, rgba(194, 122, 90, 0.04), transparent);
 
   /* shadcn/ui Variables — Light Mode (Default) */
-  --background: #f5f4f2;
+  --background: #efeeec;
   --foreground: #1c1b1a;
   --card: #ffffff;
   --card-foreground: #1c1b1a;
@@ -185,16 +185,16 @@ html {
   --popover-foreground: #1c1b1a;
   --primary: #c27a5a;
   --primary-foreground: #ffffff;
-  --secondary: #efeeed;
+  --secondary: #e9e8e6;
   --secondary-foreground: #1c1b1a;
-  --muted: #efeeed;
+  --muted: #e9e8e6;
   --muted-foreground: #6b6560;
-  --accent: #efeeed;
+  --accent: #e9e8e6;
   --accent-foreground: #1c1b1a;
   --destructive: #f87171;
   --destructive-foreground: #ffffff;
-  --border: rgba(0, 0, 0, 0.10);
-  --input: #efeeed;
+  --border: #dbd9d5;
+  --input: #e9e8e6;
   --ring: #c27a5a;
 
   /* Chart Colors */
@@ -205,13 +205,13 @@ html {
   --chart-5: #a78bfa;
 
   /* Sidebar — same as page background */
-  --sidebar: #f5f4f2;
+  --sidebar: #efeeec;
   --sidebar-foreground: #1c1b1a;
   --sidebar-primary: #c27a5a;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: rgba(0, 0, 0, 0.04);
   --sidebar-accent-foreground: #1c1b1a;
-  --sidebar-border: rgba(0, 0, 0, 0.10);
+  --sidebar-border: #dbd9d5;
   --sidebar-ring: #c27a5a;
 }
 

@@ -279,13 +279,14 @@ export function CaptureBar({ userId, spaces = [], projects = [], pages = [] }: C
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-30 px-5 pb-5 pt-2 pointer-events-none"
+      className="fixed bottom-0 left-0 right-0 z-30 px-5 pb-5 pt-8 pointer-events-none"
       style={{
         paddingLeft: `calc(${sidebarOffset} + 1.25rem)`,
         transition: 'padding-left 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)',
+        background: 'linear-gradient(to bottom, transparent 0%, var(--bg-base) 40%)',
       }}
     >
-      <div className="mx-auto max-w-2xl pointer-events-auto">
+      <div className="mx-auto max-w-3xl pointer-events-auto">
         {/* Attachment chips above input */}
         {hasAttachments && (
           <div className="mb-2 flex items-center gap-2 px-1">
@@ -325,15 +326,15 @@ export function CaptureBar({ userId, spaces = [], projects = [], pages = [] }: C
         )}
 
         <div
-          className={`capture-input relative flex items-end gap-2 rounded-2xl border px-4 py-3 transition-all duration-300 ${
+          className={`capture-input relative flex items-end gap-2 rounded-none border px-4 py-3 transition-all duration-300 ${
             isRecording
-              ? 'border-red-500/40 bg-[var(--bg-surface)]/95 shadow-[0_0_0_3px_rgba(239,68,68,0.12)]'
+              ? 'border-red-500/40 bg-[var(--bg-surface)] shadow-[0_0_0_3px_rgba(239,68,68,0.12)]'
               : captureTarget
-                ? 'border-[var(--accent-border)] bg-[var(--bg-surface)]/95 shadow-[0_0_0_1px_var(--accent-glow)]'
+                ? 'border-[var(--accent-border)] bg-[var(--bg-surface)] shadow-[0_0_0_1px_var(--accent-glow)]'
                 : isFocused
-                  ? 'border-[var(--accent-border)] bg-[var(--bg-surface)]/95 shadow-[var(--shadow-glow)]'
-                  : 'border-[var(--border-default)] bg-[var(--bg-surface)]/80 shadow-[var(--shadow-card)]'
-          } backdrop-blur-2xl`}
+                  ? 'border-[var(--accent-border)] bg-[var(--bg-surface)] shadow-[var(--shadow-glow)]'
+                  : 'border-[var(--border-default)] bg-[var(--bg-surface)]'
+          }`}
         >
           <CaptureTargetPill spaces={spaces} projects={projects} pages={pages} />
 
