@@ -8,13 +8,9 @@ import {
   ListTodo,
   Clock,
   AlertTriangle,
-  Calendar,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
-  Sun,
-  Sunrise,
-  Moon,
   Sparkles,
   ArrowUpRight,
   Loader2,
@@ -91,11 +87,11 @@ const listItemVariants = {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function getGreeting(): { text: string; Icon: typeof Sun } {
+function getGreeting(): string {
   const hour = new Date().getHours();
-  if (hour < 12) return { text: 'Good morning', Icon: Sunrise };
-  if (hour < 18) return { text: 'Good afternoon', Icon: Sun };
-  return { text: 'Good evening', Icon: Moon };
+  if (hour < 12) return 'Good morning';
+  if (hour < 18) return 'Good afternoon';
+  return 'Good evening';
 }
 
 function formatScheduledTime(item: Item): string {
@@ -179,21 +175,126 @@ function StatusBar({
   );
 }
 
-function ItemRow({
+/** Hero item for Today's Focus — large, warm, numbered */
+function FocusItem({
+  item,
+  index,
+  destinations,
+  trailing,
+  onClick,
+}: {
+  item: Item;
+  index: number;
+  destinations?: Destination[];
+  trailing?: React.ReactNode;
+  onClick: () => void;
+}) {
+  const destName = destinations ? getDestinationName(item.destination_id, destinations) : null;
+  const hasNotes = !!item.notes;
+
+  return (
+    <motion.button
+      variants={listItemVariants}
+      onClick={onClick}
+      className={cn(
+        'group flex w-full items-start gap-4 px-5 py-4 text-left',
+        'transition-all duration-150',
+        'hover:bg-[rgba(194,122,90,0.04)]',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
+      )}
+    >
+      {/* Warm numbered circle */}
+      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[rgba(194,122,90,0.10)] text-[12px] font-bold tabular-nums text-[var(--accent-base)]">
+        {index}
+      </span>
+
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2.5">
+          <span className="truncate text-[16px] font-medium leading-snug text-[var(--text-primary)]">
+            {item.title}
+          </span>
+          {trailing && (
+            <span className="shrink-0 text-xs tabular-nums text-[var(--text-muted)]">{trailing}</span>
+          )}
+        </div>
+
+        {(destName || hasNotes) && (
+          <div className="mt-1.5 flex items-center gap-2">
+            {destName && (
+              <span className="px-1.5 py-px text-[10px] font-medium uppercase tracking-wider text-[var(--text-muted)] bg-[rgba(194,122,90,0.06)]">
+                {destName}
+              </span>
+            )}
+            {hasNotes && (
+              <FileText className="h-3 w-3 text-[var(--text-disabled)]" />
+            )}
+          </div>
+        )}
+      </div>
+    </motion.button>
+  );
+}
+
+/** Compact item for Overdue — tight, urgent */
+function CompactItem({
   item,
   trailing,
-  muted = false,
   destinations,
   showAge = false,
-  index,
   onClick,
 }: {
   item: Item;
   trailing?: React.ReactNode;
-  muted?: boolean;
   destinations?: Destination[];
   showAge?: boolean;
-  index?: number;
+  onClick: () => void;
+}) {
+  const destName = destinations ? getDestinationName(item.destination_id, destinations) : null;
+  const age = showAge ? formatAge(item.created_at) : null;
+
+  return (
+    <motion.button
+      variants={listItemVariants}
+      onClick={onClick}
+      className={cn(
+        'group flex w-full items-center gap-2.5 px-4 py-2 text-left',
+        'transition-all duration-150',
+        'hover:bg-[rgba(180,83,9,0.03)]',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
+      )}
+    >
+      <span className="truncate text-sm font-medium text-[var(--text-primary)]">
+        {item.title}
+      </span>
+      <div className="ml-auto flex shrink-0 items-center gap-2">
+        {destName && (
+          <span className="px-1.5 py-px text-[10px] font-medium uppercase tracking-wider text-[var(--text-muted)] bg-[var(--bg-hover)]">
+            {destName}
+          </span>
+        )}
+        {age && age !== 'today' && (
+          <span className="text-[10px] tabular-nums text-[var(--text-disabled)]">{age}</span>
+        )}
+        {trailing && (
+          <span className="rounded-sm bg-amber-50 px-1.5 py-px text-[11px] font-medium tabular-nums text-amber-700 dark:bg-amber-900/20 dark:text-amber-400">
+            {trailing}
+          </span>
+        )}
+      </div>
+    </motion.button>
+  );
+}
+
+/** Dense item for In Motion — minimal chrome, stronger destination tag */
+function DenseItem({
+  item,
+  destinations,
+  showAge = false,
+  onClick,
+}: {
+  item: Item;
+  destinations?: Destination[];
+  showAge?: boolean;
   onClick: () => void;
 }) {
   const destName = destinations ? getDestinationName(item.destination_id, destinations) : null;
@@ -205,57 +306,59 @@ function ItemRow({
       variants={listItemVariants}
       onClick={onClick}
       className={cn(
-        'group flex w-full items-start gap-3 rounded-none px-4 py-3 text-left',
+        'group flex w-full items-center gap-2.5 px-1 py-2.5 text-left',
         'transition-all duration-150',
         'hover:bg-[var(--bg-hover)]',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
-        muted && 'opacity-40',
       )}
     >
-      {/* Optional numbered index */}
-      {index !== undefined && (
-        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center text-[11px] font-bold tabular-nums text-[var(--accent-base)]">
-          {index}
-        </span>
-      )}
-
-      {/* Two-line: title + metadata row */}
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <span
-            className={cn(
-              'truncate text-[15px] leading-snug',
-              muted
-                ? 'text-[var(--text-muted)] line-through decoration-[var(--text-disabled)]'
-                : 'font-medium text-[var(--text-primary)]',
-            )}
-          >
-            {item.title}
+      {/* Subtle status dot */}
+      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--text-disabled)]" />
+      <span className="min-w-0 flex-1 truncate text-[13px] font-medium text-[var(--text-primary)]">
+        {item.title}
+      </span>
+      <div className="flex shrink-0 items-center gap-1.5">
+        {hasNotes && <FileText className="h-3 w-3 text-[var(--text-disabled)]" />}
+        {destName && (
+          <span className="rounded-sm border border-[var(--border-subtle)] px-1.5 py-px text-[10px] font-medium text-[var(--text-muted)]">
+            {destName}
           </span>
-          {trailing && (
-            <span className="shrink-0 text-xs tabular-nums text-[var(--text-muted)]">{trailing}</span>
-          )}
-        </div>
-
-        {/* Metadata chips row */}
-        {!muted && (destName || hasNotes || (age && age !== 'today')) && (
-          <div className="mt-1 flex items-center gap-2">
-            {destName && (
-              <span className="px-1.5 py-px text-[10px] font-medium uppercase tracking-wider text-[var(--text-muted)] bg-[var(--bg-hover)]">
-                {destName}
-              </span>
-            )}
-            {hasNotes && (
-              <FileText className="h-3 w-3 text-[var(--text-disabled)]" />
-            )}
-            {age && age !== 'today' && (
-              <span className="text-[10px] tabular-nums text-[var(--text-disabled)]">
-                {age}
-              </span>
-            )}
-          </div>
+        )}
+        {age && age !== 'today' && (
+          <span className="text-[10px] tabular-nums text-[var(--text-disabled)]">{age}</span>
         )}
       </div>
+    </motion.button>
+  );
+}
+
+/** Muted item for Done section */
+function MutedItem({
+  item,
+  trailing,
+  onClick,
+}: {
+  item: Item;
+  trailing?: React.ReactNode;
+  onClick: () => void;
+}) {
+  return (
+    <motion.button
+      variants={listItemVariants}
+      onClick={onClick}
+      className={cn(
+        'group flex w-full items-center gap-3 px-4 py-2.5 text-left opacity-50',
+        'transition-all duration-150 hover:opacity-70',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
+      )}
+    >
+      <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-[#6b8f71]/60" />
+      <span className="min-w-0 flex-1 truncate text-sm text-[var(--text-muted)] line-through decoration-[var(--text-disabled)]">
+        {item.title}
+      </span>
+      {trailing && (
+        <span className="shrink-0 text-[11px] tabular-nums text-[var(--text-disabled)]">{trailing}</span>
+      )}
     </motion.button>
   );
 }
@@ -648,7 +751,7 @@ export function TodayPageClient({
   const [completedExpanded, setCompletedExpanded] = useState(false);
 
   const userName = profile?.full_name?.split(' ')[0] || 'there';
-  const { text: greetingText } = getGreeting();
+  const greetingText = getGreeting();
   const todayFormatted = format(new Date(), 'EEEE, MMM d');
 
   const hasOverdue = overdueItems.length > 0;
@@ -743,24 +846,23 @@ export function TodayPageClient({
           {/* Two-column workspace — always rendered, content adapts */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_380px]">
             {/* LEFT — Primary workspace */}
-            <div className="min-w-0 space-y-5">
-              {/* Overdue — amber left accent, urgent density */}
+            <div className="min-w-0 space-y-6">
+              {/* Overdue — borderless urgent strip, amber tint */}
               {hasOverdue && (
                 <motion.section variants={itemVariants}>
-                  <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] border-l-[3px] border-l-amber-600/60 bg-[var(--bg-surface)]">
-                    <div className="flex items-center gap-2 px-4 py-2.5">
-                      <AlertTriangle className="h-3.5 w-3.5 text-amber-700/60" />
-                      <h2 className="text-[13px] font-semibold text-[var(--text-primary)]">
+                  <div className="overflow-hidden border-l-[3px] border-l-amber-600/60 bg-[rgba(180,83,9,0.025)] dark:bg-[rgba(180,83,9,0.06)]">
+                    <div className="flex items-center gap-2 px-4 py-2">
+                      <AlertTriangle className="h-3.5 w-3.5 text-amber-700/70" />
+                      <h2 className="text-[12px] font-bold uppercase tracking-wider text-amber-800/70 dark:text-amber-400/80">
                         Overdue
                       </h2>
-                      <span className="ml-auto text-[11px] font-bold tabular-nums text-amber-700/70">
+                      <span className="ml-auto rounded-sm bg-amber-100/60 px-1.5 py-px text-[10px] font-bold tabular-nums text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
                         {overdueItems.length}
                       </span>
                     </div>
-                    <div className="mx-4 h-px bg-[var(--border-subtle)]" />
-                    <motion.div className="py-0.5" variants={containerVariants} initial="hidden" animate="visible">
+                    <motion.div variants={containerVariants} initial="hidden" animate="visible">
                       {overdueItems.map((item) => (
-                        <ItemRow
+                        <CompactItem
                           key={item.id}
                           item={item}
                           destinations={destinations}
@@ -774,25 +876,26 @@ export function TodayPageClient({
                 </motion.section>
               )}
 
-              {/* Today's Focus — hero section, terracotta accent, numbered priorities */}
+              {/* Today's Focus — HERO: warm surface, no standard border, editorial header */}
               <motion.section variants={itemVariants}>
-                <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] border-l-[3px] border-l-[var(--accent-base)] bg-[var(--bg-surface)]">
-                  <div className="flex items-center gap-2 px-4 py-3">
-                    <Calendar className="h-3.5 w-3.5 text-[var(--accent-base)]" />
-                    <h2 className="text-[13px] font-semibold text-[var(--text-primary)]">
-                      Today&apos;s Focus
-                    </h2>
+                <div className="overflow-hidden rounded-sm bg-[rgba(194,122,90,0.035)] dark:bg-[rgba(194,122,90,0.06)]">
+                  <div className="flex items-center justify-between px-5 pt-5 pb-3">
+                    <div className="flex items-center gap-2.5">
+                      <span className="inline-block h-2 w-2 rounded-full bg-[var(--accent-base)]" />
+                      <h2 className="text-[15px] font-bold text-[var(--text-primary)]">
+                        Today&apos;s Focus
+                      </h2>
+                    </div>
                     {hasToday && (
-                      <span className="ml-auto text-[11px] font-bold tabular-nums text-[var(--accent-base)]">
-                        {todayItems.length}
+                      <span className="text-[12px] font-bold tabular-nums text-[var(--accent-base)]">
+                        {todayItems.length} {todayItems.length === 1 ? 'item' : 'items'}
                       </span>
                     )}
                   </div>
-                  <div className="mx-4 h-px bg-[var(--border-subtle)]" />
                   {hasToday ? (
-                    <motion.div className="py-1" variants={containerVariants} initial="hidden" animate="visible">
+                    <motion.div className="pb-2" variants={containerVariants} initial="hidden" animate="visible">
                       {todayItems.map((item, idx) => (
-                        <ItemRow
+                        <FocusItem
                           key={item.id}
                           item={item}
                           index={idx + 1}
@@ -803,102 +906,96 @@ export function TodayPageClient({
                       ))}
                     </motion.div>
                   ) : (
-                    <div className="px-4 py-5">
-                      <p className="text-sm text-[var(--text-muted)]">Nothing scheduled today.</p>
-                      <p className="mt-1 text-xs text-[var(--text-disabled)]">Schedule items to build your focus list.</p>
+                    <div className="px-5 pb-6 pt-2">
+                      <p className="text-[15px] text-[var(--text-muted)]">
+                        Nothing on the agenda.
+                      </p>
+                      <p className="mt-2 text-[13px] leading-relaxed text-[var(--text-disabled)]">
+                        Schedule items to build your focus list, or capture something new below.
+                      </p>
                     </div>
                   )}
                 </div>
               </motion.section>
 
-              {/* In Motion — neutral, quiet background role */}
+              {/* In Motion — BORDERLESS: label + dividers, no card container */}
               {hasRecent && (
                 <motion.section variants={itemVariants}>
-                  <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-                    <div className="flex items-center gap-2 px-4 py-2.5">
-                      <Activity className="h-3.5 w-3.5 text-[var(--text-disabled)]" />
-                      <h2 className="text-[13px] font-semibold text-[var(--text-secondary)]">
-                        In Motion
-                      </h2>
-                      <span className="ml-auto text-[11px] tabular-nums text-[var(--text-disabled)]">
-                        {recentItems.length}
-                      </span>
-                    </div>
-                    <div className="mx-4 h-px bg-[var(--border-subtle)]" />
-                    <motion.div className="py-0.5" variants={containerVariants} initial="hidden" animate="visible">
-                      {recentItems.map((item) => (
-                        <ItemRow
-                          key={item.id}
-                          item={item}
-                          destinations={destinations}
-                          showAge
-                          onClick={() => handleItemClick(item.id)}
-                        />
-                      ))}
-                    </motion.div>
+                  <div className="flex items-center gap-2 px-1 pb-2">
+                    <Activity className="h-3 w-3 text-[var(--text-disabled)]" />
+                    <h2 className="text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+                      In Motion
+                    </h2>
+                    <span className="text-[11px] tabular-nums text-[var(--text-disabled)]">
+                      {recentItems.length}
+                    </span>
                   </div>
+                  <motion.div className="divide-y divide-[var(--border-subtle)]" variants={containerVariants} initial="hidden" animate="visible">
+                    {recentItems.map((item) => (
+                      <DenseItem
+                        key={item.id}
+                        item={item}
+                        destinations={destinations}
+                        showAge
+                        onClick={() => handleItemClick(item.id)}
+                      />
+                    ))}
+                  </motion.div>
                 </motion.section>
               )}
 
-              {/* Done — sage accent on expand, collapsible */}
+              {/* Done — INLINE TOGGLE: no card when collapsed, card on expand */}
               {hasCompleted && (
                 <motion.section variants={itemVariants}>
-                  <div className={cn(
-                    'overflow-hidden rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)] transition-all duration-200',
-                    completedExpanded && 'border-l-[3px] border-l-[#6b8f71]/40',
-                  )}>
-                    <button
-                      onClick={() => setCompletedExpanded((prev) => !prev)}
-                      className={cn(
-                        'flex w-full items-center gap-2 px-4 py-2.5 text-left',
-                        'transition-colors duration-150 hover:bg-[var(--bg-hover)]',
-                        'rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
-                      )}
-                    >
-                      <CheckCircle2 className="h-3.5 w-3.5 text-[#6b8f71]/60" />
-                      <h2 className="text-[13px] font-semibold text-[var(--text-muted)]">
-                        Done
-                      </h2>
-                      <span className="text-[11px] tabular-nums text-[#6b8f71]/70">
-                        {completedToday.length}
-                      </span>
-                      <span className="ml-auto text-[var(--text-disabled)]">
-                        {completedExpanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
-                      </span>
-                    </button>
-                    {completedExpanded && (
-                      <>
-                        <div className="mx-4 h-px bg-[var(--border-subtle)]" />
-                        <motion.div className="py-0.5" variants={containerVariants} initial="hidden" animate="visible">
-                          {completedToday.map((item) => (
-                            <ItemRow
-                              key={item.id}
-                              item={item}
-                              muted
-                              trailing={item.completed_at ? format(new Date(item.completed_at), 'HH:mm') : undefined}
-                              onClick={() => handleItemClick(item.id)}
-                            />
-                          ))}
-                        </motion.div>
-                      </>
+                  <button
+                    onClick={() => setCompletedExpanded((prev) => !prev)}
+                    className={cn(
+                      'flex w-full items-center gap-2 px-1 py-2 text-left',
+                      'transition-colors duration-150',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                     )}
-                  </div>
+                  >
+                    <CheckCircle2 className="h-3.5 w-3.5 text-[#6b8f71]/50" />
+                    <span className="text-[13px] font-medium text-[var(--text-muted)]">
+                      Done today
+                    </span>
+                    <span className="text-[12px] font-bold tabular-nums text-[#6b8f71]/60">
+                      {completedToday.length}
+                    </span>
+                    <span className="ml-auto text-[var(--text-disabled)]">
+                      {completedExpanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+                    </span>
+                  </button>
+                  {completedExpanded && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+                      className="mt-1 overflow-hidden rounded-sm border border-[var(--border-subtle)] border-l-[3px] border-l-[#6b8f71]/30 bg-[var(--bg-surface)]"
+                    >
+                      <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                        {completedToday.map((item) => (
+                          <MutedItem
+                            key={item.id}
+                            item={item}
+                            trailing={item.completed_at ? format(new Date(item.completed_at), 'HH:mm') : undefined}
+                            onClick={() => handleItemClick(item.id)}
+                          />
+                        ))}
+                      </motion.div>
+                    </motion.div>
+                  )}
                 </motion.section>
               )}
 
-              {/* Empty state — only when truly nothing */}
+              {/* Empty state — editorial, warm */}
               {!hasAnyContent && (
                 <motion.div
                   variants={itemVariants}
-                  className="flex items-center gap-3 rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-5 py-6"
+                  className="rounded-sm bg-[rgba(194,122,90,0.035)] px-6 py-8 text-center dark:bg-[rgba(194,122,90,0.06)]"
                 >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-[var(--accent-glow)]">
-                    <Sun className="h-4 w-4 text-[var(--accent-base)] opacity-60" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-[var(--text-primary)]">Your mind is clear.</p>
-                    <p className="text-xs text-[var(--text-muted)]">Capture something when inspiration strikes.</p>
-                  </div>
+                  <p className="text-[16px] font-medium text-[var(--text-primary)]">Your mind is clear.</p>
+                  <p className="mt-2 text-[13px] text-[var(--text-muted)]">Capture something when inspiration strikes.</p>
                 </motion.div>
               )}
             </div>
