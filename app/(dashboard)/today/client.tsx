@@ -185,6 +185,7 @@ function ItemRow({
   muted = false,
   destinations,
   showAge = false,
+  index,
   onClick,
 }: {
   item: Item;
@@ -192,6 +193,7 @@ function ItemRow({
   muted?: boolean;
   destinations?: Destination[];
   showAge?: boolean;
+  index?: number;
   onClick: () => void;
 }) {
   const destName = destinations ? getDestinationName(item.destination_id, destinations) : null;
@@ -203,44 +205,55 @@ function ItemRow({
       variants={listItemVariants}
       onClick={onClick}
       className={cn(
-        'group flex w-full items-center gap-3 rounded-none px-4 py-3 text-left',
-        'border-l-2 border-l-transparent transition-all duration-150',
-        'hover:bg-[var(--bg-hover)] hover:border-l-[var(--accent-base)]',
+        'group flex w-full items-start gap-3 rounded-none px-4 py-3 text-left',
+        'transition-all duration-150',
+        'hover:bg-[var(--bg-hover)]',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
-        muted && 'opacity-50 hover:border-l-transparent',
+        muted && 'opacity-40',
       )}
     >
-      {/* Title + metadata */}
-      <div className="flex min-w-0 flex-1 items-center gap-2">
-        <span
-          className={cn(
-            'truncate text-sm',
-            muted
-              ? 'text-[var(--text-muted)] line-through decoration-[var(--text-disabled)]'
-              : 'font-medium text-[var(--text-primary)]',
-          )}
-        >
-          {item.title}
+      {/* Optional numbered index */}
+      {index !== undefined && (
+        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center text-[11px] font-bold tabular-nums text-[var(--accent-base)]">
+          {index}
         </span>
-        {hasNotes && !muted && (
-          <FileText className="h-3.5 w-3.5 shrink-0 text-[var(--text-disabled)]" />
-        )}
-      </div>
+      )}
 
-      {/* Metadata pills */}
-      <div className="flex shrink-0 items-center gap-2">
-        {destName && !muted && (
-          <span className="px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider text-[var(--text-muted)] bg-[var(--bg-hover)]">
-            {destName}
+      {/* Two-line: title + metadata row */}
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <span
+            className={cn(
+              'truncate text-[15px] leading-snug',
+              muted
+                ? 'text-[var(--text-muted)] line-through decoration-[var(--text-disabled)]'
+                : 'font-medium text-[var(--text-primary)]',
+            )}
+          >
+            {item.title}
           </span>
-        )}
-        {age && !muted && age !== 'today' && (
-          <span className="text-[11px] font-medium tabular-nums text-[var(--text-disabled)]">
-            {age}
-          </span>
-        )}
-        {trailing && (
-          <span className="text-xs tabular-nums text-[var(--text-muted)]">{trailing}</span>
+          {trailing && (
+            <span className="shrink-0 text-xs tabular-nums text-[var(--text-muted)]">{trailing}</span>
+          )}
+        </div>
+
+        {/* Metadata chips row */}
+        {!muted && (destName || hasNotes || (age && age !== 'today')) && (
+          <div className="mt-1 flex items-center gap-2">
+            {destName && (
+              <span className="px-1.5 py-px text-[10px] font-medium uppercase tracking-wider text-[var(--text-muted)] bg-[var(--bg-hover)]">
+                {destName}
+              </span>
+            )}
+            {hasNotes && (
+              <FileText className="h-3 w-3 text-[var(--text-disabled)]" />
+            )}
+            {age && age !== 'today' && (
+              <span className="text-[10px] tabular-nums text-[var(--text-disabled)]">
+                {age}
+              </span>
+            )}
+          </div>
         )}
       </div>
     </motion.button>
@@ -360,14 +373,12 @@ function AIInsightsCard({
 
   return (
     <motion.section variants={itemVariants}>
-      <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+      <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] border-t-2 border-t-[var(--accent-base)]/25 bg-[var(--bg-surface)]">
         {/* Header */}
-        <div className="flex items-center gap-2.5 px-4 py-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)]">
-            <Brain className="h-[18px] w-[18px] text-[var(--accent-base)]" />
-          </div>
-          <h2 className="text-xs font-bold uppercase tracking-wide text-[var(--text-secondary)]">
-            AI Insights
+        <div className="flex items-center gap-2 px-4 py-3">
+          <Brain className="h-4 w-4 text-[var(--accent-base)]" />
+          <h2 className="text-[13px] font-semibold text-[var(--text-secondary)]">
+            Insights
           </h2>
           {insights && totalInsights > 0 && (
             <span className="rounded-full bg-[var(--accent-subtle)] px-2 py-0.5 text-[10px] font-bold tabular-nums text-[var(--accent-base)]">
@@ -456,9 +467,7 @@ function AIInsightsCard({
                         transition={{ type: 'spring', stiffness: 320, damping: 28 }}
                         className="group flex items-center gap-2.5 rounded-none px-2.5 py-2 transition-colors duration-150 hover:bg-[var(--bg-hover)]"
                       >
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)]">
-                          <Lightbulb className="h-3 w-3 text-[var(--text-secondary)]" />
-                        </div>
+                        <Lightbulb className="h-3.5 w-3.5 shrink-0 text-[var(--accent-base)]/60" />
                         <div className="min-w-0 flex-1">
                           <button
                             onClick={() => onItemClick(promo.item_id)}
@@ -474,7 +483,7 @@ function AIInsightsCard({
                           onClick={() => onItemClick(promo.item_id)}
                           className={cn(
                             'flex shrink-0 items-center gap-1 rounded-none px-2 py-0.5 text-[11px] font-medium',
-                            'border border-[var(--accent-border)] text-[var(--accent-base)]',
+                            'border border-[var(--accent-base)]/20 text-[var(--accent-base)]',
                             'transition-colors duration-150 hover:bg-[var(--accent-glow)]',
                           )}
                         >
@@ -509,9 +518,7 @@ function AIInsightsCard({
                           onClick={() => setExpandedCluster(expandedCluster === idx ? null : idx)}
                           className="flex w-full items-center gap-2.5 px-2.5 py-2 text-left transition-colors duration-150 hover:bg-[var(--bg-hover)] rounded-none"
                         >
-                          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)]">
-                            <TrendingUp className="h-3 w-3 text-[var(--text-secondary)]" />
-                          </div>
+                          <TrendingUp className="h-3.5 w-3.5 shrink-0 text-[var(--text-muted)]" />
                           <div className="min-w-0 flex-1">
                             <span className="block truncate text-sm text-[var(--text-primary)]">
                               {cluster.theme}
@@ -575,9 +582,7 @@ function AIInsightsCard({
                         transition={{ type: 'spring', stiffness: 320, damping: 28 }}
                         className="group flex items-start gap-2.5 rounded-none px-2.5 py-2 transition-colors duration-150 hover:bg-[var(--bg-hover)]"
                       >
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] mt-0.5">
-                          <AlertCircle className="h-3 w-3 text-[var(--text-secondary)]" />
-                        </div>
+                        <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-600/50" />
                         <div className="min-w-0 flex-1 overflow-hidden">
                           <div className="flex items-center gap-2">
                             <button
@@ -587,7 +592,16 @@ function AIInsightsCard({
                               {findItemTitle(staleItem.item_id)}
                             </button>
                             <span
-                              className="shrink-0 rounded-none bg-[var(--bg-hover)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-secondary)]"
+                              className={cn(
+                                'shrink-0 rounded-none px-2 py-0.5 text-[10px] font-medium',
+                                staleItem.action.toLowerCase().includes('schedule') && 'bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400',
+                                staleItem.action.toLowerCase().includes('complete') && 'bg-[rgba(107,143,113,0.08)] text-[#6b8f71]',
+                                staleItem.action.toLowerCase().includes('archive') && 'bg-[var(--bg-hover)] text-[var(--text-muted)]',
+                                !staleItem.action.toLowerCase().includes('schedule') &&
+                                !staleItem.action.toLowerCase().includes('complete') &&
+                                !staleItem.action.toLowerCase().includes('archive') &&
+                                'bg-[var(--bg-hover)] text-[var(--text-secondary)]',
+                              )}
                             >
                               {staleItem.action}
                             </span>
@@ -685,22 +699,23 @@ export function TodayPageClient({
       {/* Content */}
       <div className="flex-1 overflow-auto px-8 pb-6 pt-6">
         <motion.div
-          className="mx-auto max-w-7xl space-y-5"
+          className="mx-auto max-w-7xl space-y-6"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          {/* Page header — "Today" as anchor, greeting secondary */}
-          <motion.div variants={itemVariants} className="flex items-end justify-between">
+          {/* Page header — editorial: terracotta dot, large title, date on right */}
+          <motion.div variants={itemVariants} className="flex items-end justify-between pb-1">
             <div>
-              <h1 className="text-[26px] font-bold tracking-tight text-[var(--text-primary)]">
+              <h1 className="flex items-center gap-2.5 text-[28px] font-bold tracking-tight text-[var(--text-primary)]">
+                <span className="inline-block h-2 w-2 rounded-full bg-[var(--accent-base)]" />
                 Today
               </h1>
-              <p className="mt-0.5 text-[15px] text-[var(--text-muted)]">
+              <p className="mt-1 pl-[18px] text-[15px] text-[var(--text-muted)]">
                 {greetingText}, <span className="font-medium text-[var(--text-secondary)]">{userName}</span>
               </p>
             </div>
-            <span className="pb-1 text-sm tabular-nums text-[var(--text-muted)]">
+            <span className="pb-1.5 text-sm tabular-nums text-[var(--text-muted)]">
               {todayFormatted}
             </span>
           </motion.div>
@@ -726,26 +741,24 @@ export function TodayPageClient({
           </motion.div>
 
           {/* Two-column workspace — always rendered, content adapts */}
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_380px]">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_380px]">
             {/* LEFT — Primary workspace */}
-            <div className="min-w-0 space-y-4">
-              {/* Overdue — warm amber/rust accent */}
+            <div className="min-w-0 space-y-5">
+              {/* Overdue — amber left accent, urgent density */}
               {hasOverdue && (
                 <motion.section variants={itemVariants}>
-                  <div className="overflow-hidden rounded-none border border-[#e0cfc0] bg-[var(--bg-surface)]">
-                    <div className="flex items-center gap-2.5 px-4 py-3">
-                      <div className="flex h-7 w-7 items-center justify-center rounded-none bg-[rgba(180,83,9,0.06)]">
-                        <AlertTriangle className="h-4 w-4 text-amber-700/70" />
-                      </div>
-                      <h2 className="text-xs font-bold uppercase tracking-wide text-[var(--text-primary)]">
+                  <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] border-l-[3px] border-l-amber-600/60 bg-[var(--bg-surface)]">
+                    <div className="flex items-center gap-2 px-4 py-2.5">
+                      <AlertTriangle className="h-3.5 w-3.5 text-amber-700/60" />
+                      <h2 className="text-[13px] font-semibold text-[var(--text-primary)]">
                         Overdue
                       </h2>
-                      <span className="ml-auto rounded-full bg-[rgba(180,83,9,0.07)] px-2 py-0.5 text-[10px] font-bold tabular-nums text-amber-700">
+                      <span className="ml-auto text-[11px] font-bold tabular-nums text-amber-700/70">
                         {overdueItems.length}
                       </span>
                     </div>
                     <div className="mx-4 h-px bg-[var(--border-subtle)]" />
-                    <motion.div className="px-1 py-1" variants={containerVariants} initial="hidden" animate="visible">
+                    <motion.div className="py-0.5" variants={containerVariants} initial="hidden" animate="visible">
                       {overdueItems.map((item) => (
                         <ItemRow
                           key={item.id}
@@ -761,29 +774,28 @@ export function TodayPageClient({
                 </motion.section>
               )}
 
-              {/* Scheduled today */}
+              {/* Today's Focus — hero section, terracotta accent, numbered priorities */}
               <motion.section variants={itemVariants}>
-                <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-                  <div className="flex items-center gap-2.5 px-4 py-3">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-none bg-[var(--bg-hover)]">
-                      <Calendar className="h-4 w-4 text-[var(--text-secondary)]" />
-                    </div>
-                    <h2 className="text-xs font-bold uppercase tracking-wide text-[var(--text-primary)]">
-                      Scheduled
+                <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] border-l-[3px] border-l-[var(--accent-base)] bg-[var(--bg-surface)]">
+                  <div className="flex items-center gap-2 px-4 py-3">
+                    <Calendar className="h-3.5 w-3.5 text-[var(--accent-base)]" />
+                    <h2 className="text-[13px] font-semibold text-[var(--text-primary)]">
+                      Today&apos;s Focus
                     </h2>
                     {hasToday && (
-                      <span className="ml-auto rounded-full bg-[var(--bg-hover)] px-2 py-0.5 text-[10px] font-bold tabular-nums text-[var(--text-secondary)]">
+                      <span className="ml-auto text-[11px] font-bold tabular-nums text-[var(--accent-base)]">
                         {todayItems.length}
                       </span>
                     )}
                   </div>
                   <div className="mx-4 h-px bg-[var(--border-subtle)]" />
                   {hasToday ? (
-                    <motion.div className="px-1 py-1" variants={containerVariants} initial="hidden" animate="visible">
-                      {todayItems.map((item) => (
+                    <motion.div className="py-1" variants={containerVariants} initial="hidden" animate="visible">
+                      {todayItems.map((item, idx) => (
                         <ItemRow
                           key={item.id}
                           item={item}
+                          index={idx + 1}
                           destinations={destinations}
                           trailing={<span className="font-medium tabular-nums">{formatScheduledTime(item)}</span>}
                           onClick={() => handleItemClick(item.id)}
@@ -791,28 +803,29 @@ export function TodayPageClient({
                       ))}
                     </motion.div>
                   ) : (
-                    <p className="px-4 py-4 text-sm text-[var(--text-muted)]">Nothing scheduled today.</p>
+                    <div className="px-4 py-5">
+                      <p className="text-sm text-[var(--text-muted)]">Nothing scheduled today.</p>
+                      <p className="mt-1 text-xs text-[var(--text-disabled)]">Schedule items to build your focus list.</p>
+                    </div>
                   )}
                 </div>
               </motion.section>
 
-              {/* Recent — active items not in overdue/today/completed */}
+              {/* In Motion — neutral, quiet background role */}
               {hasRecent && (
                 <motion.section variants={itemVariants}>
                   <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-                    <div className="flex items-center gap-2.5 px-4 py-3">
-                      <div className="flex h-7 w-7 items-center justify-center rounded-none bg-[var(--bg-hover)]">
-                        <Activity className="h-4 w-4 text-[var(--text-secondary)]" />
-                      </div>
-                      <h2 className="text-xs font-bold uppercase tracking-wide text-[var(--text-primary)]">
+                    <div className="flex items-center gap-2 px-4 py-2.5">
+                      <Activity className="h-3.5 w-3.5 text-[var(--text-disabled)]" />
+                      <h2 className="text-[13px] font-semibold text-[var(--text-secondary)]">
                         In Motion
                       </h2>
-                      <span className="ml-auto text-[11px] text-[var(--text-disabled)]">
-                        {recentItems.length} active
+                      <span className="ml-auto text-[11px] tabular-nums text-[var(--text-disabled)]">
+                        {recentItems.length}
                       </span>
                     </div>
                     <div className="mx-4 h-px bg-[var(--border-subtle)]" />
-                    <motion.div className="px-1 py-1" variants={containerVariants} initial="hidden" animate="visible">
+                    <motion.div className="py-0.5" variants={containerVariants} initial="hidden" animate="visible">
                       {recentItems.map((item) => (
                         <ItemRow
                           key={item.id}
@@ -827,35 +840,36 @@ export function TodayPageClient({
                 </motion.section>
               )}
 
-              {/* Done — sage green accent, collapsible */}
+              {/* Done — sage accent on expand, collapsible */}
               {hasCompleted && (
                 <motion.section variants={itemVariants}>
-                  <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+                  <div className={cn(
+                    'overflow-hidden rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)] transition-all duration-200',
+                    completedExpanded && 'border-l-[3px] border-l-[#6b8f71]/40',
+                  )}>
                     <button
                       onClick={() => setCompletedExpanded((prev) => !prev)}
                       className={cn(
-                        'flex w-full items-center gap-2.5 px-4 py-3 text-left',
+                        'flex w-full items-center gap-2 px-4 py-2.5 text-left',
                         'transition-colors duration-150 hover:bg-[var(--bg-hover)]',
                         'rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                       )}
                     >
-                      <div className="flex h-7 w-7 items-center justify-center rounded-none bg-[rgba(107,143,113,0.08)]">
-                        <CheckCircle2 className="h-4 w-4 text-[#6b8f71]" />
-                      </div>
-                      <h2 className="text-xs font-bold uppercase tracking-wide text-[var(--text-muted)]">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-[#6b8f71]/60" />
+                      <h2 className="text-[13px] font-semibold text-[var(--text-muted)]">
                         Done
                       </h2>
-                      <span className="text-[11px] tabular-nums text-[#6b8f71]">
-                        {completedToday.length} {completedToday.length === 1 ? 'item' : 'items'}
+                      <span className="text-[11px] tabular-nums text-[#6b8f71]/70">
+                        {completedToday.length}
                       </span>
-                      <span className="ml-auto text-[var(--text-muted)]">
+                      <span className="ml-auto text-[var(--text-disabled)]">
                         {completedExpanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
                       </span>
                     </button>
                     {completedExpanded && (
                       <>
                         <div className="mx-4 h-px bg-[var(--border-subtle)]" />
-                        <motion.div className="px-1 py-1" variants={containerVariants} initial="hidden" animate="visible">
+                        <motion.div className="py-0.5" variants={containerVariants} initial="hidden" animate="visible">
                           {completedToday.map((item) => (
                             <ItemRow
                               key={item.id}
