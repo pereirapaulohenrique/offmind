@@ -286,7 +286,7 @@ export function CaptureBar({ userId, spaces = [], projects = [], pages = [] }: C
         background: 'linear-gradient(to bottom, transparent 0%, var(--bg-base) 40%)',
       }}
     >
-      <div className="mx-auto max-w-3xl pointer-events-auto">
+      <div className="mx-auto max-w-5xl pointer-events-auto">
         {/* Attachment chips above input */}
         {hasAttachments && (
           <div className="mb-2 flex items-center gap-2 px-1">
