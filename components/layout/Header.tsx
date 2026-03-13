@@ -16,19 +16,15 @@ interface HeaderProps {
 }
 
 export function Header({ title, user, mobileSidebar }: HeaderProps) {
-  const { setCommandPaletteOpen, pageTitle } = useUIStore();
-  const displayTitle = title || pageTitle;
+  const { setCommandPaletteOpen } = useUIStore();
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between px-6 bg-[var(--bg-base)]" style={{ borderBottom: '1px solid var(--border-default)' }}>
+    <header className="sticky top-0 z-30 flex h-12 items-center justify-between px-8 bg-[var(--bg-base)]" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
       <div className="flex items-center gap-4">
         {mobileSidebar}
-        <h1
-          className="text-base font-bold tracking-tight text-[var(--text-primary)] transition-opacity duration-200"
-          style={{ opacity: displayTitle ? 1 : 0 }}
-        >
-          {displayTitle || '\u00A0'}
-        </h1>
+        {title && (
+          <span className="text-sm font-semibold text-[var(--text-primary)]">{title}</span>
+        )}
       </div>
 
       <div className="flex items-center gap-3">

@@ -279,14 +279,14 @@ export function CaptureBar({ userId, spaces = [], projects = [], pages = [] }: C
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-30 px-5 pb-5 pt-8 pointer-events-none"
+      className="fixed bottom-0 left-0 right-0 z-30 px-8 pb-5 pt-8 pointer-events-none"
       style={{
-        paddingLeft: `calc(${sidebarOffset} + 1.25rem)`,
+        paddingLeft: `calc(${sidebarOffset} + 2rem)`,
         transition: 'padding-left 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)',
         background: 'linear-gradient(to bottom, transparent 0%, var(--bg-base) 40%)',
       }}
     >
-      <div className="mx-auto max-w-5xl pointer-events-auto">
+      <div className="mx-auto max-w-7xl pointer-events-auto">
         {/* Attachment chips above input */}
         {hasAttachments && (
           <div className="mb-2 flex items-center gap-2 px-1">

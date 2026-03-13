@@ -24,6 +24,7 @@ import {
   AlertCircle,
   TrendingUp,
   FileText,
+  Activity,
 } from 'lucide-react';
 import { useUIStore } from '@/stores/ui';
 import { cn } from '@/lib/utils';
@@ -632,12 +633,6 @@ export function TodayPageClient({
   const [onboardingVisible, setOnboardingVisible] = useState(showOnboarding);
   const [completedExpanded, setCompletedExpanded] = useState(false);
 
-  const setPageTitle = useUIStore((s) => s.setPageTitle);
-  useEffect(() => {
-    setPageTitle('Today');
-    return () => setPageTitle('');
-  }, [setPageTitle]);
-
   const userName = profile?.full_name?.split(' ')[0] || 'there';
   const { text: greetingText } = getGreeting();
   const todayFormatted = format(new Date(), 'EEEE, MMM d');
@@ -645,11 +640,20 @@ export function TodayPageClient({
   const hasOverdue = overdueItems.length > 0;
   const hasToday = todayItems.length > 0;
   const hasCompleted = completedToday.length > 0;
-  const isEverythingEmpty = !hasOverdue && !hasToday && !hasCompleted;
 
   // Progress: completed vs total today tasks
   const totalTodayTasks = todayItems.length + completedToday.length;
   const completedPercent = totalTodayTasks > 0 ? (completedToday.length / totalTodayTasks) * 100 : 0;
+
+  // Recent — active items not overdue/today/completed, fills the left column
+  const overdueIds = new Set(overdueItems.map(i => i.id));
+  const todayIds = new Set(todayItems.map(i => i.id));
+  const completedIds = new Set(completedToday.map(i => i.id));
+  const recentItems = allActiveItems
+    .filter(item => !overdueIds.has(item.id) && !todayIds.has(item.id) && !completedIds.has(item.id))
+    .slice(0, 8);
+  const hasRecent = recentItems.length > 0;
+  const hasAnyContent = hasOverdue || hasToday || hasCompleted || hasRecent;
 
   const handleOnboardingComplete = async () => {
     setOnboardingVisible(false);
@@ -679,230 +683,222 @@ export function TodayPageClient({
       )}
 
       {/* Content */}
-      <div className="flex-1 overflow-auto px-6 pb-6 pt-5">
+      <div className="flex-1 overflow-auto px-8 pb-6 pt-6">
         <motion.div
-          className="mx-auto max-w-5xl space-y-4"
+          className="mx-auto max-w-7xl space-y-5"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          {/* Greeting + date (page title "Today" is in the header bar) */}
-          <motion.div variants={itemVariants} className="flex items-baseline justify-between px-0.5">
-            <h2 className="text-lg font-semibold text-[var(--text-primary)]">
-              {greetingText}, <span className="text-[var(--text-secondary)]">{userName}</span>
-            </h2>
-            <span className="text-xs tabular-nums text-[var(--text-muted)]">
+          {/* Page header — "Today" as anchor, greeting secondary */}
+          <motion.div variants={itemVariants} className="flex items-end justify-between">
+            <div>
+              <h1 className="text-[26px] font-bold tracking-tight text-[var(--text-primary)]">
+                Today
+              </h1>
+              <p className="mt-0.5 text-[15px] text-[var(--text-muted)]">
+                {greetingText}, <span className="font-medium text-[var(--text-secondary)]">{userName}</span>
+              </p>
+            </div>
+            <span className="pb-1 text-sm tabular-nums text-[var(--text-muted)]">
               {todayFormatted}
             </span>
           </motion.div>
 
-          {/* Status bar — full width */}
-          <StatusBar counts={counts} onNavigate={(path) => router.push(path)} />
-
-          {/* Progress bar (when there are today tasks) */}
-          {totalTodayTasks > 0 && (
-            <motion.div variants={itemVariants} className="flex items-center gap-3 px-1">
-              <div className="h-1 flex-1 overflow-hidden rounded-sm bg-[var(--border-subtle)]">
-                <motion.div
-                  className="h-full rounded-sm bg-[var(--accent-base)]"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${completedPercent}%` }}
-                  transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.3 }}
-                />
+          {/* Status strip + progress — compact utility */}
+          <motion.div variants={itemVariants} className="space-y-2">
+            <StatusBar counts={counts} onNavigate={(path) => router.push(path)} />
+            {totalTodayTasks > 0 && (
+              <div className="flex items-center gap-3 px-1">
+                <div className="h-1 flex-1 overflow-hidden rounded-sm bg-[var(--border-subtle)]">
+                  <motion.div
+                    className="h-full rounded-sm bg-[var(--accent-base)]"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${completedPercent}%` }}
+                    transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.3 }}
+                  />
+                </div>
+                <span className="text-[11px] font-medium tabular-nums text-[var(--text-muted)]">
+                  {completedToday.length}/{totalTodayTasks}
+                </span>
               </div>
-              <span className="text-[11px] font-medium tabular-nums text-[var(--text-muted)]">
-                {completedToday.length}/{totalTodayTasks}
-              </span>
-            </motion.div>
-          )}
+            )}
+          </motion.div>
 
-          {/* Everything-empty state */}
-          {isEverythingEmpty && (
-            <motion.div
-              variants={itemVariants}
-              className="flex items-center gap-3 rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-5 py-5"
-            >
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-[var(--accent-glow)]">
-                <Sun className="h-4 w-4 text-[var(--accent-base)] opacity-60" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-[var(--text-primary)]">
-                  Your mind is clear.
-                </p>
-                <p className="text-xs text-[var(--text-muted)]">
-                  Capture something when inspiration strikes.
-                </p>
-              </div>
-            </motion.div>
-          )}
-
-          {/* 2-column layout: Left = tasks, Right = AI insights */}
-          {!isEverythingEmpty && (
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_340px]">
-              {/* LEFT COLUMN — Today + Overdue + Completed */}
-              <div className="min-w-0 space-y-4">
-                {/* Overdue section */}
-                {hasOverdue && (
-                  <motion.section variants={itemVariants}>
-                    <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-                      <div className="flex items-center gap-2.5 px-4 py-3">
-                        <div className="flex h-7 w-7 items-center justify-center rounded-none bg-[rgba(248,113,113,0.06)]">
-                          <AlertTriangle className="h-4 w-4 text-red-400/70" />
-                        </div>
-                        <h2 className="text-xs font-bold uppercase tracking-wide text-[var(--text-primary)]">
-                          Overdue
-                        </h2>
-                        <span className="ml-auto rounded-full bg-[rgba(248,113,113,0.06)] px-2 py-0.5 text-[10px] font-bold tabular-nums text-red-400">
-                          {overdueItems.length}
-                        </span>
+          {/* Two-column workspace — always rendered, content adapts */}
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_380px]">
+            {/* LEFT — Primary workspace */}
+            <div className="min-w-0 space-y-4">
+              {/* Overdue — warm amber/rust accent */}
+              {hasOverdue && (
+                <motion.section variants={itemVariants}>
+                  <div className="overflow-hidden rounded-none border border-[#e0cfc0] bg-[var(--bg-surface)]">
+                    <div className="flex items-center gap-2.5 px-4 py-3">
+                      <div className="flex h-7 w-7 items-center justify-center rounded-none bg-[rgba(180,83,9,0.06)]">
+                        <AlertTriangle className="h-4 w-4 text-amber-700/70" />
                       </div>
-
-                      <div className="mx-4 h-px bg-[var(--border-subtle)]" />
-
-                      <motion.div
-                        className="px-1 py-1.5"
-                        variants={containerVariants}
-                        initial="hidden"
-                        animate="visible"
-                      >
-                        {overdueItems.map((item) => (
-                          <ItemRow
-                            key={item.id}
-                            item={item}
-                            destinations={destinations}
-                            showAge
-                            trailing={
-                              item.scheduled_at
-                                ? formatOverdueDistance(item.scheduled_at)
-                                : undefined
-                            }
-                            onClick={() => handleItemClick(item.id)}
-                          />
-                        ))}
-                      </motion.div>
+                      <h2 className="text-xs font-bold uppercase tracking-wide text-[var(--text-primary)]">
+                        Overdue
+                      </h2>
+                      <span className="ml-auto rounded-full bg-[rgba(180,83,9,0.07)] px-2 py-0.5 text-[10px] font-bold tabular-nums text-amber-700">
+                        {overdueItems.length}
+                      </span>
                     </div>
-                  </motion.section>
-                )}
+                    <div className="mx-4 h-px bg-[var(--border-subtle)]" />
+                    <motion.div className="px-1 py-1" variants={containerVariants} initial="hidden" animate="visible">
+                      {overdueItems.map((item) => (
+                        <ItemRow
+                          key={item.id}
+                          item={item}
+                          destinations={destinations}
+                          showAge
+                          trailing={item.scheduled_at ? formatOverdueDistance(item.scheduled_at) : undefined}
+                          onClick={() => handleItemClick(item.id)}
+                        />
+                      ))}
+                    </motion.div>
+                  </div>
+                </motion.section>
+              )}
 
-                {/* Scheduled today section */}
+              {/* Scheduled today */}
+              <motion.section variants={itemVariants}>
+                <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+                  <div className="flex items-center gap-2.5 px-4 py-3">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-none bg-[var(--bg-hover)]">
+                      <Calendar className="h-4 w-4 text-[var(--text-secondary)]" />
+                    </div>
+                    <h2 className="text-xs font-bold uppercase tracking-wide text-[var(--text-primary)]">
+                      Scheduled
+                    </h2>
+                    {hasToday && (
+                      <span className="ml-auto rounded-full bg-[var(--bg-hover)] px-2 py-0.5 text-[10px] font-bold tabular-nums text-[var(--text-secondary)]">
+                        {todayItems.length}
+                      </span>
+                    )}
+                  </div>
+                  <div className="mx-4 h-px bg-[var(--border-subtle)]" />
+                  {hasToday ? (
+                    <motion.div className="px-1 py-1" variants={containerVariants} initial="hidden" animate="visible">
+                      {todayItems.map((item) => (
+                        <ItemRow
+                          key={item.id}
+                          item={item}
+                          destinations={destinations}
+                          trailing={<span className="font-medium tabular-nums">{formatScheduledTime(item)}</span>}
+                          onClick={() => handleItemClick(item.id)}
+                        />
+                      ))}
+                    </motion.div>
+                  ) : (
+                    <p className="px-4 py-4 text-sm text-[var(--text-muted)]">Nothing scheduled today.</p>
+                  )}
+                </div>
+              </motion.section>
+
+              {/* Recent — active items not in overdue/today/completed */}
+              {hasRecent && (
                 <motion.section variants={itemVariants}>
                   <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
                     <div className="flex items-center gap-2.5 px-4 py-3">
                       <div className="flex h-7 w-7 items-center justify-center rounded-none bg-[var(--bg-hover)]">
-                        <Calendar className="h-4 w-4 text-[var(--text-secondary)]" />
+                        <Activity className="h-4 w-4 text-[var(--text-secondary)]" />
                       </div>
                       <h2 className="text-xs font-bold uppercase tracking-wide text-[var(--text-primary)]">
-                        Scheduled
+                        In Motion
                       </h2>
-                      {hasToday && (
-                        <span className="ml-auto rounded-full bg-[var(--bg-hover)] px-2 py-0.5 text-[10px] font-bold tabular-nums text-[var(--text-secondary)]">
-                          {todayItems.length}
-                        </span>
-                      )}
+                      <span className="ml-auto text-[11px] text-[var(--text-disabled)]">
+                        {recentItems.length} active
+                      </span>
                     </div>
-
                     <div className="mx-4 h-px bg-[var(--border-subtle)]" />
+                    <motion.div className="px-1 py-1" variants={containerVariants} initial="hidden" animate="visible">
+                      {recentItems.map((item) => (
+                        <ItemRow
+                          key={item.id}
+                          item={item}
+                          destinations={destinations}
+                          showAge
+                          onClick={() => handleItemClick(item.id)}
+                        />
+                      ))}
+                    </motion.div>
+                  </div>
+                </motion.section>
+              )}
 
-                    {hasToday ? (
-                      <motion.div
-                        className="px-1 py-1.5"
-                        variants={containerVariants}
-                        initial="hidden"
-                        animate="visible"
-                      >
-                        {todayItems.map((item) => (
-                          <ItemRow
-                            key={item.id}
-                            item={item}
-                            destinations={destinations}
-                            trailing={
-                              <span className="font-medium tabular-nums">
-                                {formatScheduledTime(item)}
-                              </span>
-                            }
-                            onClick={() => handleItemClick(item.id)}
-                          />
-                        ))}
-                      </motion.div>
-                    ) : (
-                      <p className="px-4 py-4 text-xs text-[var(--text-muted)]">
-                        Nothing scheduled today.
-                      </p>
+              {/* Done — sage green accent, collapsible */}
+              {hasCompleted && (
+                <motion.section variants={itemVariants}>
+                  <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+                    <button
+                      onClick={() => setCompletedExpanded((prev) => !prev)}
+                      className={cn(
+                        'flex w-full items-center gap-2.5 px-4 py-3 text-left',
+                        'transition-colors duration-150 hover:bg-[var(--bg-hover)]',
+                        'rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
+                      )}
+                    >
+                      <div className="flex h-7 w-7 items-center justify-center rounded-none bg-[rgba(107,143,113,0.08)]">
+                        <CheckCircle2 className="h-4 w-4 text-[#6b8f71]" />
+                      </div>
+                      <h2 className="text-xs font-bold uppercase tracking-wide text-[var(--text-muted)]">
+                        Done
+                      </h2>
+                      <span className="text-[11px] tabular-nums text-[#6b8f71]">
+                        {completedToday.length} {completedToday.length === 1 ? 'item' : 'items'}
+                      </span>
+                      <span className="ml-auto text-[var(--text-muted)]">
+                        {completedExpanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+                      </span>
+                    </button>
+                    {completedExpanded && (
+                      <>
+                        <div className="mx-4 h-px bg-[var(--border-subtle)]" />
+                        <motion.div className="px-1 py-1" variants={containerVariants} initial="hidden" animate="visible">
+                          {completedToday.map((item) => (
+                            <ItemRow
+                              key={item.id}
+                              item={item}
+                              muted
+                              trailing={item.completed_at ? format(new Date(item.completed_at), 'HH:mm') : undefined}
+                              onClick={() => handleItemClick(item.id)}
+                            />
+                          ))}
+                        </motion.div>
+                      </>
                     )}
                   </div>
                 </motion.section>
+              )}
 
-                {/* Completed today (collapsible) */}
-                {hasCompleted && (
-                  <motion.section variants={itemVariants}>
-                    <div className="overflow-hidden rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-                      <button
-                        onClick={() => setCompletedExpanded((prev) => !prev)}
-                        className={cn(
-                          'flex w-full items-center gap-2.5 px-4 py-3 text-left',
-                          'transition-colors duration-150 hover:bg-[var(--bg-hover)]',
-                          'rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
-                        )}
-                      >
-                        <div className="flex h-7 w-7 items-center justify-center rounded-none bg-[var(--bg-hover)]">
-                          <CheckCircle2 className="h-4 w-4 text-[var(--text-muted)]" />
-                        </div>
-                        <h2 className="text-xs font-bold uppercase tracking-wide text-[var(--text-muted)]">
-                          Done
-                        </h2>
-                        <span className="text-[11px] tabular-nums text-[var(--text-muted)]">
-                          {completedToday.length} {completedToday.length === 1 ? 'item' : 'items'}
-                        </span>
-                        <span className="ml-auto text-[var(--text-muted)]">
-                          {completedExpanded ? (
-                            <ChevronUp className="h-3.5 w-3.5" />
-                          ) : (
-                            <ChevronDown className="h-3.5 w-3.5" />
-                          )}
-                        </span>
-                      </button>
-
-                      {completedExpanded && (
-                        <>
-                          <div className="mx-4 h-px bg-[var(--border-subtle)]" />
-                          <motion.div
-                            className="px-1 py-1.5"
-                            variants={containerVariants}
-                            initial="hidden"
-                            animate="visible"
-                          >
-                            {completedToday.map((item) => (
-                              <ItemRow
-                                key={item.id}
-                                item={item}
-                                muted
-                                trailing={
-                                  item.completed_at
-                                    ? format(new Date(item.completed_at), 'HH:mm')
-                                    : undefined
-                                }
-                                onClick={() => handleItemClick(item.id)}
-                              />
-                            ))}
-                          </motion.div>
-                        </>
-                      )}
-                    </div>
-                  </motion.section>
-                )}
-              </div>
-
-              {/* RIGHT COLUMN — AI Insights (sticky on desktop) */}
-              <div className="min-w-0 lg:sticky lg:top-5 lg:self-start">
-                <AIInsightsCard
-                  somedayItems={somedayItems}
-                  allActiveItems={allActiveItems}
-                  staleItems={staleItems}
-                  onItemClick={handleItemClick}
-                />
-              </div>
+              {/* Empty state — only when truly nothing */}
+              {!hasAnyContent && (
+                <motion.div
+                  variants={itemVariants}
+                  className="flex items-center gap-3 rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-5 py-6"
+                >
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-[var(--accent-glow)]">
+                    <Sun className="h-4 w-4 text-[var(--accent-base)] opacity-60" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-[var(--text-primary)]">Your mind is clear.</p>
+                    <p className="text-xs text-[var(--text-muted)]">Capture something when inspiration strikes.</p>
+                  </div>
+                </motion.div>
+              )}
             </div>
-          )}
+
+            {/* RIGHT — Secondary rail (sticky, denser) */}
+            <div className="min-w-0 lg:sticky lg:top-20 lg:self-start">
+              <AIInsightsCard
+                somedayItems={somedayItems}
+                allActiveItems={allActiveItems}
+                staleItems={staleItems}
+                onItemClick={handleItemClick}
+              />
+            </div>
+          </div>
         </motion.div>
       </div>
     </div>
