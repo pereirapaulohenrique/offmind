@@ -153,7 +153,7 @@ function StatusBar({
           key={seg.key}
           onClick={() => onNavigate(seg.path)}
           className={cn(
-            'group flex flex-1 items-center justify-center gap-1.5 py-2',
+            'group flex flex-1 items-center justify-center gap-2 py-2.5',
             'transition-all duration-150',
             'hover:bg-[var(--bg-hover)]',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
@@ -166,7 +166,7 @@ function StatusBar({
             className={cn(
               'text-xs tabular-nums',
               seg.count > 0
-                ? 'font-semibold text-[var(--text-primary)]'
+                ? 'font-bold text-[var(--text-primary)]'
                 : 'text-[var(--text-disabled)]',
             )}
           >
@@ -202,21 +202,21 @@ function ItemRow({
       variants={listItemVariants}
       onClick={onClick}
       className={cn(
-        'group flex w-full items-center gap-2.5 rounded-none px-3 py-2 text-left',
-        'transition-all duration-150',
-        'hover:bg-[var(--bg-hover)]',
+        'group flex w-full items-center gap-2.5 rounded-none px-3.5 py-2.5 text-left',
+        'border-l-2 border-l-transparent transition-all duration-150',
+        'hover:bg-[var(--bg-hover)] hover:border-l-[var(--accent-base)]',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
-        muted && 'opacity-50',
+        muted && 'opacity-50 hover:border-l-transparent',
       )}
     >
       {/* Title + metadata */}
       <div className="flex min-w-0 flex-1 items-center gap-2">
         <span
           className={cn(
-            'truncate text-sm',
+            'truncate text-[13px]',
             muted
               ? 'text-[var(--text-muted)] line-through decoration-[var(--text-disabled)]'
-              : 'text-[var(--text-primary)]',
+              : 'font-medium text-[var(--text-primary)]',
           )}
         >
           {item.title}
@@ -365,7 +365,7 @@ function AIInsightsCard({
           <div className="flex h-7 w-7 items-center justify-center rounded-none bg-[var(--bg-hover)]">
             <Brain className="h-4 w-4 text-[var(--accent-base)]" />
           </div>
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+          <h2 className="text-[11px] font-bold uppercase tracking-wide text-[var(--text-secondary)]">
             AI Insights
           </h2>
           {insights && totalInsights > 0 && (
@@ -673,15 +673,15 @@ export function TodayPageClient({
       {/* Content */}
       <div className="flex-1 overflow-auto px-6 pb-6 pt-5">
         <motion.div
-          className="mx-auto max-w-2xl space-y-3"
+          className="mx-auto max-w-2xl space-y-4"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          {/* Greeting + date inline */}
-          <motion.div variants={itemVariants} className="flex items-baseline justify-between px-0.5">
-            <p className="text-sm text-[var(--text-secondary)]">
-              {greetingText}, <span className="font-medium text-[var(--text-primary)]">{userName}</span>
+          {/* Greeting + date — anchored header */}
+          <motion.div variants={itemVariants} className="flex items-baseline justify-between px-0.5 pb-1">
+            <p className="text-[15px] text-[var(--text-secondary)]">
+              {greetingText}, <span className="font-semibold text-[var(--text-primary)]">{userName}</span>
             </p>
             <span className="text-[11px] tabular-nums text-[var(--text-muted)]">
               {todayFormatted}
@@ -694,9 +694,9 @@ export function TodayPageClient({
           {/* Progress bar (when there are today tasks) */}
           {totalTodayTasks > 0 && (
             <motion.div variants={itemVariants} className="flex items-center gap-3 px-1">
-              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--bg-hover)]">
+              <div className="h-1 flex-1 overflow-hidden rounded-none bg-[var(--border-subtle)]">
                 <motion.div
-                  className="h-full rounded-full bg-[var(--accent-base)]"
+                  className="h-full rounded-none bg-[var(--accent-base)]"
                   initial={{ width: 0 }}
                   animate={{ width: `${completedPercent}%` }}
                   transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.3 }}
@@ -740,11 +740,11 @@ export function TodayPageClient({
           {hasOverdue && (
             <motion.section variants={itemVariants}>
               <div className="rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-                <div className="flex items-center gap-2.5 px-4 py-2.5">
+                <div className="flex items-center gap-2.5 px-4 py-3">
                   <div className="flex h-6 w-6 items-center justify-center rounded-none bg-[rgba(248,113,113,0.06)]">
                     <AlertTriangle className="h-3.5 w-3.5 text-red-400/70" />
                   </div>
-                  <h2 className="text-xs font-semibold uppercase tracking-wide text-[var(--text-primary)]">
+                  <h2 className="text-[11px] font-bold uppercase tracking-wide text-[var(--text-primary)]">
                     Overdue
                   </h2>
                   <span className="ml-auto rounded-full bg-[rgba(248,113,113,0.06)] px-2 py-0.5 text-[10px] font-bold tabular-nums text-red-400">
@@ -755,7 +755,7 @@ export function TodayPageClient({
                 <div className="mx-4 h-px bg-[var(--border-subtle)]" />
 
                 <motion.div
-                  className="p-1"
+                  className="px-1 py-1.5"
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"
@@ -783,11 +783,11 @@ export function TodayPageClient({
           {!isEverythingEmpty && (
             <motion.section variants={itemVariants}>
               <div className="rounded-none border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-                <div className="flex items-center gap-2.5 px-4 py-2.5">
+                <div className="flex items-center gap-2.5 px-4 py-3">
                   <div className="flex h-6 w-6 items-center justify-center rounded-none bg-[var(--bg-hover)]">
                     <Calendar className="h-3.5 w-3.5 text-[var(--text-secondary)]" />
                   </div>
-                  <h2 className="text-xs font-semibold uppercase tracking-wide text-[var(--text-primary)]">
+                  <h2 className="text-[11px] font-bold uppercase tracking-wide text-[var(--text-primary)]">
                     Today
                   </h2>
                   {hasToday && (
@@ -836,7 +836,7 @@ export function TodayPageClient({
                 <button
                   onClick={() => setCompletedExpanded((prev) => !prev)}
                   className={cn(
-                    'flex w-full items-center gap-2.5 px-4 py-2.5 text-left',
+                    'flex w-full items-center gap-2.5 px-4 py-3 text-left',
                     'transition-colors duration-150 hover:bg-[var(--bg-hover)]',
                     'rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/40',
                   )}
@@ -844,7 +844,7 @@ export function TodayPageClient({
                   <div className="flex h-6 w-6 items-center justify-center rounded-none bg-[var(--bg-hover)]">
                     <CheckCircle2 className="h-3.5 w-3.5 text-[var(--text-muted)]" />
                   </div>
-                  <h2 className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                  <h2 className="text-[11px] font-bold uppercase tracking-wide text-[var(--text-muted)]">
                     Done
                   </h2>
                   <span className="text-[11px] tabular-nums text-[var(--text-muted)]">
